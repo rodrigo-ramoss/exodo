@@ -1,0 +1,9 @@
+export enum Screen {
+  HOME = 'HOME',
+  BIBLE = 'BIBLE',
+  STUDIES = 'STUDIES',
+  EBD = 'EBD',
+  BOOKSTORE = 'BOOKSTORE',
+  SIGNS = 'SIGNS',
+  DOCTRINES = 'DOCTRINES',
+}
