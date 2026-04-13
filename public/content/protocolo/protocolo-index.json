@@ -1,0 +1,32 @@
+[
+  {
+    "id": "trilha-01",
+    "title": "Trilha 01: Desprogramação",
+    "description": "Rompendo os ciclos de condicionamento mental e espiritual do sistema.",
+    "image": "/assets/protocolo/trilha-01-capa.webp",
+    "status": "liberado",
+    "missions": [
+      {
+        "title": "Missão 01 — Fundamentos",
+        "slug": "trilha-01-desprogramacao/missao-01-fundamentos",
+        "duration": "20 MIN",
+        "status": "liberado"
+      }
+    ]
+  },
+  {
+    "id": "trilha-02",
+    "title": "Trilha 02: Identidade no Deserto",
+    "description": "Descobrindo quem você é quando todas as muletas religiosas são removidas.",
+    "image": "/assets/protocolo/trilha-02-capa.webp",
+    "status": "bloqueado",
+    "missions": [
+      {
+        "title": "Missão 02 — O Despertar",
+        "slug": "trilha-02-identidade/missao-02-despertar",
+        "duration": "25 MIN",
+        "status": "bloqueado"
+      }
+    ]
+  }
+]
