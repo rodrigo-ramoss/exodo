@@ -57,6 +57,14 @@ export default function Studies() {
 
   return (
     <div className="pb-24 min-h-screen bg-surface-container-lowest">
+      {/* Editorial Header */}
+      <div className="pt-8 px-5 mb-6 border-l-2 border-primary-container ml-5 py-1">
+        <h1 className="font-headline text-4xl font-bold text-primary mb-1 tracking-tighter">Estudos</h1>
+        <p className="text-on-surface-variant/70 text-[11px] max-w-[280px] font-medium leading-relaxed">
+          A prática da fé no cotidiano: ferramentas para oração, vida com Deus e o preparo espiritual para as provações no deserto.
+        </p>
+      </div>
+
       {/* Investigative Search */}
       <section className="px-5 mt-4">
         <div className="relative group">

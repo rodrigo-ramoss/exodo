@@ -62,8 +62,8 @@ export default function Signs() {
       {/* Editorial Header */}
       <div className="mb-6 border-l-2 border-primary-container pl-4 py-1">
         <h1 className="font-headline text-4xl font-bold text-primary mb-1">Sinais</h1>
-        <p className="text-on-surface-variant max-w-xs font-bold tracking-tight text-xs italic opacity-90">
-          Profecia no tempo do algoritmo — análises que o mainstream não faz.
+        <p className="text-on-surface-variant/70 text-[11px] max-w-[280px] font-medium leading-relaxed">
+          Decifrando o agora: análise semanal de eventos globais sob a ótica de padrões proféticos, sem sensacionalismo ou hype.
         </p>
       </div>
 

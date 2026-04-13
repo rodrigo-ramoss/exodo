@@ -95,8 +95,8 @@ export default function Bookstore() {
           <h2 className="font-headline font-extrabold text-3xl text-primary tracking-tighter mb-1 text-shadow-glow">
             Arquivo Secreto
           </h2>
-          <p className="text-on-surface-variant font-bold text-sm max-w-[240px] leading-relaxed">
-            Conteúdo restrito. Investigações profundas sobre as verdades ocultas do sistema.
+          <p className="text-on-surface-variant/70 text-[11px] max-w-[280px] font-medium leading-relaxed">
+            Conteúdo de alto impacto: trilogias sobre geopolítica, IA e desconstrução teológica. Investigações profundas protegidas pelo ambiente do app.
           </p>
         </div>
       </header>

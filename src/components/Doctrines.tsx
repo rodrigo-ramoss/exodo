@@ -69,12 +69,12 @@ export default function Doctrines() {
   return (
     <div className="pt-8 pb-32 px-5 max-w-4xl mx-auto min-h-screen">
       {/* Hero Branding Section */}
-      <div className="mb-8 border-l border-primary/20 pl-4">
+      <div className="mb-8 border-l-2 border-primary-container pl-4 py-1">
         <h1 className="text-3xl font-headline font-extrabold tracking-tighter text-on-surface mb-1">
           Doutrinas <span className="text-primary">Expostas</span>
         </h1>
-        <p className="text-on-surface-variant text-sm font-bold">
-          O que a Bíblia realmente diz.
+        <p className="text-on-surface-variant/70 text-[11px] max-w-[280px] font-medium leading-relaxed">
+          Exposição de dogmas humanos sob a luz da exegese: confronte o que você sempre ouviu com o que o Texto Sagrado realmente diz.
         </p>
       </div>
 
