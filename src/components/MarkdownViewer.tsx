@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import matter from 'gray-matter';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { ArrowLeft } from 'lucide-react';
 
 interface MarkdownViewerProps {
   content: string;
@@ -10,9 +11,10 @@ interface MarkdownViewerProps {
 
 export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug }) => {
   const [progress, setProgress] = useState(0);
+  const [hasSavedScroll, setHasSavedScroll] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Load saved progress and scroll position
+  // Load saved progress and check for scroll position
   useEffect(() => {
     const savedProgress = localStorage.getItem(`progress_${slug}`);
     const savedScroll = localStorage.getItem(`scroll_${slug}`);
@@ -21,17 +23,21 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug })
       setProgress(parseInt(savedProgress, 10));
     }
 
-    if (savedScroll) {
-      const scrollPos = parseInt(savedScroll, 10);
-      // Small delay to ensure content is rendered before scrolling
-      setTimeout(() => {
-        window.scrollTo({
-          top: scrollPos,
-          behavior: 'smooth'
-        });
-      }, 100);
+    if (savedScroll && parseInt(savedScroll, 10) > 100) {
+      setHasSavedScroll(true);
     }
   }, [slug]);
+
+  const handleContinueReading = () => {
+    const savedScroll = localStorage.getItem(`scroll_${slug}`);
+    if (savedScroll) {
+      const scrollPos = parseInt(savedScroll, 10);
+      window.scrollTo({
+        top: scrollPos,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   // Track scroll progress and exact position
   useEffect(() => {
@@ -109,6 +115,26 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug })
                 {title}
               </h1>
             )}
+
+            {/* Continue Reading Button */}
+            {hasSavedScroll && progress < 100 && (
+              <button 
+                onClick={handleContinueReading}
+                className="mb-8 w-full md:w-fit px-6 py-4 bg-gradient-to-r from-orange-600 to-orange-500 rounded-2xl flex items-center justify-between md:justify-center gap-6 shadow-xl shadow-orange-900/20 active:scale-95 transition-all border border-white/10 group"
+              >
+                <div className="flex flex-col items-start text-left">
+                  <span className="text-[10px] font-black text-white/60 uppercase tracking-widest leading-none mb-1">Retomar de onde parou</span>
+                  <span className="text-sm font-bold text-white leading-none">Continuar Leitura</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-black text-white/90">{progress}%</span>
+                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                    <ArrowLeft size={20} className="rotate-180 text-white" />
+                  </div>
+                </div>
+              </button>
+            )}
+
             <div className="flex items-center gap-4 text-on-surface-variant/40 text-[9px] font-black uppercase tracking-[0.2em]">
               <span>Arquivo Sagrado</span>
               <span className="w-1 h-1 bg-outline-variant/30 rounded-full"></span>
