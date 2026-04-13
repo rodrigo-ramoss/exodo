@@ -10,6 +10,7 @@ interface DoctrineItem {
   date: string;
   category: string;
   time: string;
+  image?: string;
 }
 
 const iconMap: Record<string, any> = {
@@ -88,9 +89,15 @@ export default function Doctrines() {
               onClick={() => setSelectedSlug(doctrine.slug)}
               className="group relative flex items-center h-[80px] bg-surface-container-low hover:bg-surface-container-high border-l-4 border-transparent hover:border-primary transition-all rounded-r-2xl px-4 cursor-pointer active:scale-[0.98]"
             >
-              <div className="w-10 h-10 rounded-xl bg-surface-container-lowest flex items-center justify-center flex-shrink-0 mr-4">
-                <Icon className="text-primary" size={20} />
-              </div>
+              {doctrine.image ? (
+                <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 mr-4">
+                  <img src={doctrine.image} alt={doctrine.title} className="w-full h-full object-cover" />
+                </div>
+              ) : (
+                <div className="w-10 h-10 rounded-xl bg-surface-container-lowest flex items-center justify-center flex-shrink-0 mr-4">
+                  <Icon className="text-primary" size={20} />
+                </div>
+              )}
               <div className="flex-1 min-w-0">
                 <h3 className="text-sm font-bold font-headline text-on-surface group-hover:text-primary transition-colors truncate">
                   {doctrine.title}

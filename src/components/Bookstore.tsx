@@ -10,6 +10,7 @@ interface BookItem {
   date: string;
   category: string;
   time: string;
+  image?: string;
 }
 
 export default function Bookstore() {
@@ -81,7 +82,7 @@ export default function Bookstore() {
           ) : books?.map((item, i) => (
             <div key={i} className="group relative bg-gradient-to-b from-surface-container-high to-surface-container-lowest border border-outline-variant/15 hover:border-primary/40 transition-all rounded-2xl overflow-hidden flex flex-col h-full active:scale-[0.98]">
               <div className="relative w-full h-[220px] overflow-hidden">
-                <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={`https://picsum.photos/seed/${item.slug}/400/600`} />
+                <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={item.image || `https://picsum.photos/seed/${item.slug}/400/600`} />
                 <div className="absolute top-3 right-3 bg-primary-container text-on-primary-container text-[8px] font-black px-2 py-0.5 rounded uppercase tracking-widest">Premium</div>
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent"></div>
               </div>
@@ -98,40 +99,6 @@ export default function Bookstore() {
             </div>
           ))}
           {error && <div className="text-red-500 text-[10px] uppercase font-bold text-center py-4">{error}</div>}
-        </div>
-      </section>
-
-      {/* Section: SÉRIES */}
-      <section className="mb-16">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Layers className="text-primary" size={18} />
-            <h3 className="font-headline font-black text-xs tracking-[0.2em] uppercase">SÉRIES</h3>
-          </div>
-          <div className="h-[1px] flex-grow ml-4 bg-outline-variant/20"></div>
-        </div>
-        <div className="grid grid-cols-1 gap-4">
-          {[
-            { title: 'A Invenção do Pecado', desc: 'Uma profunda desconstrução teológica das influências modernas.', img: 'https://picsum.photos/seed/sin/600/400' },
-            { title: 'O Cânon Oculto', desc: 'A formação política da Bíblia e a verdade por trás dos evangelhos.', img: 'https://picsum.photos/seed/canon/600/400' },
-          ].map((serie, i) => (
-            <div key={i} className="group flex bg-surface-container-low border border-outline-variant/10 hover:bg-surface-container-high transition-colors rounded-2xl overflow-hidden active:scale-[0.98]">
-              <div className="w-1/3 aspect-[3/4] relative overflow-hidden">
-                <img className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" src={serie.img} />
-                <div className="absolute top-2 left-2 bg-surface-container-lowest/80 backdrop-blur-md px-1.5 py-0.5 text-[7px] text-primary font-black uppercase tracking-widest rounded-sm">Série</div>
-              </div>
-              <div className="p-4 w-2/3 flex flex-col justify-center">
-                <h4 className="font-headline font-bold text-sm text-on-surface mb-1.5 uppercase tracking-tight leading-tight">{serie.title}</h4>
-                <p className="text-on-surface-variant mb-3 text-[10px] leading-relaxed line-clamp-2">{serie.desc}</p>
-                <button 
-                  onClick={() => alert('Desbloqueando série...')}
-                  className="text-[9px] font-black text-primary tracking-widest uppercase border-b border-primary/30 w-fit pb-0.5 active:opacity-50"
-                >
-                  Desbloquear
-                </button>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 

@@ -10,6 +10,7 @@ interface StudyItem {
   date: string;
   category: string;
   time: string;
+  image?: string;
 }
 
 interface HomeProps {
@@ -17,7 +18,9 @@ interface HomeProps {
 }
 
 export default function Home({ onNavigate }: HomeProps) {
-  const { data: studies, loading } = useFetch<StudyItem[]>('/content/estudos/index.json');
+  const { data: studies, loading: loadingStudies } = useFetch<StudyItem[]>('/content/estudos/index.json');
+  const { data: signs, loading: loadingSigns } = useFetch<any[]>('/content/sinais/index.json');
+  const { data: doctrines, loading: loadingDoctrines } = useFetch<any[]>('/content/doutrinas/index.json');
 
   return (
     <div className="flex flex-col">
@@ -72,7 +75,7 @@ export default function Home({ onNavigate }: HomeProps) {
           </button>
         </div>
         <div className="flex gap-4 overflow-x-auto hide-scrollbar snap-x pb-2">
-          {loading ? (
+          {loadingStudies ? (
             <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
           ) : studies?.slice(0, 3).map((study, i) => (
             <div 
@@ -82,7 +85,7 @@ export default function Home({ onNavigate }: HomeProps) {
             >
               <div 
                 className="h-28 bg-cover bg-center relative"
-                style={{ backgroundImage: `url('https://picsum.photos/seed/${study.slug}/600/400')` }}
+                style={{ backgroundImage: `url('${study.image || `https://picsum.photos/seed/${study.slug}/600/400`}')` }}
               >
                 <div className="absolute top-3 left-3 bg-primary-container/90 backdrop-blur-sm text-[8px] font-black px-2 py-1 rounded-md text-on-primary-container uppercase tracking-wider">
                   {study.category}
@@ -139,19 +142,22 @@ export default function Home({ onNavigate }: HomeProps) {
       <section className="py-8 px-6">
         <h3 className="font-headline text-lg font-bold mb-6 uppercase text-[10px] tracking-[0.15em]">Doutrinas Expostas</h3>
         <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
-          {[
-            { name: 'Trindade', icon: 'gavel' },
-            { name: 'Escatologia', icon: 'flare' },
-            { name: 'Batismo', icon: 'water_drop' },
-            { name: 'Soteriologia', icon: 'psychology' },
-          ].map((doutrina, i) => (
+          {loadingDoctrines ? (
+            <div className="py-4 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
+          ) : doctrines?.slice(0, 4).map((doutrina, i) => (
             <div 
               key={i}
               onClick={() => onNavigate(Screen.DOCTRINES, 'push')}
               className="min-w-[120px] h-[80px] bg-surface-container-high rounded-2xl flex flex-col items-center justify-center gap-1 hover:bg-surface-bright transition-all cursor-pointer border border-outline-variant/5 active:scale-95"
             >
-              <Star className="text-primary" size={20} />
-              <span className="font-headline text-[9px] font-bold uppercase tracking-widest">{doutrina.name}</span>
+              {doutrina.image ? (
+                <div className="w-6 h-6 rounded-md overflow-hidden mb-1">
+                  <img src={doutrina.image} alt={doutrina.title} className="w-full h-full object-cover" />
+                </div>
+              ) : (
+                <Star className="text-primary" size={20} />
+              )}
+              <span className="font-headline text-[9px] font-bold uppercase tracking-widest px-2 text-center line-clamp-1">{doutrina.title}</span>
             </div>
           ))}
         </div>
@@ -190,48 +196,51 @@ export default function Home({ onNavigate }: HomeProps) {
           <div className="h-px flex-grow bg-outline-variant/20"></div>
         </div>
         <div className="flex flex-col gap-6">
-          <div 
-            onClick={() => onNavigate(Screen.SIGNS, 'push')}
-            className="group cursor-pointer active:scale-[0.98] transition-transform"
-          >
-            <div className="aspect-video w-full rounded-2xl overflow-hidden mb-3">
-              <img src="https://picsum.photos/seed/signs-main/800/450" className="h-full w-full object-cover" />
-            </div>
-            <div className="flex gap-3 mb-2">
-              <span className="text-primary font-black text-[8px] uppercase tracking-[0.2em]">URGENTE</span>
-              <span className="text-on-surface-variant text-[8px] font-bold uppercase tracking-widest">2h atrás</span>
-            </div>
-            <h4 className="font-headline text-lg font-extrabold mb-2 group-hover:text-primary transition-colors leading-tight">
-              A aceleração da Moeda Digital Única
-            </h4>
-            <p className="text-on-surface-variant text-[10px] leading-relaxed mb-3 line-clamp-2">
-              Analistas apontam que a implementação das CBDCs está 2 anos à frente do cronograma.
-            </p>
-            <button className="text-primary font-bold text-[9px] uppercase tracking-widest flex items-center gap-2">
-              Ler Investigação <ArrowRight size={10} />
-            </button>
-          </div>
-          
-          <div className="flex flex-col gap-4">
-            {[
-              { title: 'Neuro-link e a modificação do templo humano', cat: 'Sinais Locais' },
-              { title: 'O Ecumenismo Digital ganha força no Vale', cat: 'Religião' },
-            ].map((item, i) => (
+          {loadingSigns ? (
+            <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
+          ) : signs && signs.length > 0 ? (
+            <>
               <div 
-                key={i} 
                 onClick={() => onNavigate(Screen.SIGNS, 'push')}
-                className="flex gap-3 group cursor-pointer active:scale-95 transition-transform"
+                className="group cursor-pointer active:scale-[0.98] transition-transform"
               >
-                <div className="w-16 h-16 bg-surface-container-high flex-shrink-0 rounded-xl overflow-hidden">
-                  <img src={`https://picsum.photos/seed/side-${i}/200/200`} className="h-full w-full object-cover" />
+                <div className="aspect-video w-full rounded-2xl overflow-hidden mb-3">
+                  <img src={signs[0].image || "https://picsum.photos/seed/signs-main/800/450"} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 </div>
-                <div className="flex flex-col justify-center">
-                  <h5 className="font-headline font-bold text-xs mb-1 group-hover:text-primary transition-colors leading-snug">{item.title}</h5>
-                  <span className="text-[8px] text-on-surface-variant uppercase tracking-[0.2em] font-bold">{item.cat}</span>
+                <div className="flex gap-3 mb-2">
+                  <span className="text-primary font-black text-[8px] uppercase tracking-[0.2em]">{signs[0].category}</span>
+                  <span className="text-on-surface-variant text-[8px] font-bold uppercase tracking-widest">{signs[0].date}</span>
                 </div>
+                <h4 className="font-headline text-lg font-extrabold mb-2 group-hover:text-primary transition-colors leading-tight">
+                  {signs[0].title}
+                </h4>
+                <p className="text-on-surface-variant text-[10px] leading-relaxed mb-3 line-clamp-2">
+                  {signs[0].description}
+                </p>
+                <button className="text-primary font-bold text-[9px] uppercase tracking-widest flex items-center gap-2">
+                  Ler Investigação <ArrowRight size={10} />
+                </button>
               </div>
-            ))}
-          </div>
+              
+              <div className="flex flex-col gap-4">
+                {signs.slice(1, 3).map((item, i) => (
+                  <div 
+                    key={i} 
+                    onClick={() => onNavigate(Screen.SIGNS, 'push')}
+                    className="flex gap-3 group cursor-pointer active:scale-95 transition-transform"
+                  >
+                    <div className="w-16 h-16 bg-surface-container-high flex-shrink-0 rounded-xl overflow-hidden">
+                      <img src={item.image || `https://picsum.photos/seed/side-${i}/200/200`} className="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <h5 className="font-headline font-bold text-xs mb-1 group-hover:text-primary transition-colors leading-snug line-clamp-2">{item.title}</h5>
+                      <span className="text-[8px] text-on-surface-variant uppercase tracking-[0.2em] font-bold">{item.category}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : null}
         </div>
       </section>
 

@@ -10,6 +10,7 @@ interface SignItem {
   date: string;
   category: string;
   time: string;
+  image?: string;
 }
 
 export default function Signs() {
@@ -94,7 +95,7 @@ export default function Signs() {
             <div className="aspect-video relative overflow-hidden">
               <img 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                src={`https://picsum.photos/seed/${signs[0].slug}/800/600`} 
+                src={signs[0].image || `https://picsum.photos/seed/${signs[0].slug}/800/600`} 
               />
             </div>
             <div className="p-6 flex flex-col justify-center bg-surface-container-low/40 backdrop-blur-sm">
@@ -148,7 +149,7 @@ export default function Signs() {
                 className="flex gap-3 group cursor-pointer active:scale-[0.98] transition-transform"
               >
                 <div className="w-16 h-16 flex-shrink-0 overflow-hidden bg-surface-container-high rounded-xl">
-                  <img className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src={`https://picsum.photos/seed/${item.slug}-thumb/200/200`} />
+                  <img className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src={item.image || `https://picsum.photos/seed/${item.slug}-thumb/200/200`} />
                 </div>
                 <div className="flex flex-col justify-center">
                   <h5 className="font-headline text-sm font-bold leading-tight mb-1.5 group-hover:text-primary transition-colors">{item.title}</h5>

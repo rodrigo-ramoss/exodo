@@ -10,6 +10,7 @@ interface StudyItem {
   date: string;
   category: string;
   time: string;
+  image?: string;
 }
 
 export default function Studies() {
@@ -101,7 +102,7 @@ export default function Studies() {
                 onClick={() => setSelectedSlug(item.slug)}
                 className="relative aspect-[16/10] rounded-2xl overflow-hidden group cursor-pointer active:scale-95 transition-transform"
               >
-                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src={`https://picsum.photos/seed/${item.slug}/600/400`} />
+                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src={item.image || `https://picsum.photos/seed/${item.slug}/600/400`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4">
                   <span className="text-[8px] font-black tracking-[0.3em] uppercase text-primary mb-1 block">✦ INVESTIGAÇÃO</span>
@@ -131,7 +132,7 @@ export default function Studies() {
               {['Gênesis', 'Êxodo', 'Levítico', 'Números'].map((book, i) => (
                 <div key={i} className="bg-surface-container-high p-3 rounded-xl border-[0.5px] border-outline-variant/20 hover:bg-surface-bright transition-colors cursor-pointer active:scale-95">
                   <h5 className="font-bold text-on-surface text-xs">{book}</h5>
-                  <p className="text-[8px] text-on-surface-variant mt-1 uppercase font-black tracking-widest">{Math.floor(Math.random() * 10) + 3} estudos</p>
+                  <p className="text-[8px] text-on-surface-variant mt-1 uppercase font-black tracking-widest">0 estudos</p>
                 </div>
               ))}
             </div>
@@ -160,7 +161,7 @@ export default function Studies() {
               className="flex gap-3 items-start pb-5 border-b border-outline-variant/10 active:opacity-80 cursor-pointer"
             >
               <div className="w-16 h-16 bg-surface-container-highest flex-shrink-0 overflow-hidden rounded-xl">
-                <img src={`https://picsum.photos/seed/${item.slug}-thumb/200/200`} className="w-full h-full object-cover opacity-60" />
+                <img src={item.image || `https://picsum.photos/seed/${item.slug}-thumb/200/200`} className="w-full h-full object-cover opacity-60" />
               </div>
               <div className="flex-1">
                 <span className="bg-primary/10 text-primary text-[7px] font-black px-1.5 py-0.5 rounded tracking-tighter uppercase mb-1 inline-block">{item.category}</span>
