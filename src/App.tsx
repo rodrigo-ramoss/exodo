@@ -17,6 +17,7 @@ import Signs from './components/Signs';
 import Doctrines from './components/Doctrines';
 
 export default function App() {
+  // Build trigger: 2026-04-13 15:00
   const [currentScreen, setCurrentScreen] = useState<Screen>(Screen.HOME);
   const [transitionType, setTransitionType] = useState<'push' | 'none'>('none');
 

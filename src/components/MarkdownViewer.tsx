@@ -21,7 +21,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug })
 
   // Custom lightweight frontmatter parser to avoid gray-matter/Buffer issues in browser
   const parseMarkdown = (str: string) => {
-    const regex = /^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/;
+    const regex = /^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]*([\s\S]*)$/;
     const match = str.match(regex);
     
     if (!match) return { metadata: {}, body: str };
@@ -62,8 +62,10 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug })
       
       // Increased delay and multiple attempts to ensure content is fully rendered
       const restoreScroll = () => {
+        if (!containerRef.current) return;
+        
         const scrollPos = parseInt(savedScroll, 10);
-        window.scrollTo(0, scrollPos);
+        containerRef.current.scrollTop = scrollPos;
         
         // Show confirmation toast
         setShowToast(true);
@@ -90,18 +92,21 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug })
 
   // Track scroll and save progress
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
     const handleScroll = () => {
       if (isRestoring) return;
 
-      const winScroll = window.scrollY || document.documentElement.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
       
-      if (height <= 0) return;
+      if (scrollHeight <= 0) return;
 
-      const scrolled = Math.round((winScroll / height) * 100);
+      const scrolled = Math.round((scrollTop / scrollHeight) * 100);
       
-      if (winScroll > 0) {
-        localStorage.setItem(`scroll_${slug}`, winScroll.toString());
+      if (scrollTop > 0) {
+        localStorage.setItem(`scroll_${slug}`, scrollTop.toString());
       }
 
       if (scrolled > progress) {
@@ -110,8 +115,8 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug })
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => container.removeEventListener('scroll', handleScroll);
   }, [slug, progress, isRestoring]);
 
   // Theme styles
