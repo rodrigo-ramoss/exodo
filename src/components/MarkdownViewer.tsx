@@ -71,7 +71,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
     return { metadata, body };
   };
 
-  // Build trigger: 2026-04-13 15:15 - High visibility fix
+  // Build trigger: 2026-04-13 15:38 - Force opacity and z-index
   const { metadata, body: parsedContent } = parseMarkdown(content);
   const { title, category } = metadata;
 
