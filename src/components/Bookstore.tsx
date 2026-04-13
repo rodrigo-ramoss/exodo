@@ -13,10 +13,45 @@ interface BookItem {
   image?: string;
 }
 
+const categoryInfo: Record<string, { title: string; description: string }> = {
+  'Trilogia — A Marca': {
+    title: 'A Marca',
+    description: 'Uma investigação profunda sobre o sistema de controle tecnológico e espiritual que molda o fim dos tempos.'
+  },
+  'Série — A Invenção do Pecado': {
+    title: 'A Invenção do Pecado',
+    description: 'Desconstruindo as amarras teológicas e históricas que aprisionaram a fé em conceitos institucionais.'
+  },
+  'Trilogia — A Ciência dos Tempos': {
+    title: 'A Ciência dos Tempos',
+    description: 'Estratégia e discernimento profético para navegar as crises globais com sabedoria calculada.'
+  },
+  'Trilogia — O Cânon Oculto': {
+    title: 'O Cânon Oculto',
+    description: 'A história proibida da formação bíblica e as verdades que foram deixadas fora do sistema dogmático.'
+  },
+  'Trilogia — O Estrangeiro Próspero': {
+    title: 'O Estrangeiro Próspero',
+    description: 'O protocolo de Daniel e José para florescer e manter a integridade dentro de sistemas hostis.'
+  },
+  'Trilogia — O Mapa da Tempestade': {
+    title: 'O Mapa da Tempestade',
+    description: 'Cartografia profética do colapso sistêmico e o manual para atravessar o interregno entre mundos.'
+  }
+};
+
 export default function Bookstore() {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const { data: books, loading, error } = useFetch<BookItem[]>('/content/livraria/index.json');
+
+  // Group books by category
+  const categories = books ? Array.from(new Set(books.map(b => b.category))) : [];
+  
+  const groupedBooks = categories.reduce((acc, cat) => {
+    acc[cat] = books?.filter(b => b.category === cat) || [];
+    return acc;
+  }, {} as Record<string, BookItem[]>);
 
   useEffect(() => {
     if (selectedSlug) {
@@ -47,7 +82,7 @@ export default function Bookstore() {
           <ArrowLeft size={16} />
           Voltar para livraria
         </button>
-        <MarkdownViewer content={markdownContent} />
+        <MarkdownViewer content={markdownContent} slug={selectedSlug} />
       </div>
     );
   }
@@ -67,39 +102,77 @@ export default function Bookstore() {
         </div>
       </header>
 
-      {/* Section: TRILOGIAS */}
+      {/* Section: TRILOGIAS & SÉRIES */}
       <section className="mb-12">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Diamond className="text-primary" size={18} fill="currentColor" />
-            <h3 className="font-headline font-black text-xs tracking-[0.2em] uppercase">TRILOGIAS</h3>
-          </div>
-          <div className="h-[1px] flex-grow ml-4 bg-outline-variant/20"></div>
-        </div>
-        <div className="grid grid-cols-1 gap-6">
-          {loading ? (
-            <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
-          ) : books?.map((item, i) => (
-            <div key={i} className="group relative bg-gradient-to-b from-surface-container-high to-surface-container-lowest border border-outline-variant/15 hover:border-primary/40 transition-all rounded-2xl overflow-hidden flex flex-col h-full active:scale-[0.98]">
-              <div className="relative w-full h-[220px] overflow-hidden">
-                <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={item.image || `https://picsum.photos/seed/${item.slug}/400/600`} />
-                <div className="absolute top-3 right-3 bg-primary-container text-on-primary-container text-[8px] font-black px-2 py-0.5 rounded uppercase tracking-widest">Premium</div>
-                <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent"></div>
-              </div>
-              <div className="p-5 flex-grow flex flex-col">
-                <h4 className="font-headline font-bold text-base text-on-surface leading-tight mb-2 uppercase tracking-tight">{item.title}</h4>
-                <p className="text-on-surface-variant text-[11px] mb-5 line-clamp-2 leading-relaxed">{item.description}</p>
-                <button 
-                  onClick={() => setSelectedSlug(item.slug)}
-                  className="mt-auto w-full py-2.5 border border-outline-variant/30 rounded-xl text-primary text-[10px] font-black tracking-widest uppercase flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors active:scale-95"
-                >
-                  Ver completa <ChevronDown size={12} />
-                </button>
+        {loading ? (
+          <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando Estante...</div>
+        ) : categories.map((cat, i) => (
+          <div key={i} className="mb-16">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2 mb-1">
+                  <Diamond className="text-primary" size={16} fill="currentColor" />
+                  <h3 className="font-headline font-black text-[10px] tracking-[0.2em] uppercase text-primary">
+                    {cat.includes('Trilogia') ? 'Trilogia' : 'Série'}
+                  </h3>
+                </div>
+                <h4 className="font-headline font-extrabold text-xl text-on-surface tracking-tighter uppercase leading-none mb-2">
+                  {categoryInfo[cat]?.title || cat}
+                </h4>
+                <p className="text-on-surface-variant text-[11px] font-bold max-w-lg leading-relaxed opacity-70">
+                  {categoryInfo[cat]?.description || 'Coleção de estudos profundos.'}
+                </p>
               </div>
             </div>
-          ))}
-          {error && <div className="text-red-500 text-[10px] uppercase font-bold text-center py-4">{error}</div>}
-        </div>
+
+            {/* Bookshelf Grid */}
+            <div className="grid grid-cols-3 gap-4 mt-8 relative">
+              {/* Shelf Base Decor */}
+              <div className="absolute -bottom-4 left-0 right-0 h-1 bg-gradient-to-r from-primary/30 via-outline-variant/10 to-transparent opacity-20"></div>
+              
+              {groupedBooks[cat].map((item, j) => {
+                const progress = typeof window !== 'undefined' ? localStorage.getItem(`progress_${item.slug}`) : null;
+                
+                return (
+                  <div 
+                    key={j} 
+                    onClick={() => setSelectedSlug(item.slug)}
+                    className="group flex flex-col cursor-pointer active:scale-95 transition-transform"
+                  >
+                    <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden shadow-2xl border border-outline-variant/10 bg-surface-container-high group-hover:border-primary/50 transition-colors">
+                      <img 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" 
+                        src={item.image || `https://picsum.photos/seed/${item.slug}/400/600`} 
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+                      
+                      {/* Progress Overlay */}
+                      {progress && parseInt(progress) > 0 && (
+                        <div className="absolute top-2 left-2 right-2 flex flex-col gap-1">
+                          <div className="h-1 w-full bg-black/40 rounded-full overflow-hidden backdrop-blur-md">
+                            <div className="h-full bg-primary" style={{ width: `${progress}%` }}></div>
+                          </div>
+                          <span className="text-[6px] font-black text-primary uppercase tracking-widest">{progress}% Lido</span>
+                        </div>
+                      )}
+
+                      <div className="absolute bottom-2 left-2 right-2">
+                        <div className="h-0.5 w-6 bg-primary opacity-0 group-hover:opacity-100 transition-opacity mb-1"></div>
+                        <span className="text-[7px] text-white/40 uppercase font-black tracking-widest block">Vol. 0{j + 1}</span>
+                      </div>
+                    </div>
+                    <div className="mt-3 px-1">
+                      <h5 className="font-headline font-bold text-[10px] text-on-surface leading-tight uppercase line-clamp-2 group-hover:text-primary transition-colors">
+                        {item.title}
+                      </h5>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+        {error && <div className="text-red-500 text-[10px] uppercase font-bold text-center py-4">{error}</div>}
       </section>
 
       {/* CTA Footer */}

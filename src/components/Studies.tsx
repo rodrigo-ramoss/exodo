@@ -55,7 +55,7 @@ export default function Studies() {
           <ArrowLeft size={16} />
           Voltar para estudos
         </button>
-        <MarkdownViewer content={markdownContent} />
+        <MarkdownViewer content={markdownContent} slug={selectedSlug} />
       </div>
     );
   }
@@ -146,23 +146,38 @@ export default function Studies() {
               
               {expandedCategory === cat && (
                 <div className="grid grid-cols-1 gap-3 mt-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                  {groupedStudies[cat].map((item, j) => (
-                    <div 
-                      key={j} 
-                      onClick={() => setSelectedSlug(item.slug)}
-                      className="bg-surface-container-high p-4 rounded-2xl border-[0.5px] border-outline-variant/20 hover:bg-surface-bright transition-all cursor-pointer active:scale-[0.98] group"
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <h5 className="font-bold text-on-surface text-xs group-hover:text-primary transition-colors">{item.title}</h5>
-                        <Star size={10} className="text-primary opacity-40" />
+                  {groupedStudies[cat].map((item, j) => {
+                    const progress = typeof window !== 'undefined' ? localStorage.getItem(`progress_${item.slug}`) : null;
+                    
+                    return (
+                      <div 
+                        key={j} 
+                        onClick={() => setSelectedSlug(item.slug)}
+                        className="bg-surface-container-high p-4 rounded-2xl border-[0.5px] border-outline-variant/20 hover:bg-surface-bright transition-all cursor-pointer active:scale-[0.98] group"
+                      >
+                        <div className="flex justify-between items-start mb-2">
+                          <h5 className="font-bold text-on-surface text-xs group-hover:text-primary transition-colors">{item.title}</h5>
+                          <Star size={10} className="text-primary opacity-40" />
+                        </div>
+                        <p className="text-[10px] text-on-surface-variant line-clamp-1 opacity-70 mb-2">{item.description}</p>
+                        
+                        {/* Progress Bar */}
+                        {progress && parseInt(progress) > 0 && (
+                          <div className="mb-3">
+                            <div className="h-1 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+                              <div className="h-full bg-primary/60" style={{ width: `${progress}%` }}></div>
+                            </div>
+                            <span className="text-[7px] font-black text-primary/60 uppercase tracking-widest mt-1 block">{progress}% Lido</span>
+                          </div>
+                        )}
+
+                        <div className="flex justify-between items-center">
+                          <span className="text-[8px] text-on-surface-variant uppercase font-black tracking-widest">{item.time}</span>
+                          <span className="text-[8px] text-primary/60 uppercase font-black tracking-widest">Acessar</span>
+                        </div>
                       </div>
-                      <p className="text-[10px] text-on-surface-variant line-clamp-1 opacity-70 mb-2">{item.description}</p>
-                      <div className="flex justify-between items-center">
-                        <span className="text-[8px] text-on-surface-variant uppercase font-black tracking-widest">{item.time}</span>
-                        <span className="text-[8px] text-primary/60 uppercase font-black tracking-widest">Acessar</span>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>

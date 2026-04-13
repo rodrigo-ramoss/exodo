@@ -55,7 +55,7 @@ export default function Signs() {
           <ArrowLeft size={16} />
           Voltar para sinais
         </button>
-        <MarkdownViewer content={markdownContent} />
+        <MarkdownViewer content={markdownContent} slug={selectedSlug} />
       </div>
     );
   }
@@ -163,25 +163,40 @@ export default function Signs() {
             
             {expandedCategory === cat && (
               <div className="pb-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                {groupedSigns[cat].map((item, j) => (
-                  <div 
-                    key={j} 
-                    onClick={() => setSelectedSlug(item.slug)}
-                    className="flex gap-3 group cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-high/20 p-2 rounded-xl hover:bg-surface-container-high/40"
-                  >
-                    <div className="w-16 h-16 flex-shrink-0 overflow-hidden bg-surface-container-high rounded-xl border border-outline-variant/10">
-                      <img className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src={item.image || `https://picsum.photos/seed/${item.slug}-thumb/200/200`} />
-                    </div>
-                    <div className="flex flex-col justify-center">
-                      <h5 className="font-headline text-sm font-bold leading-tight mb-1.5 group-hover:text-primary transition-colors line-clamp-1">{item.title}</h5>
-                      <div className="flex items-center gap-2 text-[8px] text-on-surface-variant uppercase tracking-widest font-black">
-                        <span>{item.date}</span>
-                        <span className="text-primary">•</span>
-                        <span>{item.time}</span>
+                {groupedSigns[cat].map((item, j) => {
+                  const progress = typeof window !== 'undefined' ? localStorage.getItem(`progress_${item.slug}`) : null;
+                  
+                  return (
+                    <div 
+                      key={j} 
+                      onClick={() => setSelectedSlug(item.slug)}
+                      className="flex gap-3 group cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-high/20 p-2 rounded-xl hover:bg-surface-container-high/40"
+                    >
+                      <div className="w-16 h-16 flex-shrink-0 overflow-hidden bg-surface-container-high rounded-xl border border-outline-variant/10">
+                        <img className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src={item.image || `https://picsum.photos/seed/${item.slug}-thumb/200/200`} />
+                      </div>
+                      <div className="flex flex-col justify-center flex-1">
+                        <h5 className="font-headline text-sm font-bold leading-tight mb-1.5 group-hover:text-primary transition-colors line-clamp-1">{item.title}</h5>
+                        
+                        {/* Progress Indicator */}
+                        {progress && parseInt(progress) > 0 ? (
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="h-0.5 w-12 bg-surface-container-highest rounded-full overflow-hidden">
+                              <div className="h-full bg-primary/60" style={{ width: `${progress}%` }}></div>
+                            </div>
+                            <span className="text-[6px] font-black text-primary/60 uppercase tracking-widest">{progress}% Lido</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 text-[8px] text-on-surface-variant uppercase tracking-widest font-black">
+                            <span>{item.date}</span>
+                            <span className="text-primary">•</span>
+                            <span>{item.time}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

@@ -65,7 +65,7 @@ export default function Doctrines() {
           <ArrowLeft size={16} />
           Voltar para as camadas
         </button>
-        <MarkdownViewer content={markdownContent} />
+        <MarkdownViewer content={markdownContent} slug={selectedSlug} />
       </div>
     );
   }
@@ -128,21 +128,37 @@ export default function Doctrines() {
               {isExpanded && (
                 <div className="px-4 pb-6 pt-2 space-y-2 animate-in fade-in slide-in-from-top-2 duration-300 border-t border-outline-variant/5">
                   <div className="text-[8px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 mb-3 px-2">Selecione uma camada para aprofundar:</div>
-                  {doctrine.layers.map((layer, j) => (
-                    <div 
-                      key={j}
-                      onClick={() => setSelectedSlug(layer.slug)}
-                      className="flex items-center justify-between p-3 bg-surface-container-lowest/50 hover:bg-primary/5 border border-outline-variant/5 rounded-xl cursor-pointer active:scale-[0.99] transition-all group/layer"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded-lg bg-surface-container-high flex items-center justify-center text-primary font-black text-[10px]">
-                          {j}
+                  {doctrine.layers.map((layer, j) => {
+                    const progress = typeof window !== 'undefined' ? localStorage.getItem(`progress_${layer.slug}`) : null;
+                    
+                    return (
+                      <div 
+                        key={j}
+                        onClick={() => setSelectedSlug(layer.slug)}
+                        className="flex flex-col gap-2 p-3 bg-surface-container-lowest/50 hover:bg-primary/5 border border-outline-variant/5 rounded-xl cursor-pointer active:scale-[0.99] transition-all group/layer"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-6 h-6 rounded-lg bg-surface-container-high flex items-center justify-center text-primary font-black text-[10px]">
+                              {j}
+                            </div>
+                            <span className="text-xs font-bold text-on-surface-variant group-hover/layer:text-primary transition-colors line-clamp-1">{layer.title}</span>
+                          </div>
+                          <ChevronRight size={14} className="text-primary/20 group-hover/layer:text-primary transition-colors" />
                         </div>
-                        <span className="text-xs font-bold text-on-surface-variant group-hover/layer:text-primary transition-colors">{layer.title}</span>
+                        
+                        {/* Progress Bar for Layer */}
+                        {progress && parseInt(progress) > 0 && (
+                          <div className="flex items-center gap-2 pl-9">
+                            <div className="h-0.5 flex-1 bg-surface-container-high rounded-full overflow-hidden">
+                              <div className="h-full bg-primary/40" style={{ width: `${progress}%` }}></div>
+                            </div>
+                            <span className="text-[6px] font-black text-primary/40 uppercase tracking-widest">{progress}% Lido</span>
+                          </div>
+                        )}
                       </div>
-                      <ChevronRight size={14} className="text-primary/20 group-hover/layer:text-primary transition-colors" />
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
