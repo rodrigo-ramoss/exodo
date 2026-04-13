@@ -15,6 +15,7 @@ import EBD from './components/EBD';
 import Bookstore from './components/Bookstore';
 import Signs from './components/Signs';
 import Doctrines from './components/Doctrines';
+import Protocol from './components/Protocol';
 
 export default function App() {
   // Build trigger: 2026-04-13 15:00
@@ -43,6 +44,8 @@ export default function App() {
         return <Signs />;
       case Screen.DOCTRINES:
         return <Doctrines />;
+      case Screen.PROTOCOL:
+        return <Protocol />;
       default:
         return <Home onNavigate={handleNavigate} />;
     }

@@ -61,7 +61,7 @@ export default function Studies() {
   return (
     <div className="pb-24 min-h-screen bg-surface-container-lowest">
       {/* Editorial Header */}
-      <div className="pt-8 px-6 mb-6 border-l-2 border-primary-container py-1 ml-6">
+      <div className="pt-8 px-4 sm:px-6 mb-6 border-l-2 border-primary-container py-1 ml-4 sm:ml-6">
         <h1 className="font-headline text-4xl font-bold text-primary mb-1 tracking-tighter">Estudos</h1>
         <p className="text-on-surface-variant/70 text-[11px] max-w-[280px] font-medium leading-relaxed">
           A prática da fé no cotidiano: ferramentas para oração, vida com Deus e o preparo espiritual para as provações no deserto.
@@ -69,7 +69,7 @@ export default function Studies() {
       </div>
 
       {/* Investigative Search */}
-      <section className="px-6 mt-4">
+      <section className="px-4 sm:px-6 mt-4">
         <div className="relative group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
           <input 
@@ -83,7 +83,7 @@ export default function Studies() {
 
       {/* Featured Carousel */}
       <section className="mt-8">
-        <div className="px-6 flex justify-between items-baseline mb-3">
+        <div className="px-4 sm:px-6 flex justify-between items-baseline mb-3">
           <h2 className="font-headline font-bold text-[10px] tracking-[0.2em] uppercase text-on-surface opacity-60">
             Estudos em Destaque
           </h2>
@@ -95,7 +95,7 @@ export default function Studies() {
           </div>
         </div>
         <div className="flex gap-4 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
-          <div className="w-2 flex-shrink-0" /> {/* Left Spacer */}
+          <div className="w-4 sm:w-6 flex-shrink-0" /> {/* Left Spacer */}
           {loading ? (
             <div className="w-full py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
           ) : featuredStudies.map((item, i) => (
@@ -114,12 +114,12 @@ export default function Studies() {
               </div>
             </div>
           ))}
-          <div className="w-6 flex-shrink-0" /> {/* Right Spacer */}
+          <div className="w-4 sm:w-6 flex-shrink-0" /> {/* Right Spacer */}
         </div>
       </section>
 
       {/* Spacing and Library Header */}
-      <section className="mt-12 mb-8 px-6">
+      <section className="mt-12 mb-8 container-biblioteca">
         <div className="flex items-center gap-4">
           <h2 className="font-headline font-extrabold text-2xl tracking-tighter text-on-surface">Biblioteca</h2>
           <div className="h-[1px] flex-1 bg-outline-variant/20"></div>
@@ -130,13 +130,13 @@ export default function Studies() {
       <section className="space-y-10">
         {loading ? null : categories.map((cat, i) => (
           <div key={i} className="flex flex-col gap-4">
-            <div className="px-6 flex items-center justify-between">
+            <div className="px-4 sm:px-6 flex items-center justify-between container-biblioteca">
               <h3 className="text-[10px] font-black tracking-[0.25em] uppercase text-primary opacity-80">{cat}</h3>
               <div className="h-[1px] flex-1 ml-4 bg-outline-variant/10"></div>
             </div>
             
             <div className="flex gap-4 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
-              <div className="w-6 flex-shrink-0" /> {/* Left Spacer to align with px-6 */}
+              <div className="w-4 sm:w-6 flex-shrink-0" /> {/* Left Spacer to align with px-4/sm:px-6 */}
               {groupedStudies[cat].map((item, j) => {
                 const progress = typeof window !== 'undefined' ? localStorage.getItem(`progress_${item.slug}`) : null;
                 
@@ -170,14 +170,14 @@ export default function Studies() {
                   </div>
                 );
               })}
-              <div className="w-6 flex-shrink-0" /> {/* Right Spacer */}
+              <div className="w-4 sm:w-6 flex-shrink-0" /> {/* Right Spacer */}
             </div>
           </div>
         ))}
       </section>
 
       {/* Recent Studies (2-Column Grid) */}
-      <section className="mt-16 px-6 pb-12">
+      <section className="mt-16 pb-12 container-biblioteca">
         <div className="flex items-center gap-4 mb-8">
           <h2 className="font-headline font-extrabold text-xl tracking-tighter text-on-surface">Explorações Recentes</h2>
           <div className="h-[1px] flex-1 bg-outline-variant/20"></div>

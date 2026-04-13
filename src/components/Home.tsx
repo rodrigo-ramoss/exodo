@@ -63,6 +63,34 @@ export default function Home({ onNavigate }: HomeProps) {
         </div>
       </section>
 
+      {/* O PROTOCOLO Section */}
+      <section className="py-8 px-6">
+        <div 
+          onClick={() => onNavigate(Screen.PROTOCOL, 'push')}
+          className="relative w-full h-[200px] rounded-3xl overflow-hidden group cursor-pointer active:scale-[0.98] transition-transform border border-primary/20"
+        >
+          <div 
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800')" }}
+          ></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-coal via-coal/80 to-transparent"></div>
+          <div className="relative h-full flex flex-col justify-center p-6">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="bg-primary p-1 rounded-lg">
+                <Shield size={16} className="text-on-primary" />
+              </div>
+              <h3 className="font-headline font-bold text-2xl tracking-tighter text-on-surface">O PROTOCOLO</h3>
+            </div>
+            <p className="text-on-surface-variant text-xs max-w-[200px] mb-4 leading-relaxed font-bold italic">
+              Treinamento intensivo de desprogramação mental e despertamento espiritual.
+            </p>
+            <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
+              Iniciar Treinamento <ArrowRight size={14} />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Estudos em Destaque */}
       <section className="py-8 px-6">
         <div className="flex items-end justify-between mb-6">

@@ -97,4 +97,10 @@
   .prose hr {
     @apply my-8 border-outline-variant/30;
   }
+
+  /* Forçar espaçamento lateral na Biblioteca */
+  .container-biblioteca {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
 }
