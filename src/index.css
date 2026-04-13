@@ -67,7 +67,8 @@
     @apply text-xl font-headline font-bold text-on-surface mt-6 mb-3;
   }
   .prose p {
-    @apply mb-4 text-sm font-sans opacity-90;
+    @apply mb-4 font-sans opacity-90;
+    /* Removed text-sm to allow dynamic font size from parent */
   }
   .prose strong {
     @apply text-on-surface font-bold;
