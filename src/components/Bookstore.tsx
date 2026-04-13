@@ -14,29 +14,33 @@ interface BookItem {
 }
 
 const categoryInfo: Record<string, { title: string; description: string }> = {
+  'Trilogia — O Mapa da Tempestade': {
+    title: 'O Mapa da Tempestade',
+    description: 'Cartografia profética do colapso sistêmico e o manual para atravessar o interregno entre mundos.'
+  },
   'Trilogia — A Marca': {
     title: 'A Marca',
     description: 'Uma investigação profunda sobre o sistema de controle tecnológico e espiritual que molda o fim dos tempos.'
-  },
-  'Série — A Invenção do Pecado': {
-    title: 'A Invenção do Pecado',
-    description: 'Desconstruindo as amarras teológicas e históricas que aprisionaram a fé em conceitos institucionais.'
-  },
-  'Trilogia — A Ciência dos Tempos': {
-    title: 'A Ciência dos Tempos',
-    description: 'Estratégia e discernimento profético para navegar as crises globais com sabedoria calculada.'
-  },
-  'Trilogia — O Cânon Oculto': {
-    title: 'O Cânon Oculto',
-    description: 'A história proibida da formação bíblica e as verdades que foram deixadas fora do sistema dogmático.'
   },
   'Trilogia — O Estrangeiro Próspero': {
     title: 'O Estrangeiro Próspero',
     description: 'O protocolo de Daniel e José para florescer e manter a integridade dentro de sistemas hostis.'
   },
-  'Trilogia — O Mapa da Tempestade': {
-    title: 'O Mapa da Tempestade',
-    description: 'Cartografia profética do colapso sistêmico e o manual para atravessar o interregno entre mundos.'
+  'Trilogia — A Ciência dos Tempos': {
+    title: 'A Ciência dos Tempos',
+    description: 'Estratégia e discernimento profético para navegar as crises globais com sabedoria calculada.'
+  },
+  'Série — A Invenção do Pecado': {
+    title: 'A Invenção do Pecado',
+    description: 'Desconstruindo as amarras teológicas e históricas que aprisionaram a fé em conceitos institucionais.'
+  },
+  'Trilogia — O Cânon Oculto': {
+    title: 'O Cânon Oculto',
+    description: 'A história proibida da formação bíblica e as verdades que foram deixadas fora do sistema dogmático.'
+  },
+  'Série — A Revelação de Enoque': {
+    title: 'A Revelação de Enoque',
+    description: 'Uma jornada pelas visões e revelações do profeta Enoque sobre o mundo espiritual e o destino da humanidade.'
   }
 };
 

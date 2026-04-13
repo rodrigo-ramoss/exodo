@@ -1,22 +1,227 @@
 [ 
-   { "title": "A Imagem que Fala", "slug": "Trilogia - a Marca/A Imagem que Fala", "description": "Primeiro volume da Trilogia A Marca — análise da imagem da besta no contexto tecnológico.", "date": "2024-04-01", "category": "Trilogia — A Marca", "time": "LIVRO", "image": "/image/livraria/a imagem que fala.webp" }, 
-   { "title": "A Sabedoria do Deserto", "slug": "Trilogia - a Marca/A Sabedoria do Deserto", "description": "Segundo volume da Trilogia A Marca — sabedoria para navegar o sistema.", "date": "2024-04-02", "category": "Trilogia — A Marca", "time": "LIVRO", "image": "/image/livraria/a sabedoria do deserto.webp" }, 
-   { "title": "O Nome da Besta", "slug": "Trilogia - a Marca/O Nome da Besta", "description": "Terceiro volume da Trilogia A Marca — decodificação do nome e número.", "date": "2024-04-03", "category": "Trilogia — A Marca", "time": "LIVRO", "image": "/image/livraria/o nome da besta.webp" }, 
-   { "title": "A Invenção do Pecado Original", "slug": "serie - a invecao do pecado/A Invenção do Pecado Original", "description": "Como o conceito de pecado original foi construído teologicamente ao longo da história.", "date": "2024-03-01", "category": "Série — A Invenção do Pecado", "time": "LIVRO", "image": "/image/livraria/A Invenção do Pecado Original.webp" }, 
-   { "title": "A Sabedoria que Liberta", "slug": "serie - a invecao do pecado/A Sabedoria que Liberta", "description": "Desconstruindo as correntes teológicas para encontrar a liberdade bíblica real.", "date": "2024-03-02", "category": "Série — A Invenção do Pecado", "time": "LIVRO", "image": "/image/livraria/A Sabedoria que Liberta.webp" }, 
-   { "title": "As Palavras que Aprisionam", "slug": "serie - a invecao do pecado/As Palavras que Aprisionam", "description": "Como a linguagem religiosa molda e aprisiona a fé.", "date": "2024-03-03", "category": "Série — A Invenção do Pecado", "time": "LIVRO", "image": "/image/livraria/As Palavras que Aprisionam.webp" }, 
-   { "title": "O Jardim que Nunca Existiu", "slug": "serie - a invecao do pecado/O Jardim que Nunca Existiu", "description": "Uma análise do Éden como metáfora e suas implicações teológicas.", "date": "2024-03-04", "category": "Série — A Invenção do Pecado", "time": "LIVRO", "image": "/image/livraria/O Jardim que Nunca Existiu.webp" }, 
-   { "title": "A Ação Calculada", "slug": "trilogia - a ciencia dos tempos/A Ação Calculada", "description": "Como agir com sabedoria estratégica nos tempos do fim.", "date": "2024-02-01", "category": "Trilogia — A Ciência dos Tempos", "time": "LIVRO", "image": "/image/livraria/ação calculada.webp" }, 
-   { "title": "A Paisagem da Crise", "slug": "trilogia - a ciencia dos tempos/A Paisagem da Crise", "description": "Mapeando os tempos de crise com perspectiva profética.", "date": "2024-02-02", "category": "Trilogia — A Ciência dos Tempos", "time": "LIVRO", "image": "/image/livraria/a paisagem da crise.webp" }, 
-   { "title": "O Manual do Discernimento", "slug": "trilogia - a ciencia dos tempos/O Manual do Discernimento", "description": "Guia prático para discernir os sinais dos tempos.", "date": "2024-02-03", "category": "Trilogia — A Ciência dos Tempos", "time": "LIVRO", "image": "/image/livraria/manual do discernimento.webp" }, 
-   { "title": "A Biblioteca Proibida", "slug": "trilogia - o canon oculto/A Biblioteca Proibida", "description": "Os livros que foram censurados e o que eles revelam.", "date": "2024-01-01", "category": "Trilogia — O Cânon Oculto", "time": "LIVRO", "image": "/image/livraria/A Biblioteca Proibida.webp" }, 
-   { "title": "A Bíblia que Não Caiu do Céu", "slug": "trilogia - o canon oculto/A Bíblia que Não Caiu do Céu", "description": "A formação política e histórica do cânon bíblico.", "date": "2024-01-02", "category": "Trilogia — O Cânon Oculto", "time": "LIVRO", "image": "/image/livraria/A Bíblia que Não Caiu do Céu.webp" }, 
-   { "title": "A Palavra Fora da Caixa", "slug": "trilogia - o canon oculto/A Palavra Fora da Caixa", "description": "Interpretando a Bíblia fora dos dogmas institucionais.", "date": "2024-01-03", "category": "Trilogia — O Cânon Oculto", "time": "LIVRO", "image": "/image/livraria/A Palavra Fora da Caixa.webp" }, 
-   { "title": "Os Hereges que Tinham Razão", "slug": "trilogia - o canon oculto/Os Hereges que Tinham Razão", "description": "Revisitando os condenados pela história e suas verdades suprimidas.", "date": "2024-01-04", "category": "Trilogia — O Cânon Oculto", "time": "LIVRO", "image": "/image/livraria/Os Hereges que Tinham Razão.webp" }, 
-   { "title": "O Protocolo Daniel", "slug": "trilogia - o estrangeiro prospero/O Protocolo Daniel", "description": "Como prosperar e manter integridade dentro de sistemas hostis.", "date": "2023-12-01", "category": "Trilogia — O Estrangeiro Próspero", "time": "LIVRO", "image": "/image/livraria/protocolo daniel.webp" }, 
-   { "title": "O Manual de José", "slug": "trilogia - o estrangeiro prospero/o manual de jose", "description": "Estratégias de sobrevivência e excelência do estrangeiro próspero.", "date": "2023-12-02", "category": "Trilogia — O Estrangeiro Próspero", "time": "LIVRO", "image": "/image/livraria/o manual de josé.webp" }, 
-   { "title": "O Testamento do Estrangeiro", "slug": "trilogia - o estrangeiro prospero/o testamento do estrageiro", "description": "O legado do forasteiro que transformou nações.", "date": "2023-12-03", "category": "Trilogia — O Estrangeiro Próspero", "time": "LIVRO", "image": "/image/livraria/o testamento do estranheiro.webp" }, 
-   { "title": "A Anatomia da Ruptura", "slug": "trilogia - o mapa da tempestade/a-anatomia-da-ruptura", "description": "Entendendo os pontos de ruptura nos sistemas religiosos e sociais.", "date": "2023-11-01", "category": "Trilogia — O Mapa da Tempestade", "time": "LIVRO", "image": "/image/livraria/a anatomia da ruptura.webp" }, 
-   { "title": "O Manual do Interregno", "slug": "trilogia - o mapa da tempestade/o-manual-do-interregno", "description": "Como navegar o período entre dois mundos.", "date": "2023-11-02", "category": "Trilogia — O Mapa da Tempestade", "time": "LIVRO", "image": "/image/livraria/o manual.webp" }, 
-   { "title": "O Mapa Antes da Tempestade", "slug": "trilogia - o mapa da tempestade/o-mapa-antes-da-tempestade", "description": "Cartografando o colapso antes que ele aconteça.", "date": "2023-11-03", "category": "Trilogia — O Mapa da Tempestade", "time": "LIVRO", "image": "/image/livraria/o mapa ants da tempestade.webp" } 
- ]
+  { 
+    "title": "O Mapa Antes da Tempestade", 
+    "slug": "trilogia - o mapa da tempestade/01_Mapa_Tempestade - Livro 1 - O Mapa Antes da Tempestade", 
+    "description": "Cartografando o colapso antes que ele aconteça.", 
+    "date": "2023-11-03", 
+    "category": "Trilogia — O Mapa da Tempestade", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/o mapa ants da tempestade.webp" 
+  },
+  { 
+    "title": "A Anatomia da Ruptura", 
+    "slug": "trilogia - o mapa da tempestade/01_Mapa_Tempestade - Livro 2 - A Anatomia da Ruptura", 
+    "description": "Entendendo os pontos de ruptura nos sistemas religiosos e sociais.", 
+    "date": "2023-11-01", 
+    "category": "Trilogia — O Mapa da Tempestade", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/a anatomia da ruptura.webp" 
+  },
+  { 
+    "title": "O Manual do Interregno", 
+    "slug": "trilogia - o mapa da tempestade/01_Mapa_Tempestade - Livro 3 - O Manual do Interregno", 
+    "description": "Como navegar o período entre dois mundos.", 
+    "date": "2023-11-02", 
+    "category": "Trilogia — O Mapa da Tempestade", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/o manual.webp" 
+  },
+  { 
+    "title": "O Nome da Besta", 
+    "slug": "Trilogia - a Marca/02_A_Marca - Livro 1 - O Nome da Besta", 
+    "description": "Terceiro volume da Trilogia A Marca — decodificação do nome e número.", 
+    "date": "2024-04-03", 
+    "category": "Trilogia — A Marca", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/o nome da besta.webp" 
+  },
+  { 
+    "title": "A Imagem que Fala", 
+    "slug": "Trilogia - a Marca/02_A_Marca - Livro 2 - A Imagem que Fala", 
+    "description": "Primeiro volume da Trilogia A Marca — análise da imagem da besta no contexto tecnológico.", 
+    "date": "2024-04-01", 
+    "category": "Trilogia — A Marca", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/a imagem que fala.webp" 
+  },
+  { 
+    "title": "A Sabedoria do Deserto", 
+    "slug": "Trilogia - a Marca/02_A_Marca - Livro 3 - A Sabedoria do Deserto", 
+    "description": "Segundo volume da Trilogia A Marca — sabedoria para navegar o sistema.", 
+    "date": "2024-04-02", 
+    "category": "Trilogia — A Marca", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/a sabedoria do deserto.webp" 
+  },
+  { 
+    "title": "O Manual de José", 
+    "slug": "trilogia - o estrangeiro prospero/03_Estrangeiro_Prospero - Livro 1 - O Manual de José", 
+    "description": "Estratégias de sobrevivência e excelência do estrangeiro próspero.", 
+    "date": "2023-12-02", 
+    "category": "Trilogia — O Estrangeiro Próspero", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/o manual de josé.webp" 
+  },
+  { 
+    "title": "O Protocolo Daniel", 
+    "slug": "trilogia - o estrangeiro prospero/03_Estrangeiro_Prospero - Livro 2 - O Protocolo Daniel", 
+    "description": "Como prosperar e manter integridade dentro de sistemas hostis.", 
+    "date": "2023-12-01", 
+    "category": "Trilogia — O Estrangeiro Próspero", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/protocolo daniel.webp" 
+  },
+  { 
+    "title": "O Testamento do Estrangeiro", 
+    "slug": "trilogia - o estrangeiro prospero/03_Estrangeiro_Prospero - Livro 3 - O Testamento do Estrangeiro", 
+    "description": "O legado do forasteiro que transformou nações.", 
+    "date": "2023-12-03", 
+    "category": "Trilogia — O Estrangeiro Próspero", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/o testamento do estranheiro.webp" 
+  },
+  { 
+    "title": "A Paisagem da Crise", 
+    "slug": "trilogia - a ciencia dos tempos/04_Ciencia_dos_Tempos - Livro 1 - A Paisagem da Crise", 
+    "description": "Mapeando os tempos de crise com perspectiva profética.", 
+    "date": "2024-02-02", 
+    "category": "Trilogia — A Ciência dos Tempos", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/a paisagem da crise.webp" 
+  },
+  { 
+    "title": "O Manual do Discernimento", 
+    "slug": "trilogia - a ciencia dos tempos/04_Ciencia_dos_Tempos - Livro 2 - O Manual do Discernimento", 
+    "description": "Guia prático para discernir os sinais dos tempos.", 
+    "date": "2024-02-03", 
+    "category": "Trilogia — A Ciência dos Tempos", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/manual do discernimento.webp" 
+  },
+  { 
+    "title": "A Ação Calculada", 
+    "slug": "trilogia - a ciencia dos tempos/04_Ciencia_dos_Tempos - Livro 3 - A Ação Calculada", 
+    "description": "Como agir com sabedoria estratégica nos tempos do fim.", 
+    "date": "2024-02-01", 
+    "category": "Trilogia — A Ciência dos Tempos", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/ação calculada.webp" 
+  },
+  { 
+    "title": "A Invenção do Pecado Original", 
+    "slug": "serie - a invecao do pecado/05_Invencao_do_Pecado - Livro 1 - A Invenção do Pecado Original", 
+    "description": "Como o conceito de pecado original foi construído teologicamente ao longo da história.", 
+    "date": "2024-03-01", 
+    "category": "Série — A Invenção do Pecado", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/A Invenção do Pecado Original.webp" 
+  },
+  { 
+    "title": "O Jardim que Nunca Existiu", 
+    "slug": "serie - a invecao do pecado/05_Invencao_do_Pecado - Livro 2 - O Jardim que Nunca Existiu", 
+    "description": "Uma análise do Éden como metáfora e suas implicações teológicas.", 
+    "date": "2024-03-04", 
+    "category": "Série — A Invenção do Pecado", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/O Jardim que Nunca Existiu.webp" 
+  },
+  { 
+    "title": "As Palavras que Aprisionam", 
+    "slug": "serie - a invecao do pecado/05_Invencao_do_Pecado - Livro 3 - As Palavras que Aprisionam", 
+    "description": "Como a linguagem religiosa molda e aprisiona a fé.", 
+    "date": "2024-03-03", 
+    "category": "Série — A Invenção do Pecado", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/As Palavras que Aprisionam.webp" 
+  },
+  { 
+    "title": "A Sabedoria que Liberta", 
+    "slug": "serie - a invecao do pecado/05_Invencao_do_Pecado - Livro 4 - A Sabedoria que Liberta", 
+    "description": "Desconstruindo as correntes teológicas para encontrar a liberdade bíblica real.", 
+    "date": "2024-03-02", 
+    "category": "Série — A Invenção do Pecado", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/A Sabedoria que Liberta.webp" 
+  },
+  { 
+    "title": "A Bíblia que Não Caiu do Céu", 
+    "slug": "trilogia - o canon oculto/06_Canon_Oculto - Livro 1 - A Bíblia que Não Caiu do Céu", 
+    "description": "A formação política e histórica do cânon bíblico.", 
+    "date": "2024-01-02", 
+    "category": "Trilogia — O Cânon Oculto", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/A Bíblia que Não Caiu do Céu.webp" 
+  },
+  { 
+    "title": "A Biblioteca Proibida", 
+    "slug": "trilogia - o canon oculto/06_Canon_Oculto - Livro 2 - A Biblioteca Proibida", 
+    "description": "Os livros que foram censurados e o que eles revelam.", 
+    "date": "2024-01-01", 
+    "category": "Trilogia — O Cânon Oculto", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/A Biblioteca Proibida.webp" 
+  },
+  { 
+    "title": "Os Hereges que Tinham Razão", 
+    "slug": "trilogia - o canon oculto/06_Canon_Oculto - Livro 3 - Os Hereges que Tinham Razão", 
+    "description": "Revisitando os condenados pela história e suas verdades suprimidas.", 
+    "date": "2024-01-04", 
+    "category": "Trilogia — O Cânon Oculto", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/Os Hereges que Tinham Razão.webp" 
+  },
+  { 
+    "title": "A Palavra Fora da Caixa", 
+    "slug": "trilogia - o canon oculto/06_Canon_Oculto - Livro 4 - A Palavra Fora da Caixa", 
+    "description": "Interpretando a Bíblia fora dos dogmas institucionais.", 
+    "date": "2024-01-03", 
+    "category": "Trilogia — O Cânon Oculto", 
+    "time": "LIVRO", 
+    "image": "/image/livraria/A Palavra Fora da Caixa.webp" 
+  },
+  { 
+    "title": "O Livro dos Vigilantes", 
+    "slug": "serie - a revelacao de enoque/08_Revelacao_de_Enoque - Livro 1 - O Livro dos Vigilantes", 
+    "description": "Primeira parte do Livro de Enoque, tratando da queda dos anjos.", 
+    "date": "2024-05-10", 
+    "category": "Série — A Revelação de Enoque", 
+    "time": "LIVRO", 
+    "image": "" 
+  },
+  { 
+    "title": "O Livro das Parábolas", 
+    "slug": "serie - a revelacao de enoque/08_Revelacao_de_Enoque - Livro 2 - O Livro das Parábolas", 
+    "description": "Segunda parte do Livro de Enoque, contendo as três parábolas sobre o Filho do Homem.", 
+    "date": "2024-05-11", 
+    "category": "Série — A Revelação de Enoque", 
+    "time": "LIVRO", 
+    "image": "" 
+  },
+  { 
+    "title": "O Livro Astronômico", 
+    "slug": "serie - a revelacao de enoque/08_Revelacao_de_Enoque - Livro 3 - O Livro Astronômico", 
+    "description": "Terceira parte do Livro de Enoque, detalhando o funcionamento dos astros.", 
+    "date": "2024-05-12", 
+    "category": "Série — A Revelação de Enoque", 
+    "time": "LIVRO", 
+    "image": "" 
+  },
+  { 
+    "title": "O Livro dos Sonhos", 
+    "slug": "serie - a revelacao de enoque/08_Revelacao_de_Enoque - Livro 4 - O Livro dos Sonhos", 
+    "description": "Quarta parte do Livro de Enoque, com visões sobre a história do mundo.", 
+    "date": "2024-05-13", 
+    "category": "Série — A Revelação de Enoque", 
+    "time": "LIVRO", 
+    "image": "" 
+  },
+  { 
+    "title": "A Epístola de Enoque", 
+    "slug": "serie - a revelacao de enoque/08_Revelacao_de_Enoque - Livro 5 - A Epístola de Enoque", 
+    "description": "Quinta parte do Livro de Enoque, com exortações e avisos proféticos.", 
+    "date": "2024-05-14", 
+    "category": "Série — A Revelação de Enoque", 
+    "time": "LIVRO", 
+    "image": "" 
+  }
+]
