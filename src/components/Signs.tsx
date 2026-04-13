@@ -19,12 +19,14 @@ export default function Signs() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const { data: signs, loading, error } = useFetch<SignItem[]>('/content/sinais/index.json');
 
-  // Group signs by category
+  // Get unique categories for filter
   const categories = signs ? Array.from(new Set(signs.map(s => s.category))) : [];
-  const groupedSigns = categories.reduce((acc, cat) => {
-    acc[cat] = signs?.filter(s => s.category === cat) || [];
-    return acc;
-  }, {} as Record<string, SignItem[]>);
+
+  // Filter and Sort Logic
+  const filteredSigns = signs ? [...signs]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .filter(item => !expandedCategory || item.category === expandedCategory)
+    .slice(0, 10) : [];
 
   useEffect(() => {
     if (selectedSlug) {
@@ -56,171 +58,121 @@ export default function Signs() {
   }
 
   return (
-    <div className="pt-6 pb-32 px-5 max-w-7xl mx-auto">
+    <div className="pt-6 pb-32 px-5 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
       {/* Editorial Header */}
-      <div className="mb-8 border-l-2 border-primary-container pl-4 py-1">
+      <div className="mb-6 border-l-2 border-primary-container pl-4 py-1">
         <h1 className="font-headline text-4xl font-bold text-primary mb-1">Sinais</h1>
         <p className="text-on-surface-variant max-w-xs font-bold tracking-tight text-xs italic opacity-90">
           Profecia no tempo do algoritmo — análises que o mainstream não faz.
         </p>
       </div>
 
-      {/* Search & Filter Bar */}
-      <section className="flex flex-col gap-3 mb-10">
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant" size={18} />
-          <input 
-            className="w-full bg-surface-container-low border-b border-outline-variant focus:border-primary px-11 py-3.5 outline-none transition-all placeholder:text-neutral-600 text-on-surface text-sm" 
-            placeholder="Buscar em Sinais..." 
-            type="text" 
-          />
-        </div>
-        <button 
-          className="w-full flex items-center justify-between bg-surface-container-low border-b border-outline-variant px-5 py-3.5 text-on-surface-variant text-xs font-bold active:scale-[0.98]"
-        >
-          <span className="flex items-center gap-2">
-            <Filter className="text-primary" size={14} />
-            Categorias
-          </span>
-          <ChevronDown size={14} />
-        </button>
-      </section>
-
-      {/* Featured Article */}
-      {loading ? (
-        <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
-      ) : signs && signs.length > 0 && (
-        <article 
-          onClick={() => setSelectedSlug(signs[0].slug)}
-          className="mb-12 group relative overflow-hidden bg-surface-container-lowest rounded-2xl active:scale-[0.98] transition-transform cursor-pointer"
-        >
-          <div className="flex flex-col">
-            <div className="aspect-video relative overflow-hidden">
-              <img 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                src={signs[0].image || `https://picsum.photos/seed/${signs[0].slug}/800/600`} 
-              />
-            </div>
-            <div className="p-6 flex flex-col justify-center bg-surface-container-low/40 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-primary text-[8px] font-black uppercase tracking-widest mb-3">
-                <Star className="text-primary" size={10} fill="currentColor" />
-                {signs[0].category}
-              </div>
-              <h2 className="font-headline text-xl text-on-surface font-extrabold leading-tight mb-3">
-                {signs[0].title}
-              </h2>
-              <p className="text-on-surface-variant text-[11px] mb-5 leading-relaxed line-clamp-2">
-                {signs[0].description}
-              </p>
-              <div className="flex items-center gap-3 text-on-surface-variant text-[9px] mb-5 font-black uppercase tracking-widest">
-                <span>{signs[0].date}</span>
-                <span className="text-primary">•</span>
-                <span>{signs[0].time}</span>
-              </div>
-              <button className="inline-flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
-                Ler artigo completo 
-                <TrendingUp size={14} />
-              </button>
-            </div>
-          </div>
-        </article>
-      )}
-
-      {/* Category Grade */}
-      <section className="grid grid-cols-1 gap-2 mb-12">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[9px] font-black uppercase tracking-[0.3em] text-outline">Investigações por Eixo</h3>
-          <div className="h-px bg-outline-variant flex-grow ml-4 opacity-20"></div>
-        </div>
-        
-        {loading ? (
-          <div className="py-4 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
-        ) : categories.map((cat, i) => (
-          <div key={i} className="border-b border-outline-variant/10">
+      {/* Filter Pills */}
+      <section className="mb-8">
+        <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
+          <button 
+            onClick={() => setExpandedCategory(null)}
+            className={`flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full ${!expandedCategory ? 'bg-primary text-on-primary border-primary' : 'bg-surface-container-high text-on-surface-variant border-outline-variant/20 hover:border-primary/50'}`}
+          >
+            Todos
+          </button>
+          {categories.map((cat, i) => (
             <button 
+              key={i}
               onClick={() => setExpandedCategory(expandedCategory === cat ? null : cat)}
-              className="w-full py-4 flex items-center justify-between text-left group active:opacity-70 transition-all"
+              className={`flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full ${expandedCategory === cat ? 'bg-primary text-on-primary border-primary' : 'bg-surface-container-high text-on-surface-variant border-outline-variant/20 hover:border-primary/50'}`}
             >
-              <div className="flex items-center gap-4">
-                <span className={`font-headline text-base opacity-40 ${expandedCategory === cat ? 'text-primary opacity-100' : 'text-on-surface-variant'}`}>
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <h4 className={`font-headline text-lg font-bold group-hover:text-primary transition-colors ${expandedCategory === cat ? 'text-primary' : 'text-on-surface'}`}>
-                  {cat}
-                </h4>
-              </div>
-              {expandedCategory === cat ? (
-                <Minus className="text-primary" size={18} />
-              ) : (
-                <Plus className="text-on-surface-variant group-hover:text-primary transition-colors" size={18} />
-              )}
+              {cat}
             </button>
-            
-            {expandedCategory === cat && (
-              <div className="pb-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                {groupedSigns[cat].map((item, j) => {
-                  const progress = typeof window !== 'undefined' ? localStorage.getItem(`progress_${item.slug}`) : null;
-                  
-                  return (
-                    <div 
-                      key={j} 
-                      onClick={() => setSelectedSlug(item.slug)}
-                      className="flex gap-3 group cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-high/20 p-2 rounded-xl hover:bg-surface-container-high/40"
-                    >
-                      <div className="w-16 h-16 flex-shrink-0 overflow-hidden bg-surface-container-high rounded-xl border border-outline-variant/10">
-                        <img className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src={item.image || `https://picsum.photos/seed/${item.slug}-thumb/200/200`} />
-                      </div>
-                      <div className="flex flex-col justify-center flex-1">
-                        <h5 className="font-headline text-sm font-bold leading-tight mb-1.5 group-hover:text-primary transition-colors line-clamp-1">{item.title}</h5>
-                        
-                        {/* Progress Indicator */}
-                        {progress && parseInt(progress) > 0 ? (
-                          <div className="flex items-center gap-2 mb-1">
-                            <div className="h-1 w-16 bg-surface-container-highest rounded-full overflow-hidden border border-white/5">
-                              <div 
-                                className="h-full bg-gradient-to-r from-orange-500 to-yellow-400" 
-                                style={{ width: `${progress}%` }}
-                              ></div>
-                            </div>
-                            <span className="text-[6px] font-black text-orange-400 uppercase tracking-widest">{progress}% Lido</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2 text-[8px] text-on-surface-variant uppercase tracking-widest font-black">
-                            <span>{item.date}</span>
-                            <span className="text-primary">•</span>
-                            <span>{item.time}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </section>
 
-      {/* Newsletter */}
-      <section className="bg-surface-container-low p-8 rounded-3xl relative overflow-hidden border border-outline-variant/10">
-        <div className="absolute top-0 right-0 p-4 opacity-5">
-          <BookOpen className="text-primary" size={80} />
+      {/* Simplified Articles List */}
+      <section className="space-y-6">
+        <div className="flex items-baseline justify-between mb-4">
+          <h2 className="text-[9px] font-black tracking-[0.3em] uppercase text-primary">
+            {expandedCategory ? `Resultados: ${expandedCategory}` : 'Investigações Recentes'}
+          </h2>
+          <span className="text-[8px] font-bold text-on-surface-variant opacity-40 uppercase">Top 10 Arquivos</span>
         </div>
-        <div className="relative z-10">
-          <h3 className="font-headline text-2xl font-extrabold mb-2 tracking-tighter">Mantenha-se Alerta.</h3>
-          <p className="text-on-surface-variant text-[11px] mb-6 leading-relaxed font-bold">
-            Receba sinais em tempo real diretamente em seu e-mail.
-          </p>
-          <form className="flex flex-col gap-3" onSubmit={(e) => { e.preventDefault(); alert('Inscrito!'); }}>
-            <input 
-              className="bg-surface-container-lowest border border-outline-variant/30 px-5 py-3.5 rounded-xl focus:border-primary outline-none text-on-surface text-sm" 
-              placeholder="seu@email.com" 
-              type="email" 
-            />
-            <button className="bg-primary-container text-on-primary-container font-black px-6 py-3.5 rounded-xl hover:brightness-110 transition-all uppercase text-[10px] tracking-widest active:scale-95">Inscrever</button>
-          </form>
-        </div>
+
+        {loading ? (
+          <div className="py-20 text-center text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-50 animate-pulse">
+            Descriptografando arquivos...
+          </div>
+        ) : filteredSigns.length > 0 ? (
+          filteredSigns.map((item, i) => {
+            const progress = typeof window !== 'undefined' ? localStorage.getItem(`progress_${item.slug}`) : null;
+            
+            return (
+              <div 
+                key={i} 
+                onClick={() => setSelectedSlug(item.slug)}
+                className="flex gap-4 group cursor-pointer active:scale-[0.98] transition-all bg-surface-container-high/30 p-3 rounded-2xl border border-outline-variant/5 hover:bg-surface-container-high/60 hover:border-primary/20"
+              >
+                {/* Small Square Image on Left */}
+                <div className="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 overflow-hidden rounded-xl border border-outline-variant/10 shadow-lg relative">
+                  <img 
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+                    src={item.image || `https://picsum.photos/seed/${item.slug}/400/400`} 
+                  />
+                  {progress && parseInt(progress) > 0 && (
+                    <div className="absolute bottom-0 left-0 w-full h-1 bg-black/40">
+                      <div 
+                        className="h-full bg-gradient-to-r from-orange-500 to-yellow-400" 
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Info on Right */}
+                <div className="flex flex-col justify-center flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="text-[7px] font-black text-primary uppercase tracking-[0.2em] bg-primary/10 px-1.5 py-0.5 rounded">
+                      {item.category}
+                    </span>
+                    <span className="text-[7px] font-bold text-on-surface-variant/40 uppercase">
+                      {item.date}
+                    </span>
+                  </div>
+                  
+                  <h3 className="font-headline text-sm sm:text-base font-extrabold leading-tight text-on-surface group-hover:text-primary transition-colors mb-1.5 line-clamp-2">
+                    {item.title}
+                  </h3>
+                  
+                  <p className="text-[10px] sm:text-xs text-on-surface-variant font-medium leading-relaxed line-clamp-2 opacity-70">
+                    {item.description}
+                  </p>
+
+                  <div className="mt-2.5 flex items-center gap-3">
+                    <div className="flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-on-surface-variant/60">
+                      <TrendingUp size={10} className="text-primary" />
+                      <span>{item.time}</span>
+                    </div>
+                    {progress && parseInt(progress) > 0 && (
+                      <span className="text-[8px] font-black text-orange-400 uppercase tracking-widest">
+                        {progress}% Lido
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="py-20 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50 border border-dashed border-outline-variant/20 rounded-3xl">
+            Nenhum arquivo encontrado nesta categoria.
+          </div>
+        )}
       </section>
+
+      {error && (
+        <div className="mt-8 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-[10px] uppercase font-bold text-center">
+          Erro ao carregar sinais: {error}
+        </div>
+      )}
     </div>
   );
 }
