@@ -164,10 +164,13 @@ export default function Studies() {
                         {/* Progress Bar */}
                         {progress && parseInt(progress) > 0 && (
                           <div className="mb-3">
-                            <div className="h-1 w-full bg-surface-container-lowest rounded-full overflow-hidden">
-                              <div className="h-full bg-primary/60" style={{ width: `${progress}%` }}></div>
+                            <div className="h-1.5 w-full bg-surface-container-lowest rounded-full overflow-hidden border border-white/5">
+                              <div 
+                                className="h-full bg-gradient-to-r from-orange-500 to-yellow-400" 
+                                style={{ width: `${progress}%` }}
+                              ></div>
                             </div>
-                            <span className="text-[7px] font-black text-primary/60 uppercase tracking-widest mt-1 block">{progress}% Lido</span>
+                            <span className="text-[7px] font-black text-orange-400 uppercase tracking-widest mt-1 block">{progress}% Lido</span>
                           </div>
                         )}
 

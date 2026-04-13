@@ -12,31 +12,44 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug })
   const [progress, setProgress] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Load saved progress
+  // Load saved progress and scroll position
   useEffect(() => {
     const savedProgress = localStorage.getItem(`progress_${slug}`);
+    const savedScroll = localStorage.getItem(`scroll_${slug}`);
+    
     if (savedProgress) {
-      const p = parseInt(savedProgress, 10);
-      setProgress(p);
-      // We don't automatically scroll to position here to avoid jarring UX, 
-      // but we update the UI percentage.
+      setProgress(parseInt(savedProgress, 10));
+    }
+
+    if (savedScroll) {
+      const scrollPos = parseInt(savedScroll, 10);
+      // Small delay to ensure content is rendered before scrolling
+      setTimeout(() => {
+        window.scrollTo({
+          top: scrollPos,
+          behavior: 'smooth'
+        });
+      }, 100);
     }
   }, [slug]);
 
-  // Track scroll progress
+  // Track scroll progress and exact position
   useEffect(() => {
     const handleScroll = () => {
-      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const winScroll = window.scrollY || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrolled = Math.round((winScroll / height) * 100);
       
+      // Save exact scroll position
+      localStorage.setItem(`scroll_${slug}`, winScroll.toString());
+
       if (scrolled > progress) {
         setProgress(scrolled);
         localStorage.setItem(`progress_${slug}`, scrolled.toString());
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [slug, progress]);
 
@@ -67,9 +80,9 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug })
   return (
     <div ref={containerRef} className="flex flex-col gap-8 max-w-none w-full relative">
       {/* Progress Bar Fixed at Top */}
-      <div className="fixed top-0 left-0 w-full h-1 z-[100] bg-surface-container-highest">
+      <div className="fixed top-0 left-0 w-full h-1.5 z-[100] bg-surface-container-highest/50 backdrop-blur-sm">
         <div 
-          className="h-full bg-primary transition-all duration-300" 
+          className="h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_10px_rgba(249,115,22,0.5)] transition-all duration-300" 
           style={{ width: `${progress}%` }}
         />
       </div>

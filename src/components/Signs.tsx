@@ -181,10 +181,13 @@ export default function Signs() {
                         {/* Progress Indicator */}
                         {progress && parseInt(progress) > 0 ? (
                           <div className="flex items-center gap-2 mb-1">
-                            <div className="h-0.5 w-12 bg-surface-container-highest rounded-full overflow-hidden">
-                              <div className="h-full bg-primary/60" style={{ width: `${progress}%` }}></div>
+                            <div className="h-1 w-16 bg-surface-container-highest rounded-full overflow-hidden border border-white/5">
+                              <div 
+                                className="h-full bg-gradient-to-r from-orange-500 to-yellow-400" 
+                                style={{ width: `${progress}%` }}
+                              ></div>
                             </div>
-                            <span className="text-[6px] font-black text-primary/60 uppercase tracking-widest">{progress}% Lido</span>
+                            <span className="text-[6px] font-black text-orange-400 uppercase tracking-widest">{progress}% Lido</span>
                           </div>
                         ) : (
                           <div className="flex items-center gap-2 text-[8px] text-on-surface-variant uppercase tracking-widest font-black">

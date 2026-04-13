@@ -150,10 +150,13 @@ export default function Doctrines() {
                         {/* Progress Bar for Layer */}
                         {progress && parseInt(progress) > 0 && (
                           <div className="flex items-center gap-2 pl-9">
-                            <div className="h-0.5 flex-1 bg-surface-container-high rounded-full overflow-hidden">
-                              <div className="h-full bg-primary/40" style={{ width: `${progress}%` }}></div>
+                            <div className="h-1 flex-1 bg-surface-container-high rounded-full overflow-hidden border border-white/5">
+                              <div 
+                                className="h-full bg-gradient-to-r from-orange-500 to-yellow-400" 
+                                style={{ width: `${progress}%` }}
+                              ></div>
                             </div>
-                            <span className="text-[6px] font-black text-primary/40 uppercase tracking-widest">{progress}% Lido</span>
+                            <span className="text-[6px] font-black text-orange-400 uppercase tracking-widest">{progress}% Lido</span>
                           </div>
                         )}
                       </div>

@@ -152,11 +152,17 @@ export default function Bookstore() {
                       
                       {/* Progress Overlay */}
                       {progress && parseInt(progress) > 0 && (
-                        <div className="absolute top-2 left-2 right-2 flex flex-col gap-1">
-                          <div className="h-1 w-full bg-black/40 rounded-full overflow-hidden backdrop-blur-md">
-                            <div className="h-full bg-primary" style={{ width: `${progress}%` }}></div>
+                        <div className="absolute top-2 left-2 right-2 flex flex-col gap-1.5">
+                          <div className="h-1.5 w-full bg-black/60 rounded-full overflow-hidden backdrop-blur-md border border-white/5">
+                            <div 
+                              className="h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_8px_rgba(249,115,22,0.4)]" 
+                              style={{ width: `${progress}%` }}
+                            ></div>
                           </div>
-                          <span className="text-[6px] font-black text-primary uppercase tracking-widest">{progress}% Lido</span>
+                          <div className="flex justify-between items-center px-0.5">
+                            <span className="text-[7px] font-black text-orange-400 uppercase tracking-widest drop-shadow-md">{progress}% Lido</span>
+                            {parseInt(progress) === 100 && <Diamond size={8} className="text-orange-400 fill-orange-400 animate-pulse" />}
+                          </div>
                         </div>
                       )}
 
