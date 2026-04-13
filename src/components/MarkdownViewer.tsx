@@ -137,11 +137,11 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
     return () => container.removeEventListener('scroll', handleScroll);
   }, [slug, progress, isRestoring]);
 
-  // Theme styles - Updated for high contrast and red highlights
+  // Theme styles - Cleaned up to rely on global CSS for red headings
   const themeStyles = {
     dark: 'bg-coal text-[#e5e2e1] prose-invert',
-    light: 'bg-white text-[#0f172a] prose-slate prose-headings:text-[#b83025] prose-strong:text-[#b83025] prose-strong:font-black',
-    sepia: 'bg-[#f4ecd8] text-[#433422] prose-sepia prose-headings:text-[#b83025] prose-strong:text-[#b83025] prose-strong:font-black'
+    light: 'bg-white text-[#0f172a] prose-slate',
+    sepia: 'bg-[#f4ecd8] text-[#433422] prose-sepia'
   };
 
   return (
@@ -268,7 +268,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
 
         {/* Markdown Body */}
         <div 
-          className={`prose max-w-none prose-p:leading-relaxed prose-headings:font-headline prose-headings:tracking-tight prose-li:marker:text-primary transition-all duration-300 ${theme === 'dark' ? 'prose-invert' : 'prose-headings:text-[#b83025] prose-p:text-current prose-strong:text-[#b83025] prose-strong:font-black'}`}
+          className={`prose max-w-none prose-p:leading-relaxed prose-headings:font-headline prose-headings:tracking-tight prose-li:marker:text-primary transition-all duration-300 ${theme === 'dark' ? 'prose-invert' : 'prose-p:text-current'}`}
           style={{ fontSize: `${fontSize}px` }}
         >
           <ReactMarkdown remarkPlugins={[remarkGfm]}>

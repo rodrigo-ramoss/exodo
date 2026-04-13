@@ -58,21 +58,29 @@
   .prose-invert {
     /* Styles are already dark-themed by default here */
   }
+  
+  /* Forçar títulos e negritos em vermelho (#b83025) independente do tema */
+  .prose h1, .prose h2, .prose h3, .prose h4 {
+    color: #b83025 !important;
+  }
+  
+  .prose strong {
+    color: #b83025 !important;
+    font-weight: 900 !important;
+  }
+
   .prose h1 {
-    @apply text-3xl font-headline font-extrabold text-primary mt-8 mb-6;
+    @apply text-3xl font-headline font-extrabold mt-8 mb-6;
   }
   .prose h2 {
-    @apply text-2xl font-headline font-bold text-on-surface mt-8 mb-4 border-b border-outline-variant/20 pb-2;
+    @apply text-2xl font-headline font-bold mt-8 mb-4 border-b border-outline-variant/20 pb-2;
   }
   .prose h3 {
-    @apply text-xl font-headline font-bold text-on-surface mt-6 mb-3;
+    @apply text-xl font-headline font-bold mt-6 mb-3;
   }
   .prose p {
     @apply mb-4 font-sans opacity-90;
     /* Removed text-sm to allow dynamic font size from parent */
-  }
-  .prose strong {
-    @apply text-on-surface font-bold;
   }
   .prose em {
     @apply italic;
