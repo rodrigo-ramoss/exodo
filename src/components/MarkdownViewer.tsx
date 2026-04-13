@@ -136,20 +136,20 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
     return () => container.removeEventListener('scroll', handleScroll);
   }, [slug, progress, isRestoring]);
 
-  // Theme styles - Updated for high contrast
+  // Theme styles - Updated for high contrast and red highlights
   const themeStyles = {
     dark: 'bg-coal text-[#e5e2e1] prose-invert',
-    light: 'bg-white text-[#0f172a] prose-slate',
-    sepia: 'bg-[#f4ecd8] text-[#433422] prose-sepia'
+    light: 'bg-white text-[#0f172a] prose-slate prose-headings:text-[#b83025] prose-strong:text-[#b83025] prose-strong:font-black',
+    sepia: 'bg-[#f4ecd8] text-[#433422] prose-sepia prose-headings:text-[#b83025] prose-strong:text-[#b83025] prose-strong:font-black'
   };
 
   return (
     <div 
       ref={containerRef} 
-      className={`fixed inset-0 z-[200] flex flex-col overflow-y-auto transition-colors duration-500 ${themeStyles[theme]} ${theme === 'sepia' ? 'selection:bg-[#5b4636]/20' : ''}`}
+      className={`fixed inset-0 z-[9999] flex flex-col overflow-y-auto transition-colors duration-500 ${themeStyles[theme]} ${theme === 'sepia' ? 'selection:bg-[#5b4636]/20' : ''}`}
     >
       {/* Top Controls Bar */}
-      <div className={`sticky top-0 left-0 w-full z-[210] flex items-center justify-between px-4 h-16 backdrop-blur-md border-b transition-colors duration-500 ${theme === 'dark' ? 'bg-coal/80 border-white/5' : theme === 'sepia' ? 'bg-[#f4ecd8]/80 border-[#433422]/10' : 'bg-white/80 border-slate-200'}`}>
+      <div className={`sticky top-0 left-0 w-full z-[10000] flex items-center justify-between px-4 h-16 backdrop-blur-md border-b transition-colors duration-500 ${theme === 'dark' ? 'bg-coal/95 border-white/5' : theme === 'sepia' ? 'bg-[#f4ecd8]/95 border-[#433422]/10' : 'bg-white/95 border-slate-200'}`}>
         <button 
           onClick={handleManualClose}
           className={`flex items-center gap-2 font-bold text-xs uppercase tracking-widest active:scale-95 transition-all p-2 rounded-xl ${theme === 'dark' ? 'text-primary hover:bg-primary/10' : theme === 'sepia' ? 'text-[#433422] hover:bg-[#433422]/5' : 'text-slate-900 hover:bg-slate-100'}`}
@@ -158,25 +158,25 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
           <span>Sair</span>
         </button>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <div className={`px-2 py-1 rounded-lg text-[9px] font-black tracking-widest uppercase ${theme === 'dark' ? 'bg-primary/10 text-primary' : theme === 'sepia' ? 'bg-[#433422]/10 text-[#433422]' : 'bg-slate-100 text-slate-900'}`}>
             {progress}% Lido
           </div>
+          
+          {/* Settings Button moved here */}
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all active:scale-90 ${isMenuOpen ? 'bg-primary text-on-primary' : theme === 'dark' ? 'bg-surface-container-highest text-primary' : theme === 'sepia' ? 'bg-[#e8dfc8] text-[#433422]' : 'bg-slate-100 text-slate-900 shadow-sm border border-slate-200'}`}
+          >
+            {isMenuOpen ? <X size={20} /> : <Settings size={20} />}
+          </button>
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-1 z-[220]">
-        <div 
-          className="h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_10px_rgba(249,115,22,0.5)] transition-all duration-300" 
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-
-      {/* Floating Settings Menu */}
-      <div className="fixed bottom-8 right-6 z-[230] flex flex-col items-end gap-4">
-        {isMenuOpen && (
-          <div className={`backdrop-blur-xl border p-5 rounded-3xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 flex flex-col gap-6 w-64 ${theme === 'dark' ? 'bg-surface-container-high/95 border-white/10' : theme === 'sepia' ? 'bg-[#e8dfc8]/95 border-[#433422]/10' : 'bg-white/95 border-slate-200'}`}>
+      {/* Settings Menu (Relative to the Top Bar or absolute) */}
+      {isMenuOpen && (
+        <div className="fixed top-20 right-4 z-[10001] animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className={`backdrop-blur-xl border p-5 rounded-3xl shadow-2xl flex flex-col gap-6 w-64 ${theme === 'dark' ? 'bg-surface-container-high/95 border-white/10' : theme === 'sepia' ? 'bg-[#e8dfc8]/95 border-[#433422]/10' : 'bg-white/95 border-slate-200'}`}>
             <div className="flex flex-col gap-3">
               <span className={`text-[9px] font-black uppercase tracking-[0.2em] opacity-50 flex items-center gap-2 ${theme === 'dark' ? 'text-on-surface-variant' : 'text-current'}`}>
                 <Type size={12} /> Tamanho da Fonte
@@ -188,7 +188,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
                 >
                   A-
                 </button>
-                <div className="w-12 text-center font-mono text-xs font-black">{fontSize}px</div>
+                <div className="w-12 text-center font-mono text-xs font-black text-current">{fontSize}px</div>
                 <button 
                   onClick={() => setFontSize(prev => Math.min(32, prev + 2))}
                   className={`flex-1 h-10 rounded-xl flex items-center justify-center font-bold transition-colors border ${theme === 'dark' ? 'bg-surface-container-highest border-white/5 hover:bg-primary/20' : 'bg-current/5 border-current/10 hover:bg-current/10'}`}
@@ -224,14 +224,15 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
               </div>
             </div>
           </div>
-        )}
-        
-        <button 
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className={`w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all active:scale-90 ${theme === 'dark' ? 'bg-surface-container-highest text-primary' : theme === 'sepia' ? 'bg-[#e8dfc8] text-[#433422]' : 'bg-slate-100 text-slate-900 shadow-xl'}`}
-        >
-          {isMenuOpen ? <X size={24} /> : <Settings size={24} />}
-        </button>
+        </div>
+      )}
+
+      {/* Progress Bar */}
+      <div className="fixed top-0 left-0 w-full h-1 z-[10002]">
+        <div 
+          className="h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_10px_rgba(249,115,22,0.5)] transition-all duration-300" 
+          style={{ width: `${progress}%` }}
+        />
       </div>
 
       {/* Reader Content */}
@@ -241,13 +242,13 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
           <header className="mb-12 pt-4">
             <div className="flex justify-between items-center mb-4">
               {category && (
-                <span className={`font-black text-[10px] uppercase tracking-[0.4em] ${theme === 'dark' ? 'text-primary' : 'text-current opacity-70'}`}>
+                <span className={`font-black text-[10px] uppercase tracking-[0.4em] ${theme === 'dark' ? 'text-primary' : 'text-[#b83025]'}`}>
                   {category}
                 </span>
               )}
             </div>
             {title && (
-              <h1 className={`font-headline font-extrabold text-4xl md:text-5xl leading-tight mb-8 tracking-tighter`}>
+              <h1 className={`font-headline font-extrabold text-4xl md:text-5xl leading-tight mb-8 tracking-tighter ${theme !== 'dark' ? 'text-[#b83025]' : 'text-[#e5e2e1]'}`}>
                 {title}
               </h1>
             )}
@@ -262,7 +263,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
 
         {/* Markdown Body */}
         <div 
-          className={`prose max-w-none prose-p:leading-relaxed prose-headings:font-headline prose-headings:tracking-tight prose-li:marker:text-primary transition-all duration-300 ${theme === 'dark' ? 'prose-invert' : 'prose-headings:text-current prose-p:text-current'}`}
+          className={`prose max-w-none prose-p:leading-relaxed prose-headings:font-headline prose-headings:tracking-tight prose-li:marker:text-primary transition-all duration-300 ${theme === 'dark' ? 'prose-invert' : 'prose-headings:text-[#b83025] prose-p:text-current prose-strong:text-[#b83025] prose-strong:font-black'}`}
           style={{ fontSize: `${fontSize}px` }}
         >
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -273,7 +274,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
 
       {/* Toast Notification */}
       {showToast && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[240] animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[10003] animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="bg-primary/90 backdrop-blur-md text-on-primary px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-white/20">
             <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
             <span className="text-xs font-bold uppercase tracking-wider whitespace-nowrap">
