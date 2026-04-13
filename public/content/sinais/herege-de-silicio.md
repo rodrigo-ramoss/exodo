@@ -2,7 +2,7 @@
 title: "O Herege de Silício: A Imortalidade Digital é Filha Legítima da Teologia que a Igreja Abandonou"
 date: "2026-03-18"
 category: "Tecnologia & Teologia"
-image: "/imagens/herege-de-silicio.webp"
+image: /image/sinais/herege-de-silicio.webp
 description: "O transhumanismo não ataca a fé cristã — ele herda seu erro mais antigo: o desprezo platônico pelo corpo, travestido de esperança tecnológica."
 keywords: "#ImortabilidadeDigital #Transhumanismo #Gnosticismo #Ressurreição #Desigrejado"
 price: "R$ 19,90"
@@ -79,3 +79,4 @@ A resposta a essa pergunta não está em nenhum servidor. Mas talvez esteja em a
 - MERCER, Calvin. "Resurrection of the Body and Cryonics." *Religions*, 2017.
 - WRIGHT, N.T. *The Resurrection of the Son of God*. Fortress Press, 2003.
 - LEKSANA, Dharma. *Theology of Algorithms*, 2025.
+

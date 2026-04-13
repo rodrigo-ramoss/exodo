@@ -5,7 +5,7 @@ category: Como Não Ser Escravo da IA
 folder: Scriptorium
 description: "Sistemas de recomendação não mostram o que você procura — mostram o que o algoritmo quer que você escolha. Eis como a arquitetura de escolha da IA sequestra sua vontade e como recuperá-la."
 keywords: "#VozDoDeserto #ResistenciaCognitiva #Algoritmo #ViesDeOrdenacao #ArquiteturaDeEscolha #GuiaPratico #ArquivoSecreto"
-image: /imagens/o-algoritmo-que-comprou-sua-atencao.webp
+image: /image/sinais/o-algoritmo-que-comprou-sua-atencao.webp
 ---
 
 ## A primeira frase que para o scroll
@@ -263,3 +263,4 @@ Crianças são mais vulneráveis à arquitetura de escolha porque seu córtex pr
 
 17. The New Yorker. (2025, March 10). "The Nudge That Went Too Far: Richard Thaler on Algorithmic Choice Architecture". The New Yorker.
 18. Center for Humane Technology. (2025). *The Choice Architecture Playbook: How Platforms Design Your Decisions*. CHT Report. Disponível em: humanetech.com/choice-architecture
+

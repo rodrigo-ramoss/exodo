@@ -3,7 +3,7 @@ title: "O Padrão que Previu 2026: Como os Ciclos Econômicos de 50 Anos Estão 
 date: 2026-04-09
 category: "PADRÕES - ECONOMIA E SISTEMA"
 folder: Scriptorium
-image: /imagens/o-padrao-que-previu-2026.webp
+image: /image/sinais/o-padrao-que-previu-2026.webp
 description: "Em 1926, um economista soviético descobriu um padrão de 50 anos na economia global. Cem anos depois, estamos vivendo exatamente o que ele previu — e a maioria não está prestando atenção."
 keywords: "#VozDoDeserto #Preparacao #Kondratiev #CiclosEconomicos #Padroes #NovoMundo #ArquivoSecreto"
 ---
@@ -158,3 +158,4 @@ A tese deste artigo é que essas crises não são separadas. Elas são sintomas 
 22. IMF F&D Magazine. (2018). "Crypto Bubble? An Historical Analysis of Financial Crises". Disponível em: www.imf.org[reference:41]
 23. Thunder Said Energy. (2020). "Historical Investment Bubbles and Manias". Disponível em: thundersaidenergy.com[reference:42]
 24. Ritholtz. (2025). "A Short History of Bubbles". Disponível em: ritholtz.com[reference:43]
+

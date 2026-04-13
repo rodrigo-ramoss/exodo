@@ -5,7 +5,7 @@ category: original
 theme: "Maldições Hereditárias"
 subcategory: "Teologia Própria"
 description: "O que significa Deus 'visitar a iniquidade dos pais nos filhos'? Antes de examinar os textos, precisamos estabelecer fontes, critérios e distinguir o que é bíblico do que é manipulação. Camada 0 da nossa análise em 5 níveis."
-image: /imagens/maldicoes-hereditarias-camada0-voz-do-deserto.webp
+image: /image/doutrinas/maldição hereditária.webp
 ---
 
 **Este artigo é a primeira parte (Camada 0) da nossa análise sobre as maldições hereditárias.**
@@ -168,3 +168,4 @@ Até lá.
 ---
 
 **Fim da Camada 0**
+

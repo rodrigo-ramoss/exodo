@@ -5,7 +5,7 @@ category: original
 theme: "Batismo no Espírito"
 subcategory: "Pneumatologia"
 description: "O que o texto, lido com honestidade, realmente ensina sobre o batismo no Espírito Santo? Síntese das quatro camadas anteriores e posição fundamentada — com implicações para o leitor do deserto."
-image: /imagens/batismo-espirito-camada4-voz-do-deserto.webp
+image: /image/doutrinas/batismo no espirito santo.webp
 ---
 
 **Este artigo é a quinta e última parte (Camada 4) da nossa análise sobre a doutrina do Batismo no Espírito Santo.**
@@ -181,3 +181,4 @@ E essa verdade liberta — especialmente para quem está no deserto, buscando De
 **Próximo tema sugerido:** *A Doutrina do Pecado Original — Análise de Romanos 5 e Salmo 51* (Análise em 5 camadas).
 
 ---
+

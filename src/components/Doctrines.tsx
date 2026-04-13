@@ -3,14 +3,17 @@ import { Diamond, Star, History, Brain, ShieldAlert, Wallet, Flame, Link, Skull,
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
 
-interface DoctrineItem {
+interface DoctrineLayer {
   title: string;
   slug: string;
+}
+
+interface DoctrineItem {
+  title: string;
   description: string;
-  date: string;
   category: string;
-  time: string;
   image?: string;
+  layers: DoctrineLayer[];
 }
 
 const iconMap: Record<string, any> = {
@@ -28,6 +31,7 @@ const iconMap: Record<string, any> = {
 
 export default function Doctrines() {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const [expandedTheme, setExpandedTheme] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const { data: doctrines, loading, error } = useFetch<DoctrineItem[]>('/content/doutrinas/index.json');
 
@@ -50,6 +54,7 @@ export default function Doctrines() {
     }
   }, [selectedSlug]);
 
+  // Se um arquivo MD está selecionado, mostra o visualizador em tela cheia
   if (selectedSlug && markdownContent) {
     return (
       <div className="pb-32 px-5 pt-6 max-w-2xl mx-auto min-h-screen bg-surface-container-lowest">
@@ -58,13 +63,14 @@ export default function Doctrines() {
           className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest mb-8 active:scale-95 transition-transform"
         >
           <ArrowLeft size={16} />
-          Voltar para doutrinas
+          Voltar para as camadas
         </button>
         <MarkdownViewer content={markdownContent} />
       </div>
     );
   }
 
+  // Lista principal de Doutrinas com Accordions
   return (
     <div className="pt-8 pb-32 px-5 max-w-4xl mx-auto min-h-screen">
       {/* Hero Branding Section */}
@@ -77,36 +83,68 @@ export default function Doctrines() {
         </p>
       </div>
 
-      {/* Investigation Cards Grid */}
-      <div className="flex flex-col gap-3">
+      {/* Investigation Cards Grid (Expandable) */}
+      <div className="flex flex-col gap-4">
         {loading ? (
           <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
         ) : doctrines?.map((doctrine, i) => {
           const Icon = iconMap[doctrine.title] || Diamond;
+          const isExpanded = expandedTheme === doctrine.title;
+
           return (
             <div 
               key={i}
-              onClick={() => setSelectedSlug(doctrine.slug)}
-              className="group relative flex items-center h-[80px] bg-surface-container-low hover:bg-surface-container-high border-l-4 border-transparent hover:border-primary transition-all rounded-r-2xl px-4 cursor-pointer active:scale-[0.98]"
+              className={`group relative flex flex-col bg-surface-container-low border-l-4 transition-all rounded-r-2xl overflow-hidden ${isExpanded ? 'border-primary bg-surface-container-high shadow-xl' : 'border-transparent hover:border-primary/40 hover:bg-surface-container-high'}`}
             >
-              {doctrine.image ? (
-                <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 mr-4">
-                  <img src={doctrine.image} alt={doctrine.title} className="w-full h-full object-cover" />
+              {/* Card Header (Toggle) */}
+              <div 
+                onClick={() => setExpandedTheme(isExpanded ? null : doctrine.title)}
+                className="flex items-center h-[80px] px-4 cursor-pointer active:opacity-70"
+              >
+                {doctrine.image ? (
+                  <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 mr-4 border border-outline-variant/10">
+                    <img src={doctrine.image} alt={doctrine.title} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 rounded-xl bg-surface-container-lowest flex items-center justify-center flex-shrink-0 mr-4">
+                    <Icon className="text-primary" size={20} />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <h3 className={`text-sm font-bold font-headline transition-colors truncate ${isExpanded ? 'text-primary' : 'text-on-surface group-hover:text-primary'}`}>
+                    {doctrine.title}
+                  </h3>
+                  <p className="text-on-surface-variant text-[10px] truncate font-medium">
+                    {doctrine.description}
+                  </p>
                 </div>
-              ) : (
-                <div className="w-10 h-10 rounded-xl bg-surface-container-lowest flex items-center justify-center flex-shrink-0 mr-4">
-                  <Icon className="text-primary" size={20} />
+                <div className="flex items-center gap-2">
+                  <span className="text-[8px] font-black text-primary/40 uppercase tracking-widest">{doctrine.layers.length} camadas</span>
+                  <ChevronRight className={`text-primary/40 transition-transform duration-300 ${isExpanded ? 'rotate-90 text-primary' : ''}`} size={16} />
+                </div>
+              </div>
+
+              {/* Expanded Content (Layers List) */}
+              {isExpanded && (
+                <div className="px-4 pb-6 pt-2 space-y-2 animate-in fade-in slide-in-from-top-2 duration-300 border-t border-outline-variant/5">
+                  <div className="text-[8px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 mb-3 px-2">Selecione uma camada para aprofundar:</div>
+                  {doctrine.layers.map((layer, j) => (
+                    <div 
+                      key={j}
+                      onClick={() => setSelectedSlug(layer.slug)}
+                      className="flex items-center justify-between p-3 bg-surface-container-lowest/50 hover:bg-primary/5 border border-outline-variant/5 rounded-xl cursor-pointer active:scale-[0.99] transition-all group/layer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-6 h-6 rounded-lg bg-surface-container-high flex items-center justify-center text-primary font-black text-[10px]">
+                          {j}
+                        </div>
+                        <span className="text-xs font-bold text-on-surface-variant group-hover/layer:text-primary transition-colors">{layer.title}</span>
+                      </div>
+                      <ChevronRight size={14} className="text-primary/20 group-hover/layer:text-primary transition-colors" />
+                    </div>
+                  ))}
                 </div>
               )}
-              <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-bold font-headline text-on-surface group-hover:text-primary transition-colors truncate">
-                  {doctrine.title}
-                </h3>
-                <p className="text-on-surface-variant text-[10px] truncate font-medium">
-                  {doctrine.description}
-                </p>
-              </div>
-              <ChevronRight className="text-primary/40 group-hover:text-primary transition-all" size={16} />
             </div>
           );
         })}

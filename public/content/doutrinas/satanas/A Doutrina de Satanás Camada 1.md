@@ -5,7 +5,7 @@ category: original
 theme: "Satanás"
 subcategory: "Demonologia"
 description: "Ha-Satan, Belial, Mastema, diabo, dragão — o que cada texto originalmente diz sobre o adversário? Do AT ao NT, passando por 1 Enoque. Uma análise exegética sem pressupostos. Camada 1 da nossa análise em 5 níveis."
-image: /imagens/satanas-camada1-voz-do-deserto.webp
+image: /image/doutrinas/satanas.webp
 ---
 
 **Este artigo é a segunda parte (Camada 1) da nossa análise sobre a doutrina de Satanás.**
@@ -279,3 +279,4 @@ Até lá.
 ---
 
 **Fim da Camada 1**
+

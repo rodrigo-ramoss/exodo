@@ -3,7 +3,7 @@ title: "Schwab Caiu. Quem Assumiu Controla Mais Dinheiro do que Qualquer Nação
 date: 2026-03-29
 category: Geopolítica Escatológica
 folder: Scriptorium
-image: /imagens/schwab-caiu-quem-assumiu-controla-mais-dinheiro-do-que-qualquer-nacao-da-terra.webp
+image: /image/sinais/schwab-caiu-quem-assumiu-controla-mais-dinheiro-do-que-qualquer-nacao-da-terra.webp
 description: "Enquanto todos celebravam a saída de Schwab como o fim do Grande Reset, ninguém percebeu quem assumiu — e quanto poder ele já tinha antes de chegar."
 keywords: "#KlausSchwab #LarryFink #BlackRock #WEF #Daniel7"
 ---
@@ -118,3 +118,4 @@ A diferença é de natureza do poder, não de agenda. Schwab tinha influência i
 - AMERICAN PROPHET / PROPHECY NEWS WATCH. *Schwab's World Economic Forum Preparing the Way for Daniel's Fourth Kingdom*. new.americanprophet.org.
 - WEF. *Larry Fink — author profile and role*. weforum.org/stories/authors/larry-fink.
 - BLACKROCK INC. *Assets Under Management — Q3 2025 Report*. ir.blackrock.com.
+

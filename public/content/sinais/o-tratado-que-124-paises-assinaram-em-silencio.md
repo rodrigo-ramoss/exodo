@@ -3,7 +3,7 @@ title: "O Tratado que 124 Países Assinaram em Silêncio — e que Redefine Quem
 date: 2026-03-20
 category: Geopolítica Escatológica
 folder: Scriptorium
-image: /imagens/o-tratado-que-124-paises-assinaram-em-silencio.webp
+image: /image/sinais/o-tratado-que-124-paises-assinaram-em-silencio.webp
 description: "O Acordo Pandêmico da OMS foi adotado em maio de 2025. Ninguém leu o Artigo 12. O que ele diz sobre patógenos, vigilância integrada e soberania biológica muda tudo."
 keywords: "#AcordoPandemico #OneHealth #PABS #OMS #SoberaniaBiologica"
 ---
@@ -121,3 +121,4 @@ O Brasil votou a favor do acordo. A questão prática para cidadãos brasileiros
 - PMC / NIH. *Pathogen sharing in the digital age: the unfinished agenda*. pmc.ncbi.nlm.nih.gov/articles/PMC12411924.
 - THINK GLOBAL HEALTH. *Fate unknown: the Pandemic Agreement's PABS*. thinkglobalhealth.org.
 - Texto bíblico: Apocalipse 18:11-13; 13:16-17; Daniel 7:23 — análise a partir do texto grego (NA28) e aramaico (BHS).
+

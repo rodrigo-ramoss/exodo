@@ -6,7 +6,7 @@ book: "1 Tessalonicenses"
 verse: "1 Ts 4.17"
 language: "Grego"
 description: "Nenhum cristão ensinou arrebatamento secreto pré-tribulacional por 1800 anos. De onde veio essa doutrina? A história de Margaret Macdonald, John Nelson Darby e a Scofield Bible. Camada 2 da nossa análise em 4 camadas."
-image: /imagens/o-original/arrebatamento.webp
+image: /image/doutrinas/arrebatamento secreto.webp
 premium: false
 ---
 
@@ -260,3 +260,4 @@ Até lá.
 ---
 
 **Fim da Camada 2**
+

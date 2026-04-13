@@ -5,7 +5,7 @@ theme: "Segunda Morte"
 subcategory: "Escatologia"
 description: "Tormento eterno, aniquilacionismo ou universalismo? O debate acadêmico atual sobre a segunda morte — argumentos bíblicos, filosóficos e teológicos de cada posição. Camada 3 da nossa análise em 4 camadas."
 category: "Doutrinas"
-image: /imagens/o-original/segunda-morte.webp
+image: /image/doutrinas/segunda morte.webp
 ---
 
 **Este artigo é a terceira de quatro partes da nossa análise sobre a segunda morte.**
@@ -363,3 +363,4 @@ Até lá.
 ---
 
 **Fim da Camada 3**
+

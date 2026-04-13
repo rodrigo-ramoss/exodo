@@ -3,7 +3,7 @@ title: "O Pacto que 193 Nações Assinaram e Nenhum Pastor Leu"
 date: 2026-03-20
 category: Profecias e Tempo Presente
 folder: Scriptorium
-image: /imagens/o-pacto-que-193-nacoes-assinaram-e-nenhum-pastor-leu.webp
+image: /image/sinais/o-pacto-que-193-nacoes-assinaram-e-nenhum-pastor-leu.webp
 description: "Em setembro de 2024, 186 países assinaram um documento que usa a linguagem exata do Apocalipse. Não é interpretação. É exegese de texto público verificável."
 keywords: "#PactoParaOFuturo #ONU2024 #Apocalipse17 #GovernancaGlobal #NovaMundialOrdem"
 ---
@@ -131,3 +131,4 @@ O imperativo *exerchesthe* em Apocalipse 18:4 é presente contínuo — está sa
 - UNSDG. *Pact for the Future: world leaders pledge action on peace and sustainable development*. unsdg.un.org, setembro 2024.
 - SEMAFOR. *The UN adopted a sweeping global governance pact. Here's what's in it.* Setembro 2024.
 - Texto bíblico: Apocalipse 17:13; 18:3; 18:4; 18:23 — análise a partir do texto grego (NA28).
+

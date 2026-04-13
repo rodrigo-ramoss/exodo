@@ -1,8 +1,8 @@
 ---
-title: "Tema do Antigo Testamento: A Espera que Renova — Uma Análise de Isaías 40:31"
-date: 2026-04-13
-category: "Tema do Antigo Testamento"
-image: /imagens/espera-no-senhor-isaias40.webp
+title: "A Espera que Renova — Uma Análise de Isaías 40:31"
+date: 2024-05-01
+category: "Antigo Testamento"
+image: /image/estudos/A espera que renova.webp
 description: "O que o profeta Isaías realmente quis dizer com 'os que esperam no Senhor renovam as suas forças'? Uma análise das palavras hebraicas qavah e chalam, e como a espera ativa transforma a fraqueza em vigor."
 keywords: "#Isaías40 #EsperaNoSenhor #Qavah #ForçaRenovada #VidaCristã"
 ---

@@ -5,7 +5,7 @@ category: original
 theme: "Maldições Hereditárias"
 subcategory: "Teologia Própria"
 description: "Como a tradição judaica e cristã interpretou a 'visitação da iniquidade'? Dos rabinos que harmonizaram Êxodo 20.5 com Ezequiel 18, passando por Agostinho e Calvino, até a distorção do movimento de guerra espiritual. Camada 2 da nossa análise em 5 níveis."
-image: /imagens/maldicoes-hereditarias-camada2-voz-do-deserto.webp
+image: /image/doutrinas/maldição hereditária.webp
 ---
 
 **Este artigo é a terceira parte (Camada 2) da nossa análise sobre as maldições hereditárias.**
@@ -236,3 +236,4 @@ Até lá.
 ---
 
 **Fim da Camada 2**
+

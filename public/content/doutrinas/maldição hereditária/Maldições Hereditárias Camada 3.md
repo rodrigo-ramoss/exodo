@@ -5,7 +5,7 @@ category: original
 theme: "Maldições Hereditárias"
 subcategory: "Teologia Própria"
 description: "Existem maldições hereditárias? O que a academia diz sobre o movimento de guerra espiritual? Como lidar pastoralmente com quem acredita estar sob maldição familiar? Camada 3 da nossa análise em 5 níveis."
-image: /imagens/maldicoes-hereditarias-camada3-voz-do-deserto.webp
+image: /image/doutrinas/maldição hereditária.webp
 ---
 
 **Este artigo é a quarta parte (Camada 3) da nossa análise sobre as maldições hereditárias.**
@@ -239,3 +239,4 @@ Até lá.
 ---
 
 **Fim da Camada 3**
+

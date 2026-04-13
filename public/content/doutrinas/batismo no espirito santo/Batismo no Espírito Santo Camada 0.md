@@ -5,7 +5,7 @@ category: original
 theme: "Batismo no Espírito"
 subcategory: "Pneumatologia"
 description: "O que a Bíblia realmente ensina sobre o batismo no Espírito? Antes de exegetar Atos e Paulo, estabelecemos fontes, critérios e a história da doutrina — incluindo a invenção da 'evidência inicial' em 1901. Camada 0 da nossa análise em 5 níveis."
-image: /imagens/batismo-espirito-camada0-voz-do-deserto.webp
+image: /image/doutrinas/batismo no espirito santo.webp
 ---
 
 **Este artigo é a primeira parte (Camada 0) da nossa análise sobre a doutrina do Batismo no Espírito Santo.**
@@ -218,3 +218,4 @@ Até lá.
 ---
 
 **Fim da Camada 0**
+

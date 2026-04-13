@@ -5,7 +5,7 @@ category: original
 theme: "Duas Testemunhas"
 subcategory: "Escatologia"
 description: "Como a igreja interpretou as duas testemunhas ao longo dos séculos? Dos pais que viram Enoque e Elias (Hipólito, Irineu) à Reforma historicista (valdenses, reformadores) e aos debates atuais. Camada 2 da nossa análise em 5 níveis."
-image: /imagens/duas-testemunhas-camada2-voz-do-deserto.webp
+image: /image/doutrinas/2 testemunhas.webp
 ---
 
 **Este artigo é a terceira parte (Camada 2) da nossa análise sobre as Duas Testemunhas de Apocalipse 11.**
@@ -226,3 +226,4 @@ Até lá.
 ---
 
 **Fim da Camada 2**
+

@@ -3,7 +3,7 @@ title: "A Corrida do Ouro da Pandemia: Como a Big Pharma Transformou uma Tragéd
 date: 2026-03-20
 category: Pandemias
 folder: Scriptorium
-image: /imagens/a-corrida-do-ouro-da-pandemia-como-a-big-pharma-transformou-uma-tragedia-em-negocio.webp
+image: /image/sinais/a-corrida-do-ouro-da-pandemia-como-a-big-pharma-transformou-uma-tragedia-em-negocio.webp
 description: "USD 90 bilhões em dois anos. Recompra de ações durante luto global. Impostos de 9,3%. Os números da pandemia não precisam de comentário — precisam de leitura."
 keywords: "#BigPharma #LucroDaPandemia #PfizerModerna #ApaartheidDeVacinas #PandemiaVerdade"
 ---
@@ -105,3 +105,4 @@ O termo aramaico *mammon* aparece nos evangelhos de Mateus e Lucas nas palavras 
 - DOSHI, Peter. *Covid-19 vaccines: in the rush for regulatory approval, do we need more data?* BMJ, 2021.
 - WHO. *COVAX and vaccine equity — progress reports*. 2021–2022.
 - OXFAM INTERNATIONAL. *Pandemic billionaires and the case for a windfall profits tax*. 2022.
+

@@ -6,7 +6,7 @@ book: "1 Tessalonicenses"
 verse: "1 Ts 4.17"
 language: "Grego"
 description: "O que o texto realmente ensina sobre a vinda de Cristo? Síntese das três camadas anteriores e posição fundamentada — com honestidade textual, respeito ao debate acadêmico e implicações para quem busca Deus fora da instituição."
-image: /imagens/o-original/arrebatamento.webp
+image: /image/doutrinas/arrebatamento secreto.webp
 premium: false
 ---
 
@@ -199,3 +199,4 @@ E essa libertação do medo muda tudo — especialmente para quem está no deser
 **Próximo tema sugerido:** *A Doutrina da Salvação — O que a Bíblia realmente ensina sobre fé, obras e graça?* (Análise em 4 camadas)
 
 ---
+

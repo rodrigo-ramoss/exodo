@@ -5,7 +5,7 @@ category: original
 theme: "Arrependimento de Deus"
 subcategory: "Teologia Própria"
 description: "O que o hebraico *nacham* realmente significa? Análise exegética de Gênesis 6, Êxodo 32, Números 23, 1 Samuel 15, Amós 7 e Jonas 3 — Deus muda de ideia ou a linguagem é antropomórfica? Camada 1 da nossa análise em 5 níveis."
-image: /imagens/arrependimento-deus-camada1-voz-do-deserto.webp
+image: /image/doutrinas/arrependimemto de deus.webp
 ---
 
 **Este artigo é a segunda parte (Camada 1) da nossa análise sobre o arrependimento de Deus.**
@@ -216,3 +216,4 @@ Até lá.
 ---
 
 **Fim da Camada 1**
+

@@ -5,7 +5,7 @@ category: original
 theme: "Batismo no Espírito"
 subcategory: "Pneumatologia"
 description: "Como a igreja interpretou o batismo no Espírito ao longo dos séculos? Dos pais que o identificavam com o batismo em água, passando pela Reforma (cessacionismo), até a invenção da 'evidência inicial' por Charles Parham em 1901. Camada 2 da nossa análise em 5 níveis."
-image: /imagens/batismo-espirito-camada2-voz-do-deserto.webp
+image: /image/doutrinas/batismo no espirito santo.webp
 ---
 
 **Este artigo é a terceira parte (Camada 2) da nossa análise sobre a doutrina do Batismo no Espírito Santo.**
@@ -270,3 +270,4 @@ Até lá.
 ---
 
 **Fim da Camada 2**
+

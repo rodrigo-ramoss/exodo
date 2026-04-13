@@ -3,7 +3,7 @@ title: "A Igreja que a CIA Construiu no Brasil"
 date: 2026-03-20
 category: Igreja & CIA
 folder: Scriptorium
-image: /imagens/a-igreja-que-a-cia-construiu-no-brasil.webp
+image: /image/sinais/a-igreja-que-a-cia-construiu-no-brasil.webp
 description: "Não é teoria. É história documentada. Missionários como cobertura de inteligência, denominações como ferramenta de contrainsurgência, e documentos que o Brasil ainda não conseguiu ver."
 keywords: "#CIAeBrasil #Golpe1964 #IgrejaEvangelica #PlanoBanzer #HistoriaDaIgreja"
 ---
@@ -128,3 +128,4 @@ Não — e essa distinção é fundamental. O argumento é estrutural, não indi
 - WASHINGTON BRAZIL OFFICE. *Brazilian organizations ask the US to open secret archives about the 1964 coup*. braziloffice.org, julho 2023.
 - COMISSÃO NACIONAL DA VERDADE. *Relatório Final*. Brasília, 2014.
 - Texto bíblico: 1 Coríntios 3:11-13; Mateus 21:12-13 — análise a partir do texto grego (NA28).
+

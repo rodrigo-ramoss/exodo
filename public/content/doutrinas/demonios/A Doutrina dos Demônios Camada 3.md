@@ -5,7 +5,7 @@ category: original
 theme: "Demônios"
 subcategory: "Demonologia"
 description: "Demônios são anjos caídos ou espíritos de gigantes? Por que conheciam Jesus? Possessão é real ou doença mental? Existe hierarquia? A academia responde. Camada 3 da nossa análise em 5 níveis."
-image: /imagens/demonios-camada3-voz-do-deserto.webp
+image: /image/doutrinas/demonios.webp
 ---
 
 **Este artigo é a quarta parte (Camada 3) da nossa análise sobre a doutrina dos demônios.**
@@ -268,3 +268,4 @@ Até lá.
 ---
 
 **Fim da Camada 3**
+

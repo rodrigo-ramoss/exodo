@@ -5,7 +5,7 @@ category: "Doutrinas"
 theme: "Trindade"
 subcategory: "Teologia Própria"
 description: "O que o texto realmente ensina sobre a natureza de Deus, Jesus e o Espírito? Síntese das três camadas anteriores e posição fundamentada — com honestidade textual, respeito ao debate e implicações para quem busca Deus fora da instituição."
-image: /imagens/o-original/trindade.webp
+image: /image/doutrinas/trindade.webp
 ---
 
 **Este artigo é a quarta e última parte da nossa análise sobre a doutrina da Trindade.**
@@ -195,3 +195,4 @@ E essa humildade muda tudo — especialmente para quem está no deserto, buscand
 **Próximo tema sugerido:** *A Doutrina da Salvação — Fé, Obras e Graça: O que a Bíblia Realmente Ensina?* (Análise em 4 camadas)
 
 ---
+

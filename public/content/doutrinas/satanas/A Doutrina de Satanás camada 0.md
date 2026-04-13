@@ -5,7 +5,7 @@ category: original
 theme: "Satanás"
 subcategory: "Demonologia"
 description: "Antes de examinar o que a Bíblia diz sobre Satanás, precisamos estabelecer fontes e critérios. Distinguir o que é texto original, o que é tradição posterior, e o que é alegoria que virou dogma. Camada 0 da nossa análise em 5 níveis."
-image: /imagens/satanas-camada0-voz-do-deserto.webp
+image: /image/doutrinas/satanas.webp
 ---
 
 **Este artigo é a primeira parte (Camada 0) da nossa análise sobre a doutrina de Satanás. Diferente das séries anteriores, esta inclui um nível preparatório para lidar com a complexidade do tema.**
@@ -201,3 +201,4 @@ Até lá.
 ---
 
 **Fim da Camada 0**
+

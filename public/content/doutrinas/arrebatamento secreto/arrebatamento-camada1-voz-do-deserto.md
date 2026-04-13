@@ -6,7 +6,7 @@ book: "1 Tessalonicenses"
 verse: "1 Ts 4.17"
 language: "Grego"
 description: "Harpazō, apantēsis, parousia — três palavras gregas que a teologia do arrebatamento secreto reinterpretou. O que Paulo realmente disse aos tessalonicenses? Camada 1 da nossa análise em 4 camadas."
-image: /imagens/o-original/arrebatamento.webp
+image: /image/doutrinas/arrebatamento secreto.webp
 premium: false
 ---
 
@@ -234,3 +234,4 @@ Até lá.
 ---
 
 **Fim da Camada 1**
+

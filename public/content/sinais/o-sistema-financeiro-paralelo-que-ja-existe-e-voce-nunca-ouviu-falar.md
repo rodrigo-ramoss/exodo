@@ -3,7 +3,7 @@ title: "O Sistema Financeiro Paralelo Que Já Existe e Você Nunca Ouviu Falar"
 date: 2026-03-20
 category: Reset Mundial & Nova Ordem
 folder: Scriptorium
-image: /imagens/o-sistema-financeiro-paralelo-que-ja-existe-e-voce-nunca-ouviu-falar.webp
+image: /image/sinais/o-sistema-financeiro-paralelo-que-ja-existe-e-voce-nunca-ouviu-falar.webp
 description: "O mBridge já processou US$ 55 bilhões fora do sistema ocidental. O Reset Financeiro não será anunciado. Está acontecendo em tempo real, em transações que você nunca verá."
 keywords: "#mBridge #CBDC #ResetFinanceiro #YuanDigital #Daniel243"
 ---
@@ -124,3 +124,4 @@ Bitcoin oferece resistência à censura de transações por design — não há 
 - MESIROW FINANCIAL. *China's new payments system threatens US financial leadership*. Novembro 2024.
 - WIKIPEDIA. *mBridge — project history, participants and use cases*. en.wikipedia.org/wiki/MBridge.
 - Texto bíblico: Daniel 2:43; Apocalipse 18:3 — análise a partir do texto grego (NA28) e aramaico (BHS).
+

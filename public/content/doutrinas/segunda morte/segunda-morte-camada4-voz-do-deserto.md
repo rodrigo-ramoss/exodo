@@ -5,7 +5,7 @@ theme: "Segunda Morte"
 subcategory: "Escatologia"
 description: "O que o texto realmente ensina sobre a segunda morte? Síntese das três camadas anteriores e posição fundamentada — com honestidade textual, respeito ao debate e implicações para quem busca Deus fora da instituição."
 category: "Doutrinas"
-image: /imagens/o-original/segunda-morte.webp
+image: /image/doutrinas/segunda morte.webp
 ---
 
 **Este artigo é a quarta e última parte da nossa análise sobre a segunda morte.**
@@ -203,3 +203,4 @@ E essa diferença muda tudo — especialmente para quem está no deserto, buscan
 **Próximo tema sugerido:** *A Doutrina da Salvação — Fé, Obras e Graça: O que a Bíblia Realmente Ensina?* (Análise em 4 camadas)
 
 ---
+

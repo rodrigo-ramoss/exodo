@@ -3,7 +3,7 @@ title: "A Besta Não Tem Chifres. Tem Câmera, Microfone e Algoritmo"
 date: 2026-03-20
 category: "Escatologia Digital 2.0 - IA e Controle"
 folder: Scriptorium
-image: /imagens/a-besta-nao-tem-chifres-tem-camera-microfone-e-algoritmo.webp
+image: /image/sinais/a-besta-nao-tem-chifres-tem-camera-microfone-e-algoritmo.webp
 description: "Pastores falsos criados por IA já existem. A palavra 'Cristo' já foi bloqueada por algoritmo. O Vaticano já soou o alarme. Isso não é ficção — é janeiro de 2026."
 keywords: "#DeepfakePastor #PerseguicaoDigital #IAeIgreja #Apocalipse13 #FalsoProfeta"
 ---
@@ -123,3 +123,4 @@ Não — e afirmar que está seria hermeneuticamente irresponsável. O que a an�
 - GNET RESEARCH. *Deepfake Doomsday: the role of AI in amplifying apocalyptic propaganda*. Agosto 2023. gnet-research.org.
 - PREMIER CHRISTIANITY. *Surveillance state: how digital tools are being used to persecute Christians*. premierchristianity.com.
 - Texto bíblico: Apocalipse 13:11-16; Mateus 24:24; 2 Tessalonicenses 2:9 — análise a partir do texto grego (NA28).
+

@@ -5,7 +5,7 @@ category: "Doutrinas"
 theme: "Dízimo"
 subcategory: "Economia do Reino"
 description: "Pró-dízimo, contra o dízimo, posições intermediárias — um mapa do debate atual. O que os estudiosos dizem sobre Malaquias 3.10, Mateus 23.23 e Hebreus 7. Camada 3 da nossa análise em 4 camadas."
-image: /imagens/o-original/dizimo.webp
+image: /image/doutrinas/dizimo.webp
 ---
 
 **Este artigo é a terceira de quatro partes da nossa análise sobre o dízimo.**
@@ -355,3 +355,4 @@ Até lá.
 ---
 
 **Fim da Camada 3**
+

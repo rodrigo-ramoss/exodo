@@ -16,7 +16,15 @@ interface StudyItem {
 export default function Studies() {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const { data: studies, loading, error } = useFetch<StudyItem[]>('/content/estudos/index.json');
+
+  // Group studies by category
+  const categories = studies ? Array.from(new Set(studies.map(s => s.category))) : [];
+  const groupedStudies = categories.reduce((acc, cat) => {
+    acc[cat] = studies?.filter(s => s.category === cat) || [];
+    return acc;
+  }, {} as Record<string, StudyItem[]>);
 
   useEffect(() => {
     if (selectedSlug) {
@@ -70,10 +78,11 @@ export default function Studies() {
       {/* Filter Pills */}
       <section className="mt-4 px-5">
         <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
-          {['Exegese', 'Contexto', 'Crítica Textual', 'Teologia'].map((pill, i) => (
+          {categories.map((pill, i) => (
             <button 
               key={i}
-              className={`flex-shrink-0 px-4 py-1.5 bg-surface-container-highest text-[10px] font-bold uppercase tracking-widest border-[0.5px] transition-colors rounded-full ${i === 0 ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:border-outline-variant'}`}
+              onClick={() => setExpandedCategory(pill)}
+              className={`flex-shrink-0 px-4 py-1.5 bg-surface-container-highest text-[10px] font-bold uppercase tracking-widest border-[0.5px] transition-colors rounded-full ${expandedCategory === pill ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:border-outline-variant'}`}
             >
               {pill}
             </button>
@@ -118,31 +127,44 @@ export default function Studies() {
       {/* Library Navigation */}
       <section className="mt-8">
         <div className="flex border-b border-outline-variant/15 px-5">
-          <button className="flex-1 py-3 text-[9px] font-black tracking-[0.2em] uppercase text-primary border-b-2 border-primary">Antigo</button>
-          <button className="flex-1 py-3 text-[9px] font-black tracking-[0.2em] uppercase text-on-surface-variant opacity-60">Novo</button>
-          <button className="flex-1 py-3 text-[9px] font-black tracking-[0.2em] uppercase text-on-surface-variant opacity-60">Apócrifos</button>
+          <button className="flex-1 py-3 text-[9px] font-black tracking-[0.2em] uppercase text-primary border-b-2 border-primary">BIBLIOTECA</button>
         </div>
         <div className="space-y-3 px-5 mt-5">
-          <div className="group border-b border-outline-variant/10 pb-3">
-            <div className="flex justify-between items-center py-2 cursor-pointer active:opacity-70">
-              <h4 className="font-headline font-bold text-sm text-on-surface">Pentateuco</h4>
-              <ChevronUp className="text-primary" size={18} />
-            </div>
-            <div className="grid grid-cols-2 gap-3 mt-3">
-              {['Gênesis', 'Êxodo', 'Levítico', 'Números'].map((book, i) => (
-                <div key={i} className="bg-surface-container-high p-3 rounded-xl border-[0.5px] border-outline-variant/20 hover:bg-surface-bright transition-colors cursor-pointer active:scale-95">
-                  <h5 className="font-bold text-on-surface text-xs">{book}</h5>
-                  <p className="text-[8px] text-on-surface-variant mt-1 uppercase font-black tracking-widest">0 estudos</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          {['Livros Históricos', 'Profetas'].map((cat, i) => (
+          {categories.map((cat, i) => (
             <div key={i} className="group border-b border-outline-variant/10 pb-3">
-              <div className="flex justify-between items-center py-2 cursor-pointer active:opacity-70">
-                <h4 className="font-headline font-bold text-sm text-on-surface opacity-60">{cat}</h4>
-                <ChevronDown className="text-on-surface-variant" size={18} />
+              <div 
+                onClick={() => setExpandedCategory(expandedCategory === cat ? null : cat)}
+                className="flex justify-between items-center py-2 cursor-pointer active:opacity-70"
+              >
+                <h4 className={`font-headline font-bold text-sm ${expandedCategory === cat ? 'text-primary' : 'text-on-surface opacity-60'}`}>{cat}</h4>
+                {expandedCategory === cat ? (
+                  <ChevronUp className="text-primary" size={18} />
+                ) : (
+                  <ChevronDown className="text-on-surface-variant" size={18} />
+                )}
               </div>
+              
+              {expandedCategory === cat && (
+                <div className="grid grid-cols-1 gap-3 mt-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                  {groupedStudies[cat].map((item, j) => (
+                    <div 
+                      key={j} 
+                      onClick={() => setSelectedSlug(item.slug)}
+                      className="bg-surface-container-high p-4 rounded-2xl border-[0.5px] border-outline-variant/20 hover:bg-surface-bright transition-all cursor-pointer active:scale-[0.98] group"
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <h5 className="font-bold text-on-surface text-xs group-hover:text-primary transition-colors">{item.title}</h5>
+                        <Star size={10} className="text-primary opacity-40" />
+                      </div>
+                      <p className="text-[10px] text-on-surface-variant line-clamp-1 opacity-70 mb-2">{item.description}</p>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[8px] text-on-surface-variant uppercase font-black tracking-widest">{item.time}</span>
+                        <span className="text-[8px] text-primary/60 uppercase font-black tracking-widest">Acessar</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>

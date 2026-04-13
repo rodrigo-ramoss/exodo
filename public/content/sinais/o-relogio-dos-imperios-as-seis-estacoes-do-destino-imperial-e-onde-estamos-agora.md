@@ -3,7 +3,7 @@ title: "O Relógio dos Impérios: As Seis Estações do Destino Imperial e Onde 
 date: 2026-03-29
 category: Reset Mundial & Nova Ordem
 folder: Scriptorium
-image: /imagens/o-relogio-dos-imperios-as-seis-estacoes-do-destino-imperial-e-onde-estamos-agora.webp
+image: /image/sinais/o-relogio-dos-imperios-as-seis-estacoes-do-destino-imperial-e-onde-estamos-agora.webp
 description: "Sir John Glubb documentou que todo império colapsa em ~250 anos. Os Estados Unidos completam 250 anos em 2026. O relógio não para por conveniência política."
 keywords: "#CiclosImperiais #GlubbFateOfEmpires #DecadenciaOcidental #HistoriaDosPoderios #EscatologiaHistorica"
 ---
@@ -105,3 +105,4 @@ Significa não confundir preservação do sistema atual com fidelidade a valores
 - TURCHIN, Peter. *Political Instability in the United States: Forecast for the 2020s*. Cliodynamics, 2010.
 - KENNEDY, Paul. *The Rise and Fall of the Great Powers*. Random House, 1987.
 - MORRIS, Ian. *Why the West Rules — For Now*. Farrar, Straus and Giroux, 2010.
+

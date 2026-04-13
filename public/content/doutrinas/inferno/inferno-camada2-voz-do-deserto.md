@@ -6,7 +6,7 @@ book: "Salmos / Mateus"
 verse: "Sl 16.10 · Mt 10.28"
 language: "Hebraico / Grego"
 description: "Como o Sheol silencioso virou o inferno de fogo eterno? Dos judaísmos intertestamentais a Dante, Agostinho e Calvino — a trajetória histórica de uma doutrina que a Bíblia não ensina explicitamente. Camada 2 da nossa análise em 4 camadas."
-image: /imagens/o-original/inferno.webp
+image: /image/doutrinas/inferno.webp
 premium: false
 ---
 
@@ -274,3 +274,4 @@ Até lá.
 ## Prompt para Capa (16:9)
 
 Use o prompt abaixo para gerar a imagem de capa deste artigo (Camada 2). A imagem deve resumir visualmente o desenvolvimento histórico do inferno — desde o Sheol do AT até a imaginação medieval.
+

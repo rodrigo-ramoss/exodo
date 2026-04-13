@@ -5,7 +5,7 @@ category: original
 theme: "Arrependimento de Deus"
 subcategory: "Teologia Própria"
 description: "Teologia da abertura vs. clássica: Deus muda ou não? Oração pode mudar a mente de Deus? Como harmonizar Números 23.19 com Êxodo 32.14? Os debates acadêmicos atuais. Camada 3 da nossa análise em 5 níveis."
-image: /imagens/arrependimento-deus-camada3-voz-do-deserto.webp
+image: /image/doutrinas/arrependimemto de deus.webp
 ---
 
 **Este artigo é a quarta parte (Camada 3) da nossa análise sobre o arrependimento de Deus.**
@@ -279,3 +279,4 @@ Até lá.
 ---
 
 **Fim da Camada 3**
+

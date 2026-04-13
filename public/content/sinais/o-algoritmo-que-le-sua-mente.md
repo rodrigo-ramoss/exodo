@@ -5,7 +5,7 @@ category: Como Não Ser Escravo da IA
 folder: Scriptorium
 description: "Do varejo às seguradoras, modelos preditivos constroem seu 'gêmeo digital' e manipulam decisões antes mesmo de você pensar nelas. Eis como retomar o controle."
 keywords: "#VozDoDeserto #ResistenciaCognitiva #Dados #AlgoritmoPreditivo #GêmeoDigital #GuiaPratico #ArquivoSecreto"
-image: /imagens/o-algoritmo-que-le-sua-mente.webp
+image: /image/sinais/o-algoritmo-que-le-sua-mente.webp
 ---
 
 ## A primeira frase que para o scroll
@@ -244,3 +244,4 @@ Não. A proteção completa é impossível se você participa da vida digital. M
 
 18. Nestle-Aland (28ª ed.). (2012). *Novum Testamentum Graece*. Deutsche Bibelgesellschaft. [Salmo 139, João 8:32]
 19. Louw, J. P., & Nida, E. A. (1989). *Greek-English Lexicon of the New Testament Based on Semantic Domains*. United Bible Societies. [Entrada para *diakrisis*]
+

@@ -5,7 +5,7 @@ category: original
 theme: "Maldições Hereditárias"
 subcategory: "Teologia Própria"
 description: "O que o hebraico *paqad avon* realmente significa? Análise exegética de Êxodo 20.5, Números 14.18, Ezequiel 18, Jeremias 31 e Deuteronômio 24 — Deus pune filhos pelos pecados dos pais? Camada 1 da nossa análise em 5 níveis."
-image: /imagens/maldicoes-hereditarias-camada1-voz-do-deserto.webp
+image: /image/doutrinas/maldição hereditária.webp
 ---
 
 **Este artigo é a segunda parte (Camada 1) da nossa análise sobre as maldições hereditárias.**
@@ -239,3 +239,4 @@ Até lá.
 ---
 
 **Fim da Camada 1**
+

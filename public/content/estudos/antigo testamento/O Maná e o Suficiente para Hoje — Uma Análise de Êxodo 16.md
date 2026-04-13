@@ -2,7 +2,7 @@
 title: "Tema do Antigo Testamento: O Maná e o Suficiente para Hoje — Uma Análise de Êxodo 16"
 date: 2026-04-13
 category: "Tema do Antigo Testamento"
-image: /imagens/mana-exodo16-confianca-diaria.webp
+image: /image/estudos/Tema do Antigo Testamento: O Maná e o Suficiente para Hoje — Uma Análise de Êxodo 16.webp
 description: "O que o maná no deserto revela sobre a economia de Deus e nossa ansiedade pelo amanhã? Uma análise de Êxodo 16 e das palavras hebraicas que definem a provisão diária como pedagogia da confiança."
 keywords: "#Êxodo16 #Maná #ConfiançaDiária #Deserto #VidaCristã"
 ---

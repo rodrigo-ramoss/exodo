@@ -5,7 +5,7 @@ category: original
 theme: "Demônios"
 subcategory: "Demonologia"
 description: "Antes de examinar o que a Bíblia diz sobre demônios, precisamos estabelecer fontes e critérios. Terminologia, influências intertestamentais (1 Enoque), e como distinguir o texto canônico da tradição. Camada 0 da nossa análise em 5 níveis."
-image: /imagens/demonios-camada0-voz-do-deserto.webp
+image: /image/doutrinas/demonios.webp
 ---
 
 **Este artigo é a primeira parte (Camada 0) da nossa análise sobre a doutrina dos demônios.**
@@ -200,3 +200,4 @@ Até lá.
 ---
 
 **Fim da Camada 0**
+

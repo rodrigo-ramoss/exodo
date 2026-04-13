@@ -5,7 +5,7 @@ category: "Doutrinas"
 theme: "Trindade"
 subcategory: "Teologia Própria"
 description: "O AT ensina a Trindade? Jesus é chamado de Deus? O Espírito é pessoa ou força? Uma análise exegética sem pressupostos dogmáticos — apenas o texto nas línguas originais e seu contexto judaico. Camada 1 da nossa análise em 4 camadas."
-image: /imagens/o-original/trindade.webp
+image: /image/doutrinas/trindade.webp
 ---
 
 **Este artigo é a primeira de quatro partes da nossa análise sobre a doutrina da Trindade.**
@@ -280,3 +280,4 @@ Até lá.
 ---
 
 **Fim da Camada 1**
+

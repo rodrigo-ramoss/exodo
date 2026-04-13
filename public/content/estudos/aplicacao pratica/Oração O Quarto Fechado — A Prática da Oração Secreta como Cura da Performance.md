@@ -2,7 +2,7 @@
 title: "Oração: O Quarto Fechado — A Prática da Oração Secreta como Cura da Performance"
 date: 2026-04-13
 category: "Aplicação Prática - Oração"
-image: /imagens/quarto-fechado-oracao-secreta.webp
+image: /image/estudos/Oração: O Quarto Fechado — A Prática da Oração Secreta como Cura da Performance.webp
 description: "O que significava, no contexto de Jesus, 'entrar no quarto e fechar a porta'? Uma análise léxica e contextual de Mateus 6:6 e suas implicações práticas para uma geração que transformou a fé em espetáculo."
 keywords: "#OraçãoSecreta #SermãoDaMontanha #Mateus6 #Hipocrisia #TeologiaPrática"
 ---

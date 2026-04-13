@@ -3,7 +3,7 @@ title: "O Ouro Acaba de Ultrapassar os Títulos Americanos — e Isso Não Acont
 date: 2026-04-06
 category: Geopolítica Escatológica
 folder: Scriptorium
-image: /imagens/o-ouro-acaba-de-ultrapassar-os-titulos-americanos.webp
+image: /image/sinais/o-ouro-acaba-de-ultrapassar-os-titulos-americanos.webp
 description: "Kondratiev previu. Dalio documentou. O Jubileu ordenou. O mercado confirmou. Em abril de 2026, o padrão que atravessa 500 anos de história chegou ao presente."
 keywords: "#OuroVsTreasuries #RayDalio #BigDebtCycle #JubileuBiblico #ResetFinanceiro"
 ---
@@ -122,3 +122,4 @@ A sabedoria de José em Gênesis 41 e o mandamento do Jubileu em Levítico 25 co
 - ONLINE GOLD. *Central banks added 1,200 tonnes in 2025 — Brazil and China data*. Fevereiro 2026. onlinegold.org.
 - MAULDIN ECONOMICS. *Big Debt Cycles — analysis of Dalio's framework*. mauldineconomics.com.
 - Texto bíblico: Levítico 25:8-13 (Jubileu); Gênesis 41 (José e os sete anos); Provérbios 22:3; Eclesiastes 1:9 — análise a partir do texto hebraico (BHS).
+

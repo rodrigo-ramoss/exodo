@@ -5,7 +5,7 @@ category: original
 theme: "Duas Testemunhas"
 subcategory: "Escatologia"
 description: "O que o texto grego de Apocalipse 11 realmente diz? Análise lexical de *martyres*, *elaiōn*, *lychnia*; alusões a Zacarias 4, Moisés e Elias; os 1.260 dias; a besta do abismo. Camada 1 da nossa análise em 5 níveis."
-image: /imagens/duas-testemunhas-camada1-voz-do-deserto.webp
+image: /image/doutrinas/2 testemunhas.webp
 ---
 
 **Este artigo é a segunda parte (Camada 1) da nossa análise sobre as Duas Testemunhas de Apocalipse 11.**
@@ -206,3 +206,4 @@ Até lá.
 ---
 
 **Fim da Camada 1**
+

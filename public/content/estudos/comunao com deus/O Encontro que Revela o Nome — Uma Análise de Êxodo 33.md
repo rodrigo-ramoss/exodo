@@ -2,7 +2,7 @@
 title: "Comunhão com Deus: O Encontro que Revela o Nome — Uma Análise de Êxodo 33"
 date: 2026-04-13
 category: "Comunhão com Deus"
-image: /imagens/moises-glória-deus-exodo33.webp
+image: /image/estudos/Comunhão com Deus: O Encontro que Revela o Nome — Uma Análise de Êxodo 33.webp
 description: "O que Moisés realmente pediu quando disse 'mostra-me a tua glória'? Uma análise de Êxodo 33 e das palavras hebraicas que revelam a comunhão com Deus como conhecimento íntimo do Seu caráter."
 keywords: "#Êxodo33 #GlóriaDeDeus #Comunhão #NomeDeDeus #VidaCristã"
 ---

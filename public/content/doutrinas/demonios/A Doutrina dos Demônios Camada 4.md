@@ -5,7 +5,7 @@ category: original
 theme: "Demônios"
 subcategory: "Demonologia"
 description: "O que o texto, lido com honestidade, realmente ensina sobre os demônios? Síntese das quatro camadas anteriores e posição fundamentada — com implicações para quem busca Deus fora da instituição."
-image: /imagens/demonios-camada4-voz-do-deserto.webp
+image: /image/doutrinas/demonios.webp
 ---
 
 **Este artigo é a quinta e última parte (Camada 4) da nossa análise sobre a doutrina dos demônios.**
@@ -194,3 +194,4 @@ E essa verdade liberta — especialmente para quem está no deserto, buscando De
 **Próximo tema sugerido:** *A Doutrina da Salvação — Fé, Obras e Graça: O que a Bíblia Realmente Ensina?* (Análise em 4 camadas)
 
 ---
+

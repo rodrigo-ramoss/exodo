@@ -1,14 +1,152 @@
-[ 
-   { "title": "Arrebatamento Secreto", "slug": "arrebatamento secreto/arrebatamento-camada1-voz-do-deserto", "description": "A doutrina do arrebatamento secreto: origens, desenvolvimento histórico e análise bíblica.", "date": "2024-04-01", "category": "Escatologia", "time": "20 MIN", "image": "/content/doutrinas/.images/arrebatamento secreto.webp" }, 
-   { "title": "Arrependimento de Deus", "slug": "arrependimemto de deus/O Arrependimento de Deus Camada 0", "description": "Deus muda de ideia? Uma análise exegética das passagens sobre o arrependimento divino.", "date": "2024-04-02", "category": "Teologia", "time": "18 MIN", "image": "/content/doutrinas/.images/arrependimento de deus.webp" }, 
-   { "title": "Batismo no Espírito Santo", "slug": "batismo no espirito santo/Batismo no Espírito Santo Camada 0", "description": "O que a Bíblia realmente ensina sobre o batismo no Espírito Santo.", "date": "2024-04-03", "category": "Pneumatologia", "time": "22 MIN", "image": "/content/doutrinas/.images/batismo do espirito santo.webp" }, 
-   { "title": "A Doutrina dos Demônios", "slug": "demonios/A Doutrina dos Demônios Camada 0", "description": "Quem são os demônios, sua origem e seu papel no mundo espiritual.", "date": "2024-04-04", "category": "Angelologia", "time": "17 MIN", "image": "/content/doutrinas/.images/demonios.webp" }, 
-   { "title": "Dízimo", "slug": "dizimo/dizimo-camada1-voz-do-deserto", "description": "A verdade sobre o dízimo: lei, graça e o que a Bíblia realmente ensina.", "date": "2024-04-05", "category": "Finanças & Fé", "time": "15 MIN", "image": "/content/doutrinas/.images/dizimo.webp" }, 
-   { "title": "Inferno", "slug": "inferno/inferno-camada1-voz-do-deserto", "description": "O que a Bíblia ensina sobre o inferno, o Sheol, o Hades e a Geena.", "date": "2024-04-06", "category": "Escatologia", "time": "24 MIN", "image": "/content/doutrinas/.images/inferno.webp" }, 
-   { "title": "Maldição Hereditária", "slug": "maldição hereditária/Maldições Hereditária Camada 0", "description": "As maldições hereditárias existem? Uma análise bíblica completa.", "date": "2024-04-07", "category": "Libertação", "time": "19 MIN", "image": "/content/doutrinas/.images/maldicao hereditaria.webp" }, 
-   { "title": "A Doutrina de Satanás", "slug": "satanas/A Doutrina de Satanás camada 0", "description": "Quem é Satanás de verdade — origem, natureza, poder e limites.", "date": "2024-04-08", "category": "Angelologia", "time": "21 MIN", "image": "/content/doutrinas/.images/satanas.webp" }, 
-   { "title": "Segunda Morte", "slug": "segunda morte/segunda-morte-camada1-voz-do-deserto", "description": "O que é a segunda morte no livro do Apocalipse e quem está sujeito a ela.", "date": "2024-04-09", "category": "Escatologia", "time": "16 MIN", "image": "/content/doutrinas/.images/segunda morte.webp" }, 
-   { "title": "Sono da Alma", "slug": "sono da alma/O Sono da Alma Camada 0", "description": "A doutrina do sono da alma: o que acontece com os mortos antes da ressurreição.", "date": "2024-04-10", "category": "Escatologia", "time": "20 MIN", "image": "/content/doutrinas/.images/sono da alma.webp" }, 
-   { "title": "Trindade", "slug": "trindade/trindade-camada1-voz-do-deserto", "description": "A doutrina da Trindade: exegese, história e as perguntas que ninguém responde.", "date": "2024-04-11", "category": "Teologia", "time": "23 MIN", "image": "/content/doutrinas/.images/trindade.webp" }, 
-   { "title": "As Duas Testemunhas", "slug": "2 testemunhas/As Duas Testemunhas de Apocalipse 11 Camada 0", "description": "Quem são as duas testemunhas de Apocalipse 11? Análise completa.", "date": "2024-04-12", "category": "Escatologia", "time": "18 MIN", "image": "/content/doutrinas/.images/arrependimento de deus.webp" } 
- ]
+[
+  {
+    "title": "Arrebatamento Secreto",
+    "description": "A doutrina do arrebatamento secreto: origens, desenvolvimento histórico e análise bíblica.",
+    "category": "Escatologia",
+    "image": "/image/doutrinas/arrebatamento secreto.webp",
+    "layers": [
+      { "title": "Arrebatamento Secreto: Camada 1 — O que o Texto Grego Realmente Diz Sobre 1 Tessalonicenses 4.17", "slug": "arrebatamento secreto/arrebatamento-camada1-voz-do-deserto" },
+      { "title": "Arrebatamento Secreto: Camada 2 — Desenvolvimento Histórico: Como uma Visão de 1830 se Tornou Doutrina Dominante", "slug": "arrebatamento secreto/arrebatamento-camada2-voz-do-deserto" },
+      { "title": "Arrebatamento Secreto: Camada 3 — Tensões, Debates Acadêmicos e Pontos de Discórdia", "slug": "arrebatamento secreto/arrebatamento-camada3-voz-do-deserto" },
+      { "title": "Arrebatamento Secreto: Camada 4 — Síntese e Posição Fundamentada", "slug": "arrebatamento secreto/arrebatamento-camada4-voz-do-deserto" }
+    ]
+  },
+  {
+    "title": "Arrependimento de Deus",
+    "description": "Deus muda de ideia? Uma análise exegética das passagens sobre o arrependimento divino.",
+    "category": "Teologia",
+    "image": "/image/doutrinas/arrependimento de deus.webp",
+    "layers": [
+      { "title": "O Arrependimento de Deus: Camada 0 — Fundamentos Hermenêuticos e Fontes", "slug": "arrependimemto de deus/O Arrependimento de Deus Camada 0" },
+      { "title": "O Arrependimento de Deus: Camada 1 — Exegese do Texto Hebraico (Gênesis, Êxodo, Números, 1 Samuel, Amós, Jonas)", "slug": "arrependimemto de deus/O Arrependimento de Deus Camada 1" },
+      { "title": "O Arrependimento de Deus: Camada 2 — Desenvolvimento Histórico: do Judaísmo Rabínico à Teologia Relacional", "slug": "arrependimemto de deus/O Arrependimento de Deus Camada 2" },
+      { "title": "O Arrependimento de Deus: Camada 3 — Tensões, Debates Acadêmicos e Pontos de Discórdia", "slug": "arrependimemto de deus/O Arrependimento de Deus Camada 3" },
+      { "title": "O Arrependimento de Deus: Camada 4 — Síntese e Posição Fundamentada", "slug": "arrependimemto de deus/O Arrependimento de Deus Camada 4" }
+    ]
+  },
+  {
+    "title": "Batismo no Espírito Santo",
+    "description": "O que a Bíblia realmente ensina sobre o batismo no Espírito Santo.",
+    "category": "Pneumatologia",
+    "image": "/image/doutrinas/batismo do espirito santo.webp",
+    "layers": [
+      { "title": "Batismo no Espírito Santo: Camada 0 — Fundamentos Hermenêuticos e Fontes", "slug": "batismo no espirito santo/Batismo no Espírito Santo Camada 0" },
+      { "title": "Batismo no Espírito Santo: Camada 1 — Exegese do Texto Grego (Atos e 1 Coríntios)", "slug": "batismo no espirito santo/Batismo no Espírito Santo Camada 1" },
+      { "title": "Batismo no Espírito Santo: Camada 2 — Desenvolvimento Histórico da Interpretação", "slug": "batismo no espirito santo/Batismo no Espírito Santo Camada 2" },
+      { "title": "Batismo no Espírito Santo: Camada 3 — Tensões, Debates Acadêmicos e Perguntas Específicas", "slug": "batismo no espirito santo/Batismo no Espírito Santo Camada 3" },
+      { "title": "Batismo no Espírito Santo: Camada 4 — Síntese e Posição Fundamentada", "slug": "batismo no espirito santo/Batismo no Espírito Santo Camada 4" }
+    ]
+  },
+  {
+    "title": "A Doutrina dos Demônios",
+    "description": "Quem são os demônios, sua origem e seu papel no mundo espiritual.",
+    "category": "Angelologia",
+    "image": "/image/doutrinas/demonios.webp",
+    "layers": [
+      { "title": "A Doutrina dos Demônios: Camada 0 — Fundamentos Hermenêuticos e Fontes", "slug": "demonios/A Doutrina dos Demônios Camada 0" },
+      { "title": "A Doutrina dos Demônios: Camada 1 — Exegese do Texto (AT, Intertestamental, NT)", "slug": "demonios/A Doutrina dos Demônios Camada 1" },
+      { "title": "A Doutrina dos Demônios: Camada 2 — Desenvolvimento Histórico: Dos Pais da Igreja à Guerra Espiritual Moderna", "slug": "demonios/A Doutrina dos Demônios Camada 2" },
+      { "title": "A Doutrina dos Demônios: Camada 3 — Tensões, Debates e Perguntas Específicas", "slug": "demonios/A Doutrina dos Demônios Camada 3" },
+      { "title": "A Doutrina dos Demônios: Camada 4 — Síntese e Posição Fundamentada", "slug": "demonios/A Doutrina dos Demônios Camada 4" }
+    ]
+  },
+  {
+    "title": "Dízimo",
+    "description": "A verdade sobre o dízimo: lei, graça e o que a Bíblia realmente ensina.",
+    "category": "Finanças & Fé",
+    "image": "/image/doutrinas/dizimo.webp",
+    "layers": [
+      { "title": "O Dízimo na Bíblia: Camada 1 — O que o Texto Hebraico e Grego Realmente Dizem", "slug": "dizimo/dizimo-camada1-voz-do-deserto" },
+      { "title": "O Dízimo na Bíblia: Camada 2 — Desenvolvimento Histórico: Como o Dízimo se Tornou Obrigatório na Igreja", "slug": "dizimo/dizimo-camada2-voz-do-deserto" },
+      { "title": "O Dízimo na Bíblia: Camada 3 — Tensões, Debates Acadêmicos e Pontos de Discórdia", "slug": "dizimo/dizimo-camada3-voz-do-deserto" },
+      { "title": "O Dízimo na Bíblia: Camada 4 — Síntese e Posição Fundamentada", "slug": "dizimo/dizimo-camada4-voz-do-deserto" }
+    ]
+  },
+  {
+    "title": "Inferno",
+    "description": "O que a Bíblia ensina sobre o inferno, o Sheol, o Hades e a Geena.",
+    "category": "Escatologia",
+    "image": "/image/doutrinas/inferno.webp",
+    "layers": [
+      { "title": "O Inferno na Bíblia: Camada 1 — O que o Texto Hebraico e Grego Realmente Dizem", "slug": "inferno/inferno-camada1-voz-do-deserto" },
+      { "title": "O Inferno na Bíblia: Camada 2 — Desenvolvimento Histórico: Como a Doutrina do Tormento Eterno se Tornou Dominante", "slug": "inferno/inferno-camada2-voz-do-deserto" },
+      { "title": "O Inferno na Bíblia: Camada 3 — Tensões, Debates Acadêmicos e Pontos de Discórdia", "slug": "inferno/inferno-camada3-voz-do-deserto" },
+      { "title": "O Inferno na Bíblia: Camada 4 — Síntese e Posição Fundamentada", "slug": "inferno/inferno-camada4-voz-do-deserto" }
+    ]
+  },
+  {
+    "title": "Maldição Hereditária",
+    "description": "As maldições hereditárias existem? Uma análise bíblica completa.",
+    "category": "Libertação",
+    "image": "/image/doutrinas/maldicao hereditaria.webp",
+    "layers": [
+      { "title": "Maldições Hereditárias: Camada 0 — Fundamentos Hermenêuticos e Fontes", "slug": "maldição hereditária/Maldições Hereditária Camada 0" },
+      { "title": "Maldições Hereditárias: Camada 1 — Exegese do Texto Hebraico (Êxodo 20.5, Ezequiel 18, Jeremias 31, Deuteronômio 24)", "slug": "maldição hereditária/Maldições Hereditárias Camada 1" },
+      { "title": "Maldições Hereditárias: Camada 2 — Desenvolvimento Histórico: do Judaísmo Rabínico à Guerra Espiritual Moderna", "slug": "maldição hereditária/Maldições Hereditárias Camada 2" },
+      { "title": "Maldições Hereditárias: Camada 3 — Tensões, Debates Acadêmicos e Perguntas Específicas", "slug": "maldição hereditária/Maldições Hereditárias Camada 3" },
+      { "title": "Maldições Hereditárias: Camada 4 — Síntese e Posição Fundamentada", "slug": "maldição hereditária/Maldições Hereditárias Camada 4" }
+    ]
+  },
+  {
+    "title": "A Doutrina de Satanás",
+    "description": "Quem é Satanás de verdade — origem, natureza, poder e limites.",
+    "category": "Angelologia",
+    "image": "/image/doutrinas/satanas.webp",
+    "layers": [
+      { "title": "A Doutrina de Satanás: Camada 0 — Fundamentos Hermenêuticos e Fontes", "slug": "satanas/A Doutrina de Satanás camada 0" },
+      { "title": "A Doutrina de Satanás: Camada 1 — Exegese do Texto (AT, Intertestamental, NT)", "slug": "satanas/A Doutrina de Satanás Camada 1" },
+      { "title": "A Doutrina de Satanás: Camada 2 — Desenvolvimento Histórico: dos Pais da Igreja à Idade Média", "slug": "satanas/A Doutrina de Satanás Camada 2" },
+      { "title": "A Doutrina de Satanás: Camada 3 — Debates Contemporâneos e Leituras Esotéricas", "slug": "satanas/A Doutrina de Satanás Camada 3" },
+      { "title": "A Doutrina de Satanás: Camada 4 — Síntese e Posição Fundamentada", "slug": "satanas/A Doutrina de Satanás Camada 4" }
+    ]
+  },
+  {
+    "title": "Segunda Morte",
+    "description": "O que é a segunda morte no livro do Apocalipse e quem está sujeito a ela.",
+    "category": "Escatologia",
+    "image": "/image/doutrinas/segunda morte.webp",
+    "layers": [
+      { "title": "A Segunda Morte na Bíblia: Camada 1 — O que o Texto Grego de Apocalipse Realmente Diz", "slug": "segunda morte/segunda-morte-camada1-voz-do-deserto" },
+      { "title": "A Segunda Morte na Bíblia: Camada 2 — Desenvolvimento Histórico da Interpretação", "slug": "segunda morte/segunda-morte-camada2-voz-do-deserto" },
+      { "title": "A Segunda Morte na Bíblia: Camada 3 — Tensões, Debates Acadêmicos e Pontos de Discórdia", "slug": "segunda morte/segunda-morte-camada3-voz-do-deserto" },
+      { "title": "A Segunda Morte na Bíblia: Camada 4 — Síntese e Posição Fundamentada", "slug": "segunda morte/segunda-morte-camada4-voz-do-deserto" }
+    ]
+  },
+  {
+    "title": "Sono da Alma",
+    "description": "A doutrina do sono da alma: o que acontece com os mortos antes da ressurreição.",
+    "category": "Escatologia",
+    "image": "/image/doutrinas/sono da alma.webp",
+    "layers": [
+      { "title": "O Sono da Alma: Camada 0 — Fundamentos Hermenêuticos e Fontes", "slug": "sono da alma/O Sono da Alma Camada 0" },
+      { "title": "O Sono da Alma: Camada 1 — Exegese do Texto (AT, Intertestamental, NT)", "slug": "sono da alma/O Sono da Alma Camada 1 — Exegese do Texto" },
+      { "title": "O Sono da Alma: Camada 2 — Desenvolvimento Histórico: do Judaísmo Intertestamental ao Evangelicalismo Contemporâneo", "slug": "sono da alma/O Sono da Alma Camada 2 — Desenvolvimento Histórico" },
+      { "title": "O Sono da Alma: Camada 3 — Tensões, Debates Acadêmicos e Perguntas Específicas", "slug": "sono da alma/O Sono da Alma Camada 3" },
+      { "title": "O Sono da Alma: Camada 4 — Síntese e Posição Fundamentada", "slug": "sono da alma/O Sono da Alma Camada 4" }
+    ]
+  },
+  {
+    "title": "Trindade",
+    "description": "A doutrina da Trindade: exegese, história e as perguntas que ninguém responde.",
+    "category": "Teologia",
+    "image": "/image/doutrinas/trindade.webp",
+    "layers": [
+      { "title": "A Doutrina da Trindade: Camada 1 — O que o Texto Hebraico e Grego Realmente Dizem Sobre Deus, Jesus e o Espírito", "slug": "trindade/trindade-camada1-voz-do-deserto" },
+      { "title": "A Doutrina da Trindade: Camada 2 — Desenvolvimento Histórico: De Niceia a Constantinopla, Política e Dogma", "slug": "trindade/trindade-camada2-voz-do-deserto" },
+      { "title": "A Doutrina da Trindade: Camada 3 — Tensões, Debates e Objeções Sérias", "slug": "trindade/trindade-camada3-voz-do-deserto" },
+      { "title": "A Doutrina da Trindade: Camada 4 — Síntese e Posição Fundamentada", "slug": "trindade/trindade-camada4-voz-do-deserto" }
+    ]
+  },
+  {
+    "title": "As Duas Testemunhas",
+    "description": "Quem são as duas testemunhas de Apocalipse 11? Análise completa.",
+    "category": "Escatologia",
+    "image": "/image/doutrinas/arrependimento de deus.webp",
+    "layers": [
+      { "title": "As Duas Testemunhas de Apocalipse 11: Camada 0 — Fundamentos Hermenêuticos e Fontes", "slug": "2 testemunhas/As Duas Testemunhas de Apocalipse 11 Camada 0" },
+      { "title": "As Duas Testemunhas de Apocalipse 11: Camada 1 — Exegese do Texto Grego", "slug": "2 testemunhas/As Duas Testemunhas de Apocalipse 11 Camada 1" },
+      { "title": "As Duas Testemunhas de Apocalipse 11: Camada 2 — Desenvolvimento Histórico da Interpretação", "slug": "2 testemunhas/As Duas Testemunhas de Apocalipse 11 Camada 2" },
+      { "title": "As Duas Testemunhas de Apocalipse 11: Camada 3 — Tensões, Debates Acadêmicos e Perguntas Específicas", "slug": "2 testemunhas/As Duas Testemunhas de Apocalipse 11 Camada 3" }
+    ]
+  }
+]

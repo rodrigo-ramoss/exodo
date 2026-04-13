@@ -5,7 +5,7 @@ theme: "Segunda Morte"
 subcategory: "Escatologia"
 description: "Como a 'segunda morte' foi interpretada ao longo da história? Dos pais da igreja à Reforma, do aniquilacionismo ao tormento eterno — um mapa das principais visões. Camada 2 da nossa análise em 4 camadas."
 category: "Doutrinas"
-image: /imagens/o-original/segunda-morte.webp
+image: /image/doutrinas/segunda morte.webp
 ---
 
 **Este artigo é a segunda de quatro partes da nossa análise sobre a segunda morte.**
@@ -294,3 +294,4 @@ Até lá.
 ---
 
 **Fim da Camada 2**
+

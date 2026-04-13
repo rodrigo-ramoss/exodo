@@ -3,7 +3,7 @@ title: "Eles Usaram a Arma do Sistema Contra o Sistema"
 date: 2026-03-29
 category: Fora do Controle
 folder: Scriptorium
-image: /imagens/eles-usaram-a-arma-do-sistema-contra-o-sistema.webp
+image: /image/sinais/eles-usaram-a-arma-do-sistema-contra-o-sistema.webp
 description: "Enquanto a Igreja debatia se devia usar a tecnologia, matemáticos e hackers já a usavam para tornar a vigilância impossível. Conheça os Cypherpunks."
 keywords: "#Cypherpunks #Bitcoin #PrivacidadeDigital #ResistenciaDigital #ForaDoControle"
 ---
@@ -116,3 +116,4 @@ A prudência (*phronimos* em grego — sabedoria prática, discernimento situaci
 - BITCOIN POLICY INSTITUTE. *Why Bitcoin Part 1: Cypherpunk Dreams*. btcpolicy.org.
 - THE BLOCK. *Erik Voorhees founds generative AI platform Venice*. theblock.co, maio 2024.
 - WIKIPEDIA. *Cypherpunk — history, members and achievements*. en.wikipedia.org/wiki/Cypherpunk.
+

@@ -5,7 +5,7 @@ category: "Doutrinas"
 theme: "Trindade"
 subcategory: "Teologia Própria"
 description: "Como a doutrina da Trindade se tornou dogma? O papel de Constantino, a controvérsia ariana, o Concílio de Niceia (325) e o Credo de Constantinopla (381). Uma análise histórica sem véus. Camada 2 da nossa análise em 4 camadas."
-image: /imagens/o-original/trindade.webp
+image: /image/doutrinas/trindade.webp
 ---
 
 **Este artigo é a segunda de quatro partes da nossa análise sobre a doutrina da Trindade.**
@@ -258,3 +258,4 @@ Até lá.
 ---
 
 **Fim da Camada 2**
+

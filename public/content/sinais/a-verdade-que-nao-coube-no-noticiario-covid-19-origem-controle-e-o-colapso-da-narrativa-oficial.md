@@ -3,7 +3,7 @@ title: "A Verdade que Não Coube no Noticiário: COVID-19, Origem, Controle e o 
 date: 2026-03-20
 category: Pandemias
 folder: Scriptorium
-image: /imagens/a-verdade-que-nao-coube-no-noticiario-covid-19-origem-controle-e-o-colapso-da-narrativa-oficial.webp
+image: /image/sinais/a-verdade-que-nao-coube-no-noticiario-covid-19-origem-controle-e-o-colapso-da-narrativa-oficial.webp
 description: "A narrativa oficial da pandemia não desmoronou por conspiração — desmoronou sob o peso de documentos, e-mails e investigações que o sistema preferiu ignorar."
 keywords: "#COVID19 #OrigemDoVirus #FauciFiles #PandemiaVerdade #NarrativaOficial"
 ---
@@ -100,3 +100,4 @@ A tradição profética não é ferramenta de verificação científica — não
 - MORENS, David. Depoimento ao U.S. House Select Subcommittee on the Coronavirus Pandemic. 2024.
 - WALENSKY, Rochelle. Depoimento ao U.S. Senate HELP Committee. 2024.
 - DOSHI, Peter. *Covid-19 vaccines: in the rush for regulatory approval, do we need more data?* BMJ, 2021.
+

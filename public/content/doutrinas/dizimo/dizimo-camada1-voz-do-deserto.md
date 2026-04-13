@@ -5,7 +5,7 @@ category: "Doutrinas"
 theme: "Dízimo"
 subcategory: "Economia do Reino"
 description: "Ma'aser, terumah, beit ha'otsar — três palavras hebraicas que revelam que o dízimo bíblico era agrícola, triplo, vinculado ao Templo e ao calendário de 7 anos. O NT não o impõe aos cristãos. Camada 1 da nossa análise em 4 camadas."
-image: /imagens/o-original/dizimo.webp
+image: /image/doutrinas/dizimo.webp
 ---
 
 **Este artigo é a primeira de quatro partes da nossa análise sobre o dízimo.**
@@ -275,3 +275,4 @@ Até lá.
 ---
 
 **Fim da Camada 1**
+

@@ -5,7 +5,7 @@ category: original
 theme: "Satanás"
 subcategory: "Demonologia"
 description: "O que o texto, lido com honestidade, realmente ensina sobre Satanás? Síntese das quatro camadas anteriores e posição fundamentada — com implicações para quem busca Deus fora da instituição."
-image: /imagens/satanas-camada4-voz-do-deserto.webp
+image: /image/doutrinas/satanas.webp
 ---
 
 **Este artigo é a quinta e última parte (Camada 4) da nossa análise sobre a doutrina de Satanás.**
@@ -185,3 +185,4 @@ E essa verdade liberta — especialmente para quem está no deserto, buscando De
 **Próximo tema sugerido:** *A Doutrina da Salvação — Fé, Obras e Graça: O que a Bíblia Realmente Ensina?* (Análise em 4 camadas)
 
 ---
+

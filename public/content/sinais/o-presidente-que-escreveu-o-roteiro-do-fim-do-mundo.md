@@ -3,7 +3,7 @@ title: "O Presidente que Escreveu o Roteiro do Fim do Mundo"
 date: 2026-03-29
 category: Hollywood Profetizou
 folder: Scriptorium
-image: /imagens/o-presidente-que-escreveu-o-roteiro-do-fim-do-mundo.webp
+image: /image/sinais/o-presidente-que-escreveu-o-roteiro-do-fim-do-mundo.webp
 description: "Obama co-produziu um filme sobre colapso civilizatório e disse ao diretor que estava 'errado só em alguns detalhes'. Na mesma semana, a CISA emitiu alerta real."
 keywords: "#LeaveTheWorldBehind #ObamaNetflix #CISAAlert #AvisoProfetico #ColapsoCivilizatorio"
 ---
@@ -122,3 +122,4 @@ A CISA — Cybersecurity and Infrastructure Security Agency — é a agência fe
 - FOX NEWS. *Obama produces first fiction movie Netflix — director comments*. Dezembro 2023.
 - ALAM, Rumaan. *Leave the World Behind*. Ecco Press, 2020.
 - WIRED. *How realistic is Leave the World Behind's infrastructure collapse?* Dezembro 2023.
+

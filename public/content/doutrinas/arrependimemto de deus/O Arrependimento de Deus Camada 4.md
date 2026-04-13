@@ -5,7 +5,7 @@ category: original
 theme: "Arrependimento de Deus"
 subcategory: "Teologia Própria"
 description: "O que o texto, lido com honestidade, realmente ensina sobre o arrependimento de Deus? Síntese das quatro camadas anteriores e posição fundamentada — com implicações para a oração e para quem busca Deus fora da instituição."
-image: /imagens/arrependimento-deus-camada4-voz-do-deserto.webp
+image: /image/doutrinas/arrependimemto de deus.webp
 ---
 
 **Este artigo é a quinta e última parte (Camada 4) da nossa análise sobre o arrependimento de Deus.**
@@ -171,3 +171,4 @@ E essa verdade liberta — especialmente para quem está no deserto, buscando um
 **Próximo tema:** *A Doutrina das Maldições Hereditárias (Êxodo 20.5; 34.7)* — Análise em 5 camadas.
 
 ---
+

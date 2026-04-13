@@ -3,7 +3,7 @@ title: "O Homem Que Quer Escanear o Olho de 8 Bilhões de Pessoas — e Já Est�
 date: 2026-04-04
 category: Reset Mundial & Nova Ordem
 folder: Scriptorium
-image: /imagens/o-homem-que-quer-escanear-o-olho-de-8-bilhoes-de-pessoas.webp
+image: /image/sinais/o-homem-que-quer-escanear-o-olho-de-8-bilhoes-de-pessoas.webp
 description: "Sam Altman criou a IA que destrói a confiança online. Agora vende a solução: escanear sua íris, criar seu ID global, distribuir renda por isso. O problema não é a intenção. É a arquitetura."
 keywords: "#WorldID #SamAltman #IdentidadeDigital #Apocalipse13 #EscaneamentoDeIris"
 ---
@@ -137,3 +137,4 @@ Ezequiel 9 descreve um anjo marcando a testa dos que estavam do lado certo antes
 - US ELECTRONIC PRIVACY INFORMATION CENTER (EPIC). *Statement on Worldcoin and global digital governance concerns*. Citado em ia.acs.org.au.
 - WORLD.ORG. *Key takeaways — Seoul event with Sam Altman and Alex Blania on UBI and AGI*. world.org/blog.
 - Texto bíblico: Apocalipse 13:16-17; 14:9-11; Ezequiel 9:4; Mateus 6:22 — análise a partir do texto grego (NA28) e hebraico (BHS).
+

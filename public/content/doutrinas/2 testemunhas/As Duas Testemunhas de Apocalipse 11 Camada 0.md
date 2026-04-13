@@ -5,7 +5,7 @@ category: original
 theme: "Duas Testemunhas"
 subcategory: "Escatologia"
 description: "Quem são os dois profetas de Apocalipse 11? Moisés e Elias? Enoque e Elias? Símbolos da igreja? Antes de exegetar, estabelecemos fontes, o gênero apocalíptico, e as tradições intertestamentais que moldaram João. Camada 0 da nossa análise em 5 níveis."
-image: /imagens/duas-testemunhas-camada0-voz-do-deserto.webp
+image: /image/doutrinas/2 testemunhas.webp
 ---
 
 **Este artigo é a primeira parte (Camada 0) da nossa análise sobre as Duas Testemunhas de Apocalipse 11.**
@@ -180,3 +180,4 @@ Até lá.
 ---
 
 **Fim da Camada 0**
+

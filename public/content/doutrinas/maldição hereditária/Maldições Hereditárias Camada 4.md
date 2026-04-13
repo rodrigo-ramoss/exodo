@@ -5,7 +5,7 @@ category: original
 theme: "Maldições Hereditárias"
 subcategory: "Teologia Própria"
 description: "O que o texto, lido com honestidade, realmente ensina sobre maldições hereditárias? Síntese das quatro camadas anteriores e posição fundamentada — com implicações para o leitor do deserto."
-image: /imagens/maldicoes-hereditarias-camada4-voz-do-deserto.webp
+image: /image/doutrinas/maldição hereditária.webp
 ---
 
 **Este artigo é a quinta e última parte (Camada 4) da nossa análise sobre as maldições hereditárias.**
@@ -182,3 +182,4 @@ E essa verdade liberta — especialmente para quem está no deserto, buscando De
 **Próximo tema:** *A Doutrina do Sono da Alma (Estado Intermediário)* — Análise em 5 camadas.
 
 ---
+

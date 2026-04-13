@@ -6,7 +6,7 @@ book: "Salmos / Mateus"
 verse: "Sl 16.10 · Mt 10.28"
 language: "Hebraico / Grego"
 description: "Sheol, Gehenna, Hades, Tartaros — quatro palavras que o cristianismo fundiu num só conceito. Mas o texto hebraico e grego conta uma história muito mais complexa. Camada 1 da nossa análise em 4 camadas sobre o inferno."
-image: /imagens/o-original/inferno.webp
+image: /image/doutrinas/inferno.webp
 premium: false
 ---
 
@@ -292,3 +292,4 @@ Essas perguntas serão respondidas nos próximos artigos.
 Vamos traçar a rota desde o Sheol silencioso do AT até o inferno de Dante — passando pelos Padres da Igreja, a influência do platonismo, Agostinho, a escolástica medieval, a Reforma e o endurecimento da doutrina no protestantismo ortodoxo.
 
 Até lá.
+

@@ -5,7 +5,7 @@ category: original
 theme: "Sono da Alma"
 subcategory: "Escatologia"
 description: "O que o texto, lido com honestidade, realmente ensina sobre o estado intermediário? Síntese das quatro camadas anteriores e posição fundamentada — com implicações para o leitor do deserto."
-image: /imagens/sono-alma-camada4-voz-do-deserto.webp
+image: /image/doutrinas/sono da alma.webp
 ---
 
 **Este artigo é a quinta e última parte (Camada 4) da nossa análise sobre o sono da alma (estado intermediário).**
@@ -180,3 +180,4 @@ E essa verdade liberta — especialmente para quem está no deserto, buscando De
 **Próximo tema sugerido:** *A Doutrina das Duas Testemunhas (Apocalipse 11)* — Análise em 5 camadas.
 
 ---
+

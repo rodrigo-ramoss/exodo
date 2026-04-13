@@ -5,7 +5,7 @@ category: original
 theme: "Arrependimento de Deus"
 subcategory: "Teologia Própria"
 description: "O que significa a Bíblia dizer que Deus 'se arrependeu'? Antes de examinar os textos, precisamos estabelecer fontes, critérios e o debate entre linguagem antropomórfica e relacional. Camada 0 da nossa análise em 5 níveis."
-image: /imagens/arrependimento-deus-camada0-voz-do-deserto.webp
+image: /image/doutrinas/arrependimemto de deus.webp
 ---
 
 **Este artigo é a primeira parte (Camada 0) da nossa análise sobre o arrependimento de Deus.**
@@ -172,3 +172,4 @@ Até lá.
 ---
 
 **Fim da Camada 0**
+

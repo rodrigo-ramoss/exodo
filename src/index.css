@@ -49,3 +49,42 @@
 .text-shadow-glow {
   text-shadow: 0 0 12px rgba(242, 192, 141, 0.4);
 }
+
+@layer components {
+  .prose {
+    @apply text-on-surface-variant leading-relaxed;
+  }
+  .prose-invert {
+    /* Styles are already dark-themed by default here */
+  }
+  .prose h1 {
+    @apply text-3xl font-headline font-extrabold text-primary mt-8 mb-6;
+  }
+  .prose h2 {
+    @apply text-2xl font-headline font-bold text-on-surface mt-8 mb-4 border-b border-outline-variant/20 pb-2;
+  }
+  .prose h3 {
+    @apply text-xl font-headline font-bold text-on-surface mt-6 mb-3;
+  }
+  .prose p {
+    @apply mb-4 text-sm font-sans opacity-90;
+  }
+  .prose strong {
+    @apply text-on-surface font-bold;
+  }
+  .prose em {
+    @apply italic;
+  }
+  .prose blockquote {
+    @apply border-l-4 border-primary pl-4 italic my-6 text-on-surface-variant/80 bg-surface-container-low/30 py-2 rounded-r;
+  }
+  .prose ul, .prose ol {
+    @apply mb-6 ml-4 space-y-2;
+  }
+  .prose li {
+    @apply text-sm list-disc pl-2;
+  }
+  .prose hr {
+    @apply my-8 border-outline-variant/30;
+  }
+}

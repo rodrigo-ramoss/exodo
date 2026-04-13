@@ -5,7 +5,7 @@ category: original
 theme: "Sono da Alma"
 subcategory: "Escatologia"
 description: "O que o hebraico *Sheol* e o grego *koimaō* realmente significam? Análise exegética do AT (Eclesiastes, Salmos), da parábola do rico e Lázaro, de Filipenses 1.23, Lucas 23.43 e Apocalipse 6.9-10 — alma consciente ou sono? Camada 1 da nossa análise em 5 níveis."
-image: /imagens/sono-alma-camada1-voz-do-deserto.webp
+image: /image/doutrinas/sono da alma.webp
 ---
 
 **Este artigo é a segunda parte (Camada 1) da nossa análise sobre o sono da alma (estado intermediário).**
@@ -271,3 +271,4 @@ Até lá.
 ---
 
 **Fim da Camada 1**
+

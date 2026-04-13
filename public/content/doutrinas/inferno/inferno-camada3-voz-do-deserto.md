@@ -6,7 +6,7 @@ book: "Salmos / Mateus"
 verse: "Sl 16.10 · Mt 10.28"
 language: "Hebraico / Grego"
 description: "Tormento eterno, aniquilacionismo ou universalismo? O debate acadêmico atual sobre o destino final dos ímpios — consensos, minorias e argumentos bíblicos de cada posição. Camada 3 da nossa análise em 4 camadas."
-image: /imagens/o-original/inferno.webp
+image: /image/doutrinas/inferno.webp
 premium: false
 ---
 
@@ -313,3 +313,4 @@ Até lá.
 ---
 
 **No próximo artigo: Camada 4 — Síntese e Posição Fundamentada**
+

@@ -2,7 +2,7 @@
 title: "Comunhão com Deus: O Silêncio que Fala — Uma Análise de 1 Reis 19"
 date: 2026-04-13
 category: "Comunhão com Deus"
-image: /imagens/elias-cicio-suave-1reis19.webp
+image: /image/estudos/Comunhão com Deus: O Silêncio que Fala — Uma Análise de 1 Reis 19.webp
 description: "Deus não estava no vento, nem no terremoto, nem no fogo. O que a voz mansa e delicada ensina sobre a verdadeira comunhão para os que buscam a Deus no deserto?"
 keywords: "#1Reis19 #Elias #VozDeDeus #CicioSuave #Comunhão"
 ---

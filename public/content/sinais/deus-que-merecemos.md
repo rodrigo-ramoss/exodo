@@ -2,7 +2,7 @@
 title: "O Deus que Nós Merecemos: Teilhard de Chardin, o Ponto Ômega e a Pelagianism da Inteligência Artificial"
 date: "2026-03-18"
 category: "Tecnologia & Teologia"
-image: "/imagens/deus-que-merecemos.webp"
+image: /image/sinais/deus-que-merecemos.webp
 description: "Kurzweil não inventou o Deus de Silício. Teilhard construiu a pista de decolagem. E a Igreja aplaudiu cada passo do processo."
 keywords: "#Superinteligência #TeilhardDeChardin #PontoÔmega #Pelagianismo #Escatologia"
 price: "R$ 19,90"
@@ -87,3 +87,4 @@ Não é diferente agora.
 - STEINHART, Eric. *Digital Theology*. PhilArchive (manuscrito).
 - STANFORD HAI. *AI Index Report 2025*. Stanford University, 2025.
 - TILLICH, Paul. *Systematic Theology*, vol. 1. University of Chicago Press, 1951.
+

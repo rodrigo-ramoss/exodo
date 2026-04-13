@@ -5,7 +5,7 @@ category: original
 theme: "Sono da Alma"
 subcategory: "Escatologia"
 description: "O que acontece entre a morte e a ressurreição? Alma consciente ou sono inconsciente? Antes de examinar os textos, precisamos estabelecer fontes, critérios e o desenvolvimento histórico do debate. Camada 0 da nossa análise em 5 níveis."
-image: /imagens/sono-alma-camada0-voz-do-deserto.webp
+image: /image/doutrinas/sono da alma.webp
 ---
 
 **Este artigo é a primeira parte (Camada 0) da nossa análise sobre o sono da alma (estado intermediário).**
@@ -158,3 +158,4 @@ Até lá.
 ---
 
 **Fim da Camada 0**
+

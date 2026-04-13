@@ -6,7 +6,7 @@ book: "Salmos / Mateus"
 verse: "Sl 16.10 · Mt 10.28"
 language: "Hebraico / Grego"
 description: "O que o texto realmente ensina sobre o destino final dos ímpios? Síntese das três camadas anteriores e posição fundamentada — com honestidade textual, respeito ao debate acadêmico e implicações para quem busca Deus fora da instituição."
-image: /imagens/o-original/inferno.webp
+image: /image/doutrinas/inferno.webp
 premium: false
 ---
 
@@ -219,3 +219,4 @@ E essa diferença muda tudo — especialmente para quem está no deserto, buscan
 **Próximo tema sugerido:** *A Doutrina da Salvação — O que a Bíblia realmente ensina sobre fé, obras e graça?* (Análise em 4 camadas)
 
 ---
+

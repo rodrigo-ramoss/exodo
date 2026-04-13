@@ -5,7 +5,7 @@ theme: "Segunda Morte"
 subcategory: "Escatologia"
 description: "Deuteros thanatos — quatro ocorrências no Apocalipse. O que João quis dizer com 'segunda morte'? Lago de fogo, aniquilação ou tormento eterno? Uma análise exegética sem pressupostos. Camada 1 da nossa análise em 4 camadas."
 category: "Doutrinas"
-image: /imagens/o-original/segunda-morte.webp
+image: /image/doutrinas/segunda morte.webp
 ---
 
 **Este artigo é a primeira de quatro partes da nossa análise sobre a segunda morte.**
@@ -243,3 +243,4 @@ Até lá.
 ---
 
 **Fim da Camada 1**
+

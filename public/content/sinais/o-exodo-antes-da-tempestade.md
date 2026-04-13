@@ -3,7 +3,7 @@ title: "O Êxodo Antes da Tempestade: Como Migrações Preventivas Antecederam o
 date: 2026-04-09
 category: "PADRÕES - ECONOMIA E SISTEMA"
 folder: Scriptorium
-image: /imagens/o-exodo-antes-da-tempestade.webp
+image: /image/sinais/o-exodo-antes-da-tempestade.webp
 description: "Puritanos, huguenotes, judeus alemães, cubanos. Em quatro séculos, o padrão se repete: quem vê o mal antes e se esconde sobrevive. Quem espera o desastre ficar óbvio, já perdeu a janela."
 keywords: "#VozDoDeserto #Preparacao #Migracao #Exodo #PadroesHistoricos #ArquivoSecreto"
 ---
@@ -234,3 +234,4 @@ Provérbios 22:3 é Escritura. O prudente vê o mal e esconde-se. Não há contr
 
 21. Diamond, J. (2005). *Collapse: How Societies Choose to Fail or Succeed*. Viking Press.
 22. Snyder, T. (2017). *On Tyranny: Twenty Lessons from the Twentieth Century*. Tim Duggan Books.
+

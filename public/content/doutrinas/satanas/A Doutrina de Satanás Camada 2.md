@@ -5,7 +5,7 @@ category: original
 theme: "Satanás"
 subcategory: "Demonologia"
 description: "Como a figura modesta do ha-satan do AT se transformou no Lúcifer de Dante e Milton? Dos pais da igreja a Agostinho, da Idade Média à Reforma. Camada 2 da nossa análise em 5 níveis."
-image: /imagens/satanas-camada2-voz-do-deserto.webp
+image: /image/doutrinas/satanas.webp
 ---
 
 **Este artigo é a terceira parte (Camada 2) da nossa análise sobre a doutrina de Satanás.**
@@ -238,3 +238,4 @@ Até lá.
 ---
 
 **Fim da Camada 2**
+

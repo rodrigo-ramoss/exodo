@@ -5,7 +5,7 @@ category: original
 theme: "Arrependimento de Deus"
 subcategory: "Teologia Própria"
 description: "Como a tradição judaica e cristã interpretou o arrependimento divino? Dos rabinos que levaram o texto a sério, passando por Agostinho e Tomás (impassibilidade), até a teologia relacional contemporânea. Camada 2 da nossa análise em 5 níveis."
-image: /imagens/arrependimento-deus-camada2-voz-do-deserto.webp
+image: /image/doutrinas/arrependimemto de deus.webp
 ---
 
 **Este artigo é a terceira parte (Camada 2) da nossa análise sobre o arrependimento de Deus.**
@@ -271,3 +271,4 @@ Até lá.
 ---
 
 **Fim da Camada 2**
+

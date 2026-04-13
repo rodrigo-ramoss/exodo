@@ -105,34 +105,27 @@ export default function Home({ onNavigate }: HomeProps) {
         </div>
       </section>
 
-      {/* Bíblia Original */}
+      {/* Seções por Categoria */}
       <section className="py-8 px-6 bg-surface-container-lowest/30">
         <h3 className="font-headline text-lg font-bold mb-6 flex items-center gap-2 uppercase text-[10px] tracking-[0.15em]">
-          <Star className="text-primary" size={12} fill="currentColor" /> Bíblia Original
+          <Star className="text-primary" size={12} fill="currentColor" /> Biblioteca por Temas
         </h3>
         <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
-          {[
-            { title: 'Tradicional', desc: 'Base canônica preservada.', icon: 'menu_book' },
-            { title: 'Católica', desc: 'Livros deuterocanônicos.', icon: 'account_balance' },
-            { title: 'ETÍOPE', desc: 'Tradução exegética técnica.', icon: 'ETÍOPE', highlight: true },
-          ].map((item, i) => (
+          {loadingStudies ? (
+            <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
+          ) : Array.from(new Set(studies?.map(s => s.category) || [])).map((cat, i) => (
             <div 
               key={i}
-              onClick={() => onNavigate(Screen.BIBLE)}
-              className={cn(
-                "min-w-[140px] h-[180px] bg-surface-container-low rounded-2xl border transition-all cursor-pointer group flex flex-col items-center justify-center p-4 text-center active:scale-95",
-                item.highlight ? "border-primary/40 bg-surface-container-high/50 shadow-[0_0_15px_rgba(242,192,141,0.05)]" : "border-outline-variant/10"
-              )}
+              onClick={() => onNavigate(Screen.STUDIES, 'push')}
+              className="min-w-[140px] h-[120px] bg-surface-container-low rounded-2xl border border-outline-variant/10 transition-all cursor-pointer group flex flex-col items-center justify-center p-4 text-center active:scale-95 hover:border-primary/40"
             >
-              {item.icon === 'ETÍOPE' ? (
-                <span className="text-primary mb-2 text-lg font-black tracking-tighter">ETÍOPE</span>
-              ) : (
-                <div className="text-2xl mb-2 text-on-surface-variant group-hover:text-primary transition-colors">
-                  <Star size={24} />
-                </div>
-              )}
-              <h4 className={cn("font-headline font-bold text-xs mb-1", item.highlight && "text-primary")}>{item.title}</h4>
-              <p className="text-[9px] text-on-surface-variant leading-tight">{item.desc}</p>
+              <div className="text-xl mb-2 text-on-surface-variant group-hover:text-primary transition-colors">
+                <Star size={20} />
+              </div>
+              <h4 className="font-headline font-bold text-[10px] uppercase tracking-wider">{cat}</h4>
+              <p className="text-[8px] text-on-surface-variant leading-tight mt-1">
+                {studies?.filter(s => s.category === cat).length} estudos
+              </p>
             </div>
           ))}
         </div>

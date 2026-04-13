@@ -5,7 +5,7 @@ category: Como Não Ser Escravo da IA
 folder: Scriptorium
 description: "Deepfakes hiper-realistas, áudio clonado em tempo real, vídeos que nunca aconteceram. A evidência visual morreu. Eis como reconstruir uma epistemologia de sobrevivência na era da pós-verdade generativa."
 keywords: "#VozDoDeserto #ResistenciaCognitiva #Deepfake #IA #Desinformacao #GuiaPratico #ArquivoSecreto"
-image: /imagens/voce-nao-viu-o-que-eu-vi.webp
+image: /image/sinais/voce-nao-viu-o-que-eu-vi.webp
 ---
 
 ## A primeira frase que para o scroll
@@ -287,3 +287,4 @@ Recursos gratuitos e de alta qualidade:
 
 18. Nestle-Aland (28ª ed.). (2012). *Novum Testamentum Graece*. Deutsche Bibelgesellschaft. [1 Coríntios 15:6, Mateus 23:27, 2 Coríntios 4:4]
 19. Louw, J. P., & Nida, E. A. (1989). *Greek-English Lexicon of the New Testament Based on Semantic Domains*. United Bible Societies. [Entrada para *diakrisis* - discernimento]
+

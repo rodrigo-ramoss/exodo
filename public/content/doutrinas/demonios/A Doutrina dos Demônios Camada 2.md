@@ -5,7 +5,7 @@ category: original
 theme: "Demônios"
 subcategory: "Demonologia"
 description: "Como a demonologia se desenvolveu na igreja? Dos pais que adotaram 1 Enoque, passando pela Idade Média (Tomás de Aquino, Malleus Maleficarum), até o movimento de guerra espiritual do século XX. Camada 2 da nossa análise em 5 níveis."
-image: /imagens/demonios-camada2-voz-do-deserto.webp
+image: /image/doutrinas/demonios.webp
 ---
 
 **Este artigo é a terceira parte (Camada 2) da nossa análise sobre a doutrina dos demônios.**
@@ -218,3 +218,4 @@ Até lá.
 ---
 
 **Fim da Camada 2**
+

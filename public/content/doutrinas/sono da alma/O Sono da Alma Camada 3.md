@@ -5,7 +5,7 @@ category: original
 theme: "Sono da Alma"
 subcategory: "Escatologia"
 description: "A alma é imortal? 'Dormir' é metáfora ou inconsciência? Como harmonizar Eclesiastes 9.5 com Lucas 23.43? O que a psicologia diz sobre experiências de quase-morte? Camada 3 da nossa análise em 5 níveis."
-image: /imagens/sono-alma-camada3-voz-do-deserto.webp
+image: /image/doutrinas/sono da alma.webp
 ---
 
 **Este artigo é a quarta parte (Camada 3) da nossa análise sobre o sono da alma (estado intermediário).**
@@ -279,3 +279,4 @@ Até lá.
 ---
 
 **Fim da Camada 3**
+

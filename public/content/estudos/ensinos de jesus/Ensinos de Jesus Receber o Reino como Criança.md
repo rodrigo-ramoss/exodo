@@ -2,7 +2,7 @@
 title: "Ensinos de Jesus: Receber o Reino como Criança — Uma Análise de Lucas 18:17"
 date: 2026-04-13
 category: "Ensinos de Jesus"
-image: /imagens/reino-como-crianca-lucas-18.webp
+image: /image/estudos/Ensinos de Jesus: Receber o Reino como Criança — Uma Análise de Lucas 18:17.webp
 description: "O que Jesus quis dizer ao afirmar que é necessário receber o Reino de Deus como uma criança? Uma análise léxica e contextual de Lucas 18:17 e suas implicações para a fé fora dos sistemas religiosos."
 keywords: "#Lucas18 #ReinoDeDeus #Criança #Humildade #EnsinosDeJesus"
 ---

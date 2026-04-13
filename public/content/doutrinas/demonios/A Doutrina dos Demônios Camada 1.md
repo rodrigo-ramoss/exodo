@@ -5,7 +5,7 @@ category: original
 theme: "Demônios"
 subcategory: "Demonologia"
 description: "O que o AT, os escritos intertestamentais e o NT realmente dizem sobre demônios? Shedim, se'irim, espíritos imundos, possessões, exorcismos — uma análise exegética sem pressupostos. Camada 1 da nossa análise em 5 níveis."
-image: /imagens/demonios-camada1-voz-do-deserto.webp
+image: /image/doutrinas/demonios.webp
 ---
 
 **Este artigo é a segunda parte (Camada 1) da nossa análise sobre a doutrina dos demônios.**
@@ -291,3 +291,4 @@ Até lá.
 ---
 
 **Fim da Camada 1**
+

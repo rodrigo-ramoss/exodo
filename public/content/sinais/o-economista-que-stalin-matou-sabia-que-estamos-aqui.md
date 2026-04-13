@@ -3,7 +3,7 @@ title: "O Economista que Stalin Matou Sabia Que Estamos Aqui"
 date: 2026-03-20
 category: "PADRÕES - ECONOMIA E SISTEMA"
 folder: Scriptorium
-image: /imagens/o-economista-que-stalin-matou-sabia-que-estamos-aqui.webp
+image: /image/sinais/o-economista-que-stalin-matou-sabia-que-estamos-aqui.webp
 description: "Kondratiev descobriu que a história econômica se move em ondas de 50 anos terminando em guerra e colapso. Stalin o executou. O padrão continuou sem ele — e aponta para 2026."
 keywords: "#OndasDeKondratiev #CiclosEconomicos #Jubileo #Ezequiel #ResetMundial"
 ---
@@ -137,3 +137,4 @@ O padrão sugere que estamos em ponto de transição — final de ciclo, início
 - P2P FOUNDATION WIKI. *Kondratiev cycles and war correlation*. wiki.p2pfoundation.net/Kondratiev_Cycles.
 - GROKIPEDIA. *Kondratiev wave — updated analysis with 2023 global debt data*. Janeiro 2026.
 - Texto bíblico: Levítico 25:8-10 (o Jubileu); Eclesiastes 1:9; Ezequiel 1:16 — análise a partir do texto hebraico (BHS).
+

@@ -3,7 +3,7 @@ title: "O Boom Pentecostal que a CIA Precisava que Acontecesse"
 date: 2026-04-06
 category: Igreja & CIA
 folder: Scriptorium
-image: /imagens/o-boom-pentecostal-que-a-cia-precisava-que-acontecesse.webp
+image: /image/sinais/o-boom-pentecostal-que-a-cia-precisava-que-acontecesse.webp
 description: "Documentos desclassificados, memorandos da USAID e contratos do Departamento de Estado provam: a explosão pentecostal na América Latina não aconteceu num vácuo. Aconteceu numa guerra."
 keywords: "#PentecostalCIA #TeologiaDaLibertacao #ContrainsurgenciaReligiosa #HistoriaIgreja #ColdWarChurch"
 ---
@@ -141,3 +141,4 @@ A questão não é o que os missionários individuais deveriam ter feito — mui
 - GREY DYNAMICS. *CIA activity in South America: a brief history*. greydynamics.com.
 - COMISSÃO NACIONAL DA VERDADE. *Relatório Final*. Brasília, 2014.
 - Texto bíblico: 1 Samuel 8:11-18; Amós 5:21-24; Lucas 4:18 — análise a partir do texto hebraico (BHS) e grego (NA28).
+

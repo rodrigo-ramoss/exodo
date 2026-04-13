@@ -16,7 +16,15 @@ interface SignItem {
 export default function Signs() {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const { data: signs, loading, error } = useFetch<SignItem[]>('/content/sinais/index.json');
+
+  // Group signs by category
+  const categories = signs ? Array.from(new Set(signs.map(s => s.category))) : [];
+  const groupedSigns = categories.reduce((acc, cat) => {
+    acc[cat] = signs?.filter(s => s.category === cat) || [];
+    return acc;
+  }, {} as Record<string, SignItem[]>);
 
   useEffect(() => {
     if (selectedSlug) {
@@ -130,57 +138,54 @@ export default function Signs() {
           <div className="h-px bg-outline-variant flex-grow ml-4 opacity-20"></div>
         </div>
         
-        {/* Accordion Item 1: Active */}
-        <div className="border-b border-outline-variant/10">
-          <button className="w-full py-4 flex items-center justify-between text-left group active:opacity-70">
-            <div className="flex items-center gap-4">
-              <span className="text-primary font-headline text-base opacity-40">01</span>
-              <h4 className="font-headline text-lg font-bold group-hover:text-primary transition-colors">Escatologia Digital</h4>
-            </div>
-            <Minus className="text-primary" size={18} />
-          </button>
-          <div className="pb-6 space-y-4">
-            {loading ? (
-              <div className="py-4 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
-            ) : signs?.map((item, i) => (
-              <div 
-                key={i} 
-                onClick={() => setSelectedSlug(item.slug)}
-                className="flex gap-3 group cursor-pointer active:scale-[0.98] transition-transform"
-              >
-                <div className="w-16 h-16 flex-shrink-0 overflow-hidden bg-surface-container-high rounded-xl">
-                  <img className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src={item.image || `https://picsum.photos/seed/${item.slug}-thumb/200/200`} />
-                </div>
-                <div className="flex flex-col justify-center">
-                  <h5 className="font-headline text-sm font-bold leading-tight mb-1.5 group-hover:text-primary transition-colors">{item.title}</h5>
-                  <div className="flex items-center gap-2 text-[8px] text-on-surface-variant uppercase tracking-widest font-black">
-                    <span>{item.date}</span>
-                    <span>•</span>
-                    <span>{item.time}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {['IA e Controle Social', 'Hollywood Profetizou', 'Reset Mundial'].map((cat, i) => (
+        {loading ? (
+          <div className="py-4 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
+        ) : categories.map((cat, i) => (
           <div key={i} className="border-b border-outline-variant/10">
-            <button className="w-full py-4 flex items-center justify-between text-left group active:opacity-70">
+            <button 
+              onClick={() => setExpandedCategory(expandedCategory === cat ? null : cat)}
+              className="w-full py-4 flex items-center justify-between text-left group active:opacity-70 transition-all"
+            >
               <div className="flex items-center gap-4">
-                <span className="text-on-surface-variant font-headline text-base opacity-40">0{i + 2}</span>
-                <h4 className="font-headline text-lg font-bold group-hover:text-primary transition-colors">{cat}</h4>
+                <span className={`font-headline text-base opacity-40 ${expandedCategory === cat ? 'text-primary opacity-100' : 'text-on-surface-variant'}`}>
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h4 className={`font-headline text-lg font-bold group-hover:text-primary transition-colors ${expandedCategory === cat ? 'text-primary' : 'text-on-surface'}`}>
+                  {cat}
+                </h4>
               </div>
-              <Plus className="text-on-surface-variant" size={18} />
+              {expandedCategory === cat ? (
+                <Minus className="text-primary" size={18} />
+              ) : (
+                <Plus className="text-on-surface-variant group-hover:text-primary transition-colors" size={18} />
+              )}
             </button>
+            
+            {expandedCategory === cat && (
+              <div className="pb-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                {groupedSigns[cat].map((item, j) => (
+                  <div 
+                    key={j} 
+                    onClick={() => setSelectedSlug(item.slug)}
+                    className="flex gap-3 group cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-high/20 p-2 rounded-xl hover:bg-surface-container-high/40"
+                  >
+                    <div className="w-16 h-16 flex-shrink-0 overflow-hidden bg-surface-container-high rounded-xl border border-outline-variant/10">
+                      <img className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src={item.image || `https://picsum.photos/seed/${item.slug}-thumb/200/200`} />
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <h5 className="font-headline text-sm font-bold leading-tight mb-1.5 group-hover:text-primary transition-colors line-clamp-1">{item.title}</h5>
+                      <div className="flex items-center gap-2 text-[8px] text-on-surface-variant uppercase tracking-widest font-black">
+                        <span>{item.date}</span>
+                        <span className="text-primary">•</span>
+                        <span>{item.time}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         ))}
-        
-        <div className="py-4 text-center">
-          <button className="px-6 py-2.5 bg-surface-container-high text-primary text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-surface-bright transition-colors border border-outline-variant/20 active:scale-95">
-            Ver mais categorias
-          </button>
-        </div>
       </section>
 
       {/* Newsletter */}

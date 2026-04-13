@@ -5,7 +5,7 @@ category: original
 theme: "Batismo no Espírito"
 subcategory: "Pneumatologia"
 description: "O que o texto grego de Atos e 1 Coríntios realmente diz sobre o batismo no Espírito? Análise exegética de Atos 2, 8, 10, 19 e 1 Coríntios 12-14 — línguas como evidência? Segunda obra? Camada 1 da nossa análise em 5 níveis."
-image: /imagens/batismo-espirito-camada1-voz-do-deserto.webp
+image: /image/doutrinas/batismo no espirito santo.webp
 ---
 
 **Este artigo é a segunda parte (Camada 1) da nossa análise sobre a doutrina do Batismo no Espírito Santo.**
@@ -280,3 +280,4 @@ Até lá.
 ---
 
 **Fim da Camada 1**
+

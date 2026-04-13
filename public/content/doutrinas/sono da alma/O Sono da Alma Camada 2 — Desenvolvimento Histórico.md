@@ -5,7 +5,7 @@ category: original
 theme: "Sono da Alma"
 subcategory: "Escatologia"
 description: "Como a doutrina do estado intermediário se desenvolveu? Do Sheol silencioso do AT ao purgatório medieval, passando pela Reforma (Lutero, Calvino) até o sono da alma adventista e a consciência imediata evangélica. Camada 2 da nossa análise em 5 níveis."
-image: /imagens/sono-alma-camada2-voz-do-deserto.webp
+image: /image/doutrinas/sono da alma.webp
 ---
 
 **Este artigo é a terceira parte (Camada 2) da nossa análise sobre o sono da alma (estado intermediário).**
@@ -273,3 +273,4 @@ Até lá.
 ---
 
 **Fim da Camada 2**
+

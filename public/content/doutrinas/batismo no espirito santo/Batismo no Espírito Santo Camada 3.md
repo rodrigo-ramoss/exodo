@@ -5,7 +5,7 @@ category: original
 theme: "Batismo no Espírito"
 subcategory: "Pneumatologia"
 description: "O falar em línguas é a evidência inicial do batismo no Espírito? Uma análise acadêmica dos argumentos de Gordon Fee, James Dunn, Frank Stagg, Wayne Grudem e Roger Stronstad. Camada 3 da nossa análise em 5 níveis."
-image: /imagens/batismo-espirito-camada3-voz-do-deserto.webp
+image: /image/doutrinas/batismo no espirito santo.webp
 ---
 
 **Este artigo é a quarta parte (Camada 3) da nossa análise sobre a doutrina do Batismo no Espírito Santo.**
@@ -220,3 +220,4 @@ Até lá.
 ---
 
 **Fim da Camada 3**
+

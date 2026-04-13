@@ -2,7 +2,7 @@
 title: "O T-1000 Saiu da Tela: Quando Hollywood Profetizou o Robô de Metal Líquido"
 date: 2026-03-20
 category: Hollywood Profetizou
-image: /imagens/o-t-1000-saiu-da-tela-quando-hollywood-profetizou-o-robo-de-metal-liquido.webp
+image: /image/sinais/o-t-1000-saiu-da-tela-quando-hollywood-profetizou-o-robo-de-metal-liquido.webp
 description: "Em 1991, James Cameron mostrou um robô que atravessava grades como líquido. Em 2026, cientistas replicaram exatamente isso. O que mais do roteiro ainda está por vir?"
 keywords: "#T1000 #RoboLiquido #HollywoodProfetizou #TerminatorRealidade #EscatologiaDigital"
 ---
@@ -96,3 +96,4 @@ Significa que a trajetória tecnológica não é destino inevitável — é resu
 - GERACI, Robert. *Apocalyptic AI: Visions of Heaven in Robotics, Artificial Intelligence, and Virtual Reality*. Oxford University Press, 2010.
 - BOSTROM, Nick. *Superintelligence: Paths, Dangers, Strategies*. Oxford University Press, 2014.
 - ELLUL, Jacques. *The Technological Society*. Knopf, 1964.
+

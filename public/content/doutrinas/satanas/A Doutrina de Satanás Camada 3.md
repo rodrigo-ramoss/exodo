@@ -5,7 +5,7 @@ category: original
 theme: "Satanás"
 subcategory: "Demonologia"
 description: "Satanás é pessoal ou personificação? O que a psicologia, a academia e o esoterismo dizem? Dos debates evangélicos à cabalá, gnosticismo e Jung. Camada 3 da nossa análise em 5 níveis."
-image: /imagens/satanas-camada3-voz-do-deserto.webp
+image: /image/doutrinas/satanas.webp
 ---
 
 **Este artigo é a quarta parte (Camada 3) da nossa análise sobre a doutrina de Satanás.**
@@ -246,3 +246,4 @@ Até lá.
 ---
 
 **Fim da Camada 3**
+

@@ -5,7 +5,7 @@ category: "Doutrinas"
 theme: "Dízimo"
 subcategory: "Economia do Reino"
 description: "O NT não ordena o dízimo. Como ele se tornou um imposto eclesiástico obrigatório? Da imposição medieval à reinvenção evangélica moderna. Camada 2 da nossa análise em 4 camadas."
-image: /imagens/o-original/dizimo.webp
+image: /image/doutrinas/dizimo.webp
 ---
 
 **Este artigo é a segunda de quatro partes da nossa análise sobre o dízimo.**
@@ -283,3 +283,4 @@ Até lá.
 ---
 
 **Fim da Camada 2**
+

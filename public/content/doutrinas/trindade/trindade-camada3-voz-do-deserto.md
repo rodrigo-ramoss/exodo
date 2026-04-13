@@ -5,7 +5,7 @@ category: "Doutrinas"
 theme: "Trindade"
 subcategory: "Teologia Própria"
 description: "Judaísmo, islamismo, unitarianismo, arianismo moderno — as principais objeções à doutrina da Trindade. Um exame respeitoso das críticas e das respostas trinitárias. Camada 3 da nossa análise em 4 camadas."
-image: /imagens/o-original/trindade.webp
+image: /image/doutrinas/trindade.webp
 ---
 
 **Este artigo é a terceira de quatro partes da nossa análise sobre a doutrina da Trindade.**
@@ -282,3 +282,4 @@ Até lá.
 ---
 
 **Fim da Camada 3**
+

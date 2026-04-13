@@ -5,7 +5,7 @@ category: "Doutrinas"
 theme: "Dízimo"
 subcategory: "Economia do Reino"
 description: "O que o texto realmente ensina sobre dar financeiramente? Síntese das três camadas anteriores e posição fundamentada — com honestidade textual, respeito ao debate e implicações para quem busca Deus fora da instituição."
-image: /imagens/o-original/dizimo.webp
+image: /image/doutrinas/dizimo.webp
 ---
 
 **Este artigo é a quarta e última parte da nossa análise sobre o dízimo.**
@@ -215,3 +215,4 @@ E essa libertação do medo muda tudo — especialmente para quem está no deser
 **Próximo tema sugerido:** *A Doutrina da Salvação — Fé, Obras e Graça: O que a Bíblia Realmente Ensina?* (Análise em 4 camadas)
 
 ---
+
