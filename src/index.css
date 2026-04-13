@@ -52,7 +52,8 @@
 
 @layer components {
   .prose {
-    @apply text-on-surface-variant leading-relaxed;
+    @apply leading-relaxed;
+    color: inherit;
   }
   .prose-invert {
     /* Styles are already dark-themed by default here */

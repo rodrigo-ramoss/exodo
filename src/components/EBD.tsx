@@ -43,16 +43,11 @@ export default function EBD({ onNavigate }: EBDProps) {
 
   if (selectedSlug && markdownContent) {
     return (
-      <div className="pb-32 px-5 pt-6 max-w-2xl mx-auto min-h-screen bg-surface-container-lowest">
-        <button 
-          onClick={() => setSelectedSlug(null)}
-          className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest mb-8 active:scale-95 transition-transform"
-        >
-          <ArrowLeft size={16} />
-          Voltar para EBD
-        </button>
-        <MarkdownViewer content={markdownContent} />
-      </div>
+      <MarkdownViewer 
+        content={markdownContent} 
+        slug={selectedSlug} 
+        onClose={() => setSelectedSlug(null)} 
+      />
     );
   }
 

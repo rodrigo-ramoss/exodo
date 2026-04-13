@@ -57,16 +57,11 @@ export default function Doctrines() {
   // Se um arquivo MD está selecionado, mostra o visualizador em tela cheia
   if (selectedSlug && markdownContent) {
     return (
-      <div className="pb-32 px-5 pt-6 max-w-2xl mx-auto min-h-screen bg-surface-container-lowest">
-        <button 
-          onClick={() => setSelectedSlug(null)}
-          className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest mb-8 active:scale-95 transition-transform"
-        >
-          <ArrowLeft size={16} />
-          Voltar para as camadas
-        </button>
-        <MarkdownViewer content={markdownContent} slug={selectedSlug} />
-      </div>
+      <MarkdownViewer 
+        content={markdownContent} 
+        slug={selectedSlug} 
+        onClose={() => setSelectedSlug(null)} 
+      />
     );
   }
 

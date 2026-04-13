@@ -47,16 +47,11 @@ export default function Studies() {
 
   if (selectedSlug && markdownContent) {
     return (
-      <div className="pb-24 min-h-screen bg-surface-container-lowest px-5 pt-6">
-        <button 
-          onClick={() => setSelectedSlug(null)}
-          className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest mb-8 active:scale-95 transition-transform"
-        >
-          <ArrowLeft size={16} />
-          Voltar para estudos
-        </button>
-        <MarkdownViewer content={markdownContent} slug={selectedSlug} />
-      </div>
+      <MarkdownViewer 
+        content={markdownContent} 
+        slug={selectedSlug} 
+        onClose={() => setSelectedSlug(null)} 
+      />
     );
   }
 
