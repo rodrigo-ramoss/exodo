@@ -130,7 +130,7 @@ export default function Studies() {
       <section className="space-y-10">
         {loading ? null : categories.map((cat, i) => (
           <div key={i} className="flex flex-col gap-4">
-            <div className="px-4 sm:px-6 flex items-center justify-between container-biblioteca">
+            <div className="flex items-center justify-between container-biblioteca">
               <h3 className="text-[10px] font-black tracking-[0.25em] uppercase text-primary opacity-80">{cat}</h3>
               <div className="h-[1px] flex-1 ml-4 bg-outline-variant/10"></div>
             </div>

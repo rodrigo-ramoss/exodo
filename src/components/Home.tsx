@@ -1,4 +1,4 @@
-import { ArrowRight, Star } from 'lucide-react';
+import { ArrowRight, Shield, Star } from 'lucide-react';
 import { Screen } from '../types';
 import { useFetch } from '../hooks/useFetch';
 import { cn } from '../lib/utils';

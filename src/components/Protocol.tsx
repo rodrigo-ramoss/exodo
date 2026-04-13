@@ -19,7 +19,7 @@ interface Trilha {
   missions: Mission[];
 }
 
-export default function Protocol() {
+const Protocol: React.FC = () => {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const { data: trilhas, loading, error } = useFetch<Trilha[]>('/content/protocolo/protocolo-index.json');
@@ -143,4 +143,6 @@ export default function Protocol() {
       )}
     </div>
   );
-}
+};
+
+export default Protocol;
