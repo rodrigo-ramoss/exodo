@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Search, Star, ChevronDown, ChevronUp, Clock, ArrowLeft } from 'lucide-react';
-import { useFetch } from '../hooks/useFetch';
+import { useMemo, useState } from 'react';
+import { Search, Star, Clock } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 
 interface StudyItem {
@@ -11,12 +10,59 @@ interface StudyItem {
   category: string;
   time: string;
   image?: string;
+  track: StudyTrack;
+}
+
+type StudyTrack = 'biblicos' | 'apocrifos';
+
+const trackLabels: Record<StudyTrack, string> = {
+  biblicos: 'ESTUDOS BÍBLICOS',
+  apocrifos: 'ESTUDANDO APÓCRIFOS',
+};
+
+const studyIndexModules = import.meta.glob('../content/estudos/{biblicos,apocrifos}/index.json', {
+  eager: true,
+  import: 'default',
+}) as Record<string, Omit<StudyItem, 'track'>[]>;
+
+const studyMarkdownModules = import.meta.glob('../content/estudos/{biblicos,apocrifos}/**/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
+
+function loadStudies(track: StudyTrack): StudyItem[] {
+  const indexPath = `../content/estudos/${track}/index.json`;
+  const items = studyIndexModules[indexPath] || [];
+  return items.map(item => ({ ...item, track }));
 }
 
 export default function Studies() {
-  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
-  const [markdownContent, setMarkdownContent] = useState<string | null>(null);
-  const { data: studies, loading, error } = useFetch<StudyItem[]>('/content/estudos/index.json');
+  const [selectedTrack, setSelectedTrack] = useState<StudyTrack>('biblicos');
+  const [selectedStudy, setSelectedStudy] = useState<StudyItem | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const allStudies = useMemo(
+    () => [...loadStudies('biblicos'), ...loadStudies('apocrifos')],
+    [],
+  );
+
+  const studies = useMemo(() => {
+    const lowerSearch = searchTerm.trim().toLowerCase();
+    return allStudies
+      .filter(study => study.track === selectedTrack)
+      .filter(study => {
+        if (!lowerSearch) return true;
+        return (
+          study.title.toLowerCase().includes(lowerSearch) ||
+          study.description.toLowerCase().includes(lowerSearch) ||
+          study.category.toLowerCase().includes(lowerSearch)
+        );
+      });
+  }, [allStudies, searchTerm, selectedTrack]);
+
+  const loading = false;
+  const error = null;
 
   // Featured and Recent logic with deduplication
   const featuredStudies = studies ? studies.slice(0, 4) : [];
@@ -29,31 +75,16 @@ export default function Studies() {
     return acc;
   }, {} as Record<string, StudyItem[]>);
 
-  useEffect(() => {
-    if (selectedSlug) {
-      const fetchMarkdown = async () => {
-        try {
-          const response = await fetch(`/content/estudos/${selectedSlug}.md`);
-          if (response.ok) {
-            const text = await response.text();
-            setMarkdownContent(text);
-          }
-        } catch (err) {
-          console.error('Error fetching markdown:', err);
-        }
-      };
-      fetchMarkdown();
-    } else {
-      setMarkdownContent(null);
-    }
-  }, [selectedSlug]);
+  const markdownContent = selectedStudy
+    ? studyMarkdownModules[`../content/estudos/${selectedStudy.track}/${selectedStudy.slug}.md`] || null
+    : null;
 
-  if (selectedSlug && markdownContent) {
+  if (selectedStudy && markdownContent) {
     return (
       <MarkdownViewer 
         content={markdownContent} 
-        slug={selectedSlug} 
-        onClose={() => setSelectedSlug(null)} 
+        slug={selectedStudy.slug} 
+        onClose={() => setSelectedStudy(null)} 
       />
     );
   }
@@ -70,19 +101,45 @@ export default function Studies() {
 
       {/* Investigative Search */}
       <section className="px-4 sm:px-6 mt-4">
+        <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-3 mb-3">
+          {(Object.keys(trackLabels) as StudyTrack[]).map(track => (
+            <button
+              key={track}
+              onClick={() => setSelectedTrack(track)}
+              className={`flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full ${
+                selectedTrack === track
+                  ? 'bg-primary text-on-primary border-primary'
+                  : 'bg-surface-container-high text-on-surface-variant border-outline-variant/20 hover:border-primary/50'
+              }`}
+            >
+              {trackLabels[track]}
+            </button>
+          ))}
+        </div>
+
         <div className="relative group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
           <input 
             className="w-full bg-surface-container-high border-b border-outline-variant focus:border-primary focus:ring-0 text-on-surface placeholder:text-on-surface-variant/50 transition-all px-11 py-3.5 font-sans text-sm tracking-wide outline-none" 
             placeholder="Buscar estudo..." 
             type="text" 
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
           />
           <Star className="absolute right-4 top-1/2 -translate-y-1/2 text-primary opacity-0 group-focus-within:opacity-100 transition-opacity" size={18} />
         </div>
       </section>
 
+      {!loading && studies.length === 0 && (
+        <section className="px-4 sm:px-6 mt-8">
+          <div className="py-16 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-60 border border-dashed border-outline-variant/20 rounded-3xl">
+            Nenhum estudo encontrado nesta categoria.
+          </div>
+        </section>
+      )}
+
       {/* Featured Carousel */}
-      <section className="mt-8">
+      <section className={`mt-8 ${studies.length === 0 ? 'hidden' : ''}`}>
         <div className="px-4 sm:px-6 flex justify-between items-baseline mb-3">
           <h2 className="font-headline font-bold text-[10px] tracking-[0.2em] uppercase text-on-surface opacity-60">
             Estudos em Destaque
@@ -101,7 +158,7 @@ export default function Studies() {
           ) : featuredStudies.map((item, i) => (
             <div key={i} className="flex-shrink-0 w-72 snap-center">
               <div 
-                onClick={() => setSelectedSlug(item.slug)}
+                onClick={() => setSelectedStudy(item)}
                 className="relative aspect-[16/10] rounded-2xl overflow-hidden group cursor-pointer active:scale-95 transition-transform"
               >
                 <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src={item.image || `https://picsum.photos/seed/${item.slug}/600/400`} />
@@ -119,7 +176,7 @@ export default function Studies() {
       </section>
 
       {/* Spacing and Library Header */}
-      <section className="mt-12 mb-8 container-biblioteca">
+      <section className={`mt-12 mb-8 container-biblioteca ${studies.length === 0 ? 'hidden' : ''}`}>
         <div className="flex items-center gap-4">
           <h2 className="font-headline font-extrabold text-2xl tracking-tighter text-on-surface">Biblioteca</h2>
           <div className="h-[1px] flex-1 bg-outline-variant/20"></div>
@@ -127,7 +184,7 @@ export default function Studies() {
       </section>
 
       {/* Library Rows (Horizontal Rows per Category) */}
-      <section className="space-y-10">
+      <section className={`space-y-10 ${studies.length === 0 ? 'hidden' : ''}`}>
         {loading ? null : categories.map((cat, i) => (
           <div key={i} className="flex flex-col gap-4">
             <div className="flex items-center justify-between container-biblioteca">
@@ -143,7 +200,7 @@ export default function Studies() {
                 return (
                   <div 
                     key={j} 
-                    onClick={() => setSelectedSlug(item.slug)}
+                    onClick={() => setSelectedStudy(item)}
                     className="flex-shrink-0 w-40 sm:w-48 snap-start group cursor-pointer active:scale-[0.98] transition-all"
                   >
                     <div className="aspect-[4/3] rounded-xl overflow-hidden mb-2 border border-outline-variant/10 shadow-sm relative">
@@ -177,7 +234,7 @@ export default function Studies() {
       </section>
 
       {/* Recent Studies (2-Column Grid) */}
-      <section className="mt-16 pb-12 container-biblioteca">
+      <section className={`mt-16 pb-12 container-biblioteca ${studies.length === 0 ? 'hidden' : ''}`}>
         <div className="flex items-center gap-4 mb-8">
           <h2 className="font-headline font-extrabold text-xl tracking-tighter text-on-surface">Explorações Recentes</h2>
           <div className="h-[1px] flex-1 bg-outline-variant/20"></div>
@@ -191,7 +248,7 @@ export default function Studies() {
           ) : recentStudies.map((item, i) => (
             <div 
               key={i} 
-              onClick={() => setSelectedSlug(item.slug)}
+              onClick={() => setSelectedStudy(item)}
               className="flex flex-col group cursor-pointer active:scale-[0.98] transition-all"
             >
               <div className="aspect-[16/9] rounded-xl overflow-hidden mb-3 border border-outline-variant/10">

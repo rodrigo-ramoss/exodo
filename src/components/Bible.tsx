@@ -2,19 +2,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight, ChevronDown, Moon, Bookmark, PanelLeft } from 'lucide-react';
 import {
   fetchBibleChapter,
-  getCuratedWritingsBooks,
   getBooksByTestament,
-  getVersionMetadata,
   type BibleBookMetadata,
   type BibleChapterPayload,
-  type BibleVersion,
 } from '../services/bibleApi';
 import { useBibleVersion } from '../state/BibleVersionContext';
 
-type BookSource = 'scripture' | 'writings';
-
 interface NavigableBook extends BibleBookMetadata {
-  source: BookSource;
   category: string;
 }
 
@@ -35,11 +29,10 @@ const GROUP_ORDER = [
   'Poéticos e Sapienciais',
   'Proféticos',
   'Novo Testamento',
-  'Escritos',
 ];
 
-const DEFAULT_BOOK_ID = 'exodo';
-const DEFAULT_CHAPTER = 20;
+const DEFAULT_BOOK_ID = 'genesis';
+const DEFAULT_CHAPTER = 1;
 const MIN_FONT_SIZE = 14;
 const MAX_FONT_SIZE = 24;
 const DEFAULT_FONT_SIZE = 18;
@@ -62,9 +55,7 @@ function getScriptureCategory(book: BibleBookMetadata): string {
 }
 
 export default function Bible() {
-  const { version, setVersion } = useBibleVersion();
-  const versionMetadata = useMemo(() => getVersionMetadata(version), [version]);
-  const curatedWritingsBooks = useMemo(() => getCuratedWritingsBooks(), []);
+  const { version } = useBibleVersion();
 
   const [selectedBookId, setSelectedBookId] = useState<string>(DEFAULT_BOOK_ID);
   const [selectedChapter, setSelectedChapter] = useState<number>(DEFAULT_CHAPTER);
@@ -82,7 +73,6 @@ export default function Bible() {
     'Poéticos e Sapienciais': false,
     Proféticos: false,
     'Novo Testamento': true,
-    Escritos: true,
   });
 
   const scriptureBooks = useMemo(() => {
@@ -90,22 +80,11 @@ export default function Bible() {
     const newBooks = getBooksByTestament(version, 'new');
     return [...oldBooks, ...newBooks].map((book) => ({
       ...book,
-      source: 'scripture' as const,
       category: getScriptureCategory(book),
     }));
   }, [version]);
 
-  const writingsBooks = useMemo(
-    () =>
-      curatedWritingsBooks.map((book) => ({
-        ...book,
-        source: 'writings' as const,
-        category: 'Escritos',
-      })),
-    [curatedWritingsBooks],
-  );
-
-  const allBooks = useMemo<NavigableBook[]>(() => [...scriptureBooks, ...writingsBooks], [scriptureBooks, writingsBooks]);
+  const allBooks = useMemo<NavigableBook[]>(() => scriptureBooks, [scriptureBooks]);
 
   const selectedBook = useMemo(
     () => allBooks.find((book) => book.id === selectedBookId),
@@ -191,13 +170,6 @@ export default function Bible() {
     };
   }, [version, selectedBook, selectedChapter, retryCounter]);
 
-  const getCollectionForNavigation = (): NavigableBook[] => {
-    if (!selectedBook) {
-      return [];
-    }
-    return selectedBook.source === 'writings' ? writingsBooks : scriptureBooks;
-  };
-
   const getAdjacentChapter = (
     books: NavigableBook[],
     currentBookId: string,
@@ -232,7 +204,7 @@ export default function Bible() {
     return { bookId: nextBook.id, chapter: 1 };
   };
 
-  const navigableBooks = getCollectionForNavigation();
+  const navigableBooks = scriptureBooks;
   const previousChapter = selectedBook
     ? getAdjacentChapter(navigableBooks, selectedBook.id, selectedChapter, 'previous')
     : null;
@@ -240,13 +212,6 @@ export default function Bible() {
     ? getAdjacentChapter(navigableBooks, selectedBook.id, selectedChapter, 'next')
     : null;
   const chapterVerses = chapterData?.verses ?? [];
-
-  const handleVersionChange = (nextVersion: BibleVersion) => {
-    if (nextVersion === version) {
-      return;
-    }
-    setVersion(nextVersion);
-  };
 
   const handleNavigateChapter = (direction: 'previous' | 'next') => {
     if (!selectedBook) {
@@ -274,18 +239,12 @@ export default function Bible() {
     const visibleScriptureBooks = query
       ? scriptureBooks.filter((book) => book.name.toLowerCase().includes(query))
       : scriptureBooks;
-    const visibleWritingsBooks = query
-      ? writingsBooks.filter((book) => book.name.toLowerCase().includes(query))
-      : writingsBooks;
 
     return GROUP_ORDER.map((groupName) => ({
       name: groupName,
-      books:
-        groupName === 'Escritos'
-          ? visibleWritingsBooks
-          : visibleScriptureBooks.filter((book) => book.category === groupName),
+      books: visibleScriptureBooks.filter((book) => book.category === groupName),
     })).filter((group) => group.books.length > 0);
-  }, [scriptureBooks, writingsBooks, searchTerm]);
+  }, [scriptureBooks, searchTerm]);
 
   const currentReference = selectedBook ? `${selectedBook.name} ${selectedChapter}` : 'Leitura Bíblica';
 
@@ -307,29 +266,35 @@ export default function Bible() {
             </h1>
           </button>
 
-          <select
-            value={version}
-            onChange={(event) => handleVersionChange(event.target.value as BibleVersion)}
-            className="bg-surface-container-high border border-outline-variant/20 rounded-xl px-3 py-2 text-[11px] font-bold text-on-surface uppercase tracking-widest"
-          >
-            <option value="traditional">Tradicional</option>
-            <option value="ethiopian">Etíope</option>
-          </select>
+          <span className="bg-surface-container-high border border-outline-variant/20 rounded-xl px-3 py-2 text-[10px] font-black text-on-surface uppercase tracking-widest">
+            Bíblia Tradicional
+          </span>
         </div>
       </header>
 
       <section className="flex-1 min-h-0 bg-surface-container-lowest rounded-2xl shadow-xl border border-outline-variant/10 flex flex-col overflow-hidden">
-        <div className="px-4 py-3 border-b border-outline-variant/10 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-          <button
-            onClick={() => handleNavigateChapter('previous')}
-            disabled={!previousChapter}
-            className="justify-self-start flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors font-headline font-bold uppercase text-[10px] tracking-widest disabled:opacity-40 disabled:pointer-events-none"
-          >
-            <ChevronLeft size={14} />
-            Anterior
-          </button>
+        <div className="px-3 sm:px-4 py-3 border-b border-outline-variant/10 flex flex-col gap-3 relative z-10">
+          <div className="grid grid-cols-2 items-center gap-3">
+            <button
+              onClick={() => handleNavigateChapter('previous')}
+              disabled={!previousChapter}
+              className="justify-self-start flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors font-headline font-bold uppercase text-[10px] tracking-widest disabled:opacity-40 disabled:pointer-events-none"
+            >
+              <ChevronLeft size={14} />
+              Anterior
+            </button>
 
-          <div className="bg-surface-container-high border border-outline-variant/20 rounded-xl px-3 py-2 flex items-center gap-3 min-w-[180px]">
+            <button
+              onClick={() => handleNavigateChapter('next')}
+              disabled={!nextChapter}
+              className="justify-self-end flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors font-headline font-bold uppercase text-[10px] tracking-widest disabled:opacity-40 disabled:pointer-events-none"
+            >
+              Próximo
+              <ChevronRight size={14} />
+            </button>
+          </div>
+
+          <div className="mx-auto w-full max-w-[220px] sm:max-w-[260px] bg-surface-container-high border border-outline-variant/20 rounded-xl px-3 py-2 flex items-center gap-3">
             <span className="text-[9px] font-black text-on-surface-variant">A</span>
             <input
               className="flex-1 h-1 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary"
@@ -341,15 +306,6 @@ export default function Bible() {
             />
             <span className="text-sm font-black text-on-surface-variant">A</span>
           </div>
-
-          <button
-            onClick={() => handleNavigateChapter('next')}
-            disabled={!nextChapter}
-            className="justify-self-end flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors font-headline font-bold uppercase text-[10px] tracking-widest disabled:opacity-40 disabled:pointer-events-none"
-          >
-            Próximo
-            <ChevronRight size={14} />
-          </button>
         </div>
 
         <article
