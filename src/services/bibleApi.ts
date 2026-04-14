@@ -1,5 +1,6 @@
 import bibleMetadata from '../data/bibleMetadata.json';
 import catholicFallbackBooks from '../data/catholicFallbackBooks.json';
+import escritosCurados from '../data/escritosCurados.json';
 
 export type BibleVersion = 'traditional' | 'catholic' | 'ethiopian';
 export type BibleTestament = 'old' | 'new' | 'deuterocanonical';
@@ -61,9 +62,19 @@ interface LocalFallbackBook {
 }
 
 type LocalFallbackBooksMap = Record<string, LocalFallbackBook>;
+interface CuratedWritingsPayload {
+  books: Array<{
+    id: string;
+    name: string;
+    group: string;
+    chapterCount: number;
+    chapters: Record<string, unknown>;
+  }>;
+}
 
 const persistedMetadata = bibleMetadata as PersistedBibleMetadataMap;
 const localCatholicFallbackBooks = catholicFallbackBooks as LocalFallbackBooksMap;
+const curatedWritingsPayload = escritosCurados as CuratedWritingsPayload;
 
 const CATHOLIC_LOCAL_BOOK_IDS = new Set([
   'tobias',
@@ -106,6 +117,27 @@ const localEthiopianFallbackBooks: LocalFallbackBooksMap = {
 };
 
 const ETHIOPIAN_LOCAL_BOOK_IDS = new Set(Object.keys(localEthiopianFallbackBooks));
+const curatedWritingsMap: LocalFallbackBooksMap = curatedWritingsPayload.books.reduce(
+  (accumulator, book) => {
+    accumulator[book.id] = {
+      name: book.name,
+      chapterCount: book.chapterCount,
+      chapters: book.chapters ?? {},
+    };
+    return accumulator;
+  },
+  {} as LocalFallbackBooksMap,
+);
+const CURATED_WRITINGS_BOOK_IDS = new Set(Object.keys(curatedWritingsMap));
+const curatedWritingsBooksMetadata: BibleBookMetadata[] = curatedWritingsPayload.books.map(
+  (book, index) => ({
+    id: book.id,
+    name: book.name,
+    testament: 'deuterocanonical',
+    chapters: book.chapterCount,
+    order: 1000 + index,
+  }),
+);
 
 const ethiopianMetadata: BibleVersionMetadata = {
   id: 'ethiopian',
@@ -434,6 +466,10 @@ export function getBooksByTestament(
   return getVersionMetadata(version).books.filter((book) => book.testament === testament);
 }
 
+export function getCuratedWritingsBooks(): BibleBookMetadata[] {
+  return curatedWritingsBooksMetadata;
+}
+
 export function getBookById(version: BibleVersion, bookId: string): BibleBookMetadata | undefined {
   return getVersionMetadata(version).books.find((book) => book.id === bookId);
 }
@@ -483,6 +519,23 @@ export async function fetchBibleChapter({
   const config = providerConfig[version];
   const resolvedBookId = bookId ?? getKnownBookId(version, bookName);
   const resolvedBookMetadata = resolvedBookId ? getBookById(version, resolvedBookId) : undefined;
+
+  if (resolvedBookId && CURATED_WRITINGS_BOOK_IDS.has(resolvedBookId)) {
+    const curatedBook = curatedWritingsMap[resolvedBookId];
+    const boundedChapter = curatedBook
+      ? Math.min(Math.max(chapter, 1), curatedBook.chapterCount)
+      : chapter;
+
+    const chapterData = curatedBook?.chapters[String(boundedChapter)];
+    const verses = normalizeLocalVerses(chapterData);
+    return {
+      version,
+      reference: `${curatedBook?.name ?? bookName} ${boundedChapter}`,
+      bookName: curatedBook?.name ?? bookName,
+      chapter: boundedChapter,
+      verses,
+    };
+  }
 
   if (
     resolvedBookId &&

@@ -12,7 +12,7 @@ const DEFAULT_VERSION: BibleVersion = 'traditional';
 const BibleVersionContext = createContext<BibleVersionContextValue | undefined>(undefined);
 
 function isBibleVersion(value: string | null): value is BibleVersion {
-  return value === 'traditional' || value === 'catholic' || value === 'ethiopian';
+  return value === 'traditional' || value === 'ethiopian';
 }
 
 function getInitialVersion(): BibleVersion {

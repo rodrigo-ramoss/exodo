@@ -1,0 +1,67 @@
+{
+  "books": [
+    {
+      "id": "tobias",
+      "name": "Tobias",
+      "group": "históricos-sapienciais",
+      "chapterCount": 14,
+      "chapters": {}
+    },
+    {
+      "id": "judite",
+      "name": "Judite",
+      "group": "históricos-sapienciais",
+      "chapterCount": 16,
+      "chapters": {}
+    },
+    {
+      "id": "1-macabeus",
+      "name": "1 Macabeus",
+      "group": "históricos-sapienciais",
+      "chapterCount": 16,
+      "chapters": {}
+    },
+    {
+      "id": "2-macabeus",
+      "name": "2 Macabeus",
+      "group": "históricos-sapienciais",
+      "chapterCount": 15,
+      "chapters": {}
+    },
+    {
+      "id": "sabedoria",
+      "name": "Sabedoria",
+      "group": "históricos-sapienciais",
+      "chapterCount": 19,
+      "chapters": {}
+    },
+    {
+      "id": "eclesiastico",
+      "name": "Eclesiástico",
+      "group": "históricos-sapienciais",
+      "chapterCount": 51,
+      "chapters": {}
+    },
+    {
+      "id": "baruc",
+      "name": "Baruc",
+      "group": "históricos-sapienciais",
+      "chapterCount": 6,
+      "chapters": {}
+    },
+    {
+      "id": "enoque",
+      "name": "Enoque",
+      "group": "proféticos-antigos",
+      "chapterCount": 108,
+      "chapters": {}
+    },
+    {
+      "id": "jubileus",
+      "name": "Jubileus",
+      "group": "proféticos-antigos",
+      "chapterCount": 50,
+      "chapters": {}
+    }
+  ]
+}
