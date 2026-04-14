@@ -44,7 +44,7 @@ export default function App() {
         return <Signs />;
       case Screen.DOCTRINES:
         return <Doctrines />;
-      case Screen.PROTOCOL:
+      case Screen.APOCRYPHA:
         return <Protocol />;
       default:
         return <Home onNavigate={handleNavigate} />;

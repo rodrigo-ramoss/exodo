@@ -15,11 +15,6 @@ interface StudyItem {
 
 type StudyTrack = 'biblicos' | 'apocrifos';
 
-const trackLabels: Record<StudyTrack, string> = {
-  biblicos: 'ESTUDOS BÍBLICOS',
-  apocrifos: 'ESTUDANDO APÓCRIFOS',
-};
-
 const studyIndexModules = import.meta.glob('../content/estudos/{biblicos,apocrifos}/index.json', {
   eager: true,
   import: 'default',
@@ -38,7 +33,6 @@ function loadStudies(track: StudyTrack): StudyItem[] {
 }
 
 export default function Studies() {
-  const [selectedTrack, setSelectedTrack] = useState<StudyTrack>('biblicos');
   const [selectedStudy, setSelectedStudy] = useState<StudyItem | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -50,7 +44,6 @@ export default function Studies() {
   const studies = useMemo(() => {
     const lowerSearch = searchTerm.trim().toLowerCase();
     return allStudies
-      .filter(study => study.track === selectedTrack)
       .filter(study => {
         if (!lowerSearch) return true;
         return (
@@ -59,7 +52,7 @@ export default function Studies() {
           study.category.toLowerCase().includes(lowerSearch)
         );
       });
-  }, [allStudies, searchTerm, selectedTrack]);
+  }, [allStudies, searchTerm]);
 
   const loading = false;
   const error = null;
@@ -102,19 +95,12 @@ export default function Studies() {
       {/* Investigative Search */}
       <section className="px-4 sm:px-6 mt-4">
         <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-3 mb-3">
-          {(Object.keys(trackLabels) as StudyTrack[]).map(track => (
-            <button
-              key={track}
-              onClick={() => setSelectedTrack(track)}
-              className={`flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full ${
-                selectedTrack === track
-                  ? 'bg-primary text-on-primary border-primary'
-                  : 'bg-surface-container-high text-on-surface-variant border-outline-variant/20 hover:border-primary/50'
-              }`}
-            >
-              {trackLabels[track]}
-            </button>
-          ))}
+          <button
+            className="flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full bg-primary text-on-primary border-primary"
+            type="button"
+          >
+            Estudos
+          </button>
         </div>
 
         <div className="relative group">
@@ -133,7 +119,7 @@ export default function Studies() {
       {!loading && studies.length === 0 && (
         <section className="px-4 sm:px-6 mt-8">
           <div className="py-16 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-60 border border-dashed border-outline-variant/20 rounded-3xl">
-            Nenhum estudo encontrado nesta categoria.
+            Nenhum estudo encontrado para esta busca.
           </div>
         </section>
       )}

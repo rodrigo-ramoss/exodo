@@ -6,5 +6,5 @@ export enum Screen {
   BOOKSTORE = 'BOOKSTORE',
   SIGNS = 'SIGNS',
   DOCTRINES = 'DOCTRINES',
-  PROTOCOL = 'PROTOCOL',
+  APOCRYPHA = 'APOCRYPHA',
 }

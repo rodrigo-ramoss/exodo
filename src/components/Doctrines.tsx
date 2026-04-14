@@ -166,11 +166,11 @@ export default function Doctrines() {
                 className="flex items-center h-[80px] px-4 cursor-pointer active:opacity-70"
               >
                 {doctrine.image ? (
-                  <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 mr-4 border border-outline-variant/10">
-                    <img src={doctrine.image} alt={doctrine.title} className="w-full h-full object-cover" />
+                  <div className="w-14 h-10 rounded-xl overflow-hidden flex-shrink-0 mr-4 border border-outline-variant/10 bg-surface-container-lowest">
+                    <img src={doctrine.image} alt={doctrine.title} className="w-full h-full object-cover object-center" />
                   </div>
                 ) : (
-                  <div className="w-10 h-10 rounded-xl bg-surface-container-lowest flex items-center justify-center flex-shrink-0 mr-4">
+                  <div className="w-14 h-10 rounded-xl bg-surface-container-lowest flex items-center justify-center flex-shrink-0 mr-4">
                     <Icon className="text-primary" size={20} />
                   </div>
                 )}

@@ -22,19 +22,19 @@ interface Trilha {
 const Protocol: React.FC = () => {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
-  const { data: trilhas, loading, error } = useFetch<Trilha[]>('/content/protocolo/protocolo-index.json');
+  const { data: trilhas, loading, error } = useFetch<Trilha[]>('/content/apocrifos/apocrifos-index.json');
 
   useEffect(() => {
     if (selectedSlug) {
       const fetchMarkdown = async () => {
         try {
-          const response = await fetch(`/content/protocolo/${selectedSlug}.md`);
+          const response = await fetch(`/content/apocrifos/${selectedSlug}.md`);
           if (response.ok) {
             const text = await response.text();
             setMarkdownContent(text);
           }
         } catch (err) {
-          console.error('Error fetching protocol mission:', err);
+          console.error('Error fetching apocrypha mission:', err);
         }
       };
       fetchMarkdown();
@@ -55,23 +55,31 @@ const Protocol: React.FC = () => {
 
   return (
     <div className="pb-32 px-4 sm:px-6 max-w-4xl mx-auto min-h-screen bg-surface-container-lowest pt-8">
-      {/* Protocol Header */}
+      {/* Apocrypha Header */}
       <div className="mb-10 border-l-2 border-primary-container pl-4 py-1 ml-2">
         <div className="flex items-center gap-2 text-primary mb-2">
           <Shield size={20} />
-          <span className="text-[10px] font-black uppercase tracking-[0.3em]">Ambiente Seguro</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.3em]">Análise Técnica</span>
         </div>
         <h1 className="font-headline text-4xl font-bold text-on-surface mb-2 tracking-tighter">
-          O <span className="text-primary">Protocolo</span>
+          <span className="text-primary">Apócrifos</span>
         </h1>
         <p className="text-on-surface-variant/70 text-xs max-w-md font-medium leading-relaxed italic">
-          Treinamento intensivo de desprogramação mental e despertamento espiritual. Siga as trilhas na ordem correta.
+          Interpretação profunda de Enoque, Jubileus e outros escritos em diálogo direto com a base Bíblica, com leitura técnica e comparativa.
         </p>
       </div>
 
+      <section className="mb-8">
+        <div className="border-l-4 border-primary bg-transparent pl-5 py-2">
+          <p className="text-[11px] leading-relaxed italic opacity-90 text-on-surface-variant font-semibold tracking-[0.01em]">
+            Descriptografando o que foi ocultado: Análise técnica e histórica das fontes primárias em conexão direta com o cânon bíblico. Além da superfície.
+          </p>
+        </div>
+      </section>
+
       {loading ? (
         <div className="py-20 text-center text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-50 animate-pulse">
-          Sincronizando com a base...
+          Sincronizando acervo apócrifo...
         </div>
       ) : (
         <div className="space-y-12">
@@ -138,7 +146,7 @@ const Protocol: React.FC = () => {
 
       {error && (
         <div className="mt-8 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-[10px] uppercase font-bold text-center">
-          Erro ao sincronizar Protocolo: {error}
+          Erro ao sincronizar Apócrifos: {error}
         </div>
       )}
     </div>

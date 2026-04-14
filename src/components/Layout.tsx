@@ -13,7 +13,7 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
   const navItems = [
     { id: Screen.BIBLE, label: 'Bíblia', icon: BookOpen },
     { id: Screen.STUDIES, label: 'Estudos', icon: GraduationCap },
-    { id: Screen.PROTOCOL, label: 'Protocolo', icon: Shield },
+    { id: Screen.APOCRYPHA, label: 'Apócrifos', icon: Shield },
     { id: Screen.DOCTRINES, label: 'Doutrinas', icon: Gavel },
     { id: Screen.BOOKSTORE, label: 'Livraria', icon: Library },
     { id: Screen.SIGNS, label: 'Sinais', icon: Eye },
