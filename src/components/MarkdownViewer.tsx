@@ -19,6 +19,12 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
   const [showToast, setShowToast] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef(0);
+  const didFinalizeRef = useRef(false);
+
+  useEffect(() => {
+    progressRef.current = progress;
+  }, [progress]);
 
   // History sync for hardware back button
   useEffect(() => {
@@ -77,16 +83,25 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
 
   // Load settings and progress
   useEffect(() => {
+    const resetKey = `reset_after_complete_${slug}`;
+    const shouldResetAfterComplete = localStorage.getItem(resetKey) === '1';
+
+    if (shouldResetAfterComplete) {
+      localStorage.removeItem(resetKey);
+      localStorage.removeItem(`scroll_${slug}`);
+      localStorage.setItem(`progress_${slug}`, '0');
+    }
+
     const savedFontSize = localStorage.getItem('reader_font_size');
     const savedTheme = localStorage.getItem('reader_theme') as ReadingTheme;
-    const savedProgress = localStorage.getItem(`progress_${slug}`);
+    const savedProgress = shouldResetAfterComplete ? '0' : localStorage.getItem(`progress_${slug}`);
     
     if (savedFontSize) setFontSize(parseInt(savedFontSize, 10));
     if (savedTheme) setTheme(savedTheme);
     if (savedProgress) setProgress(parseInt(savedProgress, 10));
 
     // Restore scroll position
-    const savedScroll = localStorage.getItem(`scroll_${slug}`);
+    const savedScroll = shouldResetAfterComplete ? null : localStorage.getItem(`scroll_${slug}`);
     if (savedScroll && parseInt(savedScroll, 10) > 100) {
       setIsRestoring(true);
       
@@ -102,6 +117,22 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
       const timer = setTimeout(restoreScroll, 800);
       return () => clearTimeout(timer);
     }
+  }, [slug]);
+
+  // Finalize session on close/unmount (gamificação + reset para releitura)
+  useEffect(() => {
+    return () => {
+      if (didFinalizeRef.current) return;
+      didFinalizeRef.current = true;
+
+      const finalProgress = progressRef.current;
+      if (finalProgress >= 100) {
+        const readsKey = `reads_${slug}`;
+        const currentReads = parseInt(localStorage.getItem(readsKey) || '0', 10);
+        localStorage.setItem(readsKey, (((Number.isFinite(currentReads) ? currentReads : 0) + 1)).toString());
+        localStorage.setItem(`reset_after_complete_${slug}`, '1');
+      }
+    };
   }, [slug]);
 
   // Save settings

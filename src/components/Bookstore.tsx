@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Diamond, Download, Layers, Shield, ChevronDown, ArrowLeft } from 'lucide-react';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { Check, Diamond, Download, Shield } from 'lucide-react';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
 
@@ -43,6 +43,62 @@ const categoryInfo: Record<string, { title: string; description: string }> = {
     description: 'Uma jornada pelas visões e revelações do profeta Enoque sobre o mundo espiritual e o destino da humanidade.'
   }
 };
+
+function DragScrollRow({ children }: { children: ReactNode }) {
+  const rowRef = useRef<HTMLDivElement>(null);
+  const dragStateRef = useRef<{ isDown: boolean; startX: number; scrollLeft: number; didDrag: boolean }>({
+    isDown: false,
+    startX: 0,
+    scrollLeft: 0,
+    didDrag: false
+  });
+
+  return (
+    <div
+      ref={rowRef}
+      className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      onClickCapture={e => {
+        if (dragStateRef.current.didDrag) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
+      onPointerDown={e => {
+        if (e.pointerType !== 'mouse') return;
+        const el = rowRef.current;
+        if (!el) return;
+        dragStateRef.current = { isDown: true, startX: e.clientX, scrollLeft: el.scrollLeft, didDrag: false };
+        el.setPointerCapture(e.pointerId);
+      }}
+      onPointerMove={e => {
+        if (e.pointerType !== 'mouse') return;
+        const el = rowRef.current;
+        if (!el) return;
+        if (!dragStateRef.current.isDown) return;
+        const walk = e.clientX - dragStateRef.current.startX;
+        if (Math.abs(walk) > 4) dragStateRef.current.didDrag = true;
+        el.scrollLeft = dragStateRef.current.scrollLeft - walk;
+      }}
+      onPointerUp={e => {
+        if (e.pointerType !== 'mouse') return;
+        dragStateRef.current.isDown = false;
+        if (dragStateRef.current.didDrag) {
+          setTimeout(() => {
+            dragStateRef.current.didDrag = false;
+          }, 0);
+        }
+      }}
+      onPointerCancel={() => {
+        dragStateRef.current.isDown = false;
+      }}
+      onPointerLeave={() => {
+        dragStateRef.current.isDown = false;
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 export default function Bookstore() {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
@@ -115,9 +171,21 @@ export default function Bookstore() {
                     {cat.includes('Trilogia') ? 'Trilogia' : 'Série'}
                   </h3>
                 </div>
-                <h4 className="font-headline font-extrabold text-xl text-on-surface tracking-tighter uppercase leading-none mb-2">
-                  {categoryInfo[cat]?.title || cat}
-                </h4>
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <h4 className="font-headline font-extrabold text-xl text-on-surface tracking-tighter uppercase leading-none">
+                    {categoryInfo[cat]?.title || cat}
+                  </h4>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">
+                    (Lido{' '}
+                    {typeof window !== 'undefined'
+                      ? (() => {
+                          const reads = groupedBooks[cat].map(b => parseInt(localStorage.getItem(`reads_${b.slug}`) || '0', 10));
+                          return reads.length ? Math.min(...reads) : 0;
+                        })()
+                      : 0}{' '}
+                    vezes)
+                  </span>
+                </div>
                 <p className="text-on-surface-variant text-[11px] font-bold max-w-lg leading-relaxed opacity-70">
                   {categoryInfo[cat]?.description || 'Coleção de estudos profundos.'}
                 </p>
@@ -125,55 +193,68 @@ export default function Bookstore() {
             </div>
 
             {/* Bookshelf Grid */}
-            <div className="grid grid-cols-3 gap-4 mt-8 relative">
+            <div className="mt-8 relative -mx-5 px-5">
               {/* Shelf Base Decor */}
-              <div className="absolute -bottom-4 left-0 right-0 h-1 bg-gradient-to-r from-primary/30 via-outline-variant/10 to-transparent opacity-20"></div>
-              
-              {groupedBooks[cat].map((item, j) => {
-                const progress = typeof window !== 'undefined' ? localStorage.getItem(`progress_${item.slug}`) : null;
-                
-                return (
-                  <div 
-                    key={j} 
-                    onClick={() => setSelectedSlug(item.slug)}
-                    className="group flex flex-col cursor-pointer active:scale-95 transition-transform"
-                  >
-                    <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden shadow-2xl border border-outline-variant/10 bg-surface-container-high group-hover:border-primary/50 transition-colors">
-                      <img 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" 
-                        src={item.image || `https://picsum.photos/seed/${item.slug}/400/600`} 
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
-                      
-                      {/* Progress Overlay */}
-                      {progress && parseInt(progress) > 0 && (
-                        <div className="absolute top-2 left-2 right-2 flex flex-col gap-1.5">
-                          <div className="h-1.5 w-full bg-black/60 rounded-full overflow-hidden backdrop-blur-md border border-white/5">
-                            <div 
-                              className="h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_8px_rgba(249,115,22,0.4)]" 
-                              style={{ width: `${progress}%` }}
-                            ></div>
+              <div className="pointer-events-none absolute -bottom-1 left-5 right-5 h-1 bg-gradient-to-r from-primary/30 via-outline-variant/10 to-transparent opacity-20"></div>
+               
+              <DragScrollRow>
+                {groupedBooks[cat].map((item, j) => {
+                  const progressValue = typeof window !== 'undefined' ? parseInt(localStorage.getItem(`progress_${item.slug}`) || '0', 10) : 0;
+                  const clampedProgress = Math.max(0, Math.min(100, Number.isFinite(progressValue) ? progressValue : 0));
+                  const isCompleted = clampedProgress >= 100;
+                  
+                  return (
+                    <div
+                      key={j}
+                      onClick={() => setSelectedSlug(item.slug)}
+                      className="group shrink-0 w-[148px] sm:w-[168px] flex flex-col cursor-pointer active:scale-95 transition-transform snap-start"
+                    >
+                      <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden shadow-2xl border border-outline-variant/10 bg-surface-container-high group-hover:border-primary/50 transition-colors">
+                        <img 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" 
+                          src={item.image || `https://picsum.photos/seed/${item.slug}/400/600`} 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+
+                        <div className="absolute bottom-2 left-2 right-2">
+                          <div className="h-0.5 w-6 bg-primary opacity-0 group-hover:opacity-100 transition-opacity mb-1"></div>
+                          <span className="text-[7px] text-white/40 uppercase font-black tracking-widest block">Vol. 0{j + 1}</span>
+                        </div>
+                      </div>
+
+                      {/* Progress Bar (migrada para baixo da capa) */}
+                      <div className="mt-3 px-1 select-none">
+                        <div className="flex items-center gap-2">
+                          <div className="h-1.5 flex-1 bg-outline-variant/20 rounded-full overflow-hidden border border-outline-variant/10">
+                            <div
+                              className={
+                                isCompleted
+                                  ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_10px_rgba(212,175,55,0.35)]'
+                                  : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_8px_rgba(249,115,22,0.35)]'
+                              }
+                              style={{ width: `${clampedProgress}%` }}
+                            />
                           </div>
-                          <div className="flex justify-between items-center px-0.5">
-                            <span className="text-[7px] font-black text-orange-400 uppercase tracking-widest drop-shadow-md">{progress}% Lido</span>
-                            {parseInt(progress) === 100 && <Diamond size={8} className="text-orange-400 fill-orange-400 animate-pulse" />}
+                          <div className="flex items-center gap-1.5">
+                            <span
+                              className={
+                                isCompleted
+                                  ? 'text-[9px] font-black uppercase tracking-widest text-[#D4AF37]'
+                                  : clampedProgress > 0
+                                    ? 'text-[9px] font-black uppercase tracking-widest text-orange-400'
+                                    : 'text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40'
+                              }
+                            >
+                              {clampedProgress}%
+                            </span>
+                            {isCompleted && <Check size={12} className="text-[#D4AF37]" />}
                           </div>
                         </div>
-                      )}
-
-                      <div className="absolute bottom-2 left-2 right-2">
-                        <div className="h-0.5 w-6 bg-primary opacity-0 group-hover:opacity-100 transition-opacity mb-1"></div>
-                        <span className="text-[7px] text-white/40 uppercase font-black tracking-widest block">Vol. 0{j + 1}</span>
                       </div>
                     </div>
-                    <div className="mt-3 px-1">
-                      <h5 className="font-headline font-bold text-[10px] text-on-surface leading-tight uppercase line-clamp-2 group-hover:text-primary transition-colors">
-                        {item.title}
-                      </h5>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </DragScrollRow>
             </div>
           </div>
         ))}

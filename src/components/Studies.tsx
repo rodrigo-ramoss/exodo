@@ -144,7 +144,7 @@ export default function Studies() {
                   <div 
                     key={j} 
                     onClick={() => setSelectedSlug(item.slug)}
-                    className="flex-shrink-0 w-48 snap-start group cursor-pointer active:scale-[0.98] transition-all"
+                    className="flex-shrink-0 w-40 sm:w-48 snap-start group cursor-pointer active:scale-[0.98] transition-all"
                   >
                     <div className="aspect-[4/3] rounded-xl overflow-hidden mb-2 border border-outline-variant/10 shadow-sm relative">
                       <img 
