@@ -381,8 +381,8 @@ export default function Bible() {
           )}
           {!isLoading && !error && (
             <div className={`transition-opacity duration-300 ease-out ${isContentVisible ? 'opacity-100' : 'opacity-0'}`}>
-              {chapterVerses.map((verse) => (
-                <p key={verse.number} className="flex items-start gap-2">
+              {chapterVerses.map((verse, index) => (
+                <p key={`${currentBook?.id ?? 'book'}-${selectedChapter}-${verse.number}-${index}`} className="flex items-start gap-2">
                   <span className="inline-block mt-1 min-w-5 text-right text-primary font-black text-[10px] leading-none">
                     {verse.number}
                   </span>

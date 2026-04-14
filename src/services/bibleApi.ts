@@ -158,10 +158,29 @@ function parseNumeric(input: unknown, fallbackValue: number): number {
     return input;
   }
   if (typeof input === 'string') {
-    const parsed = Number(input);
+    const parsed = Number(input.trim());
     return Number.isNaN(parsed) ? fallbackValue : parsed;
   }
   return fallbackValue;
+}
+
+function getChapterVerseFromReference(input: unknown): { chapter: number; verse: number } | null {
+  if (typeof input !== 'string') {
+    return null;
+  }
+
+  const match = input.trim().match(/^(\d+)\s*[:.]\s*(\d+)$/);
+  if (!match) {
+    return null;
+  }
+
+  const chapter = Number(match[1]);
+  const verse = Number(match[2]);
+  if (Number.isNaN(chapter) || Number.isNaN(verse)) {
+    return null;
+  }
+
+  return { chapter, verse };
 }
 
 function normalizeChapterResponse(
@@ -176,7 +195,10 @@ function normalizeChapterResponse(
     const verses = payload.verses
       .map((item, index) => {
         const verse = item as Record<string, unknown>;
-        const number = parseNumeric(verse.verse ?? verse.number, index + 1);
+        const chapterVerse = getChapterVerseFromReference(verse.verse ?? verse.number);
+        const number = chapterVerse
+          ? chapterVerse.verse
+          : parseNumeric(verse.verse ?? verse.number, index + 1);
         const text = typeof verse.text === 'string' ? verse.text.trim() : '';
         return text ? { number, text } : null;
       })
@@ -247,21 +269,29 @@ function resolveBaseUrl(rawBaseUrl: string): string {
   }${normalizedBaseUrl}`;
 }
 
+function buildReference(bookName: string, chapter: number, bookChapters?: number): string {
+  const isSingleChapterBook = bookChapters === 1;
+  if (isSingleChapterBook && chapter === 1) {
+    // Avoid ambiguity where "Livro 1" can be interpreted as verse 1.
+    return bookName;
+  }
+
+  return `${bookName} ${chapter}`;
+}
+
 function buildChapterUrl({
   baseUrl,
-  bookName,
-  chapter,
+  reference,
   translation,
   bookId,
 }: {
   baseUrl: string;
-  bookName: string;
-  chapter: number;
+  reference: string;
   translation?: string;
   bookId?: string;
 }): string {
-  const reference = encodeURIComponent(`${bookName} ${chapter}`);
-  const url = new URL(`${resolveBaseUrl(baseUrl)}/${reference}`);
+  const encodedReference = encodeURIComponent(reference);
+  const url = new URL(`${resolveBaseUrl(baseUrl)}/${encodedReference}`);
 
   if (translation) {
     url.searchParams.set('translation', translation);
@@ -365,6 +395,7 @@ async function fetchFromProvider({
   bookName,
   chapter,
   bookId,
+  bookChapters,
   signal,
 }: {
   baseUrl: string;
@@ -373,9 +404,11 @@ async function fetchFromProvider({
   bookName: string;
   chapter: number;
   bookId?: string;
+  bookChapters?: number;
   signal?: AbortSignal;
 }): Promise<BibleChapterPayload> {
-  const url = buildChapterUrl({ baseUrl, bookName, chapter, translation, bookId });
+  const reference = buildReference(bookName, chapter, bookChapters);
+  const url = buildChapterUrl({ baseUrl, reference, translation, bookId });
   const response = await fetch(url, { signal });
 
   if (!response.ok) {
@@ -449,6 +482,7 @@ export async function fetchBibleChapter({
 }: FetchBibleChapterParams): Promise<BibleChapterPayload> {
   const config = providerConfig[version];
   const resolvedBookId = bookId ?? getKnownBookId(version, bookName);
+  const resolvedBookMetadata = resolvedBookId ? getBookById(version, resolvedBookId) : undefined;
 
   if (
     resolvedBookId &&
@@ -478,6 +512,7 @@ export async function fetchBibleChapter({
     bookName,
     chapter,
     bookId: resolvedBookId,
+    bookChapters: resolvedBookMetadata?.chapters,
     signal,
   });
 }
