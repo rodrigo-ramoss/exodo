@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { Diamond, Star, History, Brain, ShieldAlert, Wallet, Flame, Link, Skull, Moon, Network, ChevronRight, ArrowLeft } from 'lucide-react';
-import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
 
 interface DoctrineLayer {
@@ -14,11 +13,46 @@ interface DoctrineItem {
   category: string;
   image?: string;
   layers: DoctrineLayer[];
+  track: DoctrineTrack;
+}
+
+type DoctrineTrack = 'expostas' | 'biblicas';
+
+const trackLabels: Record<DoctrineTrack, string> = {
+  expostas: 'Doutrinas Expostas',
+  biblicas: 'Doutrinas Bíblicas',
+};
+
+const trackDescriptions: Record<DoctrineTrack, string> = {
+  expostas:
+    'Exposição de dogmas humanos sob a luz da exegese: confronte o que você sempre ouviu com o que o Texto Sagrado realmente diz.',
+  biblicas:
+    'As verdadeiras doutrinas que deveriam ser ensinadas, mas que confrontam os dogmas de qualquer instituição.',
+};
+
+const doctrineIndexModules = import.meta.glob('../content/doutrinas/{expostas,biblicas}/index.json', {
+  eager: true,
+  import: 'default',
+}) as Record<string, Omit<DoctrineItem, 'track'>[]>;
+
+const doctrineMarkdownModules = import.meta.glob('../content/doutrinas/{expostas,biblicas}/**/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
+
+function loadDoctrines(track: DoctrineTrack): DoctrineItem[] {
+  const indexPath = `../content/doutrinas/${track}/index.json`;
+  const items = doctrineIndexModules[indexPath] || [];
+  return items.map(item => ({ ...item, track }));
 }
 
 const iconMap: Record<string, any> = {
   'Arrebatamento Secreto': Star,
   'Arrependimento de Deus': History,
+  'Batismo no Espírito Santo': Star,
+  'A Doutrina dos Demônios': Brain,
+  'A Doutrina de Satanás': ShieldAlert,
   'Demônios': Brain,
   'Satanás': ShieldAlert,
   'Dízimo': Wallet,
@@ -30,37 +64,35 @@ const iconMap: Record<string, any> = {
 };
 
 export default function Doctrines() {
-  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const [selectedTrack, setSelectedTrack] = useState<DoctrineTrack>('expostas');
+  const [selectedLayer, setSelectedLayer] = useState<{ track: DoctrineTrack; slug: string } | null>(null);
   const [expandedTheme, setExpandedTheme] = useState<string | null>(null);
-  const [markdownContent, setMarkdownContent] = useState<string | null>(null);
-  const { data: doctrines, loading, error } = useFetch<DoctrineItem[]>('/content/doutrinas/index.json');
+  const allDoctrines = useMemo(
+    () => [...loadDoctrines('expostas'), ...loadDoctrines('biblicas')],
+    [],
+  );
+  const doctrines = useMemo(
+    () => allDoctrines.filter(doctrine => doctrine.track === selectedTrack),
+    [allDoctrines, selectedTrack],
+  );
+  const loading = false;
+  const error = null;
+  const markdownContent = selectedLayer
+    ? doctrineMarkdownModules[`../content/doutrinas/${selectedLayer.track}/${selectedLayer.slug}.md`] || null
+    : null;
 
-  useEffect(() => {
-    if (selectedSlug) {
-      const fetchMarkdown = async () => {
-        try {
-          const response = await fetch(`/content/doutrinas/${selectedSlug}.md`);
-          if (response.ok) {
-            const text = await response.text();
-            setMarkdownContent(text);
-          }
-        } catch (err) {
-          console.error('Error fetching markdown:', err);
-        }
-      };
-      fetchMarkdown();
-    } else {
-      setMarkdownContent(null);
-    }
-  }, [selectedSlug]);
+  const handleTrackChange = (nextTrack: DoctrineTrack) => {
+    setSelectedTrack(nextTrack);
+    setExpandedTheme(null);
+  };
 
   // Se um arquivo MD está selecionado, mostra o visualizador em tela cheia
-  if (selectedSlug && markdownContent) {
+  if (selectedLayer && markdownContent) {
     return (
       <MarkdownViewer 
         content={markdownContent} 
-        slug={selectedSlug} 
-        onClose={() => setSelectedSlug(null)} 
+        slug={selectedLayer.slug} 
+        onClose={() => setSelectedLayer(null)} 
       />
     );
   }
@@ -71,18 +103,55 @@ export default function Doctrines() {
       {/* Hero Branding Section */}
       <div className="mb-8 border-l-2 border-primary-container pl-4 py-1">
         <h1 className="text-3xl font-headline font-extrabold tracking-tighter text-on-surface mb-1">
-          Doutrinas <span className="text-primary">Expostas</span>
+          Doutrinas <span className="text-primary">{selectedTrack === 'expostas' ? 'Expostas' : 'Bíblicas'}</span>
         </h1>
         <p className="text-on-surface-variant/70 text-[11px] max-w-[280px] font-medium leading-relaxed">
-          Exposição de dogmas humanos sob a luz da exegese: confronte o que você sempre ouviu com o que o Texto Sagrado realmente diz.
+          {trackDescriptions[selectedTrack]}
         </p>
       </div>
 
+      {/* Category Bar */}
+      <section className="mb-6">
+        <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
+          {(Object.keys(trackLabels) as DoctrineTrack[]).map((track) => (
+            <button
+              key={track}
+              onClick={() => handleTrackChange(track)}
+              className={`flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full ${
+                selectedTrack === track
+                  ? 'bg-primary text-on-primary border-primary'
+                  : 'bg-surface-container-high text-on-surface-variant border-outline-variant/20 hover:border-primary/50'
+              }`}
+            >
+              {trackLabels[track]}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {selectedTrack === 'biblicas' && (
+        <section className="mb-6">
+          <div className="border-l-4 border-primary bg-transparent pl-5 py-2">
+            <p className="text-[11px] leading-relaxed italic opacity-90 text-on-surface-variant font-semibold tracking-[0.01em]">
+              As verdadeiras doutrinas que deveriam ser ensinadas, mas que confrontam os dogmas de qualquer instituição.
+            </p>
+            <p className="mt-2 text-[9px] uppercase tracking-[0.24em] text-primary/90 font-black">
+              Manifesto Oficial • Voz do Deserto
+            </p>
+          </div>
+        </section>
+      )}
+
       {/* Investigation Cards Grid (Expandable) */}
       <div className="flex flex-col gap-4">
+        {!loading && doctrines.length === 0 && (
+          <div className="py-14 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-60 border border-dashed border-outline-variant/20 rounded-3xl">
+            Nenhuma doutrina encontrada nesta categoria.
+          </div>
+        )}
         {loading ? (
           <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
-        ) : doctrines?.map((doctrine, i) => {
+        ) : doctrines.map((doctrine, i) => {
           const Icon = iconMap[doctrine.title] || Diamond;
           const isExpanded = expandedTheme === doctrine.title;
 
@@ -129,7 +198,7 @@ export default function Doctrines() {
                     return (
                       <div 
                         key={j}
-                        onClick={() => setSelectedSlug(layer.slug)}
+                        onClick={() => setSelectedLayer({ track: doctrine.track, slug: layer.slug })}
                         className="flex flex-col gap-2 p-3 bg-surface-container-lowest/50 hover:bg-primary/5 border border-outline-variant/5 rounded-xl cursor-pointer active:scale-[0.99] transition-all group/layer"
                       >
                         <div className="flex items-center justify-between">

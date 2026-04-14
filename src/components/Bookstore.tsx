@@ -41,6 +41,10 @@ const categoryInfo: Record<string, { title: string; description: string }> = {
   'Série — A Revelação de Enoque': {
     title: 'A Revelação de Enoque',
     description: 'Uma jornada pelas visões e revelações do profeta Enoque sobre o mundo espiritual e o destino da humanidade.'
+  },
+  'Série — A Verdadeira História da Igreja': {
+    title: 'A Verdadeira História da Igreja',
+    description: 'Sete volumes para reconstruir a trajetória da ekklesia antes, durante e depois da institucionalização religiosa.'
   }
 };
 
