@@ -174,11 +174,3 @@ E essa verdade liberta — especialmente para quem está no deserto, buscando De
 - SEYMOUR, William J. *The Azusa Street Papers* (1906-1908).
 - ASSEMBLEIAS DE DEUS. *Declaração de Fé Fundamental* (1914).
 
----
-
-**Fim da série "Batismo no Espírito Santo" (5 níveis).**
-
-**Próximo tema sugerido:** *A Doutrina do Pecado Original — Análise de Romanos 5 e Salmo 51* (Análise em 5 camadas).
-
----
-

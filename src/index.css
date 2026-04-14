@@ -98,6 +98,43 @@
     @apply my-8 border-outline-variant/30;
   }
 
+  /* Tabelas responsivas globais para conteúdo Markdown */
+  .prose .table-responsive {
+    @apply my-6 rounded-xl border border-outline-variant/30;
+  }
+  .prose .table-responsive table {
+    @apply w-full border-collapse text-xs;
+    min-width: 700px;
+  }
+  .prose .table-responsive thead tr {
+    background: rgba(242, 192, 141, 0.1);
+  }
+  .prose .table-responsive tbody tr:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .prose .table-responsive tbody tr:nth-child(even) {
+    background: rgba(80, 69, 59, 0.18);
+  }
+  .prose .table-responsive th,
+  .prose .table-responsive td {
+    @apply px-3 py-2 align-top;
+    min-width: 150px;
+    border-right: 1px solid rgba(156, 142, 130, 0.28);
+    border-bottom: 1px solid rgba(80, 69, 59, 0.35);
+    line-height: 1.35;
+    text-align: left;
+  }
+  .prose .table-responsive th:last-child,
+  .prose .table-responsive td:last-child {
+    border-right: none;
+  }
+  .prose .table-responsive th {
+    color: var(--color-primary);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
   /* Forçar espaçamento lateral na Biblioteca */
   .container-biblioteca {
     padding-left: 16px !important;

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X } from 'lucide-react';
+import type { Components } from 'react-markdown';
 
 interface MarkdownViewerProps {
   content: string;
@@ -175,6 +176,14 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
     sepia: 'bg-[#f4ecd8] text-[#433422] prose-sepia'
   };
 
+  const markdownComponents: Components = {
+    table: ({ children }) => (
+      <div className="table-responsive overflow-x-auto">
+        <table>{children}</table>
+      </div>
+    ),
+  };
+
   return (
     <div 
       ref={containerRef} 
@@ -302,7 +311,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
           className={`prose max-w-none prose-p:leading-relaxed prose-headings:font-headline prose-headings:tracking-tight prose-li:marker:text-primary transition-all duration-300 ${theme === 'dark' ? 'prose-invert' : 'prose-p:text-current'}`}
           style={{ fontSize: `${fontSize}px` }}
         >
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
             {parsedContent}
           </ReactMarkdown>
         </div>
