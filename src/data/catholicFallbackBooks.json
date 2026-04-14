@@ -1,0 +1,37 @@
+{
+  "tobias": {
+    "name": "Tobias",
+    "chapterCount": 14,
+    "chapters": {}
+  },
+  "judite": {
+    "name": "Judite",
+    "chapterCount": 16,
+    "chapters": {}
+  },
+  "1-macabeus": {
+    "name": "1 Macabeus",
+    "chapterCount": 16,
+    "chapters": {}
+  },
+  "2-macabeus": {
+    "name": "2 Macabeus",
+    "chapterCount": 15,
+    "chapters": {}
+  },
+  "sabedoria": {
+    "name": "Sabedoria",
+    "chapterCount": 19,
+    "chapters": {}
+  },
+  "eclesiastico": {
+    "name": "Eclesiástico",
+    "chapterCount": 51,
+    "chapters": {}
+  },
+  "baruc": {
+    "name": "Baruc",
+    "chapterCount": 6,
+    "chapters": {}
+  }
+}
