@@ -16,6 +16,7 @@ import Bookstore from './components/Bookstore';
 import Signs from './components/Signs';
 import Doctrines from './components/Doctrines';
 import Protocol from './components/Protocol';
+import Settings from './components/Settings';
 
 export default function App() {
   // Build trigger: 2026-04-13 15:00
@@ -46,6 +47,8 @@ export default function App() {
         return <Doctrines />;
       case Screen.APOCRYPHA:
         return <Protocol />;
+      case Screen.SETTINGS:
+        return <Settings />;
       default:
         return <Home onNavigate={handleNavigate} />;
     }

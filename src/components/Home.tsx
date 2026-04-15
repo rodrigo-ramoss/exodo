@@ -2,6 +2,7 @@ import { ArrowRight, Shield, Star } from 'lucide-react';
 import { Screen } from '../types';
 import { useFetch } from '../hooks/useFetch';
 import { cn } from '../lib/utils';
+import { useProfile } from '../state/ProfileContext';
 
 interface StudyItem {
   title: string;
@@ -21,12 +22,13 @@ export default function Home({ onNavigate }: HomeProps) {
   const { data: studies, loading: loadingStudies } = useFetch<StudyItem[]>('/content/estudos/index.json');
   const { data: signs, loading: loadingSigns } = useFetch<any[]>('/content/sinais/index.json');
   const { data: doctrines, loading: loadingDoctrines } = useFetch<any[]>('/content/doutrinas/index.json');
+  const { name: profileName } = useProfile();
 
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative h-[480px] w-full overflow-hidden">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: "url('https://picsum.photos/seed/exodo-hero/1200/800?blur=1')" }}
         >
@@ -37,7 +39,7 @@ export default function Home({ onNavigate }: HomeProps) {
           <div className="flex items-center gap-2 mb-3">
             <Star className="text-primary" size={14} fill="currentColor" />
             <span className="font-headline uppercase tracking-[0.2em] text-[9px] font-bold text-on-surface-variant">
-              Investigação Especial
+              {profileName ? `Bem-vindo ao deserto, ${profileName}` : 'Investigação Especial'}
             </span>
           </div>
           <h2 className="font-headline text-3xl font-extrabold text-on-surface leading-tight mb-4 tracking-tighter">

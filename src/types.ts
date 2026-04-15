@@ -7,4 +7,5 @@ export enum Screen {
   SIGNS = 'SIGNS',
   DOCTRINES = 'DOCTRINES',
   APOCRYPHA = 'APOCRYPHA',
+  SETTINGS = 'SETTINGS',
 }

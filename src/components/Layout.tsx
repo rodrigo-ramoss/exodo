@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { Menu, Settings, BookOpen, GraduationCap, Gavel, Library, Eye, Shield } from 'lucide-react';
 import { Screen } from '../types';
 import { cn } from '../lib/utils';
+import { useProfile } from '../state/ProfileContext';
 
 interface LayoutProps {
   children: ReactNode;
@@ -10,6 +11,8 @@ interface LayoutProps {
 }
 
 export default function Layout({ children, currentScreen, setScreen }: LayoutProps) {
+  const { photo } = useProfile();
+
   const navItems = [
     { id: Screen.BIBLE, label: 'Bíblia', icon: BookOpen },
     { id: Screen.STUDIES, label: 'Estudos', icon: GraduationCap },
@@ -36,14 +39,6 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
           >
             ÊXODO
           </h1>
-        </div>
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={() => alert('Configurações em breve')}
-            className="text-primary active:scale-95 transition-transform p-1"
-          >
-            <Settings size={20} />
-          </button>
         </div>
       </header>
 
@@ -73,6 +68,30 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
             </button>
           );
         })}
+
+        {/* Settings — always at the end */}
+        <button
+          onClick={() => setScreen(Screen.SETTINGS)}
+          className={cn(
+            "flex flex-col items-center justify-center py-1.5 px-3 transition-all active:scale-90 flex-1",
+            currentScreen === Screen.SETTINGS
+              ? "text-primary bg-surface-container-high/50 rounded-xl"
+              : "text-on-surface-variant hover:text-on-surface"
+          )}
+        >
+          {photo ? (
+            <img
+              src={photo}
+              alt="Perfil"
+              className="w-5 h-5 rounded-full object-cover border border-primary/40"
+            />
+          ) : (
+            <Settings size={20} strokeWidth={currentScreen === Screen.SETTINGS ? 2.5 : 2} />
+          )}
+          <span className="font-sans text-[9px] uppercase font-bold tracking-tight mt-1">
+            Config
+          </span>
+        </button>
       </nav>
     </div>
   );

@@ -213,10 +213,17 @@ export default function Bible() {
     : null;
   const chapterVerses = chapterData?.verses ?? [];
 
+  const markChapterRead = (bookId: string, chapter: number) => {
+    localStorage.setItem(`exodo:bible-read:${bookId}:${chapter}`, '1');
+  };
+
   const handleNavigateChapter = (direction: 'previous' | 'next') => {
     if (!selectedBook) {
       return;
     }
+
+    // Mark current chapter as read when navigating away
+    markChapterRead(selectedBook.id, selectedChapter);
 
     const target = getAdjacentChapter(navigableBooks, selectedBook.id, selectedChapter, direction);
     if (!target) {
@@ -401,6 +408,7 @@ export default function Bible() {
                         <button
                           key={book.id}
                           onClick={() => {
+                            if (selectedBook) markChapterRead(selectedBook.id, selectedChapter);
                             setSelectedBookId(book.id);
                             setSelectedChapter(1);
                             setIsDrawerOpen(false);
