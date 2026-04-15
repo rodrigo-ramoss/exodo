@@ -278,5 +278,45 @@
         "slug": "falar em linguas/falar-em-linguas-camada9"
       }
     ]
+  },
+  {
+    "title": "Inferno",
+    "description": "Análise bíblica completa sobre o inferno: vocabulário original, textos centrais, história da doutrina e conclusões em 8 camadas.",
+    "category": "Escatologia",
+    "image": "/image/doutrinas/inferno.webp",
+    "layers": [
+      {
+        "title": "O Problema do Vocabulário: Sheol, Hades, Geena, Tártaro e a Palavra Inferno",
+        "slug": "inferno/inferno1"
+      },
+      {
+        "title": "O Antigo Testamento e o Estado dos Mortos: O Silêncio do Sheol",
+        "slug": "inferno/inferno2"
+      },
+      {
+        "title": "O Judaísmo do Segundo Templo e a Origem das Ideias sobre o Além",
+        "slug": "inferno/inferno3"
+      },
+      {
+        "title": "O Que Jesus Realmente Disse sobre o Julgamento Final",
+        "slug": "inferno/inferno4"
+      },
+      {
+        "title": "O Que o Resto do Novo Testamento Diz sobre o Destino Final",
+        "slug": "inferno/inferno5"
+      },
+      {
+        "title": "As Três Posições Principais e o Que a Bíblia Sustenta",
+        "slug": "inferno/inferno6"
+      },
+      {
+        "title": "Recepção Histórica e Filtro Institucional: Como a Igreja Chegou ao Inferno que Prega",
+        "slug": "inferno/inferno7"
+      },
+      {
+        "title": "Conclusão Geral: O Que a Bíblia Afirma, o Que a Tradição Adicionou e o Que um Leitor Honesto Deve Concluir",
+        "slug": "inferno/infernor8"
+      }
+    ]
   }
 ]
