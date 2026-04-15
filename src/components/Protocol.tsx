@@ -1,156 +1,238 @@
-import React, { useState, useEffect } from 'react';
-import { Shield, Lock, Play, Clock, ArrowRight } from 'lucide-react';
+import { useState, useRef, type ReactNode } from 'react';
+import { Check, Shield } from 'lucide-react';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
 
-interface Mission {
+interface ApoBook {
   title: string;
   slug: string;
-  duration: string;
-  status: 'liberado' | 'bloqueado';
-}
-
-interface Trilha {
-  id: string;
-  title: string;
   description: string;
+  category: string;
   image: string;
-  status: 'liberado' | 'bloqueado';
-  missions: Mission[];
+  time: string;
 }
 
-const Protocol: React.FC = () => {
-  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
-  const [markdownContent, setMarkdownContent] = useState<string | null>(null);
-  const { data: trilhas, loading, error } = useFetch<Trilha[]>('/content/apocrifos/apocrifos-index.json');
+const seriesInfo: Record<string, { title: string; description: string }> = {
+  'Série — A Revelação de Enoque': {
+    title: 'A Revelação de Enoque',
+    description:
+      'Análise técnica e histórica das partes de 1 Enoque em diálogo direto com o cânon bíblico. Além da superfície.',
+  },
+};
 
-  useEffect(() => {
-    if (selectedSlug) {
-      const fetchMarkdown = async () => {
-        try {
-          const response = await fetch(`/content/apocrifos/${selectedSlug}.md`);
-          if (response.ok) {
-            const text = await response.text();
-            setMarkdownContent(text);
-          }
-        } catch (err) {
-          console.error('Error fetching apocrypha mission:', err);
-        }
-      };
-      fetchMarkdown();
-    } else {
-      setMarkdownContent(null);
-    }
-  }, [selectedSlug]);
-
-  if (selectedSlug && markdownContent) {
-    return (
-      <MarkdownViewer 
-        content={markdownContent} 
-        slug={selectedSlug} 
-        onClose={() => setSelectedSlug(null)} 
-      />
-    );
-  }
+// ── DragScrollRow (same as Bookstore) ────────────────────────────────────────
+function DragScrollRow({ children }: { children: ReactNode }) {
+  const rowRef = useRef<HTMLDivElement>(null);
+  const drag = useRef({ isDown: false, startX: 0, scrollLeft: 0, didDrag: false });
 
   return (
-    <div className="pb-32 px-4 sm:px-6 max-w-4xl mx-auto min-h-screen bg-surface-container-lowest pt-8">
-      {/* Apocrypha Header */}
-      <div className="mb-10 border-l-2 border-primary-container pl-4 py-1 ml-2">
-        <div className="flex items-center gap-2 text-primary mb-2">
-          <Shield size={20} />
-          <span className="text-[10px] font-black uppercase tracking-[0.3em]">Análise Técnica</span>
+    <div
+      ref={rowRef}
+      className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      onClickCapture={(e) => {
+        if (drag.current.didDrag) { e.preventDefault(); e.stopPropagation(); }
+      }}
+      onPointerDown={(e) => {
+        if (e.pointerType !== 'mouse') return;
+        const el = rowRef.current; if (!el) return;
+        drag.current = { isDown: true, startX: e.clientX, scrollLeft: el.scrollLeft, didDrag: false };
+        el.setPointerCapture(e.pointerId);
+      }}
+      onPointerMove={(e) => {
+        if (e.pointerType !== 'mouse' || !drag.current.isDown) return;
+        const el = rowRef.current; if (!el) return;
+        const walk = e.clientX - drag.current.startX;
+        if (Math.abs(walk) > 4) drag.current.didDrag = true;
+        el.scrollLeft = drag.current.scrollLeft - walk;
+      }}
+      onPointerUp={() => { drag.current.isDown = false; setTimeout(() => { drag.current.didDrag = false; }, 0); }}
+      onPointerCancel={() => { drag.current.isDown = false; }}
+      onPointerLeave={() => { drag.current.isDown = false; }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// ── Book card ─────────────────────────────────────────────────────────────────
+function BookCard({ book, index, onSelect }: { book: ApoBook; index: number; onSelect: () => void }) {
+  const progressValue = parseInt(localStorage.getItem(`progress_${book.slug}`) || '0', 10);
+  const clamped = Math.max(0, Math.min(100, Number.isFinite(progressValue) ? progressValue : 0));
+  const isCompleted = clamped >= 100;
+
+  return (
+    <div
+      onClick={onSelect}
+      className="group shrink-0 w-[148px] sm:w-[168px] flex flex-col cursor-pointer active:scale-95 transition-transform snap-start"
+    >
+      <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden shadow-2xl border border-outline-variant/10 bg-surface-container-high group-hover:border-primary/50 transition-colors">
+        <img
+          src={book.image}
+          alt={book.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+        <div className="absolute bottom-2 left-2 right-2">
+          <div className="h-0.5 w-6 bg-primary opacity-0 group-hover:opacity-100 transition-opacity mb-1" />
+          <span className="inline-flex items-center rounded-md border border-white/20 bg-black/65 px-2 py-1 text-[9px] text-white/95 uppercase font-black tracking-widest shadow-sm">
+            Parte {String(index + 1).padStart(2, '0')}
+          </span>
         </div>
-        <h1 className="font-headline text-4xl font-bold text-on-surface mb-2 tracking-tighter">
-          <span className="text-primary">Apócrifos</span>
-        </h1>
-        <p className="text-on-surface-variant/70 text-xs max-w-md font-medium leading-relaxed italic">
-          Interpretação profunda de Enoque, Jubileus e outros escritos em diálogo direto com a base Bíblica, com leitura técnica e comparativa.
-        </p>
       </div>
 
-      <section className="mb-8">
-        <div className="border-l-4 border-primary bg-transparent pl-5 py-2">
-          <p className="text-[11px] leading-relaxed italic opacity-90 text-on-surface-variant font-semibold tracking-[0.01em]">
-            Descriptografando o que foi ocultado: Análise técnica e histórica das fontes primárias em conexão direta com o cânon bíblico. Além da superfície.
+      {/* Title */}
+      <p className="mt-2 px-0.5 text-[10px] font-bold text-on-surface leading-snug line-clamp-2 select-none">
+        {book.title}
+      </p>
+
+      {/* Progress bar */}
+      <div className="mt-2 px-0.5 select-none">
+        <div className="flex items-center gap-2">
+          <div className="h-1.5 flex-1 bg-outline-variant/20 rounded-full overflow-hidden border border-outline-variant/10">
+            <div
+              className={
+                isCompleted
+                  ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_10px_rgba(212,175,55,0.35)]'
+                  : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_8px_rgba(249,115,22,0.35)]'
+              }
+              style={{ width: `${clamped}%` }}
+            />
+          </div>
+          <div className="flex items-center gap-1">
+            <span
+              className={
+                isCompleted
+                  ? 'text-[9px] font-black uppercase tracking-widest text-[#D4AF37]'
+                  : clamped > 0
+                    ? 'text-[9px] font-black uppercase tracking-widest text-orange-400'
+                    : 'text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40'
+              }
+            >
+              {clamped}%
+            </span>
+            {isCompleted && <Check size={11} className="text-[#D4AF37]" />}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────────────────
+export default function Protocol() {
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const [markdownContent, setMarkdownContent] = useState<string | null>(null);
+  const { data: books, loading, error } = useFetch<ApoBook[]>('/content/apocrifos/apocrifos-index.json');
+
+  const handleSelect = async (slug: string) => {
+    setSelectedSlug(slug);
+    try {
+      const res = await fetch(`/content/apocrifos/${slug}.md`);
+      if (res.ok) setMarkdownContent(await res.text());
+    } catch {
+      // silent
+    }
+  };
+
+  const handleClose = () => {
+    setSelectedSlug(null);
+    setMarkdownContent(null);
+  };
+
+  if (selectedSlug && markdownContent) {
+    return <MarkdownViewer content={markdownContent} slug={selectedSlug} onClose={handleClose} />;
+  }
+
+  // Group by category (same pattern as Bookstore)
+  const categories = books ? Array.from(new Set(books.map((b) => b.category))) : [];
+  const grouped = categories.reduce((acc, cat) => {
+    acc[cat] = books?.filter((b) => b.category === cat) ?? [];
+    return acc;
+  }, {} as Record<string, ApoBook[]>);
+
+  return (
+    <div className="pt-6 pb-32 px-5 max-w-7xl mx-auto">
+      {/* Hero Header */}
+      <header className="mb-10 relative">
+        <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px]" />
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-2">
+            <Shield size={16} className="text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Análise Técnica</span>
+          </div>
+          <h2 className="font-headline font-extrabold text-3xl text-primary tracking-tighter mb-1 text-shadow-glow">
+            Apócrifos
+          </h2>
+          <p className="text-on-surface-variant/70 text-[11px] max-w-[280px] font-medium leading-relaxed">
+            Interpretação profunda de Enoque e outros escritos em diálogo direto com o cânon bíblico. Além da superfície.
           </p>
         </div>
-      </section>
+      </header>
 
-      {loading ? (
-        <div className="py-20 text-center text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-50 animate-pulse">
+      {/* Content */}
+      {loading && (
+        <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">
           Sincronizando acervo apócrifo...
-        </div>
-      ) : (
-        <div className="space-y-12">
-          {trilhas?.map((trilha) => (
-            <div key={trilha.id} className="group">
-              {/* Trilha Header */}
-              <div className="relative h-48 rounded-3xl overflow-hidden mb-6 shadow-2xl border border-outline-variant/10">
-                <img 
-                  src={trilha.image} 
-                  alt={trilha.title}
-                  className={`w-full h-full object-cover transition-all duration-700 ${trilha.status === 'bloqueado' ? 'grayscale blur-sm' : 'group-hover:scale-110'}`}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
-                
-                {trilha.status === 'bloqueado' && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
-                    <div className="bg-surface-container-high/90 p-4 rounded-2xl flex flex-col items-center gap-2 border border-white/10 shadow-2xl scale-90">
-                      <Lock size={24} className="text-primary" />
-                      <span className="text-[8px] font-black uppercase tracking-widest text-primary">Acesso Bloqueado</span>
-                    </div>
-                  </div>
-                )}
-
-                <div className="absolute bottom-6 left-6 right-6">
-                  <h2 className="font-headline text-2xl font-extrabold text-on-surface mb-1">{trilha.title}</h2>
-                  <p className="text-[10px] text-on-surface-variant font-bold leading-relaxed line-clamp-2 max-w-sm">
-                    {trilha.description}
-                  </p>
-                </div>
-              </div>
-
-              {/* Missions List */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {trilha.missions.map((mission, i) => (
-                  <div 
-                    key={i}
-                    onClick={() => mission.status === 'liberado' && setSelectedSlug(mission.slug)}
-                    className={`flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer ${
-                      mission.status === 'liberado' 
-                        ? 'bg-surface-container-high/40 border-outline-variant/10 hover:border-primary/40 hover:bg-surface-container-high/60 active:scale-[0.98]' 
-                        : 'bg-surface-container-lowest/50 border-outline-variant/5 opacity-50 cursor-not-allowed'
-                    }`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${mission.status === 'liberado' ? 'bg-primary/10 text-primary' : 'bg-surface-container-highest text-on-surface-variant/40'}`}>
-                        {mission.status === 'liberado' ? <Play size={18} fill="currentColor" /> : <Lock size={18} />}
-                      </div>
-                      <div className="flex flex-col">
-                        <h3 className="font-bold text-sm text-on-surface leading-tight">{mission.title}</h3>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Clock size={10} className="text-on-surface-variant opacity-40" />
-                          <span className="text-[8px] font-black uppercase tracking-widest text-on-surface-variant opacity-40">{mission.duration}</span>
-                        </div>
-                      </div>
-                    </div>
-                    {mission.status === 'liberado' && <ArrowRight size={16} className="text-primary opacity-0 group-hover:opacity-100 transition-opacity" />}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
         </div>
       )}
 
+      {!loading && categories.map((cat) => {
+        const items = grouped[cat];
+        const info = seriesInfo[cat];
+        const reads = items.map((b) =>
+          parseInt(localStorage.getItem(`reads_${b.slug}`) || '0', 10)
+        );
+        const minReads = reads.length ? Math.min(...reads) : 0;
+
+        return (
+          <div key={cat} className="mb-16">
+            {/* Series header */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-col">
+                <div className="mb-1">
+                  <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-primary">
+                    SÉRIE
+                  </span>
+                </div>
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <h4 className="font-headline font-extrabold text-xl text-on-surface tracking-tighter uppercase leading-none">
+                    {info?.title ?? cat}
+                  </h4>
+                  {minReads > 0 && (
+                    <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">
+                      (Lido {minReads} vez{minReads > 1 ? 'es' : ''})
+                    </span>
+                  )}
+                </div>
+                <p className="text-on-surface-variant text-[11px] font-bold max-w-lg leading-relaxed opacity-70 mt-0.5">
+                  {info?.description ?? ''}
+                </p>
+              </div>
+            </div>
+
+            {/* Book cards row */}
+            <div className="relative -mx-5 px-5 mt-6">
+              <div className="pointer-events-none absolute -bottom-1 left-5 right-5 h-1 bg-gradient-to-r from-primary/30 via-outline-variant/10 to-transparent opacity-20" />
+              <DragScrollRow>
+                {items.map((book, i) => (
+                  <BookCard
+                    key={book.slug}
+                    book={book}
+                    index={i}
+                    onSelect={() => handleSelect(book.slug)}
+                  />
+                ))}
+              </DragScrollRow>
+            </div>
+          </div>
+        );
+      })}
+
       {error && (
-        <div className="mt-8 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-[10px] uppercase font-bold text-center">
-          Erro ao sincronizar Apócrifos: {error}
+        <div className="text-red-500 text-[10px] uppercase font-bold text-center py-4">
+          Erro ao sincronizar: {error}
         </div>
       )}
     </div>
   );
-};
-
-export default Protocol;
+}

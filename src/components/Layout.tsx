@@ -48,7 +48,7 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-1 pb-4 pt-2 bg-background/90 backdrop-blur-2xl border-t border-outline-variant/10">
+      <nav className="fixed bottom-0 left-0 w-full z-50 flex items-center px-0.5 pb-safe-area-inset-bottom pb-4 pt-1.5 bg-background/90 backdrop-blur-2xl border-t border-outline-variant/10">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentScreen === item.id;
@@ -57,12 +57,17 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
               key={item.id}
               onClick={() => setScreen(item.id)}
               className={cn(
-                "flex flex-col items-center justify-center py-1.5 px-3 transition-all active:scale-90 flex-1",
-                isActive ? "text-primary bg-surface-container-high/50 rounded-xl" : "text-on-surface-variant hover:text-on-surface"
+                "flex flex-col items-center justify-center py-1 px-0.5 transition-all active:scale-90 flex-1 min-w-0",
+                isActive ? "text-primary" : "text-on-surface-variant hover:text-on-surface"
               )}
             >
-              <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-              <span className="font-sans text-[9px] uppercase font-bold tracking-tight mt-1">
+              <div className={cn(
+                "flex items-center justify-center w-10 h-6 rounded-full transition-all",
+                isActive && "bg-surface-container-high/60"
+              )}>
+                <Icon size={18} strokeWidth={isActive ? 2.5 : 1.8} />
+              </div>
+              <span className="font-sans text-[8px] uppercase font-bold tracking-tight mt-0.5 truncate max-w-full leading-none">
                 {item.label}
               </span>
             </button>
@@ -73,22 +78,27 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
         <button
           onClick={() => setScreen(Screen.SETTINGS)}
           className={cn(
-            "flex flex-col items-center justify-center py-1.5 px-3 transition-all active:scale-90 flex-1",
+            "flex flex-col items-center justify-center py-1 px-0.5 transition-all active:scale-90 flex-1 min-w-0",
             currentScreen === Screen.SETTINGS
-              ? "text-primary bg-surface-container-high/50 rounded-xl"
+              ? "text-primary"
               : "text-on-surface-variant hover:text-on-surface"
           )}
         >
-          {photo ? (
-            <img
-              src={photo}
-              alt="Perfil"
-              className="w-5 h-5 rounded-full object-cover border border-primary/40"
-            />
-          ) : (
-            <Settings size={20} strokeWidth={currentScreen === Screen.SETTINGS ? 2.5 : 2} />
-          )}
-          <span className="font-sans text-[9px] uppercase font-bold tracking-tight mt-1">
+          <div className={cn(
+            "flex items-center justify-center w-10 h-6 rounded-full transition-all",
+            currentScreen === Screen.SETTINGS && "bg-surface-container-high/60"
+          )}>
+            {photo ? (
+              <img
+                src={photo}
+                alt="Perfil"
+                className="w-5 h-5 rounded-full object-cover border border-primary/40"
+              />
+            ) : (
+              <Settings size={18} strokeWidth={currentScreen === Screen.SETTINGS ? 2.5 : 1.8} />
+            )}
+          </div>
+          <span className="font-sans text-[8px] uppercase font-bold tracking-tight mt-0.5 truncate max-w-full leading-none">
             Config
           </span>
         </button>
