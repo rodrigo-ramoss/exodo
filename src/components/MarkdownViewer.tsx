@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import matter from 'gray-matter';
 import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X } from 'lucide-react';
 import type { Components } from 'react-markdown';
 
 interface MarkdownViewerProps {
-  content: string;
+  content?: string | null;
   slug: string;
   onClose: () => void;
 }
@@ -19,7 +18,7 @@ type MarkdownMetadata = {
 };
 
 function normalizeToStudyMarkdown(raw: string): string {
-  const source = raw.replace(/^\uFEFF/, '').trim();
+  const source = (raw || '').replace(/^\uFEFF/, '').trim();
 
   // If AI wrapped the markdown in a fenced block, keep only the fenced payload.
   const fencedMatch = source.match(/```(?:markdown|md)?\s*([\s\S]*?)```/i);
@@ -38,6 +37,40 @@ function normalizeToStudyMarkdown(raw: string): string {
     .replace(/^Data:\s.*$/gim, '')
     .replace(/^---\s*$/gim, '')
     .trim();
+}
+
+function safeParseMarkdown(rawContent?: string | null): { metadata: MarkdownMetadata; parsedContent: string } {
+  const fallback = (rawContent ?? '').trim();
+  if (!fallback) return { metadata: {}, parsedContent: '' };
+
+  try {
+    const normalized = normalizeToStudyMarkdown(fallback);
+    const frontmatterRegex = /^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]*([\s\S]*)$/;
+    const match = normalized.match(frontmatterRegex);
+
+    if (!match) {
+      return { metadata: {}, parsedContent: normalized };
+    }
+
+    const metadataRaw = match[1];
+    const body = (match[2] ?? '').trim();
+    const metadata: MarkdownMetadata = {};
+
+    metadataRaw.split(/\r?\n/).forEach((line) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return;
+      const idx = trimmed.indexOf(':');
+      if (idx <= 0) return;
+      const key = trimmed.slice(0, idx).trim().toLowerCase();
+      const value = trimmed.slice(idx + 1).trim().replace(/^["']|["']$/g, '');
+      if (key === 'title') metadata.title = value;
+      if (key === 'subcategory') metadata.subcategory = value;
+    });
+
+    return { metadata, parsedContent: body || normalized };
+  } catch {
+    return { metadata: {}, parsedContent: fallback };
+  }
 }
 
 export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, onClose }) => {
@@ -84,16 +117,10 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
     }
   };
 
-  const { metadata, parsedContent } = useMemo(() => {
-    const normalized = normalizeToStudyMarkdown(content);
-    const parsed = matter(normalized);
-    return {
-      metadata: (parsed.data ?? {}) as MarkdownMetadata,
-      parsedContent: parsed.content.trim(),
-    };
-  }, [content]);
+  const { metadata, parsedContent } = useMemo(() => safeParseMarkdown(content), [content]);
 
-  const { title, subcategory } = metadata;
+  const title = metadata?.title;
+  const subcategory = metadata?.subcategory;
 
   // Load settings and progress
   useEffect(() => {
@@ -204,6 +231,24 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
     ol: ({ children }) => <ol className="font-sans list-decimal ml-5 mb-6 space-y-2">{children}</ol>,
     li: ({ children }) => <li className="font-sans leading-relaxed">{children}</li>,
   };
+
+  console.log('Conteúdo carregado:', content);
+
+  if (!content || !content.trim()) {
+    return (
+      <div className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-coal text-on-surface p-6">
+        <button
+          onClick={handleManualClose}
+          className="absolute top-4 left-4 flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest"
+        >
+          <ArrowLeft size={18} />
+          <span>Sair</span>
+        </button>
+        <p className="font-headline text-xl mb-2">Carregando conteúdo...</p>
+        <p className="text-sm opacity-70 text-center">O estudo ainda não foi carregado ou está vazio.</p>
+      </div>
+    );
+  }
 
   return (
     <div 
