@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import matter from 'gray-matter';
 import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X } from 'lucide-react';
 import type { Components } from 'react-markdown';
 
@@ -11,6 +12,33 @@ interface MarkdownViewerProps {
 }
 
 type ReadingTheme = 'dark' | 'light' | 'sepia';
+
+type MarkdownMetadata = {
+  title?: string;
+  subcategory?: string;
+};
+
+function normalizeToStudyMarkdown(raw: string): string {
+  const source = raw.replace(/^\uFEFF/, '').trim();
+
+  // If AI wrapped the markdown in a fenced block, keep only the fenced payload.
+  const fencedMatch = source.match(/```(?:markdown|md)?\s*([\s\S]*?)```/i);
+  const withoutFence = fencedMatch ? fencedMatch[1].trim() : source;
+
+  // Always start from frontmatter when present, dropping AI preamble lines.
+  const fmStart = withoutFence.search(/^---\s*$/m);
+  if (fmStart >= 0) {
+    return withoutFence.slice(fmStart).trim();
+  }
+
+  return withoutFence
+    .replace(/^#\s*Resposta da IA\s*$/im, '')
+    .replace(/^Projeto:\s.*$/gim, '')
+    .replace(/^Sess[aã]o:\s.*$/gim, '')
+    .replace(/^Data:\s.*$/gim, '')
+    .replace(/^---\s*$/gim, '')
+    .trim();
+}
 
 export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, onClose }) => {
   const [progress, setProgress] = useState(0);
@@ -56,31 +84,16 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
     }
   };
 
-  // Custom lightweight frontmatter parser
-  const parseMarkdown = (str: string) => {
-    const regex = /^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]*([\s\S]*)$/;
-    const match = str.match(regex);
-    
-    if (!match) return { metadata: {}, body: str };
-    
-    const yamlStr = match[1];
-    const body = match[2];
-    const metadata: any = {};
-    
-    yamlStr.split('\n').forEach(line => {
-      const [key, ...valueParts] = line.split(':');
-      if (key && valueParts.length > 0) {
-        const value = valueParts.join(':').trim().replace(/^["'](.*)["']$/, '$1');
-        metadata[key.trim()] = value;
-      }
-    });
-    
-    return { metadata, body };
-  };
+  const { metadata, parsedContent } = useMemo(() => {
+    const normalized = normalizeToStudyMarkdown(content);
+    const parsed = matter(normalized);
+    return {
+      metadata: (parsed.data ?? {}) as MarkdownMetadata,
+      parsedContent: parsed.content.trim(),
+    };
+  }, [content]);
 
-  // Build trigger: 2026-04-13 15:38 - Force opacity and z-index
-  const { metadata, body: parsedContent } = parseMarkdown(content);
-  const { title, category } = metadata;
+  const { title, subcategory } = metadata;
 
   // Load settings and progress
   useEffect(() => {
@@ -182,6 +195,14 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
         <table>{children}</table>
       </div>
     ),
+    h2: ({ children }) => (
+      <h2 className="font-headline font-bold text-2xl mt-8 mb-4 border-b border-outline-variant/20 pb-2">
+        {children}
+      </h2>
+    ),
+    ul: ({ children }) => <ul className="font-sans list-disc ml-5 mb-6 space-y-2">{children}</ul>,
+    ol: ({ children }) => <ol className="font-sans list-decimal ml-5 mb-6 space-y-2">{children}</ol>,
+    li: ({ children }) => <li className="font-sans leading-relaxed">{children}</li>,
   };
 
   return (
@@ -283,12 +304,12 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
       {/* Reader Content */}
       <div className="max-w-2xl mx-auto w-full px-6 py-12 pb-32">
         {/* Header Section */}
-        {(title || category) && (
+        {(title || subcategory) && (
           <header className="mb-12 pt-4">
             <div className="flex justify-between items-center mb-4">
-              {category && (
+              {subcategory && (
                 <span className={`font-black text-[10px] uppercase tracking-[0.4em] ${theme === 'dark' ? 'text-primary' : 'text-[#b83025]'}`}>
-                  {category}
+                  {subcategory}
                 </span>
               )}
             </div>
