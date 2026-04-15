@@ -234,5 +234,49 @@
         "slug": "2 testemunhas/As Duas Testemunhas de Apocalipse 11 Camada 4"
       }
     ]
+  },
+  {
+    "title": "Falar em Línguas",
+    "description": "Análise completa sobre o falar em línguas em 9 camadas: exegese, história, disputas doutrinárias e implicações espirituais.",
+    "category": "Pneumatologia",
+    "image": "/image/doutrinas/falar em linguas.webp",
+    "layers": [
+      {
+        "title": "Falar em Línguas — Camada 1: Vocabulário e Terminologia",
+        "slug": "falar em linguas/falar-em-linguas-camada1"
+      },
+      {
+        "title": "Falar em Línguas — Camada 2: Contexto do Segundo Templo e Paralelos Anteriores ao Novo Testamento",
+        "slug": "falar em linguas/falar-em-linguas-camada2"
+      },
+      {
+        "title": "Falar em Línguas — Camada 3: Atos 2 e as Heterai Glōssai",
+        "slug": "falar em linguas/falar-em-linguas-camada3"
+      },
+      {
+        "title": "Falar em Línguas — Camada 4: 1 Coríntios 12–14 e o Principal Texto Normativo",
+        "slug": "falar em linguas/falar-em-linguas-camada4"
+      },
+      {
+        "title": "Falar em Línguas — Camada 5: Marcos 16.17 e Textos Periféricos",
+        "slug": "falar em linguas/falar-em-linguas-camada5"
+      },
+      {
+        "title": "Falar em Línguas — Camada 6: Recepção nos Primeiros Séculos",
+        "slug": "falar em linguas/falar-em-linguas-camada6"
+      },
+      {
+        "title": "Falar em Línguas — Camada 7: O Intervalo Histórico e a Ressurgência Moderna",
+        "slug": "falar em linguas/falar-em-linguas-camada7"
+      },
+      {
+        "title": "Falar em Línguas — Camada 8: Questões Doutrinárias em Disputa",
+        "slug": "falar em linguas/falar-em-linguas-camada8"
+      },
+      {
+        "title": "Falar em Línguas — Camada 9: Implicação Existencial e Formação da Alma",
+        "slug": "falar em linguas/falar-em-linguas-camada9"
+      }
+    ]
   }
 ]
