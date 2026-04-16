@@ -104,8 +104,8 @@ export default function ProgressSection() {
     return { total: libBooks.length, read, pct: pctOf(read, libBooks.length) };
   }, [libBooks]);
 
-  // ── 5. Estudos ────────────────────────────────────────────────────────────
-  const { data: studies } = useFetch<StudyItem[]>('/content/estudos/index.json');
+  // ── 5. MANA ───────────────────────────────────────────────────────────────
+  const { data: studies } = useFetch<StudyItem[]>('/content/mana/index.json');
   const studyStats = useMemo(() => {
     if (!studies) return { pct: 0, read: 0, total: 0 };
     const read = studies.filter((s) => isRead(s.slug)).length;
@@ -123,7 +123,7 @@ export default function ProgressSection() {
     { label: 'Apócrifos', pct: apoStats.pct },
     { label: 'Doutrinas', pct: docStats.pct },
     { label: 'Livraria', pct: libStats.pct },
-    { label: 'Estudos', pct: studyStats.pct },
+    { label: 'MANA', pct: studyStats.pct },
   ];
 
   return (
@@ -142,7 +142,7 @@ export default function ProgressSection() {
           <div>
             <p className="text-xs font-bold text-on-surface">Progresso Geral</p>
             <p className="text-[10px] text-on-surface-variant/60 mt-0.5">
-              Bíblia · Apócrifos · Doutrinas · Livraria · Estudos
+              Bíblia · Apócrifos · Doutrinas · Livraria · MANA
             </p>
           </div>
           <span className="font-headline text-2xl font-black text-primary tracking-tighter">

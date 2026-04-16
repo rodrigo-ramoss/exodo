@@ -1,5 +1,6 @@
 ---
 title: "Ensinos de Jesus: A Oração que Nasce da Permanência — Uma Análise de João 15:7"
+author: "Voz do Deserto"
 date: 2026-04-13
 category: "Ensinos de Jesus"
 image: /image/estudos/Ensinos de Jesus: A Oração que Nasce da Permanência — Uma Análise de João 15:7.webp
@@ -83,3 +84,4 @@ Sim. *Logos* (Strong's G3056) refere-se à Palavra como mensagem completa, princ
 
 **Como cultivar a permanência fora de uma comunidade institucional?**
 A permanência não depende de um prédio ou de uma programação eclesiástica. Ela pode ser cultivada no deserto através de: (1) leitura diária e meditativa das Escrituras, pedindo que o Espírito Santo a aplique à sua vida; (2) oração constante, transformando os acontecimentos do dia em conversa com Deus; (3) obediência imediata ao que você já entendeu da vontade de Deus; (4) busca de comunhão com outros que também desejam permanecer em Cristo, mesmo que em pequenos grupos informais ou relações de discipulado mútuo. A Videira é acessível de qualquer lugar.
+

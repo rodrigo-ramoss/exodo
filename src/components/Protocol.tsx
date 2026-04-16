@@ -13,10 +13,10 @@ interface ApoBook {
 }
 
 const seriesInfo: Record<string, { title: string; description: string }> = {
-  'Série — A Revelação de Enoque': {
-    title: 'A Revelação de Enoque',
+  APÓCRIFOS: {
+    title: 'Apócrifos',
     description:
-      'Análise técnica e histórica das partes de 1 Enoque em diálogo direto com o cânon bíblico. Além da superfície.',
+      'Vozes do Silêncio: exploração de textos antigos e históricos que complementam o contexto bíblico.',
   },
 };
 
@@ -122,12 +122,14 @@ function BookCard({ book, index, onSelect }: { book: ApoBook; index: number; onS
 export default function Protocol() {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
-  const { data: books, loading, error } = useFetch<ApoBook[]>('/content/apocrifos/apocrifos-index.json');
+  const { data: books, loading, error } = useFetch<ApoBook[]>('/content/livraria/index.json');
+
+  const apocryphaBooks = (books || []).filter((book) => book.category === 'APÓCRIFOS');
 
   const handleSelect = async (slug: string) => {
     setSelectedSlug(slug);
     try {
-      const res = await fetch(`/content/apocrifos/${slug}.md`);
+      const res = await fetch(`/content/livraria/${slug}.md`);
       if (res.ok) setMarkdownContent(await res.text());
     } catch {
       // silent
@@ -144,9 +146,9 @@ export default function Protocol() {
   }
 
   // Group by category (same pattern as Bookstore)
-  const categories = books ? Array.from(new Set(books.map((b) => b.category))) : [];
+  const categories = apocryphaBooks.length ? Array.from(new Set(apocryphaBooks.map((b) => b.category))) : [];
   const grouped = categories.reduce((acc, cat) => {
-    acc[cat] = books?.filter((b) => b.category === cat) ?? [];
+    acc[cat] = apocryphaBooks.filter((b) => b.category === cat);
     return acc;
   }, {} as Record<string, ApoBook[]>);
 

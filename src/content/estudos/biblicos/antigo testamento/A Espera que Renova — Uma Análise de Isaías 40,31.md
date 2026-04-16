@@ -1,5 +1,6 @@
 ---
 title: "A Espera que Renova — Uma Análise de Isaías 40:31"
+author: "Voz do Deserto"
 date: 2024-05-01
 category: "Antigo Testamento"
 image: /image/estudos/A espera que renova.webp
@@ -83,3 +84,4 @@ Significa ganhar uma perspectiva espiritual que transcende as circunstâncias im
 
 **Essa promessa se aplica a qualquer tipo de cansaço, inclusive depressão e burnout?**
 Isaías 40:31 é uma promessa espiritual poderosa, mas não deve ser usada para negar ou minimizar condições de saúde mental que exigem cuidado médico e terapêutico. A Bíblia reconhece a complexidade do sofrimento humano. A promessa de renovo espiritual pode coexistir com a necessidade de tratamento para depressão, ansiedade ou exaustão física. Deus pode usar meios naturais (descanso, terapia, medicação, apoio comunitário) para cumprir Sua promessa de renovo. A espera no Senhor inclui a sabedoria de cuidar do corpo e da mente que Ele nos deu.
+

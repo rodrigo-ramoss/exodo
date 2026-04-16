@@ -281,41 +281,61 @@
   },
   {
     "title": "Inferno",
-    "description": "Análise bíblica completa sobre o inferno: vocabulário original, textos centrais, história da doutrina e conclusões em 8 camadas.",
+    "description": "Revisão completa da doutrina do inferno em 5 camadas, com base bíblica, histórica e escatológica.",
     "category": "Escatologia",
     "image": "/image/doutrinas/inferno.webp",
     "layers": [
       {
-        "title": "O Problema do Vocabulário: Sheol, Hades, Geena, Tártaro e a Palavra Inferno",
-        "slug": "inferno/inferno1"
+        "title": "Camada 0 - O Dogma Eclesiástico (O Pano de Fundo a ser Refutado)",
+        "slug": "inferno/inferno 01"
       },
       {
-        "title": "O Antigo Testamento e o Estado dos Mortos: O Silêncio do Sheol",
-        "slug": "inferno/inferno2"
+        "title": "Camada 1 - PESHAT (O Fundamento Contextual e Linguístico)",
+        "slug": "inferno/inferno 02"
       },
       {
-        "title": "O Judaísmo do Segundo Templo e a Origem das Ideias sobre o Além",
-        "slug": "inferno/inferno3"
+        "title": "Camada 2 - REMEZ (A Sombra e a Tipologia)",
+        "slug": "inferno/inferno 03"
       },
       {
-        "title": "O Que Jesus Realmente Disse sobre o Julgamento Final",
-        "slug": "inferno/inferno4"
+        "title": "Camada 3 - DERASH (Investigação Comparativa e Tradição)",
+        "slug": "inferno/inferno 04"
       },
       {
-        "title": "O Que o Resto do Novo Testamento Diz sobre o Destino Final",
-        "slug": "inferno/inferno5"
+        "title": "Camada 4 - SOD (O Mistério Cósmico e Escatológico)",
+        "slug": "inferno/inferno 05"
+      }
+    ]
+  },
+  {
+    "title": "Ressurreição dos Mortos",
+    "description": "Investigação doutrinária da ressurreição em 6 camadas: fundamento bíblico, tradição histórica e aplicação escatológica.",
+    "category": "Escatologia",
+    "image": "/image/doutrinas/ressurreicao.webp",
+    "layers": [
+      {
+        "title": "Camada 0 - O Dogma Eclesiástico (O Pano de Fundo a ser Analisado)",
+        "slug": "ressurreicao/ressurreicao"
       },
       {
-        "title": "As Três Posições Principais e o Que a Bíblia Sustenta",
-        "slug": "inferno/inferno6"
+        "title": "Camada 1 - PESHAT (O Fundamento Contextual e Linguístico)",
+        "slug": "ressurreicao/ressurreicao2"
       },
       {
-        "title": "Recepção Histórica e Filtro Institucional: Como a Igreja Chegou ao Inferno que Prega",
-        "slug": "inferno/inferno7"
+        "title": "Camada 2 - REMEZ (A Sombra e a Tipologia)",
+        "slug": "ressurreicao/ressurreicao3"
       },
       {
-        "title": "Conclusão Geral: O Que a Bíblia Afirma, o Que a Tradição Adicionou e o Que um Leitor Honesto Deve Concluir",
-        "slug": "inferno/infernor8"
+        "title": "Camada 3 - DERASH (Investigação Comparativa e Tradição)",
+        "slug": "ressurreicao/ressurreicao4"
+      },
+      {
+        "title": "Camada 4 - SOD (O Mistério Cósmico e Escatológico)",
+        "slug": "ressurreicao/ressurreicao5"
+      },
+      {
+        "title": "Camada 5 - SÍNTESE, REFUTAÇÃO E APLICAÇÃO (A Conclusão Final)",
+        "slug": "ressurreicao/ressurreicao6"
       }
     ]
   }

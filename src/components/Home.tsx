@@ -19,7 +19,7 @@ interface HomeProps {
 }
 
 export default function Home({ onNavigate }: HomeProps) {
-  const { data: studies, loading: loadingStudies } = useFetch<StudyItem[]>('/content/estudos/index.json');
+  const { data: studies, loading: loadingStudies } = useFetch<StudyItem[]>('/content/mana/index.json');
   const { data: signs, loading: loadingSigns } = useFetch<any[]>('/content/sinais/index.json');
   const { data: doctrines, loading: loadingDoctrines } = useFetch<any[]>('/content/doutrinas/index.json');
   const { name: profileName } = useProfile();
@@ -50,10 +50,10 @@ export default function Home({ onNavigate }: HomeProps) {
           </p>
           <div className="flex flex-col gap-3">
             <button 
-              onClick={() => onNavigate(Screen.STUDIES, 'push')}
+              onClick={() => onNavigate(Screen.MANA, 'push')}
               className="bg-primary-container text-on-primary-container px-6 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-primary transition-all active:scale-95 shadow-lg shadow-primary/10"
             >
-              Explorar Estudos
+              Explorar MANA
             </button>
             <button 
               onClick={() => onNavigate(Screen.BOOKSTORE, 'push')}
@@ -68,7 +68,7 @@ export default function Home({ onNavigate }: HomeProps) {
       {/* APÓCRIFOS Section */}
       <section className="py-8 px-6">
         <div 
-          onClick={() => onNavigate(Screen.APOCRYPHA, 'push')}
+          onClick={() => onNavigate(Screen.BOOKSTORE, 'push')}
           className="relative w-full h-[200px] rounded-3xl overflow-hidden group cursor-pointer active:scale-[0.98] transition-transform border border-primary/20"
         >
           <div 
@@ -93,12 +93,12 @@ export default function Home({ onNavigate }: HomeProps) {
         </div>
       </section>
 
-      {/* Estudos em Destaque */}
+      {/* MANA em Destaque */}
       <section className="py-8 px-6">
         <div className="flex items-end justify-between mb-6">
-          <h3 className="font-headline text-lg font-bold tracking-tight text-primary uppercase text-[10px] tracking-[0.15em]">Estudos em Destaque</h3>
+          <h3 className="font-headline text-lg font-bold tracking-tight text-primary uppercase text-[10px] tracking-[0.15em]">MANA em Destaque</h3>
           <button 
-            onClick={() => onNavigate(Screen.STUDIES)}
+            onClick={() => onNavigate(Screen.MANA)}
             className="text-on-surface-variant text-[9px] uppercase tracking-widest hover:text-primary transition-colors font-bold"
           >
             Ver todos
@@ -110,7 +110,7 @@ export default function Home({ onNavigate }: HomeProps) {
           ) : studies?.slice(0, 3).map((study, i) => (
             <div 
               key={i}
-              onClick={() => onNavigate(Screen.STUDIES, 'push')}
+              onClick={() => onNavigate(Screen.MANA, 'push')}
               className="min-w-[240px] bg-surface-container-low rounded-2xl overflow-hidden border border-outline-variant/10 hover:border-primary/50 transition-all snap-start cursor-pointer group active:scale-[0.98]"
             >
               <div 
@@ -146,7 +146,7 @@ export default function Home({ onNavigate }: HomeProps) {
           ) : Array.from(new Set(studies?.map(s => s.category) || [])).map((cat, i) => (
             <div 
               key={i}
-              onClick={() => onNavigate(Screen.STUDIES, 'push')}
+              onClick={() => onNavigate(Screen.MANA, 'push')}
               className="min-w-[140px] h-[120px] bg-surface-container-low rounded-2xl border border-outline-variant/10 transition-all cursor-pointer group flex flex-col items-center justify-center p-4 text-center active:scale-95 hover:border-primary/40"
             >
               <div className="text-xl mb-2 text-on-surface-variant group-hover:text-primary transition-colors">

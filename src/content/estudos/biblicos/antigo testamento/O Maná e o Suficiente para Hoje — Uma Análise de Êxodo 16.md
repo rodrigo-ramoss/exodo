@@ -1,5 +1,6 @@
 ---
 title: "Tema do Antigo Testamento: O Maná e o Suficiente para Hoje — Uma Análise de Êxodo 16"
+author: "Voz do Deserto"
 date: 2026-04-13
 category: "Tema do Antigo Testamento"
 image: /image/estudos/Tema do Antigo Testamento: O Maná e o Suficiente para Hoje — Uma Análise de Êxodo 16.webp
@@ -90,3 +91,4 @@ Sim, e é profunda. O maná era recolhido individualmente por cada família, mas
 
 **Como discernir se estou confiando em Deus ou sendo irresponsável?**
 A confiança bíblica nunca é passiva; ela age com base no que Deus já revelou. Os israelitas deveriam colher o maná — isso era ação. Eles não deveriam colher no sábado — isso era obediência. O equilíbrio está em fazer diligentemente o que Deus ordena (trabalhar, planejar, cuidar) e descansar naquilo que Ele prometeu prover (o resultado, o futuro, o que está fora do nosso controle). Se minha “confiança” me leva à preguiça, não é fé; se minha “prudência” me leva à ansiedade, não é sabedoria.
+

@@ -35,7 +35,7 @@ export default function App() {
         return <Home onNavigate={handleNavigate} />;
       case Screen.BIBLE:
         return <Bible />;
-      case Screen.STUDIES:
+      case Screen.MANA:
         return <Studies />;
       case Screen.EBD:
         return <EBD onNavigate={handleNavigate} />;

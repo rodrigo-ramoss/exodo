@@ -1,5 +1,6 @@
 ---
 title: "Comunhão com Deus: O Encontro que Revela o Nome — Uma Análise de Êxodo 33"
+author: "Voz do Deserto"
 date: 2026-04-13
 category: "Comunhão com Deus"
 image: /image/estudos/Comunhão com Deus: O Encontro que Revela o Nome — Uma Análise de Êxodo 33.webp
@@ -79,3 +80,4 @@ Porque a glória plena de Deus é insuportável para a criatura mortal. Mas, mai
 
 **O que fazer quando não sinto a presença de Deus na comunhão?**
 A comunhão bíblica não se baseia em sentimentos, mas na verdade do caráter de Deus revelado. Moisés não sentiu arrepios; ele ouviu palavras. Quando a sensação de presença se ausenta, somos chamados a confiar no que Deus *disse* sobre Si mesmo. Continue buscando a Deus na oração e na Palavra, mesmo na secura. Lembre-se do Nome: Ele é compassivo, clemente, tardio em irar-se, cheio de amor e fidelidade. Essas verdades permanecem firmes mesmo quando nossas emoções oscilam. O deserto é, muitas vezes, o lugar onde aprendemos a caminhar pela fé na Palavra, não pela visão dos sentimentos.
+

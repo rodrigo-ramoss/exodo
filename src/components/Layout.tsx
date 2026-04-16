@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Menu, Settings, BookOpen, GraduationCap, Gavel, Library, Eye, Shield } from 'lucide-react';
+import { Menu, Settings, BookOpen, GraduationCap, Gavel, Library, Eye } from 'lucide-react';
 import { Screen } from '../types';
 import { cn } from '../lib/utils';
 import { useProfile } from '../state/ProfileContext';
@@ -15,8 +15,7 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
 
   const navItems = [
     { id: Screen.BIBLE, label: 'Bíblia', icon: BookOpen },
-    { id: Screen.STUDIES, label: 'Estudos', icon: GraduationCap },
-    { id: Screen.APOCRYPHA, label: 'Apócrifos', icon: Shield },
+    { id: Screen.MANA, label: 'MANA', icon: GraduationCap },
     { id: Screen.DOCTRINES, label: 'Doutrinas', icon: Gavel },
     { id: Screen.BOOKSTORE, label: 'Livraria', icon: Library },
     { id: Screen.SIGNS, label: 'Sinais', icon: Eye },

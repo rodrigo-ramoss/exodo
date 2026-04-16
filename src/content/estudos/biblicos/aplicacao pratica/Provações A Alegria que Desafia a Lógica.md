@@ -1,5 +1,6 @@
 ---
 title: "Provações: A Alegria que Desafia a Lógica — Uma Análise de Tiago 1:2-3"
+author: "Voz do Deserto"
 date: 2026-04-12
 category: "Aplicação Prática - Provações"
 image: /image/estudos/Provações: A Alegria que Desafia a Lógica — Uma Análise de Tiago 1:2-3.webp
@@ -62,3 +63,4 @@ A Bíblia ensina que Deus disciplina aqueles a quem ama (Hebreus 12:6), e o prop
 
 **E se eu não sentir que minha fé está ficando mais forte com as provações?**
 O trabalho do ourives é lento e muitas vezes invisível a olho nu. O *dokimion* (o resultado aprovado) pode levar anos para se manifestar plenamente. A fé não é medida pela intensidade do sentimento no meio da crise, mas pela direção para a qual você se volta quando a crise chega. Se você continua se voltando para Deus, mesmo com raiva, mesmo com dúvidas, o processo está funcionando. A *hupomonē* é a capacidade de permanecer sob o peso, não a ausência de dor enquanto se está lá.
+

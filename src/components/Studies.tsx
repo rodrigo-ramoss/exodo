@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Search, Star, Clock } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
+import { useFetch } from '../hooks/useFetch';
 
 interface StudyItem {
   title: string;
@@ -14,6 +15,17 @@ interface StudyItem {
 }
 
 type StudyTrack = 'biblicos' | 'apocrifos';
+
+interface ManaTheme {
+  id: string;
+  title: string;
+  subtitle: string;
+  keywords: string[];
+}
+
+interface ManaConfig {
+  themes: ManaTheme[];
+}
 
 const studyIndexModules = import.meta.glob('../content/estudos/{biblicos,apocrifos}/index.json', {
   eager: true,
@@ -35,16 +47,31 @@ function loadStudies(track: StudyTrack): StudyItem[] {
 export default function Studies() {
   const [selectedStudy, setSelectedStudy] = useState<StudyItem | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [selectedThemeId, setSelectedThemeId] = useState<string | null>(null);
+  const { data: manaConfig } = useFetch<ManaConfig>('/content/mana/mana.json');
 
   const allStudies = useMemo(
     () => [...loadStudies('biblicos'), ...loadStudies('apocrifos')],
     [],
   );
 
+  const selectedTheme = useMemo(
+    () => manaConfig?.themes?.find((theme) => theme.id === selectedThemeId) || null,
+    [manaConfig?.themes, selectedThemeId],
+  );
+
+  const matchesTheme = (study: StudyItem) => {
+    if (!selectedTheme) return true;
+    const haystack = `${study.title} ${study.description} ${study.category} ${study.slug}`.toLowerCase();
+    return selectedTheme.keywords.some((keyword) => haystack.includes(keyword.toLowerCase()));
+  };
+
   const studies = useMemo(() => {
     const lowerSearch = searchTerm.trim().toLowerCase();
     return allStudies
       .filter(study => {
+        if (!matchesTheme(study)) return false;
         if (!lowerSearch) return true;
         return (
           study.title.toLowerCase().includes(lowerSearch) ||
@@ -52,7 +79,7 @@ export default function Studies() {
           study.category.toLowerCase().includes(lowerSearch)
         );
       });
-  }, [allStudies, searchTerm]);
+  }, [allStudies, searchTerm, selectedTheme]);
 
   const loading = false;
   const error = null;
@@ -86,7 +113,7 @@ export default function Studies() {
     <div className="pb-24 min-h-screen bg-surface-container-lowest">
       {/* Editorial Header */}
       <div className="pt-8 px-4 sm:px-6 mb-6 border-l-2 border-primary-container py-1 ml-4 sm:ml-6">
-        <h1 className="font-headline text-4xl font-bold text-primary mb-1 tracking-tighter">Estudos</h1>
+        <h1 className="font-headline text-4xl font-bold text-primary mb-1 tracking-tighter">MANA</h1>
         <p className="text-on-surface-variant/70 text-[11px] max-w-[280px] font-medium leading-relaxed">
           A prática da fé no cotidiano: ferramentas para oração, vida com Deus e o preparo espiritual para as provações no deserto.
         </p>
@@ -99,9 +126,55 @@ export default function Studies() {
             className="flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full bg-primary text-on-primary border-primary"
             type="button"
           >
-            Estudos
+            MANA
+          </button>
+          <button
+            className="flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full bg-surface-container-high text-on-surface border-outline-variant/40 hover:border-primary"
+            type="button"
+            onClick={() => setIsCategoriesOpen((prev) => !prev)}
+          >
+            Categorias
           </button>
         </div>
+
+        {isCategoriesOpen && (
+          <div className="mb-4 rounded-2xl border border-outline-variant/20 bg-surface-container-low p-2 max-h-72 overflow-y-auto">
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedThemeId(null);
+                setIsCategoriesOpen(false);
+              }}
+              className={`w-full text-left px-3 py-2 rounded-xl transition-colors ${
+                !selectedThemeId ? 'bg-primary/15 text-primary' : 'hover:bg-surface-container-high'
+              }`}
+            >
+              <p className="text-[10px] font-black uppercase tracking-wider">Todos os temas</p>
+            </button>
+            {(manaConfig?.themes || []).map((theme) => (
+              <button
+                key={theme.id}
+                type="button"
+                onClick={() => {
+                  setSelectedThemeId(theme.id);
+                  setIsCategoriesOpen(false);
+                }}
+                className={`w-full text-left px-3 py-2 rounded-xl transition-colors ${
+                  selectedThemeId === theme.id ? 'bg-primary/15 text-primary' : 'hover:bg-surface-container-high'
+                }`}
+              >
+                <p className="text-[10px] font-black uppercase tracking-wider">{theme.title}</p>
+                <p className="text-[10px] text-on-surface-variant">{theme.subtitle}</p>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {selectedTheme && (
+          <div className="mb-4 text-[10px] font-bold uppercase tracking-wider text-primary">
+            Tema ativo: {selectedTheme.title}
+          </div>
+        )}
 
         <div className="relative group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
@@ -119,7 +192,7 @@ export default function Studies() {
       {!loading && studies.length === 0 && (
         <section className="px-4 sm:px-6 mt-8">
           <div className="py-16 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-60 border border-dashed border-outline-variant/20 rounded-3xl">
-            Nenhum estudo encontrado para esta busca.
+            Nenhum estudo encontrado para este tema.
           </div>
         </section>
       )}
@@ -128,7 +201,7 @@ export default function Studies() {
       <section className={`mt-8 ${studies.length === 0 ? 'hidden' : ''}`}>
         <div className="px-4 sm:px-6 flex justify-between items-baseline mb-3">
           <h2 className="font-headline font-bold text-[10px] tracking-[0.2em] uppercase text-on-surface opacity-60">
-            Estudos em Destaque
+            MANA em Destaque
           </h2>
           <div className="flex gap-1">
             <span className="w-1 h-1 bg-primary rounded-full"></span>

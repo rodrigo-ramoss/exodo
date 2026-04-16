@@ -286,5 +286,95 @@
     "category": "Série — A Verdadeira História da Igreja",
     "time": "LIVRO",
     "image": "/image/livraria/o que sobre depois do deserto.webp"
+  },
+  {
+    "title": "Enoque — Os Filhos de Deus e os Nefilins",
+    "slug": "apocrifos/Parte 1 - Enoque - Os Filhos de Deus e os Nefilins",
+    "description": "A identidade dos Vigilantes, a corrupção da criação e o eco direto em Gênesis 6. Análise técnica de 1 Enoque 6–11.",
+    "date": "2026-04-01",
+    "category": "APÓCRIFOS",
+    "time": "LIVRO",
+    "image": "/image/livraria/o livro dos vigilantes.webp"
+  },
+  {
+    "title": "Enoque — A Origem dos Demônios",
+    "slug": "apocrifos/Parte 2 - Enoque - A Origem dos Demônios",
+    "description": "Como os espíritos imundos emergem dos Nefilins e o que Enoque revela sobre o mundo espiritual invisível.",
+    "date": "2026-04-02",
+    "category": "APÓCRIFOS",
+    "time": "LIVRO",
+    "image": "/image/apocrifos/a origem dos demonios.webp"
+  },
+  {
+    "title": "Enoque — O Julgamento dos Anjos e as Prisões Eternas",
+    "slug": "apocrifos/Parte 3 - Enoque - O Julgamento dos Anjos e as Prisões Eternas",
+    "description": "O tribunal celestial, as prisões do abismo e as implicações escatológicas para a teologia do julgamento divino.",
+    "date": "2026-04-03",
+    "category": "APÓCRIFOS",
+    "time": "LIVRO",
+    "image": "/image/apocrifos/o julgamento dos anjos.webp"
+  },
+  {
+    "title": "Enoque — O Escriba da Justiça",
+    "slug": "apocrifos/Parte 4 - Enoque, o Escriba da Justiça",
+    "description": "Enoque como mediador, escriba celestial e precursor da figura do Filho do Homem. Conexões com Daniel e o NT.",
+    "date": "2026-04-04",
+    "category": "APÓCRIFOS",
+    "time": "LIVRO",
+    "image": "/image/apocrifos/o escritba da justiça.webp"
+  },
+  {
+    "title": "Enoque — O Prólogo e a Geografia Cósmica",
+    "slug": "apocrifos/Parte 5 - Enoque- O Prólogo e a Geografia Cósmica",
+    "description": "A teofania do juízo e a jornada de Enoque aos confins da criação em 1 Enoque 1–5 e 17–36.",
+    "date": "2026-04-05",
+    "category": "APÓCRIFOS",
+    "time": "LIVRO",
+    "image": "/image/livraria/o prologo.webp"
+  },
+  {
+    "title": "Enoque — O Livro das Parábolas",
+    "slug": "apocrifos/Parte 6 - Enoque - O Livro das Parábolas",
+    "description": "O Filho do Homem e as três parábolas do juízo em 1 Enoque 37–71.",
+    "date": "2026-04-06",
+    "category": "APÓCRIFOS",
+    "time": "LIVRO",
+    "image": "/image/livraria/o livro das parabolas (1).webp"
+  },
+  {
+    "title": "Enoque — O Livro Astronômico",
+    "slug": "apocrifos/Parte 7 - Enoque - O Livro Astronômico",
+    "description": "Os segredos do calendário sagrado e a ordem cósmica em 1 Enoque 72–82.",
+    "date": "2026-04-07",
+    "category": "APÓCRIFOS",
+    "time": "LIVRO",
+    "image": "/image/livraria/o livro astronomico 2.webp"
+  },
+  {
+    "title": "Enoque — O Livro dos Sonhos",
+    "slug": "apocrifos/Parte 8 - Enoque - O Livro dos Sonhos",
+    "description": "A história do mundo em código animal e a vindicação dos justos em 1 Enoque 83–90.",
+    "date": "2026-04-08",
+    "category": "APÓCRIFOS",
+    "time": "LIVRO",
+    "image": "/image/livraria/o livro dos sonhos (1).webp"
+  },
+  {
+    "title": "Enoque — O Nascimento de Noé e os Apêndices Escatológicos",
+    "slug": "apocrifos/parte 10 - Enoque - O Nascimento de Noé e os Apêndices Escatológicos",
+    "description": "O relato miraculoso de Noé e a promessa final para os justos (1 Enoque 106–108).",
+    "date": "2026-04-09",
+    "category": "APÓCRIFOS",
+    "time": "LIVRO",
+    "image": "/image/livraria/o nascimento de noe.webp"
+  },
+  {
+    "title": "Enoque — A Epístola de Enoque",
+    "slug": "apocrifos/Parte 9 - Enoque - A Epístola de Enoque",
+    "description": "O testamento final do sétimo patriarca e a sabedoria para os últimos dias (1 Enoque 91–105).",
+    "date": "2026-04-10",
+    "category": "APÓCRIFOS",
+    "time": "LIVRO",
+    "image": "/image/livraria/a epistola de enoque (1).webp"
   }
 ]

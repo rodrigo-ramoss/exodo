@@ -1,5 +1,6 @@
 ---
 title: "Oração: O Quarto Fechado — A Prática da Oração Secreta como Cura da Performance"
+author: "Voz do Deserto"
 date: 2026-04-13
 category: "Aplicação Prática - Oração"
 image: /image/estudos/Oração: O Quarto Fechado — A Prática da Oração Secreta como Cura da Performance.webp
@@ -64,3 +65,4 @@ Nada no contexto léxico ou literário sugere recompensa material. A recompensa 
 
 **E se eu sentir vontade de compartilhar algo que vivi no secreto? Isso invalida o segredo?**
 O problema está na motivação e na dependência. Compartilhar para edificar outros e glorificar a Deus é bíblico. O perigo surge quando o “secreto” se torna apenas um ensaio para o “público”, quando a oração só tem valor se depois for narrada. Um bom teste de honestidade interior é perguntar-se: “Se eu nunca puder contar isso a ninguém, essa experiência com Deus ainda terá valor para mim?” Se a resposta for sim, você entendeu o *tameion*.
+

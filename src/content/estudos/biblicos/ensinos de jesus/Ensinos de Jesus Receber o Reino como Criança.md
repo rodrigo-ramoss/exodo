@@ -1,5 +1,6 @@
 ---
 title: "Ensinos de Jesus: Receber o Reino como Criança — Uma Análise de Lucas 18:17"
+author: "Voz do Deserto"
 date: 2026-04-13
 category: "Ensinos de Jesus"
 image: /image/estudos/Ensinos de Jesus: Receber o Reino como Criança — Uma Análise de Lucas 18:17.webp
@@ -64,3 +65,4 @@ No ensino de Jesus, o Reino de Deus (*basileia tou Theou*) é o governo soberano
 
 **Como posso cultivar essa atitude de criança na minha vida de fé?**
 Comece reconhecendo diariamente sua total dependência de Deus. Confesse suas limitações e fraquezas sem tentar escondê-las. Ao orar, não tente impressionar a Deus com palavras elaboradas; fale com Ele como um filho fala com seu Pai, com simplicidade e honestidade. Ao ler as Escrituras, peça que o Espírito Santo a ensine, como uma criança que se senta aos pés do Mestre para aprender. E, sobretudo, descanse na certeza de que o amor de Deus por você não depende do seu desempenho, mas da graça dAquele que a acolheu.
+

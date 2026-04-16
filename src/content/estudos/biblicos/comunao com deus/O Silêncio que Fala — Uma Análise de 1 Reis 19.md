@@ -1,5 +1,6 @@
 ---
 title: "Comunhão com Deus: O Silêncio que Fala — Uma Análise de 1 Reis 19"
+author: "Voz do Deserto"
 date: 2026-04-13
 category: "Comunhão com Deus"
 image: /image/estudos/Comunhão com Deus: O Silêncio que Fala — Uma Análise de 1 Reis 19.webp
@@ -91,3 +92,4 @@ A teofania foi única, mas o princípio é universal: Deus se revela aos humilde
 
 **Como posso criar espaço para o “cicio suave” em minha vida prática?**
 Estabeleça momentos de silêncio intencional. Desligue notificações. Saia para caminhar sem fones de ouvido. Pratique a oração de escuta: leia um pequeno trecho da Bíblia e fique em silêncio por alguns minutos, perguntando: “Senhor, o que queres me dizer com isso?” A disciplina do silêncio é contracultural, mas essencial para quem deseja comunhão profunda com Deus.
+
