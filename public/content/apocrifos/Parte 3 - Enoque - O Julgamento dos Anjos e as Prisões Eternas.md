@@ -1,7 +1,8 @@
-# Categoria: Apócrifos
-# Subcategoria: Enoque
+---
+title: "O Julgamento dos Anjos e as Prisões Eternas"
+subcategory: "Enoque"
+---
 
-# O Julgamento dos Anjos e as Prisões Eternas
 ## O Tártaro, o Abismo e as Cadeias da Escuridão (1 Enoque 10; 18–21)
 *Rodrigo Ramos — Voz do Deserto*
 

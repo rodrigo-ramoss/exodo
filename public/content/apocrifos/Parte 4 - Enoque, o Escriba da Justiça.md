@@ -1,7 +1,8 @@
-# Categoria: Apócrifos
-# Subcategoria: Enoque
+---
+title: "Enoque, o Escriba da Justiça"
+subcategory: "Enoque"
+---
 
-# Enoque, o Escriba da Justiça
 ## O Ofício Celestial do Sétimo Patriarca (1 Enoque 12–16)
 *Rodrigo Ramos — Voz do Deserto*
 

@@ -1,7 +1,8 @@
-# Categoria: Apócrifos
-# Subcategoria: Enoque
+---
+title: "Os Filhos de Deus e os Nefilins"
+subcategory: "Enoque"
+---
 
-# Os Filhos de Deus e os Nefilins
 ## A Identidade dos Vigilantes e a Corrupção da Criação (1 Enoque 6–11)
 *Rodrigo Ramos — Voz do Deserto*
 

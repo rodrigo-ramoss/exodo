@@ -1,7 +1,8 @@
-# Categoria: Apócrifos
-# Subcategoria: Enoque
+---
+title: "A Origem dos Demônios"
+subcategory: "Enoque"
+---
 
-# A Origem dos Demônios
 ## Os Espíritos Impuros e a Demonologia Enoquiana (1 Enoque 15–16)
 *Rodrigo Ramos — Voz do Deserto*
 
