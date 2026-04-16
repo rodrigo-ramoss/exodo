@@ -249,7 +249,7 @@
     "date": "2026-04-01",
     "category": "A REVELAÇÃO DE ENOQUE",
     "time": "LIVRO",
-    "image": "/image/livraria/o livro dos vigilantes.webp"
+    "image": "/image/apocrifos/o livro dos vigilantes.webp"
   },
   {
     "title": "Enoque — A Origem dos Demônios",
@@ -285,7 +285,7 @@
     "date": "2026-04-05",
     "category": "A REVELAÇÃO DE ENOQUE",
     "time": "LIVRO",
-    "image": "/image/livraria/o prologo.webp"
+    "image": "/image/apocrifos/o prologo.webp"
   },
   {
     "title": "Enoque — O Livro das Parábolas",
@@ -294,7 +294,7 @@
     "date": "2026-04-06",
     "category": "A REVELAÇÃO DE ENOQUE",
     "time": "LIVRO",
-    "image": "/image/livraria/o livro das parabolas (1).webp"
+    "image": "/image/apocrifos/o livro das parabolas (1).webp"
   },
   {
     "title": "Enoque — O Livro Astronômico",
@@ -303,7 +303,7 @@
     "date": "2026-04-07",
     "category": "A REVELAÇÃO DE ENOQUE",
     "time": "LIVRO",
-    "image": "/image/livraria/o livro astronomico 2.webp"
+    "image": "/image/apocrifos/o livro astronomico 2.webp"
   },
   {
     "title": "Enoque — O Livro dos Sonhos",
@@ -312,7 +312,7 @@
     "date": "2026-04-08",
     "category": "A REVELAÇÃO DE ENOQUE",
     "time": "LIVRO",
-    "image": "/image/livraria/o livro dos sonhos (1).webp"
+    "image": "/image/apocrifos/o livro dos sonhos (1).webp"
   },
   {
     "title": "Enoque — O Nascimento de Noé e os Apêndices Escatológicos",
@@ -321,7 +321,7 @@
     "date": "2026-04-09",
     "category": "A REVELAÇÃO DE ENOQUE",
     "time": "LIVRO",
-    "image": "/image/livraria/o nascimento de noe.webp"
+    "image": "/image/apocrifos/o nascimento de noe.webp"
   },
   {
     "title": "Enoque — A Epístola de Enoque",
@@ -331,5 +331,41 @@
     "category": "A REVELAÇÃO DE ENOQUE",
     "time": "LIVRO",
     "image": "/image/livraria/a epistola de enoque (1).webp"
+  },
+  {
+    "title": "O Trono e o Templo",
+    "slug": "serie - sombras do reino de deus/Ebook 01 - O Trono e o Templo",
+    "description": "A morada de Deus como modelo do Reino — arquitetura cósmica, sacerdócio e a presença divina no Templo.",
+    "date": "2026-04-16",
+    "category": "SOMBRAS DO REINO DE DEUS",
+    "time": "LIVRO",
+    "image": "/image/livraria/o trono e o templo.webp"
+  },
+  {
+    "title": "A Cidade e o Jardim",
+    "slug": "serie - sombras do reino de deus/Ebook 02 - A Cidade e o Jardim",
+    "description": "A Nova Jerusalém e a restauração da criação — Eden, cidade e a consumação do Reino.",
+    "date": "2026-04-16",
+    "category": "SOMBRAS DO REINO DE DEUS",
+    "time": "LIVRO",
+    "image": "/image/livraria/a cidade e o jardim.webp"
+  },
+  {
+    "title": "As Províncias e os Governantes",
+    "slug": "serie - sombras do reino de deus/Ebook - 03As Províncias e os Governantes",
+    "description": "Galardão, hierarquia e a administração do cosmos — autoridade delegada e o governo eterno dos santos.",
+    "date": "2026-04-16",
+    "category": "SOMBRAS DO REINO DE DEUS",
+    "time": "LIVRO",
+    "image": "/image/livraria/as provincias e os governantes.webp"
+  },
+  {
+    "title": "A Jornada e o Mistério",
+    "slug": "serie - sombras do reino de deus/Ebook 4 - A Jornada e o Mistério",
+    "description": "A geografia do céu e a mística da ascensão — caminhos, portais e o destino final da alma.",
+    "date": "2026-04-16",
+    "category": "SOMBRAS DO REINO DE DEUS",
+    "time": "LIVRO",
+    "image": "/image/livraria/a jornada e o misterio.webp"
   }
 ]

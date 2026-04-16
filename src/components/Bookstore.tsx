@@ -57,6 +57,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Série — A Invenção do Pecado':             'IGREJA E BÍBLIA',
   'Trilogia — O Cânon Oculto':                'IGREJA E BÍBLIA',
   'Série — A Verdadeira História da Igreja':  'IGREJA E BÍBLIA',
+  'SOMBRAS DO REINO DE DEUS':                 'IGREJA E BÍBLIA',
   'Trilogia — O Mapa da Tempestade':          'ANTISISTEMA',
   'Trilogia — O Estrangeiro Próspero':        'ANTISISTEMA',
   'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
@@ -72,6 +73,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — A Invenção do Pecado':             'A Invenção do Pecado',
   'Trilogia — O Cânon Oculto':                'O Cânon Oculto',
   'A REVELAÇÃO DE ENOQUE':                    'A Revelação de Enoque',
+  'SOMBRAS DO REINO DE DEUS':                 'Sombras do Reino de Deus',
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
 };
 

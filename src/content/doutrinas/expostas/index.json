@@ -138,20 +138,24 @@
     "image": "/image/doutrinas/segunda morte.webp",
     "layers": [
       {
-        "title": "A Segunda Morte na Bíblia: Camada 1 — O que o Texto Grego de Apocalipse Realmente Diz",
-        "slug": "segunda morte/segunda-morte-camada1-voz-do-deserto"
+        "title": "A Segunda Morte: Camada 0 — O Dogma Eclesiástico (O Pano de Fundo a ser Refutado)",
+        "slug": "segunda morte/segunda morte01"
       },
       {
-        "title": "A Segunda Morte na Bíblia: Camada 2 — Desenvolvimento Histórico da Interpretação",
-        "slug": "segunda morte/segunda-morte-camada2-voz-do-deserto"
+        "title": "A Segunda Morte: Camada 1 — PESHAT (O Fundamento Contextual e Linguístico)",
+        "slug": "segunda morte/segunda morte02"
       },
       {
-        "title": "A Segunda Morte na Bíblia: Camada 3 — Tensões, Debates Acadêmicos e Pontos de Discórdia",
-        "slug": "segunda morte/segunda-morte-camada3-voz-do-deserto"
+        "title": "A Segunda Morte: Camada 3 — DERASH (Investigação Comparativa e Tradição)",
+        "slug": "segunda morte/segunda morte03"
       },
       {
-        "title": "A Segunda Morte na Bíblia: Camada 4 — Síntese e Posição Fundamentada",
-        "slug": "segunda morte/segunda-morte-camada4-voz-do-deserto"
+        "title": "A Segunda Morte: Camada 4 — SOD (O Mistério Cósmico e Escatológico)",
+        "slug": "segunda morte/segunda morte04"
+      },
+      {
+        "title": "A Segunda Morte: Camada 5 — SÍNTESE, REFUTAÇÃO E APLICAÇÃO (A Conclusão Final)",
+        "slug": "segunda morte/segunda morte05"
       }
     ]
   },
@@ -162,24 +166,28 @@
     "image": "/image/doutrinas/sono da alma.webp",
     "layers": [
       {
-        "title": "O Sono da Alma: Camada 0 — Fundamentos Hermenêuticos e Fontes",
-        "slug": "sono da alma/O Sono da Alma Camada 0"
+        "title": "O Sono da Alma: Camada 0 — O Dogma Eclesiástico (O Pano de Fundo a ser Refutado)",
+        "slug": "sono da alma/sono da alma01"
       },
       {
-        "title": "O Sono da Alma: Camada 1 — Exegese do Texto (AT, Intertestamental, NT)",
-        "slug": "sono da alma/O Sono da Alma Camada 1 — Exegese do Texto"
+        "title": "O Sono da Alma: Camada 1 — PESHAT (O Fundamento Contextual e Linguístico)",
+        "slug": "sono da alma/sono da alma02"
       },
       {
-        "title": "O Sono da Alma: Camada 2 — Desenvolvimento Histórico: do Judaísmo Intertestamental ao Evangelicalismo Contemporâneo",
-        "slug": "sono da alma/O Sono da Alma Camada 2 — Desenvolvimento Histórico"
+        "title": "O Sono da Alma: Camada 2 — REMEZ (A Sombra e a Tipologia)",
+        "slug": "sono da alma/sono da alma03"
       },
       {
-        "title": "O Sono da Alma: Camada 3 — Tensões, Debates Acadêmicos e Perguntas Específicas",
-        "slug": "sono da alma/O Sono da Alma Camada 3"
+        "title": "O Sono da Alma: Camada 3 — DERASH (Investigação Comparativa e Tradição)",
+        "slug": "sono da alma/sono da alma04"
       },
       {
-        "title": "O Sono da Alma: Camada 4 — Síntese e Posição Fundamentada",
-        "slug": "sono da alma/O Sono da Alma Camada 4"
+        "title": "O Sono da Alma: Camada 4 — SOD (O Mistério Cósmico e Escatológico)",
+        "slug": "sono da alma/sono da alma05"
+      },
+      {
+        "title": "O Sono da Alma: Camada 5 — SÍNTESE, REFUTAÇÃO E APLICAÇÃO (A Conclusão Final)",
+        "slug": "sono da alma/sono da alma06"
       }
     ]
   },
@@ -190,20 +198,24 @@
     "image": "/image/doutrinas/trindade.webp",
     "layers": [
       {
-        "title": "A Doutrina da Trindade: Camada 1 — O que o Texto Hebraico e Grego Realmente Dizem Sobre Deus, Jesus e o Espírito",
-        "slug": "trindade/trindade-camada1-voz-do-deserto"
+        "title": "A Trindade: Camada 0 — O Dogma Eclesiástico (O Pano de Fundo a ser Analisado)",
+        "slug": "trindade/trindade01"
       },
       {
-        "title": "A Doutrina da Trindade: Camada 2 — Desenvolvimento Histórico: De Niceia a Constantinopla, Política e Dogma",
-        "slug": "trindade/trindade-camada2-voz-do-deserto"
+        "title": "A Trindade: Camada 1 — PESHAT (O Fundamento Contextual e Linguístico)",
+        "slug": "trindade/trindade02"
       },
       {
-        "title": "A Doutrina da Trindade: Camada 3 — Tensões, Debates e Objeções Sérias",
-        "slug": "trindade/trindade-camada3-voz-do-deserto"
+        "title": "A Trindade: Camada 2 — REMEZ (A Sombra e a Tipologia)",
+        "slug": "trindade/trindade04"
       },
       {
-        "title": "A Doutrina da Trindade: Camada 4 — Síntese e Posição Fundamentada",
-        "slug": "trindade/trindade-camada4-voz-do-deserto"
+        "title": "A Trindade: Camada 3 — DERASH (Investigação Comparativa e Tradição)",
+        "slug": "trindade/trindade05"
+      },
+      {
+        "title": "A Trindade: Camada 4 — SOD (O Mistério Cósmico e Escatológico)",
+        "slug": "trindade/trindade06"
       }
     ]
   },
