@@ -93,8 +93,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
     // Push a new state when the reader opens
     window.history.pushState({ readerOpen: true, slug }, '');
 
-    const handlePopState = (event: PopStateEvent) => {
-      // If the back button is pressed, close the reader
+    const handlePopState = (_event: PopStateEvent) => {
       onClose();
     };
 
@@ -124,25 +123,16 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
 
   // Load settings and progress
   useEffect(() => {
-    const resetKey = `reset_after_complete_${slug}`;
-    const shouldResetAfterComplete = localStorage.getItem(resetKey) === '1';
-
-    if (shouldResetAfterComplete) {
-      localStorage.removeItem(resetKey);
-      localStorage.removeItem(`scroll_${slug}`);
-      localStorage.setItem(`progress_${slug}`, '0');
-    }
-
     const savedFontSize = localStorage.getItem('reader_font_size');
     const savedTheme = localStorage.getItem('reader_theme') as ReadingTheme;
-    const savedProgress = shouldResetAfterComplete ? '0' : localStorage.getItem(`progress_${slug}`);
-    
+    const savedProgress = localStorage.getItem(`progress_${slug}`);
+
     if (savedFontSize) setFontSize(parseInt(savedFontSize, 10));
     if (savedTheme) setTheme(savedTheme);
     if (savedProgress) setProgress(parseInt(savedProgress, 10));
 
     // Restore scroll position
-    const savedScroll = shouldResetAfterComplete ? null : localStorage.getItem(`scroll_${slug}`);
+    const savedScroll = localStorage.getItem(`scroll_${slug}`);
     if (savedScroll && parseInt(savedScroll, 10) > 100) {
       setIsRestoring(true);
       
@@ -160,18 +150,26 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
     }
   }, [slug]);
 
-  // Finalize session on close/unmount (gamificação + reset para releitura)
+  // Finalize session on close/unmount
   useEffect(() => {
     return () => {
       if (didFinalizeRef.current) return;
       didFinalizeRef.current = true;
 
-      const finalProgress = progressRef.current;
-      if (finalProgress >= 100) {
+      // Lê diretamente do localStorage para evitar ref desatualizado
+      // (progressRef pode não ter sido sincronizado antes do unmount)
+      const savedProgress = parseInt(localStorage.getItem(`progress_${slug}`) || '0', 10);
+      console.log(`[Progresso] Fechando "${slug}" — progresso salvo: ${savedProgress}%`);
+
+      if (savedProgress >= 100) {
         const readsKey = `reads_${slug}`;
         const currentReads = parseInt(localStorage.getItem(readsKey) || '0', 10);
-        localStorage.setItem(readsKey, (((Number.isFinite(currentReads) ? currentReads : 0) + 1)).toString());
-        localStorage.setItem(`reset_after_complete_${slug}`, '1');
+        const newReads = (Number.isFinite(currentReads) ? currentReads : 0) + 1;
+        localStorage.setItem(readsKey, newReads.toString());
+        // Reseta imediatamente para que o BookCard exiba 0% (pronto para releitura)
+        localStorage.setItem(`progress_${slug}`, '0');
+        localStorage.removeItem(`scroll_${slug}`);
+        console.log(`[Progresso] "${slug}" concluído! Leituras totais: ${newReads}`);
       }
     };
   }, [slug]);

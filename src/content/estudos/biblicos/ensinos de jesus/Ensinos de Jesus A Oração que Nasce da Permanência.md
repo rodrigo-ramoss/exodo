@@ -2,7 +2,7 @@
 title: "Ensinos de Jesus: A Oração que Nasce da Permanência — Uma Análise de João 15:7"
 author: "Voz do Deserto"
 date: 2026-04-13
-category: "Ensinos de Jesus"
+category: "Disciplinas"
 image: /image/estudos/Ensinos de Jesus: A Oração que Nasce da Permanência — Uma Análise de João 15:7.webp
 description: "O que Jesus realmente prometeu em João 15:7? Uma análise léxica da condição dupla de permanecer nEle e ter Suas palavras permanecendo em nós, e como isso transforma a natureza do pedir."
 keywords: "#João15 #Oração #Permanência #Videira #EnsinosDeJesus"

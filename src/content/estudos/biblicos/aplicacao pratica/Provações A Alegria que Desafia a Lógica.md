@@ -2,7 +2,7 @@
 title: "Provações: A Alegria que Desafia a Lógica — Uma Análise de Tiago 1:2-3"
 author: "Voz do Deserto"
 date: 2026-04-12
-category: "Aplicação Prática - Provações"
+category: "Provações"
 image: /image/estudos/Provações: A Alegria que Desafia a Lógica — Uma Análise de Tiago 1:2-3.webp
 description: "O que Tiago quis dizer com 'tende por motivo de toda alegria o passardes por várias provações'? Uma análise léxica e contextual da palavra peirasmos e seu propósito no amadurecimento da fé."
 keywords: "#Tiago1 #Provações #Alegria #Peirasmos #TeologiaPrática"

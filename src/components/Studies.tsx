@@ -113,9 +113,9 @@ export default function Studies() {
     <div className="pb-24 min-h-screen bg-surface-container-lowest">
       {/* Editorial Header */}
       <div className="pt-8 px-4 sm:px-6 mb-6 border-l-2 border-primary-container py-1 ml-4 sm:ml-6">
-        <h1 className="font-headline text-4xl font-bold text-primary mb-1 tracking-tighter">MANA</h1>
+        <h1 className="font-headline text-4xl font-bold text-primary mb-1 tracking-tighter">MANÁ</h1>
         <p className="text-on-surface-variant/70 text-[11px] max-w-[280px] font-medium leading-relaxed">
-          A prática da fé no cotidiano: ferramentas para oração, vida com Deus e o preparo espiritual para as provações no deserto.
+          <span className="italic">'Nem só de pão viverá o homem, mas de toda palavra que sai da boca de Deus.'</span> O alimento diário para a sua jornada no deserto. Estudos voltados para o preparo espiritual, batalhas da mente e a resiliência inabalável diante das provações.
         </p>
       </div>
 
@@ -126,7 +126,7 @@ export default function Studies() {
             className="flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full bg-primary text-on-primary border-primary"
             type="button"
           >
-            MANA
+            MANÁ
           </button>
           <button
             className="flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full bg-surface-container-high text-on-surface border-outline-variant/40 hover:border-primary"
@@ -201,7 +201,7 @@ export default function Studies() {
       <section className={`mt-8 ${studies.length === 0 ? 'hidden' : ''}`}>
         <div className="px-4 sm:px-6 flex justify-between items-baseline mb-3">
           <h2 className="font-headline font-bold text-[10px] tracking-[0.2em] uppercase text-on-surface opacity-60">
-            MANA em Destaque
+            MANÁ em Destaque
           </h2>
           <div className="flex gap-1">
             <span className="w-1 h-1 bg-primary rounded-full"></span>
@@ -223,7 +223,7 @@ export default function Studies() {
                 <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src={item.image || `https://picsum.photos/seed/${item.slug}/600/400`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4">
-                  <span className="text-[8px] font-black tracking-[0.3em] uppercase text-primary mb-1 block">✦ INVESTIGAÇÃO</span>
+                  <span className="text-[8px] font-black tracking-[0.3em] uppercase text-primary mb-1 block">✦ {item.category.toUpperCase()}</span>
                   <h3 className="font-headline font-extrabold text-base leading-tight text-on-surface">{item.title}</h3>
                   <p className="text-[9px] text-on-surface-variant mt-1 font-bold uppercase tracking-wider">{item.category} • {item.time}</p>
                 </div>
@@ -318,7 +318,7 @@ export default function Studies() {
               </div>
               <div className="flex flex-col flex-1">
                 <span className="text-[8px] font-black text-primary uppercase tracking-[0.2em] mb-1.5">
-                  {item.category}
+                  ✦ {item.category.toUpperCase()}
                 </span>
                 <h4 className="font-headline font-bold text-xs text-on-surface leading-tight mb-2 group-hover:text-primary transition-colors line-clamp-2">
                   {item.title}

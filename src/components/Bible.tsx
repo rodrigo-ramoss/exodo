@@ -67,6 +67,7 @@ export default function Bible() {
   const [fontSize, setFontSize] = useState(DEFAULT_FONT_SIZE);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isChapterRead, setIsChapterRead] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
     Pentateuco: true,
     Históricos: false,
@@ -213,8 +214,20 @@ export default function Bible() {
     : null;
   const chapterVerses = chapterData?.verses ?? [];
 
+  useEffect(() => {
+    if (!selectedBook) return;
+    const alreadyRead = localStorage.getItem(`exodo:bible-read:${selectedBook.id}:${selectedChapter}`) === '1';
+    setIsChapterRead(alreadyRead);
+  }, [selectedBook, selectedChapter]);
+
   const markChapterRead = (bookId: string, chapter: number) => {
     localStorage.setItem(`exodo:bible-read:${bookId}:${chapter}`, '1');
+  };
+
+  const handleMarkCurrentChapterRead = () => {
+    if (!selectedBook) return;
+    markChapterRead(selectedBook.id, selectedChapter);
+    setIsChapterRead(true);
   };
 
   const handleNavigateChapter = (direction: 'previous' | 'next') => {
@@ -363,6 +376,29 @@ export default function Bible() {
                 <p className="text-center text-[10px] uppercase tracking-widest font-bold opacity-60">
                   Nenhum versículo retornado para esta referência.
                 </p>
+              )}
+
+              {chapterVerses.length > 0 && (
+                <div className="pt-6 pb-2 flex justify-center">
+                  <button
+                    onClick={handleMarkCurrentChapterRead}
+                    disabled={isChapterRead}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all active:scale-95 ${
+                      isChapterRead
+                        ? 'bg-primary/15 text-primary border border-primary/30 cursor-default'
+                        : 'bg-primary-container text-on-primary-container hover:bg-primary hover:text-on-primary border border-transparent'
+                    }`}
+                  >
+                    {isChapterRead ? (
+                      <>
+                        <span>✓</span>
+                        Capítulo Concluído
+                      </>
+                    ) : (
+                      'Marcar Capítulo como Lido'
+                    )}
+                  </button>
+                </div>
               )}
             </div>
           )}

@@ -53,8 +53,7 @@ const SECTION_ORDER: SectionKey[] = ['APÓCRIFOS', 'IGREJA E BÍBLIA', 'ANTISIST
 
 // Maps existing category strings → top-level section
 const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
-  'APÓCRIFOS':                               'APÓCRIFOS',
-  'Série — A Revelação de Enoque':            'APÓCRIFOS',
+  'A REVELAÇÃO DE ENOQUE':                   'APÓCRIFOS',
   'Série — A Invenção do Pecado':             'IGREJA E BÍBLIA',
   'Trilogia — O Cânon Oculto':                'IGREJA E BÍBLIA',
   'Série — A Verdadeira História da Igreja':  'IGREJA E BÍBLIA',
@@ -72,9 +71,13 @@ const SERIES_LABEL: Record<string, string> = {
   'Trilogia — A Ciência dos Tempos':          'A Ciência dos Tempos',
   'Série — A Invenção do Pecado':             'A Invenção do Pecado',
   'Trilogia — O Cânon Oculto':                'O Cânon Oculto',
-  'Série — A Revelação de Enoque':            'A Revelação de Enoque',
+  'A REVELAÇÃO DE ENOQUE':                    'A Revelação de Enoque',
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
-  'APÓCRIFOS':                                'Apócrifos',
+};
+
+// Description shown below each series header
+const SERIES_DESCRIPTION: Record<string, string> = {
+  'A REVELAÇÃO DE ENOQUE': 'Uma jornada profunda pelas visões e revelações do profeta Enoque sobre o mundo espiritual, os vigilantes e o destino da humanidade.',
 };
 
 // ── DragScrollRow ─────────────────────────────────────────────────────────────
@@ -112,7 +115,10 @@ function DragScrollRow({ children }: { children: ReactNode }) {
 function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: number; onSelect: () => void }) {
   const progressValue = parseInt(localStorage.getItem(`progress_${item.slug}`) || '0', 10);
   const clamped = Math.max(0, Math.min(100, Number.isFinite(progressValue) ? progressValue : 0));
-  const isCompleted = clamped >= 100;
+  const readsCount = parseInt(localStorage.getItem(`reads_${item.slug}`) || '0', 10);
+  // hasBeenRead: livro concluído ao menos uma vez (progress é resetado para 0 após conclusão)
+  const hasBeenRead = readsCount > 0;
+  const isReading = clamped > 0;
 
   return (
     <div
@@ -137,21 +143,35 @@ function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: numb
         <div className="flex items-center gap-2">
           <div className="h-1.5 flex-1 bg-outline-variant/20 rounded-full overflow-hidden border border-outline-variant/10">
             <div
-              className={isCompleted
-                ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_10px_rgba(212,175,55,0.35)]'
-                : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_8px_rgba(249,115,22,0.35)]'}
+              className={
+                hasBeenRead && isReading
+                  ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_10px_rgba(212,175,55,0.35)]'
+                  : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_8px_rgba(249,115,22,0.35)]'
+              }
               style={{ width: `${clamped}%` }}
             />
           </div>
           <div className="flex items-center gap-1.5">
-            <span className={isCompleted
-              ? 'text-[9px] font-black uppercase tracking-widest text-[#D4AF37]'
-              : clamped > 0
-                ? 'text-[9px] font-black uppercase tracking-widest text-orange-400'
-                : 'text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40'}>
-              {clamped}%
-            </span>
-            {isCompleted && <Check size={12} className="text-[#D4AF37]" />}
+            {hasBeenRead && !isReading ? (
+              // Concluído e resetado: exibe selo de leituras
+              <>
+                <Check size={12} className="text-[#D4AF37]" />
+                <span className="text-[9px] font-black uppercase tracking-widest text-[#D4AF37]">
+                  {readsCount}×
+                </span>
+              </>
+            ) : (
+              // Em leitura ou não iniciado: exibe porcentagem
+              <span className={
+                hasBeenRead
+                  ? 'text-[9px] font-black uppercase tracking-widest text-[#D4AF37]'
+                  : isReading
+                    ? 'text-[9px] font-black uppercase tracking-widest text-orange-400'
+                    : 'text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40'
+              }>
+                {clamped}%
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -315,6 +335,11 @@ export default function Bookstore() {
                     </span>
                   )}
                 </div>
+                {SERIES_DESCRIPTION[cat] && (
+                  <p className="mt-1.5 text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm">
+                    {SERIES_DESCRIPTION[cat]}
+                  </p>
+                )}
               </div>
               <div className="relative -mx-5 px-5">
                 <DragScrollRow>

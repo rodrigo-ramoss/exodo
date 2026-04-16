@@ -2,7 +2,7 @@
 title: "A Espera que Renova — Uma Análise de Isaías 40:31"
 author: "Voz do Deserto"
 date: 2024-05-01
-category: "Antigo Testamento"
+category: "Ansiedade"
 image: /image/estudos/A espera que renova.webp
 description: "O que o profeta Isaías realmente quis dizer com 'os que esperam no Senhor renovam as suas forças'? Uma análise das palavras hebraicas qavah e chalam, e como a espera ativa transforma a fraqueza em vigor."
 keywords: "#Isaías40 #EsperaNoSenhor #Qavah #ForçaRenovada #VidaCristã"
