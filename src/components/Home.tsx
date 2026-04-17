@@ -53,7 +53,7 @@ export default function Home({ onNavigate }: HomeProps) {
               onClick={() => onNavigate(Screen.MANA, 'push')}
               className="bg-primary-container text-on-primary-container px-6 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-primary transition-all active:scale-95 shadow-lg shadow-primary/10"
             >
-              Explorar MANA
+              Explorar MANÁ
             </button>
             <button 
               onClick={() => onNavigate(Screen.BOOKSTORE, 'push')}
@@ -93,10 +93,10 @@ export default function Home({ onNavigate }: HomeProps) {
         </div>
       </section>
 
-      {/* MANA em Destaque */}
+      {/* MANÁ em Destaque */}
       <section className="py-8 px-6">
         <div className="flex items-end justify-between mb-6">
-          <h3 className="font-headline text-lg font-bold tracking-tight text-primary uppercase text-[10px] tracking-[0.15em]">MANA em Destaque</h3>
+          <h3 className="font-headline text-lg font-bold tracking-tight text-primary uppercase text-[10px] tracking-[0.15em]">MANÁ em Destaque</h3>
           <button 
             onClick={() => onNavigate(Screen.MANA)}
             className="text-on-surface-variant text-[9px] uppercase tracking-widest hover:text-primary transition-colors font-bold"

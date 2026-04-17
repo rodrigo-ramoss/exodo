@@ -126,7 +126,7 @@ export default function Settings() {
             <div>
               <p className="text-sm font-bold text-on-surface">Ativar notificações</p>
               <p className="text-[10px] text-on-surface-variant mt-0.5">
-                Receba alertas de novos temas do MANA e profecias
+                Receba alertas de novos temas do MANÁ e profecias
               </p>
             </div>
             <button

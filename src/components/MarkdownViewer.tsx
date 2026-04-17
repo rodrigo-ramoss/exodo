@@ -134,12 +134,8 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
   const [showToast, setShowToast] = useState(false);
   const [savedScrollPos, setSavedScrollPos] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef(0);
   const didFinalizeRef = useRef(false);
-
-  useEffect(() => {
-    progressRef.current = progress;
-  }, [progress]);
+  const reachedEndRef = useRef(false);
 
   // History sync for hardware back button
   useEffect(() => {
@@ -199,20 +195,27 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
       if (didFinalizeRef.current) return;
       didFinalizeRef.current = true;
 
-      // Lê diretamente do localStorage para evitar ref desatualizado
-      // (progressRef pode não ter sido sincronizado antes do unmount)
-      const savedProgress = parseInt(localStorage.getItem(`progress_${slug}`) || '0', 10);
-      console.log(`[Progresso] Fechando "${slug}" — progresso salvo: ${savedProgress}%`);
+      const container = containerRef.current;
+      let completionByScroll = false;
+      if (container) {
+        const totalScrollable = container.scrollHeight - container.clientHeight;
+        if (totalScrollable > 0) {
+          const ratio = container.scrollTop / totalScrollable;
+          completionByScroll = ratio >= 0.995;
+        }
+      }
 
-      if (savedProgress >= 100) {
+      const savedProgress = parseInt(localStorage.getItem(`progress_${slug}`) || '0', 10);
+      const didComplete = reachedEndRef.current || completionByScroll || savedProgress >= 100;
+
+      if (didComplete) {
+        localStorage.setItem(`progress_${slug}`, '100');
         const readsKey = `reads_${slug}`;
         const currentReads = parseInt(localStorage.getItem(readsKey) || '0', 10);
         const newReads = (Number.isFinite(currentReads) ? currentReads : 0) + 1;
         localStorage.setItem(readsKey, newReads.toString());
-        // Reseta imediatamente para que o BookCard exiba 0% (pronto para releitura)
         localStorage.setItem(`progress_${slug}`, '0');
         localStorage.removeItem(`scroll_${slug}`);
-        console.log(`[Progresso] "${slug}" concluído! Leituras totais: ${newReads}`);
       }
     };
   }, [slug]);
@@ -235,19 +238,30 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
       const scrollTop = container.scrollTop;
       const scrollHeight = container.scrollHeight - container.clientHeight;
       if (scrollHeight <= 0) return;
-      const scrolled = Math.round((scrollTop / scrollHeight) * 100);
+      const ratio = scrollTop / scrollHeight;
+      const reachedEnd = ratio >= 0.995;
+      const scrolled = reachedEnd ? 100 : Math.round(ratio * 100);
+
+      if (reachedEnd) {
+        reachedEndRef.current = true;
+      }
+
       if (scrollTop > 0) {
         localStorage.setItem(`scroll_${slug}`, scrollTop.toString());
       }
-      if (scrolled > progress) {
-        setProgress(scrolled);
-        localStorage.setItem(`progress_${slug}`, scrolled.toString());
-      }
+
+      setProgress((current) => {
+        const next = Math.max(current, scrolled);
+        if (next !== current) {
+          localStorage.setItem(`progress_${slug}`, String(next));
+        }
+        return next;
+      });
     };
 
     container.addEventListener('scroll', handleScroll, { passive: true });
     return () => container.removeEventListener('scroll', handleScroll);
-  }, [slug, progress]);
+  }, [slug]);
 
   // Theme styles - Cleaned up to rely on global CSS for red headings
   const themeStyles = {

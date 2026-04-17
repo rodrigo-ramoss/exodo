@@ -126,7 +126,7 @@ export default function EBD({ onNavigate }: EBDProps) {
               className="group flex items-center justify-center gap-2 border border-outline-variant/30 px-6 py-3.5 rounded-xl text-on-surface hover:bg-surface-container-high transition-all active:scale-95"
             >
               <GraduationCap className="text-primary" size={18} />
-              <span className="font-headline font-bold text-[10px] tracking-widest uppercase">MANA</span>
+              <span className="font-headline font-bold text-[10px] tracking-widest uppercase">MANÁ</span>
             </button>
             <button 
               onClick={() => onNavigate(Screen.DOCTRINES, 'push')}
