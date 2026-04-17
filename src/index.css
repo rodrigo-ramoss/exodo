@@ -78,6 +78,36 @@
   }
 }
 
+@keyframes divider-sheen-run {
+  0% {
+    transform: translateX(-180%);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(340%);
+    opacity: 0;
+  }
+}
+
+.divider-sheen {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(156, 142, 130, 0.45), transparent);
+  overflow: hidden;
+}
+
+.divider-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 30%;
+  background: linear-gradient(90deg, transparent, rgba(242, 192, 141, 0.95), transparent);
+  animation: divider-sheen-run 4.5s ease-in-out infinite;
+}
+
 @layer components {
   .prose {
     @apply leading-relaxed;
