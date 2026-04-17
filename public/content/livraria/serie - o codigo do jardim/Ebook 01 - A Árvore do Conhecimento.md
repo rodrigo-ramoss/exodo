@@ -1,6 +1,3 @@
-# Categoria: Algoritmo e Apocalipse
-# Subcategoria: IA e Fé
-
 # A Árvore do Conhecimento
 ## O Arquétipo do Conhecimento Proibido e a Tentação da Onisciência Artificial
 *Rodrigo Ramos — Voz do Deserto*

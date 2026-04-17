@@ -70,6 +70,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Trilogia — O Estrangeiro Próspero':        'ANTISISTEMA',
   'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
   'Trilogia — A Marca':                       'IA & APOCALIPSE',
+  'Trilogia — O Véu Rasgado':                 'IA & APOCALIPSE',
 };
 
 // Short display labels per series
@@ -80,6 +81,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Trilogia — A Ciência dos Tempos':          'A Ciência dos Tempos',
   'Série — A Invenção do Pecado':             'A Invenção do Pecado',
   'Trilogia — O Cânon Oculto':                'O Cânon Oculto',
+  'Trilogia — O Véu Rasgado':                 'O Véu Rasgado',
   'A REVELAÇÃO DE ENOQUE':                    'A Revelação de Enoque',
   'SOMBRAS DO REINO DE DEUS':                 'Sombras do Reino de Deus',
   'Série — O Conselho do Altíssimo':          'O Conselho do Altíssimo',
@@ -100,6 +102,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Trilogia — O Estrangeiro Próspero': 'Princípios de José e Daniel para prosperar dentro do sistema sem perder identidade, integridade e aliança.',
   'Trilogia — A Ciência dos Tempos': 'Discernimento profético e estratégico para ler ciclos históricos, interpretar sinais e agir com precisão em tempos críticos.',
   'Trilogia — A Marca': 'Uma análise bíblica e contemporânea sobre controle, tecnologia e os mecanismos de conformação espiritual dos últimos tempos.',
+  'Trilogia — O Véu Rasgado': 'Uma investigação sobre Babel, CERN e conhecimento proibido na fronteira entre tecnologia, mundo invisível e profecia bíblica.',
 };
 
 function buildAutoSeriesDescription(category: string, items: BookItem[]): string {

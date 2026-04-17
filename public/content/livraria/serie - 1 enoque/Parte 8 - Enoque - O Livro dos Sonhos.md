@@ -1,6 +1,3 @@
-# Categoria: Apócrifos
-# Subcategoria: Enoque
-
 # O Livro dos Sonhos
 ## A História do Mundo em Código Animal e a Vindicação dos Justos (1 Enoque 83–90)
 *Rodrigo Ramos — Voz do Deserto*

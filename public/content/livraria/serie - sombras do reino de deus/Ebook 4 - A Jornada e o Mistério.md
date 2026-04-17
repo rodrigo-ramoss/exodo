@@ -1,6 +1,3 @@
-# Categoria: Igreja e Bíblia
-# Subcategoria: Escatologia
-
 # A Jornada e o Mistério
 ## A Geografia do Céu e a Mística da Ascensão
 *Rodrigo Ramos — Voz do Deserto*

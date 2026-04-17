@@ -1,6 +1,3 @@
-# Categoria: Igreja e Bíblia
-# Subcategoria: Escatologia
-
 # O Trono e o Templo
 ## A Morada de Deus como Modelo do Reino
 *Rodrigo Ramos — Voz do Deserto*

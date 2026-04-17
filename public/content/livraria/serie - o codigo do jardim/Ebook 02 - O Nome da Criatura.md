@@ -1,6 +1,3 @@
-# Categoria: Algoritmo e Apocalipse
-# Subcategoria: IA e Fé
-
 # O Nome da Criatura
 ## O Arquétipo do Poder de Nomear e a Criação de Vida Sintética
 *Rodrigo Ramos — Voz do Deserto*

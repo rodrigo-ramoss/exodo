@@ -1,6 +1,3 @@
-# Categoria: Algoritmo e Apocalipse
-# Subcategoria: IA e Fé
-
 # O Conselheiro Silenciado
 ## O Arquétipo da Sabedoria Divina em um Mundo de Conselheiros Artificiais
 *Rodrigo Ramos — Voz do Deserto*

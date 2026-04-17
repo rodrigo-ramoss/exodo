@@ -1,6 +1,3 @@
-# Categoria: Igreja e Bíblia
-# Subcategoria: Escatologia
-
 # A Cidade e o Jardim
 ## A Nova Jerusalém e a Restauração da Criação
 *Rodrigo Ramos — Voz do Deserto*

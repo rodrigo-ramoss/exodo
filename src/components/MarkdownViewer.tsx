@@ -37,21 +37,53 @@ function findFrontmatterStart(raw: string): number | null {
   return matchIndex + prefix.length;
 }
 
+function stripLeadingCategoryHeaders(raw: string): string {
+  const lines = raw.split(/\r?\n/);
+  let index = 0;
+
+  while (index < lines.length && !lines[index].trim()) {
+    index += 1;
+  }
+
+  const isCategoryLike = (line: string) => /^(?:#{1,6}\s*)?categoria\s*:/i.test(line.trim());
+  const isSubcategoryLike = (line: string) => /^(?:#{1,6}\s*)?subcategoria\s*:/i.test(line.trim());
+
+  if (index >= lines.length || !isCategoryLike(lines[index] ?? '')) {
+    return raw;
+  }
+
+  index += 1;
+  while (index < lines.length && !lines[index].trim()) {
+    index += 1;
+  }
+
+  if (index < lines.length && isSubcategoryLike(lines[index] ?? '')) {
+    index += 1;
+  }
+
+  while (index < lines.length && !lines[index].trim()) {
+    index += 1;
+  }
+
+  return lines.slice(index).join('\n');
+}
+
 function normalizeToStudyMarkdown(raw: string): string {
   const source = (raw || '').replace(/^\uFEFF/, '').trim();
 
   // If AI wrapped the markdown in a fenced block, keep only the fenced payload.
   const fencedMatch = source.match(/```(?:markdown|md)?\s*([\s\S]*?)```/i);
   const withoutFence = fencedMatch ? fencedMatch[1].trim() : source;
+  const withoutCatalogHeaders = stripLeadingCategoryHeaders(withoutFence);
 
   // Only treat --- blocks as frontmatter when they look like YAML.
   // This avoids cutting real content that uses --- as a visual divider.
-  const fmStart = findFrontmatterStart(withoutFence);
+  const fmStart = findFrontmatterStart(withoutCatalogHeaders);
   if (fmStart !== null) {
-    return withoutFence.slice(fmStart).trim();
+    return withoutCatalogHeaders.slice(fmStart).trim();
   }
 
-  return withoutFence
+  return withoutCatalogHeaders
     .replace(/^#\s*Resposta da IA\s*$/im, '')
     .replace(/^Projeto:\s.*$/gim, '')
     .replace(/^Sess[aã]o:\s.*$/gim, '')

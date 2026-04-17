@@ -1,6 +1,3 @@
-# Categoria: Apócrifos
-# Subcategoria: Enoque
-
 # O Prólogo e a Geografia Cósmica
 ## A Teofania do Juízo e a Jornada de Enoque aos Confins da Criação (1 Enoque 1–5; 17–36)
 *Rodrigo Ramos — Voz do Deserto*

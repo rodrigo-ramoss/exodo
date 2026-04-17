@@ -1,6 +1,3 @@
-# Categoria: Apócrifos
-# Subcategoria: Enoque
-
 # A Epístola de Enoque
 ## O Testamento Final do Sétimo Patriarca e a Sabedoria para os Últimos Dias (1 Enoque 91–105)
 *Rodrigo Ramos — Voz do Deserto*

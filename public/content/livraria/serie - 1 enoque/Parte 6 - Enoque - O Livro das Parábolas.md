@@ -1,6 +1,3 @@
-# Categoria: Apócrifos
-# Subcategoria: Enoque
-
 # O Livro das Parábolas
 ## O Filho do Homem e as Três Parábolas do Juízo (1 Enoque 37–71)
 *Rodrigo Ramos — Voz do Deserto*

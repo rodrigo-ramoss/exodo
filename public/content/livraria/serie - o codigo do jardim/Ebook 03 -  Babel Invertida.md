@@ -1,6 +1,3 @@
-# Categoria: Algoritmo e Apocalipse
-# Subcategoria: IA e Fé
-
 # A Babel Invertida
 ## O Arquétipo da Unificação Forçada e a Sabedoria da Dispersão
 *Rodrigo Ramos — Voz do Deserto*

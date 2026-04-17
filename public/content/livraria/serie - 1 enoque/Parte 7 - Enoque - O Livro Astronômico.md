@@ -1,6 +1,3 @@
-# Categoria: Apócrifos
-# Subcategoria: Enoque
-
 # O Livro Astronômico
 ## Os Segredos do Calendário Sagrado e a Ordem Oculta do Cosmos (1 Enoque 72–82)
 *Rodrigo Ramos — Voz do Deserto*

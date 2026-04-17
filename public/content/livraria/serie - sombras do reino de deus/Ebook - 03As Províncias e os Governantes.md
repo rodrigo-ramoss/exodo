@@ -1,6 +1,3 @@
-# Categoria: Igreja e Bíblia
-# Subcategoria: Escatologia
-
 # As Províncias e os Governantes
 ## Galardão, Hierarquia e a Administração do Cosmos
 *Rodrigo Ramos — Voz do Deserto*

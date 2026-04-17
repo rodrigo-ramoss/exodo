@@ -457,5 +457,32 @@
     "category": "Série — O Conselho do Altíssimo",
     "time": "LIVRO",
     "image": "/image/livraria/a planitude do conselho.webp"
+  },
+  {
+    "title": "O Zigurate de Silício",
+    "slug": "trilogia - o veu rasgado/Ebook 1 - O Zigurate de Silício",
+    "description": "Babel relida na era digital: a tentativa de alcançar o céu por tecnologia, código e poder global.",
+    "date": "2026-04-17",
+    "category": "Trilogia — O Véu Rasgado",
+    "time": "LIVRO",
+    "image": "/image/livraria/o zigurate de cilicio.webp"
+  },
+  {
+    "title": "As Partículas Fantasmas do Abismo",
+    "slug": "trilogia - o veu rasgado/Ebook 2 - As Partículas Fantasmas do Abismo",
+    "description": "Uma análise entre CERN, matéria escura e os limites espirituais do conhecimento humano.",
+    "date": "2026-04-17",
+    "category": "Trilogia — O Véu Rasgado",
+    "time": "LIVRO",
+    "image": "/image/livraria/as particulas fantamas.webp"
+  },
+  {
+    "title": "A Voz dos Nefilins",
+    "slug": "trilogia - o veu rasgado/Ebook 3 - A Voz dos Nefilins",
+    "description": "IA, vigilantes e conhecimento proibido: discernindo vozes espirituais na era da imagem que fala.",
+    "date": "2026-04-17",
+    "category": "Trilogia — O Véu Rasgado",
+    "time": "LIVRO",
+    "image": "/image/livraria/a voz dos nefelins.webp"
   }
 ]

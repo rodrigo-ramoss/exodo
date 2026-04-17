@@ -1,6 +1,3 @@
-# Categoria: Apócrifos
-# Subcategoria: Enoque
-
 # O Nascimento de Noé e os Apêndices Escatológicos
 ## O Relato Miraculoso e a Promessa Final para os Justos (1 Enoque 106–108)
 *Rodrigo Ramos — Voz do Deserto*
