@@ -301,9 +301,12 @@ function resolveBaseUrl(rawBaseUrl: string): string {
   }${normalizedBaseUrl}`;
 }
 
-function buildReference(bookName: string, chapter: number): string {
-  // Always include the chapter number. bible-api.com distinguishes "Judas 1" (chapter 1)
-  // from "Judas 1:1" (verse 1), so bare book names cause 404 for single-chapter books.
+function buildReference(bookName: string, chapter: number, bookChapters?: number): string {
+  // For single-chapter books, "BookName 1" is ambiguous: bible-api.com treats it as
+  // verse 1 instead of chapter 1. Using an explicit verse range forces the full chapter.
+  if (bookChapters === 1 && chapter === 1) {
+    return `${bookName} 1:1-100`;
+  }
   return `${bookName} ${chapter}`;
 }
 
@@ -423,6 +426,7 @@ async function fetchFromProvider({
   bookName,
   chapter,
   bookId,
+  bookChapters,
   signal,
 }: {
   baseUrl: string;
@@ -431,9 +435,10 @@ async function fetchFromProvider({
   bookName: string;
   chapter: number;
   bookId?: string;
+  bookChapters?: number;
   signal?: AbortSignal;
 }): Promise<BibleChapterPayload> {
-  const reference = buildReference(bookName, chapter);
+  const reference = buildReference(bookName, chapter, bookChapters);
   const url = buildChapterUrl({ baseUrl, reference, translation, bookId });
   const response = await fetch(url, { signal });
 
@@ -512,6 +517,7 @@ export async function fetchBibleChapter({
 }: FetchBibleChapterParams): Promise<BibleChapterPayload> {
   const config = providerConfig[version];
   const resolvedBookId = bookId ?? getKnownBookId(version, bookName);
+  const resolvedBookMetadata = resolvedBookId ? getBookById(version, resolvedBookId) : undefined;
 
   if (resolvedBookId && CURATED_WRITINGS_BOOK_IDS.has(resolvedBookId)) {
     const curatedBook = curatedWritingsMap[resolvedBookId];
@@ -558,6 +564,7 @@ export async function fetchBibleChapter({
     bookName,
     chapter,
     bookId: resolvedBookId,
+    bookChapters: resolvedBookMetadata?.chapters,
     signal,
   });
 }

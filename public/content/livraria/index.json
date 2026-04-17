@@ -367,5 +367,95 @@
     "category": "SOMBRAS DO REINO DE DEUS",
     "time": "LIVRO",
     "image": "/image/livraria/a jornada e o misterio.webp"
+  },
+  {
+    "title": "A Árvore do Conhecimento",
+    "slug": "serie - o codigo do jardim/Ebook 01 - A Árvore do Conhecimento",
+    "description": "Um mergulho no arquétipo da árvore e no conflito entre sabedoria divina e autonomia humana.",
+    "date": "2026-04-17",
+    "category": "Série — O Código do Jardim",
+    "time": "LIVRO",
+    "image": "/image/livraria/a arvore do conhecimento.webp"
+  },
+  {
+    "title": "O Nome da Criatura",
+    "slug": "serie - o codigo do jardim/Ebook 02 - O Nome da Criatura",
+    "description": "A autoridade de nomear, linguagem e identidade espiritual em disputa no mundo contemporâneo.",
+    "date": "2026-04-17",
+    "category": "Série — O Código do Jardim",
+    "time": "LIVRO",
+    "image": "/image/livraria/o nome da criatura.webp"
+  },
+  {
+    "title": "Babel Invertida",
+    "slug": "serie - o codigo do jardim/Ebook 03 -  Babel Invertida",
+    "description": "Unificação sem Deus, poder centralizado e o padrão de Babel relido à luz da profecia bíblica.",
+    "date": "2026-04-17",
+    "category": "Série — O Código do Jardim",
+    "time": "LIVRO",
+    "image": "/image/livraria/a babel invertida.webp"
+  },
+  {
+    "title": "O Conselheiro Silenciado",
+    "slug": "serie - o codigo do jardim/Ebook 04 - O Conselheiro Silenciado",
+    "description": "Discernimento, conselho celestial e a diferença entre sabedoria revelada e ruído ideológico.",
+    "date": "2026-04-17",
+    "category": "Série — O Código do Jardim",
+    "time": "LIVRO",
+    "image": "/image/livraria/o conselheiro silenciado.webp"
+  },
+  {
+    "title": "A Sessão do Conselho",
+    "slug": "serie - o conselho do altissimo/Ebook 1 - A Sessão do Conselho",
+    "description": "A estrutura do conselho divino e os textos bíblicos que revelam o governo celestial.",
+    "date": "2026-04-17",
+    "category": "Série — O Conselho do Altíssimo",
+    "time": "LIVRO",
+    "image": "/image/livraria/a sessao do conselho.webp"
+  },
+  {
+    "title": "A Queda do Querubim",
+    "slug": "serie - o conselho do altissimo/Ebook 2 - A Queda do Querubim",
+    "description": "A rebelião no conselho celestial, a origem do mal e seus desdobramentos na história bíblica.",
+    "date": "2026-04-17",
+    "category": "Série — O Conselho do Altíssimo",
+    "time": "LIVRO",
+    "image": "/image/livraria/a queda do querubim.webp"
+  },
+  {
+    "title": "A Restauração do Conselho",
+    "slug": "serie - o conselho do altissimo/Ebook 3 - A Restauração do Conselho",
+    "description": "A reconciliação cósmica em Cristo e o chamado dos redimidos para participar do Reino.",
+    "date": "2026-04-17",
+    "category": "Série — O Conselho do Altíssimo",
+    "time": "LIVRO",
+    "image": "/image/livraria/a restauracao do conselho.webp"
+  },
+  {
+    "title": "O Governo do Reino",
+    "slug": "serie - o conselho do altissimo/Ebook 4 - O Governo do Reino",
+    "description": "Hierarquia, mordomia e administração do Reino à luz da escatologia bíblica.",
+    "date": "2026-04-17",
+    "category": "Série — O Conselho do Altíssimo",
+    "time": "LIVRO",
+    "image": "/image/livraria/o governo do reino.webp"
+  },
+  {
+    "title": "A Sabedoria do Conselho",
+    "slug": "serie - o conselho do altissimo/Ebook 5 - A Sabedoria do Conselho",
+    "description": "Sabedoria celestial aplicada ao discernimento espiritual, decisões e fidelidade no tempo presente.",
+    "date": "2026-04-17",
+    "category": "Série — O Conselho do Altíssimo",
+    "time": "LIVRO",
+    "image": "/image/livraria/a sabedoria do conselho.webp"
+  },
+  {
+    "title": "A Plenitude do Conselho",
+    "slug": "serie - o conselho do altissimo/Ebook 6 - A Plenitude do Conselho",
+    "description": "Consumação do propósito divino: conselho restaurado, Reino estabelecido e plenitude em Cristo.",
+    "date": "2026-04-17",
+    "category": "Série — O Conselho do Altíssimo",
+    "time": "LIVRO",
+    "image": "/image/livraria/a planitude do conselho.webp"
   }
 ]

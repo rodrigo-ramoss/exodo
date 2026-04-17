@@ -64,6 +64,8 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Trilogia — O Cânon Oculto':                'IGREJA E BÍBLIA',
   'Série — A Verdadeira História da Igreja':  'IGREJA E BÍBLIA',
   'SOMBRAS DO REINO DE DEUS':                 'MUNDO ESPIRITUAL',
+  'Série — O Conselho do Altíssimo':          'MUNDO ESPIRITUAL',
+  'Série — O Código do Jardim':               'MUNDO ESPIRITUAL',
   'Trilogia — O Mapa da Tempestade':          'ANTISISTEMA',
   'Trilogia — O Estrangeiro Próspero':        'ANTISISTEMA',
   'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
@@ -80,6 +82,8 @@ const SERIES_LABEL: Record<string, string> = {
   'Trilogia — O Cânon Oculto':                'O Cânon Oculto',
   'A REVELAÇÃO DE ENOQUE':                    'A Revelação de Enoque',
   'SOMBRAS DO REINO DE DEUS':                 'Sombras do Reino de Deus',
+  'Série — O Conselho do Altíssimo':          'O Conselho do Altíssimo',
+  'Série — O Código do Jardim':               'O Código do Jardim',
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
 };
 
@@ -87,6 +91,8 @@ const SERIES_LABEL: Record<string, string> = {
 const SERIES_DESCRIPTION: Record<string, string> = {
   'A REVELAÇÃO DE ENOQUE': 'Uma jornada profunda pelas visões e revelações do profeta Enoque sobre o mundo espiritual, os vigilantes e o destino da humanidade.',
   'SOMBRAS DO REINO DE DEUS': 'Uma leitura bíblica do mundo espiritual: Reino de Deus, conselho celeste e as realidades invisíveis que Hebreus 8:5 chama de sombra das coisas celestiais.',
+  'Série — O Conselho do Altíssimo': 'Uma exploração bíblica do conselho divino: rebelião celestial, restauração em Cristo e governo do Reino na eternidade.',
+  'Série — O Código do Jardim': 'Uma série sobre os arquétipos de Gênesis: conhecimento, nomeação, Babel e sabedoria para discernir o conflito espiritual no presente.',
   'Série — A Invenção do Pecado': 'Uma investigação histórica e teológica sobre como certas doutrinas foram construídas, institucionalizadas e usadas para moldar consciências.',
   'Série — A Verdadeira História da Igreja': 'Uma arqueologia da fé cristã primitiva, revelando o caminho entre a ekklesia viva e a institucionalização religiosa ao longo dos séculos.',
   'Trilogia — O Cânon Oculto': 'Uma imersão nos bastidores da formação bíblica, nos textos suprimidos e nas leituras que ficaram fora da narrativa oficial.',
