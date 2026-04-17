@@ -17,6 +17,26 @@ type MarkdownMetadata = {
   subcategory?: string;
 };
 
+const YAML_KEY_REGEX = /^[A-Za-z_][\w-]*\s*:/;
+
+function hasYamlMetadataLine(raw: string): boolean {
+  return raw
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .some((line) => Boolean(line) && !line.startsWith('#') && YAML_KEY_REGEX.test(line));
+}
+
+function findFrontmatterStart(raw: string): number | null {
+  const frontmatterAnywhereRegex = /(^|\r?\n)---\s*\r?\n([\s\S]*?)\r?\n---\s*(?=\r?\n|$)/;
+  const match = raw.match(frontmatterAnywhereRegex);
+  if (!match) return null;
+  const metadataRaw = match[2] ?? '';
+  if (!hasYamlMetadataLine(metadataRaw)) return null;
+  const prefix = match[1] ?? '';
+  const matchIndex = match.index ?? 0;
+  return matchIndex + prefix.length;
+}
+
 function normalizeToStudyMarkdown(raw: string): string {
   const source = (raw || '').replace(/^\uFEFF/, '').trim();
 
@@ -24,9 +44,10 @@ function normalizeToStudyMarkdown(raw: string): string {
   const fencedMatch = source.match(/```(?:markdown|md)?\s*([\s\S]*?)```/i);
   const withoutFence = fencedMatch ? fencedMatch[1].trim() : source;
 
-  // Always start from frontmatter when present, dropping AI preamble lines.
-  const fmStart = withoutFence.search(/^---\s*$/m);
-  if (fmStart >= 0) {
+  // Only treat --- blocks as frontmatter when they look like YAML.
+  // This avoids cutting real content that uses --- as a visual divider.
+  const fmStart = findFrontmatterStart(withoutFence);
+  if (fmStart !== null) {
     return withoutFence.slice(fmStart).trim();
   }
 
@@ -48,7 +69,7 @@ function safeParseMarkdown(rawContent?: string | null): { metadata: MarkdownMeta
     const frontmatterRegex = /^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]*([\s\S]*)$/;
     const match = normalized.match(frontmatterRegex);
 
-    if (!match) {
+    if (!match || !hasYamlMetadataLine(match[1] ?? '')) {
       return { metadata: {}, parsedContent: normalized };
     }
 
@@ -59,10 +80,10 @@ function safeParseMarkdown(rawContent?: string | null): { metadata: MarkdownMeta
     metadataRaw.split(/\r?\n/).forEach((line) => {
       const trimmed = line.trim();
       if (!trimmed || trimmed.startsWith('#')) return;
-      const idx = trimmed.indexOf(':');
-      if (idx <= 0) return;
-      const key = trimmed.slice(0, idx).trim().toLowerCase();
-      const value = trimmed.slice(idx + 1).trim().replace(/^["']|["']$/g, '');
+      const keyMatch = trimmed.match(/^([A-Za-z_][\w-]*)\s*:\s*(.*)$/);
+      if (!keyMatch) return;
+      const key = keyMatch[1].toLowerCase();
+      const value = keyMatch[2].trim().replace(/^["']|["']$/g, '');
       if (key === 'title') metadata.title = value;
       if (key === 'subcategory') metadata.subcategory = value;
     });
@@ -79,7 +100,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
   const [theme, setTheme] = useState<ReadingTheme>('dark');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
-  const [isRestoring, setIsRestoring] = useState(false);
+  const [savedScrollPos, setSavedScrollPos] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
   const didFinalizeRef = useRef(false);
@@ -131,22 +152,12 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
     if (savedTheme) setTheme(savedTheme);
     if (savedProgress) setProgress(parseInt(savedProgress, 10));
 
-    // Restore scroll position
+    // Always open from the top. If there's a saved position, offer a button
+    // so the user can choose to jump back — instead of auto-scrolling past title/index.
     const savedScroll = localStorage.getItem(`scroll_${slug}`);
     if (savedScroll && parseInt(savedScroll, 10) > 100) {
-      setIsRestoring(true);
-      
-      const restoreScroll = () => {
-        if (!containerRef.current) return;
-        const scrollPos = parseInt(savedScroll, 10);
-        containerRef.current.scrollTop = scrollPos;
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 4000);
-        setTimeout(() => setIsRestoring(false), 200);
-      };
-
-      const timer = setTimeout(restoreScroll, 800);
-      return () => clearTimeout(timer);
+      setSavedScrollPos(parseInt(savedScroll, 10));
+      setShowToast(true);
     }
   }, [slug]);
 
@@ -189,7 +200,6 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
     if (!container) return;
 
     const handleScroll = () => {
-      if (isRestoring) return;
       const scrollTop = container.scrollTop;
       const scrollHeight = container.scrollHeight - container.clientHeight;
       if (scrollHeight <= 0) return;
@@ -205,7 +215,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
 
     container.addEventListener('scroll', handleScroll, { passive: true });
     return () => container.removeEventListener('scroll', handleScroll);
-  }, [slug, progress, isRestoring]);
+  }, [slug, progress]);
 
   // Theme styles - Cleaned up to rely on global CSS for red headings
   const themeStyles = {
@@ -381,15 +391,28 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
         </div>
       </div>
 
-      {/* Toast Notification */}
-      {showToast && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[10003] animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="bg-primary/90 backdrop-blur-md text-on-primary px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-white/20">
+      {/* Continue Reading Button */}
+      {showToast && savedScrollPos !== null && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[10003] animate-in fade-in slide-in-from-bottom-4 duration-500 flex items-center gap-2">
+          <button
+            onClick={() => {
+              if (containerRef.current) containerRef.current.scrollTop = savedScrollPos;
+              setShowToast(false);
+            }}
+            className="bg-primary/90 backdrop-blur-md text-on-primary px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-white/20 active:scale-95 transition-transform"
+          >
             <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
             <span className="text-xs font-bold uppercase tracking-wider whitespace-nowrap">
-              Você parou aqui. Retomando leitura...
+              Continuar leitura
             </span>
-          </div>
+          </button>
+          <button
+            onClick={() => setShowToast(false)}
+            className="bg-surface-container-high/90 backdrop-blur-md text-on-surface-variant w-10 h-10 rounded-2xl flex items-center justify-center border border-white/10 active:scale-95 transition-transform"
+            aria-label="Fechar"
+          >
+            <X size={14} />
+          </button>
         </div>
       )}
     </div>

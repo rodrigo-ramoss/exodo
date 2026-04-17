@@ -1,5 +1,5 @@
 import { useState, useRef, type ReactNode } from 'react';
-import { Check, ChevronLeft, Shield, BookOpen, Zap, Cpu } from 'lucide-react';
+import { Check, ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye } from 'lucide-react';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
 
@@ -14,7 +14,7 @@ interface BookItem {
   image?: string;
 }
 
-type SectionKey = 'APÓCRIFOS' | 'IGREJA E BÍBLIA' | 'ANTISISTEMA' | 'IA & APOCALIPSE';
+type SectionKey = 'APÓCRIFOS' | 'IGREJA E BÍBLIA' | 'MUNDO ESPIRITUAL' | 'ANTISISTEMA' | 'IA & APOCALIPSE';
 
 // ── Section metadata ──────────────────────────────────────────────────────────
 const SECTIONS: Record<SectionKey, {
@@ -35,6 +35,12 @@ const SECTIONS: Record<SectionKey, {
     Icon: BookOpen,
     accent: 'from-sky-900/70 to-sky-800/10',
   },
+  'MUNDO ESPIRITUAL': {
+    label: 'Mundo Espiritual',
+    description: 'Uma jornada bíblica pelo Reino de Deus, conselho celeste e realidades invisíveis. Em Hebreus 8, o texto diz que servem como “exemplar e sombra das coisas celestiais”. Como é o mundo espiritual? A Bíblia responde.',
+    Icon: Eye,
+    accent: 'from-violet-900/70 to-violet-800/10',
+  },
   'ANTISISTEMA': {
     label: 'Antissistema',
     description: 'Os protocolos de sobrevivência espiritual dentro de sistemas hostis. Daniel, José e os que atravessaram.',
@@ -49,7 +55,7 @@ const SECTIONS: Record<SectionKey, {
   },
 };
 
-const SECTION_ORDER: SectionKey[] = ['APÓCRIFOS', 'IGREJA E BÍBLIA', 'ANTISISTEMA', 'IA & APOCALIPSE'];
+const SECTION_ORDER: SectionKey[] = ['APÓCRIFOS', 'IGREJA E BÍBLIA', 'MUNDO ESPIRITUAL', 'ANTISISTEMA', 'IA & APOCALIPSE'];
 
 // Maps existing category strings → top-level section
 const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
@@ -57,7 +63,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Série — A Invenção do Pecado':             'IGREJA E BÍBLIA',
   'Trilogia — O Cânon Oculto':                'IGREJA E BÍBLIA',
   'Série — A Verdadeira História da Igreja':  'IGREJA E BÍBLIA',
-  'SOMBRAS DO REINO DE DEUS':                 'IGREJA E BÍBLIA',
+  'SOMBRAS DO REINO DE DEUS':                 'MUNDO ESPIRITUAL',
   'Trilogia — O Mapa da Tempestade':          'ANTISISTEMA',
   'Trilogia — O Estrangeiro Próspero':        'ANTISISTEMA',
   'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
@@ -80,7 +86,32 @@ const SERIES_LABEL: Record<string, string> = {
 // Description shown below each series header
 const SERIES_DESCRIPTION: Record<string, string> = {
   'A REVELAÇÃO DE ENOQUE': 'Uma jornada profunda pelas visões e revelações do profeta Enoque sobre o mundo espiritual, os vigilantes e o destino da humanidade.',
+  'SOMBRAS DO REINO DE DEUS': 'Uma leitura bíblica do mundo espiritual: Reino de Deus, conselho celeste e as realidades invisíveis que Hebreus 8:5 chama de sombra das coisas celestiais.',
+  'Série — A Invenção do Pecado': 'Uma investigação histórica e teológica sobre como certas doutrinas foram construídas, institucionalizadas e usadas para moldar consciências.',
+  'Série — A Verdadeira História da Igreja': 'Uma arqueologia da fé cristã primitiva, revelando o caminho entre a ekklesia viva e a institucionalização religiosa ao longo dos séculos.',
+  'Trilogia — O Cânon Oculto': 'Uma imersão nos bastidores da formação bíblica, nos textos suprimidos e nas leituras que ficaram fora da narrativa oficial.',
+  'Trilogia — O Mapa da Tempestade': 'Um diagnóstico de ruptura civilizacional e um mapa prático para atravessar colapsos sistêmicos com lucidez, preparo e fé.',
+  'Trilogia — O Estrangeiro Próspero': 'Princípios de José e Daniel para prosperar dentro do sistema sem perder identidade, integridade e aliança.',
+  'Trilogia — A Ciência dos Tempos': 'Discernimento profético e estratégico para ler ciclos históricos, interpretar sinais e agir com precisão em tempos críticos.',
+  'Trilogia — A Marca': 'Uma análise bíblica e contemporânea sobre controle, tecnologia e os mecanismos de conformação espiritual dos últimos tempos.',
 };
+
+function buildAutoSeriesDescription(category: string, items: BookItem[]): string {
+  const curated = SERIES_DESCRIPTION[category];
+  if (curated) return curated;
+
+  // Fallback automático: reaproveita as descrições dos próprios volumes
+  // para que novas séries/trilogias nunca apareçam sem texto de apoio.
+  const fromBooks = items
+    .map((item) => item.description?.trim())
+    .filter((value): value is string => Boolean(value))
+    .slice(0, 2);
+
+  if (fromBooks.length > 0) return fromBooks.join(' ');
+
+  const seriesLabel = SERIES_LABEL[category] ?? category;
+  return `${seriesLabel}: coleção de estudos e livros com análise bíblica, histórica e aplicação prática.`;
+}
 
 // ── DragScrollRow ─────────────────────────────────────────────────────────────
 function DragScrollRow({ children }: { children: ReactNode }) {
@@ -317,6 +348,7 @@ export default function Bookstore() {
           const reads = items.map((b) => parseInt(localStorage.getItem(`reads_${b.slug}`) || '0', 10));
           const minReads = reads.length ? Math.min(...reads) : 0;
           const label = SERIES_LABEL[cat] ?? cat;
+          const seriesDescription = buildAutoSeriesDescription(cat, items);
           const isSeries = items.length > 3;
 
           return (
@@ -337,9 +369,9 @@ export default function Bookstore() {
                     </span>
                   )}
                 </div>
-                {SERIES_DESCRIPTION[cat] && (
+                {seriesDescription && (
                   <p className="mt-1.5 text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm">
-                    {SERIES_DESCRIPTION[cat]}
+                    {seriesDescription}
                   </p>
                 )}
               </div>

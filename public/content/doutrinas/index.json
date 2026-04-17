@@ -6,20 +6,28 @@
     "image": "/image/doutrinas/arrebatamento secreto.webp",
     "layers": [
       {
-        "title": "Arrebatamento Secreto: Camada 1 — O que o Texto Grego Realmente Diz Sobre 1 Tessalonicenses 4.17",
-        "slug": "arrebatamento secreto/arrebatamento-camada1-voz-do-deserto"
+        "title": "Arrebatamento Secreto: Camada 0 - O Dogma Eclesiástico (O Pano de Fundo a ser Analisado)",
+        "slug": "arrebatamento secreto/arrebatamento secreto01"
       },
       {
-        "title": "Arrebatamento Secreto: Camada 2 — Desenvolvimento Histórico: Como uma Visão de 1830 se Tornou Doutrina Dominante",
-        "slug": "arrebatamento secreto/arrebatamento-camada2-voz-do-deserto"
+        "title": "Arrebatamento Secreto: Camada 1 - PESHAT (O Fundamento Contextual e Linguístico)",
+        "slug": "arrebatamento secreto/arrebatamento secreto02"
       },
       {
-        "title": "Arrebatamento Secreto: Camada 3 — Tensões, Debates Acadêmicos e Pontos de Discórdia",
-        "slug": "arrebatamento secreto/arrebatamento-camada3-voz-do-deserto"
+        "title": "Arrebatamento Secreto: Camada 2 - REMEZ (A Sombra e a Tipologia)",
+        "slug": "arrebatamento secreto/arrebatamento secreto03"
       },
       {
-        "title": "Arrebatamento Secreto: Camada 4 — Síntese e Posição Fundamentada",
-        "slug": "arrebatamento secreto/arrebatamento-camada4-voz-do-deserto"
+        "title": "Arrebatamento Secreto: Camada 3 - DERASH (Investigação Comparativa e Tradição)",
+        "slug": "arrebatamento secreto/arrebatamento secreto04"
+      },
+      {
+        "title": "Arrebatamento Secreto: Camada 4 - SOD (O Mistério Cósmico e Escatológico)",
+        "slug": "arrebatamento secreto/arrebatamento secreto05"
+      },
+      {
+        "title": "Arrebatamento Secreto: Camada 5 - SÍNTESE, REFUTAÇÃO E APLICAÇÃO (A Conclusão Final)",
+        "slug": "arrebatamento secreto/arrebatamento secreto06"
       }
     ]
   },
@@ -226,24 +234,28 @@
     "image": "/image/doutrinas/as duas testemunhas.webp",
     "layers": [
       {
-        "title": "As Duas Testemunhas de Apocalipse 11: Camada 0 — Fundamentos Hermenêuticos e Fontes",
-        "slug": "2 testemunhas/As Duas Testemunhas de Apocalipse 11 Camada 0"
+        "title": "As Duas Testemunhas: Camada 0 - O Dogma Eclesiástico (O Pano de Fundo a ser Analisado)",
+        "slug": "2 testemunhas/as duas testemunhas01"
       },
       {
-        "title": "As Duas Testemunhas de Apocalipse 11: Camada 1 — Exegese do Texto Grego",
-        "slug": "2 testemunhas/As Duas Testemunhas de Apocalipse 11 Camada 1"
+        "title": "As Duas Testemunhas: Camada 1 - PESHAT (O Fundamento Contextual e Linguístico)",
+        "slug": "2 testemunhas/as duas testemunhas02"
       },
       {
-        "title": "As Duas Testemunhas de Apocalipse 11: Camada 2 — Desenvolvimento Histórico da Interpretação",
-        "slug": "2 testemunhas/As Duas Testemunhas de Apocalipse 11 Camada 2"
+        "title": "As Duas Testemunhas: Camada 2 - REMEZ (A Sombra e a Tipologia)",
+        "slug": "2 testemunhas/as duas testemunhas03"
       },
       {
-        "title": "As Duas Testemunhas de Apocalipse 11: Camada 3 — Tensões, Debates Acadêmicos e Perguntas Específicas",
-        "slug": "2 testemunhas/As Duas Testemunhas de Apocalipse 11 Camada 3"
+        "title": "As Duas Testemunhas: Camada 3 - DERASH (Investigação Comparativa e Tradição)",
+        "slug": "2 testemunhas/as duas testemunhas04"
       },
       {
-        "title": "As Duas Testemunhas de Apocalipse 11: Camada 4 — Síntese e Posição Fundamentada",
-        "slug": "2 testemunhas/As Duas Testemunhas de Apocalipse 11 Camada 4"
+        "title": "As Duas Testemunhas: Camada 4 - SOD (O Mistério Cósmico e Escatológico)",
+        "slug": "2 testemunhas/as duas testemunhas05"
+      },
+      {
+        "title": "As Duas Testemunhas: Camada 5 - SÍNTESE, REFUTAÇÃO E APLICAÇÃO (A Conclusão Final)",
+        "slug": "2 testemunhas/as duas testemunhas06"
       }
     ]
   },
