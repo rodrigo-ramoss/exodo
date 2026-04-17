@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X } from 'lucide-react';
@@ -136,6 +136,31 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
   const containerRef = useRef<HTMLDivElement>(null);
   const didFinalizeRef = useRef(false);
   const reachedEndRef = useRef(false);
+  const completionCountedRef = useRef(false);
+
+  const incrementReadCountOnCompletion = useCallback((updateUi: boolean) => {
+    if (completionCountedRef.current) return;
+    completionCountedRef.current = true;
+
+    const readsKey = `reads_${slug}`;
+    const currentReads = parseInt(localStorage.getItem(readsKey) || '0', 10);
+    const normalizedReads = Number.isFinite(currentReads) ? currentReads : 0;
+    localStorage.setItem(readsKey, String(normalizedReads + 1));
+    localStorage.setItem(`progress_${slug}`, '0');
+    localStorage.removeItem(`scroll_${slug}`);
+    reachedEndRef.current = false;
+
+    if (updateUi) {
+      setProgress(0);
+    }
+  }, [slug]);
+
+  const persistCompletionIfNeeded = useCallback((percentage: number, updateUi: boolean) => {
+    if (percentage < 100) return false;
+    localStorage.setItem(`progress_${slug}`, '100');
+    incrementReadCountOnCompletion(updateUi);
+    return true;
+  }, [slug, incrementReadCountOnCompletion]);
 
   // History sync for hardware back button
   useEffect(() => {
@@ -174,11 +199,18 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
   useEffect(() => {
     const savedFontSize = localStorage.getItem('reader_font_size');
     const savedTheme = localStorage.getItem('reader_theme') as ReadingTheme;
-    const savedProgress = localStorage.getItem(`progress_${slug}`);
+    const savedProgressRaw = localStorage.getItem(`progress_${slug}`);
+    const savedProgress = parseInt(savedProgressRaw || '0', 10);
 
     if (savedFontSize) setFontSize(parseInt(savedFontSize, 10));
     if (savedTheme) setTheme(savedTheme);
-    if (savedProgress) setProgress(parseInt(savedProgress, 10));
+
+    if (savedProgress >= 100) {
+      localStorage.setItem(`progress_${slug}`, '100');
+      incrementReadCountOnCompletion(true);
+    } else if (savedProgress > 0) {
+      setProgress(savedProgress);
+    }
 
     // Always open from the top. If there's a saved position, offer a button
     // so the user can choose to jump back — instead of auto-scrolling past title/index.
@@ -187,7 +219,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
       setSavedScrollPos(parseInt(savedScroll, 10));
       setShowToast(true);
     }
-  }, [slug]);
+  }, [slug, incrementReadCountOnCompletion]);
 
   // Finalize session on close/unmount
   useEffect(() => {
@@ -208,17 +240,11 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
       const savedProgress = parseInt(localStorage.getItem(`progress_${slug}`) || '0', 10);
       const didComplete = reachedEndRef.current || completionByScroll || savedProgress >= 100;
 
-      if (didComplete) {
-        localStorage.setItem(`progress_${slug}`, '100');
-        const readsKey = `reads_${slug}`;
-        const currentReads = parseInt(localStorage.getItem(readsKey) || '0', 10);
-        const newReads = (Number.isFinite(currentReads) ? currentReads : 0) + 1;
-        localStorage.setItem(readsKey, newReads.toString());
-        localStorage.setItem(`progress_${slug}`, '0');
-        localStorage.removeItem(`scroll_${slug}`);
+      if (didComplete && !completionCountedRef.current) {
+        persistCompletionIfNeeded(100, false);
       }
     };
-  }, [slug]);
+  }, [slug, persistCompletionIfNeeded]);
 
   // Save settings
   useEffect(() => {
@@ -244,6 +270,8 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
 
       if (reachedEnd) {
         reachedEndRef.current = true;
+        persistCompletionIfNeeded(100, true);
+        return;
       }
 
       if (scrollTop > 0) {
@@ -261,7 +289,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
 
     container.addEventListener('scroll', handleScroll, { passive: true });
     return () => container.removeEventListener('scroll', handleScroll);
-  }, [slug]);
+  }, [slug, persistCompletionIfNeeded]);
 
   // Theme styles - Cleaned up to rely on global CSS for red headings
   const themeStyles = {

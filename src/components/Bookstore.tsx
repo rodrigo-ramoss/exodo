@@ -1,5 +1,5 @@
 import { useState, useRef, type ReactNode } from 'react';
-import { Check, ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye } from 'lucide-react';
+import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers } from 'lucide-react';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
 
@@ -14,7 +14,13 @@ interface BookItem {
   image?: string;
 }
 
-type SectionKey = 'APÓCRIFOS' | 'IGREJA E BÍBLIA' | 'MUNDO ESPIRITUAL' | 'ANTISISTEMA' | 'IA & APOCALIPSE';
+type SectionKey =
+  | 'APÓCRIFOS'
+  | 'HISTÓRIA DA IGREJA'
+  | 'TIPOLOGIA BÍBLICA'
+  | 'MUNDO ESPIRITUAL'
+  | 'ANTISISTEMA'
+  | 'IA & APOCALIPSE';
 
 // ── Section metadata ──────────────────────────────────────────────────────────
 const SECTIONS: Record<SectionKey, {
@@ -29,11 +35,17 @@ const SECTIONS: Record<SectionKey, {
     Icon: Shield,
     accent: 'from-amber-900/70 to-amber-800/10',
   },
-  'IGREJA E BÍBLIA': {
-    label: 'Igreja & Bíblia',
-    description: 'A anatomia do sistema religioso: como a instituição se construiu e o que ela apagou no processo.',
+  'HISTÓRIA DA IGREJA': {
+    label: 'História da Igreja',
+    description: 'A anatomia do dogma e os bastidores do poder. Uma análise sobre a verdadeira história da igreja, a formação de suas doutrinas e como a estrutura religiosa foi utilizada como ferramenta de manipulação e controle sistêmico.',
     Icon: BookOpen,
     accent: 'from-sky-900/70 to-sky-800/10',
+  },
+  'TIPOLOGIA BÍBLICA': {
+    label: 'Tipologia Bíblica',
+    description: 'Conexões entre tipos, sombras e cumprimentos proféticos para mapear a unidade da Escritura em profundidade.',
+    Icon: Layers,
+    accent: 'from-indigo-900/70 to-indigo-800/10',
   },
   'MUNDO ESPIRITUAL': {
     label: 'Mundo Espiritual',
@@ -55,17 +67,26 @@ const SECTIONS: Record<SectionKey, {
   },
 };
 
-const SECTION_ORDER: SectionKey[] = ['APÓCRIFOS', 'IGREJA E BÍBLIA', 'MUNDO ESPIRITUAL', 'ANTISISTEMA', 'IA & APOCALIPSE'];
+const SECTION_ORDER: SectionKey[] = [
+  'APÓCRIFOS',
+  'HISTÓRIA DA IGREJA',
+  'TIPOLOGIA BÍBLICA',
+  'MUNDO ESPIRITUAL',
+  'ANTISISTEMA',
+  'IA & APOCALIPSE',
+];
 
 // Maps existing category strings → top-level section
 const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'A REVELAÇÃO DE ENOQUE':                   'APÓCRIFOS',
-  'Série — A Invenção do Pecado':             'IGREJA E BÍBLIA',
-  'Trilogia — O Cânon Oculto':                'IGREJA E BÍBLIA',
-  'Série — A Verdadeira História da Igreja':  'IGREJA E BÍBLIA',
+  'Série — A Invenção do Pecado':             'HISTÓRIA DA IGREJA',
+  'Trilogia — O Cânon Oculto':                'HISTÓRIA DA IGREJA',
+  'Série — A Verdadeira História da Igreja':  'HISTÓRIA DA IGREJA',
+  'TIPOLOGIA BÍBLICA':                        'TIPOLOGIA BÍBLICA',
   'SOMBRAS DO REINO DE DEUS':                 'MUNDO ESPIRITUAL',
   'Série — O Conselho do Altíssimo':          'MUNDO ESPIRITUAL',
   'Série — O Código do Jardim':               'MUNDO ESPIRITUAL',
+  'Série — A Identidade do Eterno':           'MUNDO ESPIRITUAL',
   'Trilogia — O Mapa da Tempestade':          'ANTISISTEMA',
   'Trilogia — O Estrangeiro Próspero':        'ANTISISTEMA',
   'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
@@ -86,6 +107,7 @@ const SERIES_LABEL: Record<string, string> = {
   'SOMBRAS DO REINO DE DEUS':                 'Sombras do Reino de Deus',
   'Série — O Conselho do Altíssimo':          'O Conselho do Altíssimo',
   'Série — O Código do Jardim':               'O Código do Jardim',
+  'Série — A Identidade do Eterno':           'A Identidade do Eterno',
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
 };
 
@@ -95,6 +117,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'SOMBRAS DO REINO DE DEUS': 'Uma leitura bíblica do mundo espiritual: Reino de Deus, conselho celeste e as realidades invisíveis que Hebreus 8:5 chama de sombra das coisas celestiais.',
   'Série — O Conselho do Altíssimo': 'Uma exploração bíblica do conselho divino: rebelião celestial, restauração em Cristo e governo do Reino na eternidade.',
   'Série — O Código do Jardim': 'Uma série sobre os arquétipos de Gênesis: conhecimento, nomeação, Babel e sabedoria para discernir o conflito espiritual no presente.',
+  'Série — A Identidade do Eterno': 'Uma série sobre identidade divina, conselho celestial e o chamado da família do Reino para viver alinhada ao propósito eterno.',
   'Série — A Invenção do Pecado': 'Uma investigação histórica e teológica sobre como certas doutrinas foram construídas, institucionalizadas e usadas para moldar consciências.',
   'Série — A Verdadeira História da Igreja': 'Uma arqueologia da fé cristã primitiva, revelando o caminho entre a ekklesia viva e a institucionalização religiosa ao longo dos séculos.',
   'Trilogia — O Cânon Oculto': 'Uma imersão nos bastidores da formação bíblica, nos textos suprimidos e nas leituras que ficaram fora da narrativa oficial.',
@@ -158,9 +181,9 @@ function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: numb
   const progressValue = parseInt(localStorage.getItem(`progress_${item.slug}`) || '0', 10);
   const clamped = Math.max(0, Math.min(100, Number.isFinite(progressValue) ? progressValue : 0));
   const readsCount = parseInt(localStorage.getItem(`reads_${item.slug}`) || '0', 10);
-  // hasBeenRead: livro concluído ao menos uma vez (progress é resetado para 0 após conclusão)
   const hasBeenRead = readsCount > 0;
   const isReading = clamped > 0;
+  const showReadCount = hasBeenRead && !isReading;
 
   return (
     <div
@@ -173,48 +196,41 @@ function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: numb
           src={item.image || `https://picsum.photos/seed/${item.slug}/400/600`}
           alt={item.title}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
-        <div className="absolute bottom-2 left-2 right-2">
-          <div className="h-0.5 w-6 bg-primary opacity-0 group-hover:opacity-100 transition-opacity mb-1" />
-          <span className="inline-flex items-center rounded-md border border-white/20 bg-black/65 px-2 py-1 text-[9px] text-white/95 uppercase font-black tracking-widest shadow-sm">
-            Vol. {String(volIndex + 1).padStart(2, '0')}
-          </span>
-        </div>
       </div>
       <div className="mt-3 px-1 select-none">
+        <div className="mb-1.5">
+          <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60">
+            Volume {volIndex + 1}
+          </span>
+        </div>
         <div className="flex items-center gap-2">
           <div className="h-1.5 flex-1 bg-outline-variant/20 rounded-full overflow-hidden border border-outline-variant/10">
             <div
               className={
-                hasBeenRead && isReading
+                showReadCount
                   ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_10px_rgba(212,175,55,0.35)]'
                   : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_8px_rgba(249,115,22,0.35)]'
               }
               style={{ width: `${clamped}%` }}
             />
           </div>
-          <div className="flex items-center gap-1.5">
-            {hasBeenRead && !isReading ? (
-              // Concluído e resetado: exibe selo de leituras
-              <>
-                <Check size={12} className="text-[#D4AF37]" />
-                <span className="text-[9px] font-black uppercase tracking-widest text-[#D4AF37]">
-                  {readsCount}×
-                </span>
-              </>
-            ) : (
-              // Em leitura ou não iniciado: exibe porcentagem
-              <span className={
-                hasBeenRead
-                  ? 'text-[9px] font-black uppercase tracking-widest text-[#D4AF37]'
-                  : isReading
-                    ? 'text-[9px] font-black uppercase tracking-widest text-orange-400'
-                    : 'text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40'
-              }>
-                {clamped}%
-              </span>
-            )}
-          </div>
+        </div>
+        <div className="mt-1.5">
+          {showReadCount ? (
+            <span className="text-[9px] font-black uppercase tracking-widest text-[#D4AF37]">
+              Lido {readsCount} vez(es)
+            </span>
+          ) : (
+            <span className={
+              hasBeenRead
+                ? 'text-[9px] font-black uppercase tracking-widest text-[#D4AF37]'
+                : isReading
+                  ? 'text-[9px] font-black uppercase tracking-widest text-orange-400'
+                  : 'text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40'
+            }>
+              {clamped}%
+            </span>
+          )}
         </div>
       </div>
     </div>

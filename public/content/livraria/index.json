@@ -484,5 +484,59 @@
     "category": "Trilogia — O Véu Rasgado",
     "time": "LIVRO",
     "image": "/image/livraria/a voz dos nefelins.webp"
+  },
+  {
+    "title": "O Pai de Glória",
+    "slug": "serie - a identidade do Eterno/Ebook 1 - O Pai de Glória",
+    "description": "Uma investigação bíblica sobre a revelação do Pai e sua glória no conselho divino.",
+    "date": "2026-04-17",
+    "category": "Série — A Identidade do Eterno",
+    "time": "LIVRO",
+    "image": "/image/livraria/o pai de gloria.webp"
+  },
+  {
+    "title": "O Filho do Homem",
+    "slug": "serie - a identidade do Eterno/Ebook 2 - O Filho do Homem",
+    "description": "A identidade messiânica do Filho do Homem e suas implicações no Reino de Deus.",
+    "date": "2026-04-17",
+    "category": "Série — A Identidade do Eterno",
+    "time": "LIVRO",
+    "image": "/image/livraria/o filho do homem.webp"
+  },
+  {
+    "title": "O Sopro do Altíssimo",
+    "slug": "serie - a identidade do Eterno/Ebook 3 - O Sopro do Altíssimo",
+    "description": "O agir do Espírito do Altíssimo na criação, restauração e governo espiritual.",
+    "date": "2026-04-17",
+    "category": "Série — A Identidade do Eterno",
+    "time": "LIVRO",
+    "image": "/image/livraria/o sopro do altissimo.webp"
+  },
+  {
+    "title": "O Mistério da Unidade",
+    "slug": "serie - a identidade do Eterno/Ebook 4 - O Mistério da Unidade",
+    "description": "Uma leitura sobre unidade divina, comunhão e aliança no plano eterno.",
+    "date": "2026-04-17",
+    "category": "Série — A Identidade do Eterno",
+    "time": "LIVRO",
+    "image": "/image/livraria/o misterio da unidade.webp"
+  },
+  {
+    "title": "A Origem do Adversário",
+    "slug": "serie - a identidade do Eterno/Ebook 5 - A Origem do Adversário",
+    "description": "A queda, a rebelião e o desenvolvimento do adversário na narrativa bíblica.",
+    "date": "2026-04-17",
+    "category": "Série — A Identidade do Eterno",
+    "time": "LIVRO",
+    "image": "/image/livraria/a origem do adversario.webp"
+  },
+  {
+    "title": "A Família do Reino",
+    "slug": "serie - a identidade do Eterno/Ebook 6 - A Família do Reino",
+    "description": "O chamado dos filhos de Deus para viver governo, herança e missão no Reino.",
+    "date": "2026-04-17",
+    "category": "Série — A Identidade do Eterno",
+    "time": "LIVRO",
+    "image": "/image/livraria/a familia do reino.webp"
   }
 ]
