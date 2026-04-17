@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Sparkles, Clock3 } from 'lucide-react';
+import { Sparkles, Clock3, ChevronLeft } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 
 type Testament = 'old' | 'new';
@@ -12,6 +12,7 @@ interface InterpretationStudy {
   date?: string;
   pathKey: string;
   image?: string;
+  fallbackImage: string;
   content: string;
 }
 
@@ -34,7 +35,8 @@ function sortByNewest(a: InterpretationStudy, b: InterpretationStudy): number {
 }
 
 function parseFrontmatter(markdown: string): Record<string, string> {
-  const match = markdown.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---/);
+  const normalized = markdown.replace(/^\uFEFF/, '');
+  const match = normalized.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---/);
   if (!match) return {};
   const result: Record<string, string> = {};
   for (const line of match[1].split(/\r?\n/)) {
@@ -50,8 +52,16 @@ function toBookLabel(raw: string): string {
   return raw.normalize('NFC').toUpperCase();
 }
 
-function resolveImageUrl(frontmatterImage?: string): string {
-  const fallback = '/assets/imagens/interpretacao-biblica/o verdadeiro oficio do nachash.webp';
+function getBookFallbackImage(book: string): string {
+  const fallbackByBook: Record<string, string> = {
+    'GÊNESIS': '/assets/imagens/interpretacao-biblica/verdadeiro-oficio-nachash-parte1.webp',
+    'MALAQUIAS': '/assets/imagens/interpretacao-biblica/portal-melquisedeque-dizimo-parte1.webp',
+  };
+  return fallbackByBook[book] ?? '/assets/imagens/interpretacao-biblica/o verdadeiro oficio do nachash.webp';
+}
+
+function resolveImageUrl(frontmatterImage?: string, book?: string): string {
+  const fallback = getBookFallbackImage(toBookLabel(book || ''));
   if (!frontmatterImage) return fallback;
 
   const baseName = frontmatterImage
@@ -83,7 +93,8 @@ function loadInterpretationStudies(): InterpretationStudy[] {
         description: frontmatter.description,
         date: frontmatter.date,
         pathKey,
-        image: resolveImageUrl(frontmatter.image),
+        image: resolveImageUrl(frontmatter.image, book),
+        fallbackImage: getBookFallbackImage(book),
         content,
       };
     })
@@ -92,6 +103,7 @@ function loadInterpretationStudies(): InterpretationStudy[] {
 
 export default function Bible() {
   const [selectedStudy, setSelectedStudy] = useState<InterpretationStudy | null>(null);
+  const [selectedBook, setSelectedBook] = useState<BookGroup | null>(null);
   const studies = useMemo(() => loadInterpretationStudies(), []);
 
   const recentStudies = useMemo(() => studies.slice(0, 6), [studies]);
@@ -124,6 +136,10 @@ export default function Bible() {
     setSelectedStudy(study);
   };
 
+  const openBookHub = (group: BookGroup) => {
+    setSelectedBook(group);
+  };
+
   if (selectedStudy) {
     return (
       <MarkdownViewer
@@ -133,6 +149,85 @@ export default function Bible() {
           setSelectedStudy(null);
         }}
       />
+    );
+  }
+
+  if (selectedBook) {
+    return (
+      <div className="pt-6 pb-32 px-5 max-w-5xl mx-auto">
+        <div className="mb-7">
+          <button
+            onClick={() => setSelectedBook(null)}
+            className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors mb-5 active:scale-95 text-[10px] font-black uppercase tracking-widest"
+          >
+            <ChevronLeft size={15} />
+            BÍBLIA
+          </button>
+
+          <p className="font-headline text-[10px] uppercase tracking-[0.2em] font-black text-primary/80 mb-2">
+            Hub do Livro
+          </p>
+          <h2 className="font-headline font-extrabold text-3xl text-primary tracking-tighter mb-2 uppercase">
+            {selectedBook.book}
+          </h2>
+          <p className="text-on-surface-variant/75 text-[11px] max-w-xl font-medium leading-relaxed">
+            Estudos disponíveis neste livro. Selecione uma parte para continuar.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          {selectedBook.studies.map((study, index) => {
+            const progressValue = parseInt(localStorage.getItem(`progress_${study.pathKey}`) || '0', 10);
+            const progress = Math.max(0, Math.min(100, Number.isFinite(progressValue) ? progressValue : 0));
+            const readsCount = parseInt(localStorage.getItem(`reads_${study.pathKey}`) || '0', 10);
+
+            return (
+              <article
+                key={study.pathKey}
+                onClick={() => openStudy(study)}
+                className="interactive-card gold-glow-hover cursor-pointer rounded-xl border border-outline-variant/15 bg-surface-container-low p-4 hover:border-primary/35 transition-colors"
+              >
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <p className="text-[8px] uppercase tracking-[0.16em] font-black text-primary/80">
+                    Estudo {index + 1}
+                  </p>
+                  <p className="text-[9px] uppercase tracking-wider font-black text-on-surface-variant/55">
+                    {study.testament === 'old' ? 'Velho Testamento' : 'Novo Testamento'}
+                  </p>
+                </div>
+
+                <h4 className="font-headline text-base font-extrabold tracking-tight text-on-surface line-clamp-2 mb-1">
+                  {study.title}
+                </h4>
+
+                <p className="text-[10px] text-on-surface-variant/70 leading-relaxed line-clamp-2 mb-3">
+                  {study.description || 'Estudo de interpretação bíblica com análise contextual e leitura aprofundada.'}
+                </p>
+
+                <div className="flex items-center gap-3">
+                  <div className="h-1.5 flex-1 bg-outline-variant/20 rounded-full overflow-hidden border border-outline-variant/10">
+                    <div
+                      className="h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_8px_rgba(249,115,22,0.35)]"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/65">
+                    {readsCount > 0 && progress === 0 ? `Lido ${readsCount} vez(es)` : `${progress}%`}
+                  </span>
+                </div>
+              </article>
+            );
+          })}
+
+          {selectedBook.studies.length === 0 && (
+            <article className="rounded-xl border border-outline-variant/15 bg-surface-container-low p-4">
+              <p className="text-[10px] text-on-surface-variant/70 leading-relaxed">
+                Ainda não há estudos publicados para este livro.
+              </p>
+            </article>
+          )}
+        </div>
+      </div>
     );
   }
 
@@ -170,7 +265,7 @@ export default function Bible() {
             <article
               key={`${study.pathKey}-${study.title}`}
               onClick={() => openStudy(study)}
-              className="cursor-pointer rounded-xl border border-outline-variant/15 bg-surface-container-low p-4 hover:border-primary/35 transition-colors"
+              className="interactive-card gold-glow-hover cursor-pointer rounded-xl border border-outline-variant/15 bg-surface-container-low p-4 hover:border-primary/35 transition-colors"
             >
               <p className="text-[8px] uppercase tracking-[0.16em] font-black text-primary/80 mb-1">
                 {study.book}
@@ -183,7 +278,7 @@ export default function Bible() {
                   onError={(event) => {
                     const target = event.currentTarget;
                     target.onerror = null;
-                    target.src = '/assets/imagens/interpretacao-biblica/o verdadeiro oficio do nachash.webp';
+                    target.src = study.fallbackImage;
                   }}
                 />
               </div>
@@ -216,12 +311,11 @@ export default function Bible() {
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {oldTestamentBooks.map((group) => {
-            const latest = group.studies[0];
             return (
               <button
                 key={`old-${group.book}`}
-                onClick={() => openStudy(latest)}
-                className="text-left rounded-xl border border-outline-variant/15 bg-[#17130f] p-3 hover:border-primary/35 transition-colors"
+                onClick={() => openBookHub(group)}
+                className="interactive-card gold-glow-hover text-left rounded-xl border border-outline-variant/15 bg-[#17130f] p-3 hover:border-primary/35 transition-colors"
               >
                 <p className="text-[8px] uppercase tracking-[0.16em] font-black text-primary/75 mb-1">Livro</p>
                 <p className="font-headline text-base font-extrabold tracking-tight text-on-surface mb-2 line-clamp-1">
@@ -250,12 +344,11 @@ export default function Bible() {
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {newTestamentBooks.map((group) => {
-            const latest = group.studies[0];
             return (
               <button
                 key={`new-${group.book}`}
-                onClick={() => openStudy(latest)}
-                className="text-left rounded-xl border border-outline-variant/15 bg-[#17130f] p-3 hover:border-primary/35 transition-colors"
+                onClick={() => openBookHub(group)}
+                className="interactive-card gold-glow-hover text-left rounded-xl border border-outline-variant/15 bg-[#17130f] p-3 hover:border-primary/35 transition-colors"
               >
                 <p className="text-[8px] uppercase tracking-[0.16em] font-black text-primary/75 mb-1">Livro</p>
                 <p className="font-headline text-base font-extrabold tracking-tight text-on-surface mb-2 line-clamp-1">

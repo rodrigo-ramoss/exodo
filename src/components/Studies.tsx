@@ -123,13 +123,13 @@ export default function Studies() {
       <section className="px-4 sm:px-6 mt-4">
         <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-3 mb-3">
           <button
-            className="flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full bg-primary text-on-primary border-primary"
+            className="gold-glow-hover flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full bg-primary text-on-primary border-primary"
             type="button"
           >
             MANÁ
           </button>
           <button
-            className="flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full bg-surface-container-high text-on-surface border-outline-variant/40 hover:border-primary"
+            className="gold-glow-hover flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full bg-surface-container-high text-on-surface border-outline-variant/40 hover:border-primary"
             type="button"
             onClick={() => setIsCategoriesOpen((prev) => !prev)}
           >
@@ -218,7 +218,7 @@ export default function Studies() {
             <div key={i} className="flex-shrink-0 w-72 snap-center">
               <div 
                 onClick={() => setSelectedStudy(item)}
-                className="relative aspect-[16/10] rounded-2xl overflow-hidden group cursor-pointer active:scale-95 transition-transform"
+                className="interactive-card gold-glow-hover relative aspect-[16/10] rounded-2xl overflow-hidden group cursor-pointer active:scale-95 transition-transform"
               >
                 <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src={item.image || `https://picsum.photos/seed/${item.slug}/600/400`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
@@ -260,7 +260,7 @@ export default function Studies() {
                   <div 
                     key={j} 
                     onClick={() => setSelectedStudy(item)}
-                    className="flex-shrink-0 w-40 sm:w-48 snap-start group cursor-pointer active:scale-[0.98] transition-all"
+                    className="interactive-card gold-glow-hover flex-shrink-0 w-40 sm:w-48 snap-start group cursor-pointer active:scale-[0.98] transition-all"
                   >
                     <div className="aspect-[4/3] rounded-xl overflow-hidden mb-2 border border-outline-variant/10 shadow-sm relative">
                       <img 
@@ -308,7 +308,7 @@ export default function Studies() {
             <div 
               key={i} 
               onClick={() => setSelectedStudy(item)}
-              className="flex flex-col group cursor-pointer active:scale-[0.98] transition-all"
+              className="interactive-card gold-glow-hover flex flex-col group cursor-pointer active:scale-[0.98] transition-all"
             >
               <div className="aspect-[16/9] rounded-xl overflow-hidden mb-3 border border-outline-variant/10">
                 <img 

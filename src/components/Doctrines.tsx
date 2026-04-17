@@ -117,7 +117,7 @@ export default function Doctrines() {
             <button
               key={track}
               onClick={() => handleTrackChange(track)}
-              className={`flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full ${
+              className={`gold-glow-hover flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full ${
                 selectedTrack === track
                   ? 'bg-primary text-on-primary border-primary'
                   : 'bg-surface-container-high text-on-surface-variant border-outline-variant/20 hover:border-primary/50'
@@ -158,7 +158,7 @@ export default function Doctrines() {
           return (
             <div 
               key={i}
-              className={`group relative flex flex-col bg-surface-container-low border-l-4 transition-all rounded-r-2xl overflow-hidden ${isExpanded ? 'border-primary bg-surface-container-high shadow-xl' : 'border-transparent hover:border-primary/40 hover:bg-surface-container-high'}`}
+              className={`interactive-card gold-glow-hover group relative flex flex-col bg-surface-container-low border-l-4 transition-all rounded-r-2xl overflow-hidden ${isExpanded ? 'border-primary bg-surface-container-high shadow-xl' : 'border-transparent hover:border-primary/40 hover:bg-surface-container-high'}`}
             >
               {/* Card Header (Toggle) */}
               <div 
@@ -199,7 +199,7 @@ export default function Doctrines() {
                       <div 
                         key={j}
                         onClick={() => setSelectedLayer({ track: doctrine.track, slug: layer.slug })}
-                        className="flex flex-col gap-2 p-3 bg-surface-container-lowest/50 hover:bg-primary/5 border border-outline-variant/5 rounded-xl cursor-pointer active:scale-[0.99] transition-all group/layer"
+                        className="interactive-card gold-glow-hover flex flex-col gap-2 p-3 bg-surface-container-lowest/50 hover:bg-primary/5 border border-outline-variant/5 rounded-xl cursor-pointer active:scale-[0.99] transition-all group/layer"
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">

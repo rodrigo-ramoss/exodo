@@ -188,7 +188,7 @@ function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: numb
   return (
     <div
       onClick={onSelect}
-      className="group shrink-0 w-[148px] sm:w-[168px] flex flex-col cursor-pointer active:scale-95 transition-transform snap-start"
+      className="interactive-card group shrink-0 w-[148px] sm:w-[168px] flex flex-col cursor-pointer active:scale-95 transition-transform snap-start"
     >
       <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden shadow-2xl border border-outline-variant/10 bg-surface-container-high group-hover:border-primary/50 transition-colors">
         <img
@@ -198,40 +198,36 @@ function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: numb
         />
       </div>
       <div className="mt-3 px-1 select-none">
-        <div className="mb-1.5">
-          <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60">
+        <div className="mb-1">
+          <span className="text-[10px] font-black uppercase tracking-[0.12em] text-on-surface-variant/50">
             Volume {volIndex + 1}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-1.5 flex-1 bg-outline-variant/20 rounded-full overflow-hidden border border-outline-variant/10">
+          <div className="h-5 flex-1 bg-outline-variant/20 rounded-full overflow-hidden border border-outline-variant/15">
             <div
               className={
                 showReadCount
-                  ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_10px_rgba(212,175,55,0.35)]'
-                  : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_8px_rgba(249,115,22,0.35)]'
+                  ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_10px_rgba(212,175,55,0.35)] flex items-center justify-center'
+                  : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_8px_rgba(249,115,22,0.35)] flex items-center justify-center'
               }
               style={{ width: `${clamped}%` }}
-            />
+            >
+              {clamped > 0 && (
+                <span className="text-[10px] font-black tracking-tight text-black/90 whitespace-nowrap leading-none">
+                  {clamped}%
+                </span>
+              )}
+            </div>
           </div>
         </div>
-        <div className="mt-1.5">
-          {showReadCount ? (
+        {showReadCount && (
+          <div className="mt-1.5">
             <span className="text-[9px] font-black uppercase tracking-widest text-[#D4AF37]">
               Lido {readsCount} vez(es)
             </span>
-          ) : (
-            <span className={
-              hasBeenRead
-                ? 'text-[9px] font-black uppercase tracking-widest text-[#D4AF37]'
-                : isReading
-                  ? 'text-[9px] font-black uppercase tracking-widest text-orange-400'
-                  : 'text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40'
-            }>
-              {clamped}%
-            </span>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -253,7 +249,7 @@ function SectionCard({ sectionKey, books, onSelect }: {
   return (
     <div
       onClick={onSelect}
-      className="group relative w-full h-44 rounded-2xl overflow-hidden cursor-pointer active:scale-[0.98] transition-all duration-300 border border-white/5 hover:border-primary/30 hover:shadow-[0_0_40px_rgba(242,192,141,0.10)]"
+      className="interactive-card gold-glow-hover group relative w-full h-44 rounded-2xl overflow-hidden cursor-pointer active:scale-[0.98] transition-all duration-300 border border-white/5 hover:border-primary/30 hover:shadow-[0_0_40px_rgba(242,192,141,0.10)]"
     >
       {/* Cover image — blurred, zooms out on hover */}
       {cover && (
@@ -369,7 +365,7 @@ export default function Bookstore() {
           </p>
         </div>
 
-        {seriesInSection.map(([cat, items]) => {
+        {seriesInSection.map(([cat, items], index) => {
           const reads = items.map((b) => parseInt(localStorage.getItem(`reads_${b.slug}`) || '0', 10));
           const minReads = reads.length ? Math.min(...reads) : 0;
           const label = SERIES_LABEL[cat] ?? cat;
@@ -377,9 +373,9 @@ export default function Bookstore() {
           const isSeries = items.length > 3;
 
           return (
-            <div key={cat} className="mb-14">
-              <div className="mb-4">
-                <div className="mb-1.5">
+            <div key={cat} className="mb-6">
+              <div className="mb-2.5">
+                <div className="mb-1">
                   <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-primary">
                     {isSeries ? 'SÉRIE' : 'TRILOGIA'}
                   </span>
@@ -412,6 +408,12 @@ export default function Bookstore() {
                   ))}
                 </DragScrollRow>
               </div>
+
+              {index < seriesInSection.length - 1 && (
+                <div className="mt-3 px-1">
+                  <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/55 to-transparent animate-[pulse_4.5s_ease-in-out_infinite]" />
+                </div>
+              )}
             </div>
           );
         })}

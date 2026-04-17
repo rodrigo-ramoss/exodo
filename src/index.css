@@ -50,6 +50,34 @@
   text-shadow: 0 0 12px rgba(242, 192, 141, 0.4);
 }
 
+.interactive-card {
+  transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease, background-color 300ms ease;
+  will-change: transform;
+}
+
+@media (hover: hover) {
+  .interactive-card:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 24px rgba(242, 192, 141, 0.12);
+  }
+}
+
+.interactive-card:active {
+  transform: scale(0.985);
+}
+
+.gold-glow-hover {
+  transition: box-shadow 300ms ease, border-color 300ms ease, filter 300ms ease;
+}
+
+@media (hover: hover) {
+  .gold-glow-hover:hover {
+    border-color: rgba(242, 192, 141, 0.5);
+    box-shadow: 0 0 22px rgba(242, 192, 141, 0.2);
+    filter: saturate(1.08);
+  }
+}
+
 @layer components {
   .prose {
     @apply leading-relaxed;

@@ -51,13 +51,13 @@ export default function Home({ onNavigate }: HomeProps) {
           <div className="flex flex-col gap-3">
             <button 
               onClick={() => onNavigate(Screen.MANA, 'push')}
-              className="bg-primary-container text-on-primary-container px-6 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-primary transition-all active:scale-95 shadow-lg shadow-primary/10"
+              className="gold-glow-hover bg-primary-container text-on-primary-container px-6 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-primary transition-all active:scale-95 shadow-lg shadow-primary/10"
             >
               Explorar MANÁ
             </button>
             <button 
               onClick={() => onNavigate(Screen.BOOKSTORE, 'push')}
-              className="border border-outline-variant/40 bg-surface-container-lowest/50 backdrop-blur px-6 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:border-primary transition-all active:scale-95"
+              className="gold-glow-hover border border-outline-variant/40 bg-surface-container-lowest/50 backdrop-blur px-6 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:border-primary transition-all active:scale-95"
             >
               Arquivo Secreto <ArrowRight size={14} />
             </button>
@@ -69,7 +69,7 @@ export default function Home({ onNavigate }: HomeProps) {
       <section className="py-8 px-6">
         <div 
           onClick={() => onNavigate(Screen.BOOKSTORE, 'push')}
-          className="relative w-full h-[200px] rounded-3xl overflow-hidden group cursor-pointer active:scale-[0.98] transition-transform border border-primary/20"
+          className="interactive-card gold-glow-hover relative w-full h-[200px] rounded-3xl overflow-hidden group cursor-pointer active:scale-[0.98] transition-transform border border-primary/20"
         >
           <div 
             className="absolute inset-0 bg-cover bg-center"
@@ -111,7 +111,7 @@ export default function Home({ onNavigate }: HomeProps) {
             <div 
               key={i}
               onClick={() => onNavigate(Screen.MANA, 'push')}
-              className="min-w-[240px] bg-surface-container-low rounded-2xl overflow-hidden border border-outline-variant/10 hover:border-primary/50 transition-all snap-start cursor-pointer group active:scale-[0.98]"
+              className="interactive-card gold-glow-hover min-w-[240px] bg-surface-container-low rounded-2xl overflow-hidden border border-outline-variant/10 hover:border-primary/50 transition-all snap-start cursor-pointer group active:scale-[0.98]"
             >
               <div 
                 className="h-28 bg-cover bg-center relative"
@@ -147,7 +147,7 @@ export default function Home({ onNavigate }: HomeProps) {
             <div 
               key={i}
               onClick={() => onNavigate(Screen.MANA, 'push')}
-              className="min-w-[140px] h-[120px] bg-surface-container-low rounded-2xl border border-outline-variant/10 transition-all cursor-pointer group flex flex-col items-center justify-center p-4 text-center active:scale-95 hover:border-primary/40"
+              className="interactive-card gold-glow-hover min-w-[140px] h-[120px] bg-surface-container-low rounded-2xl border border-outline-variant/10 transition-all cursor-pointer group flex flex-col items-center justify-center p-4 text-center active:scale-95 hover:border-primary/40"
             >
               <div className="text-xl mb-2 text-on-surface-variant group-hover:text-primary transition-colors">
                 <Star size={20} />
@@ -171,7 +171,7 @@ export default function Home({ onNavigate }: HomeProps) {
             <div 
               key={i}
               onClick={() => onNavigate(Screen.DOCTRINES, 'push')}
-              className="min-w-[120px] h-[80px] bg-surface-container-high rounded-2xl flex flex-col items-center justify-center gap-1 hover:bg-surface-bright transition-all cursor-pointer border border-outline-variant/5 active:scale-95"
+              className="interactive-card gold-glow-hover min-w-[120px] h-[80px] bg-surface-container-high rounded-2xl flex flex-col items-center justify-center gap-1 hover:bg-surface-bright transition-all cursor-pointer border border-outline-variant/5 active:scale-95"
             >
               {doutrina.image ? (
                 <div className="w-6 h-6 rounded-md overflow-hidden mb-1">
@@ -190,7 +190,7 @@ export default function Home({ onNavigate }: HomeProps) {
       <section className="py-8 px-6">
         <div 
           onClick={() => onNavigate(Screen.BOOKSTORE, 'push')}
-          className="relative w-full h-[260px] rounded-3xl overflow-hidden group cursor-pointer active:scale-[0.98] transition-transform"
+          className="interactive-card gold-glow-hover relative w-full h-[260px] rounded-3xl overflow-hidden group cursor-pointer active:scale-[0.98] transition-transform"
         >
           <div 
             className="absolute inset-0 bg-cover bg-center"
@@ -225,7 +225,7 @@ export default function Home({ onNavigate }: HomeProps) {
             <>
               <div 
                 onClick={() => onNavigate(Screen.SIGNS, 'push')}
-                className="group cursor-pointer active:scale-[0.98] transition-transform"
+                className="interactive-card gold-glow-hover group cursor-pointer active:scale-[0.98] transition-transform"
               >
                 <div className="aspect-video w-full rounded-2xl overflow-hidden mb-3">
                   <img src={signs[0].image || "https://picsum.photos/seed/signs-main/800/450"} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -250,7 +250,7 @@ export default function Home({ onNavigate }: HomeProps) {
                   <div 
                     key={i} 
                     onClick={() => onNavigate(Screen.SIGNS, 'push')}
-                    className="flex gap-3 group cursor-pointer active:scale-95 transition-transform"
+                    className="interactive-card gold-glow-hover flex gap-3 group cursor-pointer active:scale-95 transition-transform"
                   >
                     <div className="w-16 h-16 bg-surface-container-high flex-shrink-0 rounded-xl overflow-hidden">
                       <img src={item.image || `https://picsum.photos/seed/side-${i}/200/200`} className="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
@@ -271,7 +271,7 @@ export default function Home({ onNavigate }: HomeProps) {
       <section className="py-8 px-6">
         <div 
           onClick={() => onNavigate(Screen.EBD, 'push')}
-          className="bg-surface-container-low rounded-3xl p-6 border border-outline-variant/10 text-center cursor-pointer active:scale-[0.98] transition-transform"
+          className="interactive-card gold-glow-hover bg-surface-container-low rounded-3xl p-6 border border-outline-variant/10 text-center cursor-pointer active:scale-[0.98] transition-transform"
         >
           <div className="w-16 h-16 bg-primary-container/10 flex items-center justify-center rounded-full border border-primary/20 mx-auto mb-4">
             <Star className="text-primary" size={24} fill="currentColor" />
