@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import { Menu, Settings, GraduationCap, Gavel, Library, BookOpen, ExternalLink } from 'lucide-react';
+import { ReactNode } from 'react';
+import { Menu, Settings, GraduationCap, Gavel, Library, BookOpen, ExternalLink, UserCircle2 } from 'lucide-react';
 import { Screen } from '../types';
 import { cn } from '../lib/utils';
 import { useProfile } from '../state/ProfileContext';
@@ -38,6 +38,17 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
           >
             ÊXODO
           </h1>
+        </div>
+
+        <div
+          aria-hidden="true"
+          className="w-8 h-8 rounded-full border border-[#D4AF37]/35 bg-black/40 flex items-center justify-center"
+        >
+          {photo ? (
+            <img src={photo} alt="" className="w-6 h-6 rounded-full object-cover border border-[#D4AF37]/40" />
+          ) : (
+            <UserCircle2 size={18} className="text-[#D4AF37]/85" />
+          )}
         </div>
       </header>
 

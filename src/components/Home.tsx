@@ -1,7 +1,7 @@
-import { ArrowRight, Shield, Star } from 'lucide-react';
+import { useMemo, useRef } from 'react';
+import { ArrowDown, ArrowRight, BookOpenText, Flame, Sparkles } from 'lucide-react';
 import { Screen } from '../types';
 import { useFetch } from '../hooks/useFetch';
-import { useProfile } from '../state/ProfileContext';
 import { AppImage } from './AppImage';
 
 interface StudyItem {
@@ -18,234 +18,241 @@ interface HomeProps {
   onNavigate: (screen: Screen, transition?: 'push' | 'none') => void;
 }
 
-export default function Home({ onNavigate }: HomeProps) {
-  const { data: studies, loading: loadingStudies } = useFetch<StudyItem[]>('/content/mana/index.json');
-  const { name: profileName } = useProfile();
-  const heroImage = '/image/livraria/a sabedoria do deserto.webp';
-  const apocryphaImage = '/image/apocrifos/o livro dos vigilantes.webp';
-  const bookstoreImage = '/image/livraria/o mapa ants da tempestade.webp';
+interface BookItem {
+  title: string;
+  slug: string;
+  description: string;
+  date: string;
+  category: string;
+  time: string;
+  image?: string;
+}
 
-  const toCssImageUrl = (path?: string, fallback = '/image/estudos/A espera que renova.webp') => {
+interface AxisBanner {
+  id: string;
+  title: string;
+  subtitle: string;
+  image?: string;
+}
+
+export default function Home({ onNavigate }: HomeProps) {
+  const { data: manaStudies, loading: loadingMana } = useFetch<StudyItem[]>('/content/mana/index.json');
+  const { data: books, loading: loadingBooks } = useFetch<BookItem[]>('/content/livraria/index.json');
+  const sectionsRef = useRef<HTMLElement | null>(null);
+
+  const heroImage = '/image/livraria/a sabedoria do deserto.webp';
+  const fallbackImage = '/image/estudos/A espera que renova.webp';
+
+  const axisBanners: AxisBanner[] = [
+    {
+      id: 'eixo-1-geografia-invisivel',
+      title: 'Eixo 1 · Geografia Invisível',
+      subtitle: 'Mapas espirituais, conselho divino e territórios celestiais.',
+      image: '/assets/imagens/eixos-biblicos/capa-eixo-1-geografia-invisivel.webp',
+    },
+    {
+      id: 'eixo-2-seres-celestiais',
+      title: 'Eixo 2 · Seres Celestiais',
+      subtitle: 'Ofícios, hierarquias e arquitetura do governo invisível.',
+      image: '/image/livraria/a sessao do conselho.webp',
+    },
+    {
+      id: 'eixo-3-rebeliao-cosmica',
+      title: 'Eixo 3 · Rebelião Cósmica',
+      subtitle: 'Nachash, queda e guerra pela herança das nações.',
+      image: '/assets/imagens/eixos-biblicos/capa-eixo-3-rebeliao-cosmica.webp',
+    },
+  ];
+
+  const toCssImageUrl = (path?: string, fallback = fallbackImage) => {
     const safePath = encodeURI(path || fallback);
     return `url('${safePath}')`;
   };
 
+  const newestMana = useMemo(() => {
+    if (!manaStudies?.length) return null;
+    return [...manaStudies].sort((a, b) => {
+      return new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime();
+    })[0];
+  }, [manaStudies]);
+
+  const coroaRoubadaLaunch = useMemo(() => {
+    if (!books?.length) return null;
+    const coroaRoubada = books.filter((book) =>
+      book.category.toLowerCase().includes('coroa roubada'),
+    );
+    if (!coroaRoubada.length) return null;
+    return [...coroaRoubada].sort((a, b) => {
+      return new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime();
+    })[0];
+  }, [books]);
+
   return (
-    <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative h-[480px] w-full overflow-hidden">
+    <div className="flex flex-col bg-[#000000] text-[#D9D9D9]">
+      <section className="relative h-[560px] w-full overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: toCssImageUrl(heroImage) }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/60"></div>
         </div>
+
         <div className="relative h-full flex flex-col justify-center px-6 max-w-4xl">
           <div className="flex items-center gap-2 mb-3">
-            <Star className="text-primary" size={14} fill="currentColor" />
-            <span className="font-headline uppercase tracking-[0.2em] text-[9px] font-bold text-on-surface-variant">
-              {profileName ? `Bem-vindo ao deserto, ${profileName}` : 'Investigação Especial'}
+            <Sparkles className="text-[#D4AF37]" size={14} fill="currentColor" />
+            <span className="font-headline uppercase tracking-[0.2em] text-[9px] font-bold text-[#C9C9C9]">
+              Investigação Especial
             </span>
           </div>
-          <h2 className="font-headline text-3xl font-extrabold text-on-surface leading-tight mb-4 tracking-tighter">
-            Profecia no tempo do algoritmo
+
+          <h2 className="font-headline text-3xl sm:text-4xl font-extrabold text-[#D4AF37] leading-tight mb-4 tracking-tight">
+            VOZ DO DESERTO: A Geopolítica do Invisível
           </h2>
-          <p className="text-on-surface-variant text-xs max-w-[240px] mb-8 leading-relaxed">
-            Tecnologia e o sistema religioso se fundem na sombra da era digital. Descubra as verdades ocultas.
+
+          <p className="text-[#CFCFCF] text-xs sm:text-sm max-w-[520px] mb-8 leading-relaxed">
+            Bem-vindo à fronteira final da investigação bíblica. Aqui, a Escritura deixa de ser um livro religioso
+            para se tornar o mapa técnico dos reinos, governos e tecnologias da eternidade. Desvende o que está
+            oculto entre as linhas do tempo e do espaço.
           </p>
-          <div className="flex flex-col gap-3">
-            <button 
-              onClick={() => onNavigate(Screen.MANA, 'push')}
-              className="gold-glow-hover bg-primary-container text-on-primary-container px-6 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-primary transition-all active:scale-95 shadow-lg shadow-primary/10"
+
+          <p className="text-[11px] text-[#AAAAAA] uppercase tracking-[0.14em] mb-3 font-bold">
+            Inicie sua jornada pelos Eixos de Investigação ou explore os últimos relatórios abaixo.
+          </p>
+
+          <div className="flex">
+            <button
+              onClick={() => sectionsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+              className="gold-glow-hover bg-[#D4AF37] text-black px-6 py-3 rounded-xl font-black text-xs flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-[#D4AF37]/20"
             >
-              Explorar MANÁ
-            </button>
-            <button 
-              onClick={() => onNavigate(Screen.BOOKSTORE, 'push')}
-              className="gold-glow-hover border border-outline-variant/40 bg-surface-container-lowest/50 backdrop-blur px-6 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:border-primary transition-all active:scale-95"
-            >
-              Arquivo Secreto <ArrowRight size={14} />
+              Explorar a Verdade <ArrowDown size={14} />
             </button>
           </div>
         </div>
       </section>
 
-      {/* APÓCRIFOS Section */}
-      <section className="py-8 px-6">
-        <div 
-          onClick={() => onNavigate(Screen.BOOKSTORE, 'push')}
-          className="interactive-card gold-glow-hover relative w-full h-[200px] rounded-3xl overflow-hidden group cursor-pointer active:scale-[0.98] transition-transform border border-primary/20"
+      <section ref={sectionsRef} className="pt-6 pb-28 px-6 space-y-6">
+        <article
+          onClick={() => onNavigate(Screen.REFUTACAO, 'push')}
+          className="interactive-card gold-glow-hover cursor-pointer rounded-xl border border-[#D4AF37]/30 bg-[#0A0A0A] px-4 py-3"
         >
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: toCssImageUrl(apocryphaImage) }}
-          ></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-coal via-coal/80 to-transparent"></div>
-          <div className="relative h-full flex flex-col justify-center p-6">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="bg-primary p-1 rounded-lg">
-                <Shield size={16} className="text-on-primary" />
-              </div>
-              <h3 className="font-headline font-bold text-2xl tracking-tighter text-on-surface">APÓCRIFOS</h3>
-            </div>
-            <p className="text-on-surface-variant text-xs max-w-[200px] mb-4 leading-relaxed font-bold italic">
-              Interpretação técnica de Enoque, Jubileus e outros escritos, conectados à base Bíblica.
-            </p>
-            <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
-              Explorar Análises <ArrowRight size={14} />
-            </div>
+          <p className="text-[9px] uppercase tracking-[0.16em] font-black text-[#D4AF37] mb-1">
+            Alerta de Doutrinas
+          </p>
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="font-headline text-sm sm:text-base font-extrabold text-[#EAEAEA]">
+              A Fraude do Arrebatamento Secreto
+            </h3>
+            <ArrowRight size={14} className="text-[#D4AF37] shrink-0" />
           </div>
-        </div>
-      </section>
+        </article>
 
-      {/* MANÁ em Destaque */}
-      <section className="py-8 px-6">
-        <div className="flex items-end justify-between mb-6">
-          <h3 className="font-headline text-lg font-bold tracking-tight text-primary uppercase text-[10px] tracking-[0.15em]">MANÁ em Destaque</h3>
-          <button 
-            onClick={() => onNavigate(Screen.MANA)}
-            className="text-on-surface-variant text-[9px] uppercase tracking-widest hover:text-primary transition-colors font-bold"
+        <article
+          onClick={() => onNavigate(Screen.MANA, 'push')}
+          className="interactive-card gold-glow-hover rounded-2xl overflow-hidden border border-[#262626] bg-[#0B0B0B] cursor-pointer"
+        >
+          <div
+            className="h-40 bg-cover bg-center relative"
+            style={{ backgroundImage: toCssImageUrl(newestMana?.image) }}
           >
-            Ver todos
-          </button>
-        </div>
-        <div className="flex gap-4 overflow-x-auto hide-scrollbar snap-x pb-2">
-          {loadingStudies ? (
-            <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
-          ) : studies?.slice(0, 3).map((study, i) => (
-            <div 
-              key={i}
-              onClick={() => onNavigate(Screen.MANA, 'push')}
-              className="interactive-card gold-glow-hover min-w-[240px] bg-surface-container-low rounded-2xl overflow-hidden border border-outline-variant/10 hover:border-primary/50 transition-all snap-start cursor-pointer group active:scale-[0.98]"
-            >
-              <div 
-                className="h-28 bg-cover bg-center relative"
-                style={{ backgroundImage: toCssImageUrl(study.image) }}
-              >
-                <div className="absolute top-3 left-3 bg-primary-container/90 backdrop-blur-sm text-[8px] font-black px-2 py-1 rounded-md text-on-primary-container uppercase tracking-wider">
-                  {study.category}
-                </div>
-              </div>
-              <div className="p-4 bg-surface-container-high flex flex-col justify-between h-20">
-                <h4 className="font-headline font-bold text-xs line-clamp-2 group-hover:text-primary transition-colors leading-snug">
-                  {study.title}
-                </h4>
-                <div className="flex justify-between items-center text-[8px] text-on-surface-variant font-bold uppercase tracking-widest">
-                  <span>{study.time} LEITURA</span>
-                  <Star className="text-primary" size={10} fill="currentColor" />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Seções por Categoria */}
-      <section className="py-8 px-6 bg-surface-container-lowest/30">
-        <h3 className="font-headline text-lg font-bold mb-6 flex items-center gap-2 uppercase text-[10px] tracking-[0.15em]">
-          <Star className="text-primary" size={12} fill="currentColor" /> Biblioteca por Temas
-        </h3>
-        <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
-          {loadingStudies ? (
-            <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
-          ) : Array.from(new Set(studies?.map(s => s.category) || [])).map((cat, i) => (
-            <div 
-              key={i}
-              onClick={() => onNavigate(Screen.MANA, 'push')}
-              className="interactive-card gold-glow-hover min-w-[140px] h-[120px] bg-surface-container-low rounded-2xl border border-outline-variant/10 transition-all cursor-pointer group flex flex-col items-center justify-center p-4 text-center active:scale-95 hover:border-primary/40"
-            >
-              <div className="text-xl mb-2 text-on-surface-variant group-hover:text-primary transition-colors">
-                <Star size={20} />
-              </div>
-              <h4 className="font-headline font-bold text-[10px] uppercase tracking-wider">{cat}</h4>
-              <p className="text-[8px] text-on-surface-variant leading-tight mt-1">
-                {studies?.filter(s => s.category === cat).length} estudos
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Refutação de Doutrinas */}
-      <section className="py-8 px-6">
-        <h3 className="font-headline text-lg font-bold mb-6 uppercase text-[10px] tracking-[0.15em]">Refutação de Doutrinas</h3>
-        <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
-          {[
-            { title: 'Dízimo', image: '/assets/imagens/refutacao/dizimo.webp' },
-            { title: 'Arrebatamento Secreto', image: '/assets/imagens/refutacao/arrebatamento-secreto.webp' },
-            { title: 'Inferno Eterno', image: '/assets/imagens/refutacao/inferno-eterno.webp' },
-            { title: 'Batismo no Espírito Santo Pentecostal', image: '/assets/imagens/refutacao/batismo-espirito-santo-pentecostal.webp' },
-          ].map((doutrina, i) => (
-            <div 
-              key={i}
-              onClick={() => onNavigate(Screen.REFUTACAO, 'push')}
-              className="interactive-card gold-glow-hover min-w-[120px] h-[80px] bg-surface-container-high rounded-2xl flex flex-col items-center justify-center gap-1 hover:bg-surface-bright transition-all cursor-pointer border border-outline-variant/5 active:scale-95"
-            >
-              <div className="w-6 h-6 rounded-md overflow-hidden mb-1">
-                <AppImage src={doutrina.image} alt={doutrina.title} className="w-full h-full object-cover" />
-              </div>
-              <span className="font-headline text-[9px] font-bold uppercase tracking-widest px-2 text-center line-clamp-1">{doutrina.title}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Arquivo Secreto (Livraria) */}
-      <section className="py-8 px-6">
-        <div 
-          onClick={() => onNavigate(Screen.BOOKSTORE, 'push')}
-          className="interactive-card gold-glow-hover relative w-full h-[260px] rounded-3xl overflow-hidden group cursor-pointer active:scale-[0.98] transition-transform"
-        >
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: toCssImageUrl(bookstoreImage) }}
-          ></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent"></div>
-          <div className="relative h-full flex flex-col justify-center p-6">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="bg-primary text-on-primary text-[8px] font-black px-2 py-0.5 rounded uppercase tracking-wider">PREMIUM</span>
-              <h3 className="font-headline font-bold text-xl tracking-tighter">Arquivo Secreto</h3>
-            </div>
-            <p className="text-on-surface-variant text-[10px] max-w-[160px] mb-6 leading-relaxed">
-              Acesse a livraria exclusiva com manuscritos decodificados.
-            </p>
-            <button className="bg-primary-container text-on-primary-container w-fit px-5 py-2 rounded-xl font-bold text-[10px] hover:bg-primary transition-all uppercase tracking-widest">
-              Explorar
-            </button>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
+            <span className="absolute top-3 left-3 bg-[#D4AF37]/95 text-black text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-wider">
+              Alimento Diário
+            </span>
           </div>
-        </div>
-      </section>
-
-      {/* EBD Section */}
-      <section className="py-8 px-6">
-        <div 
-          onClick={() => onNavigate(Screen.EBD, 'push')}
-          className="interactive-card gold-glow-hover bg-surface-container-low rounded-3xl p-6 border border-outline-variant/10 text-center cursor-pointer active:scale-[0.98] transition-transform"
-        >
-          <div className="w-16 h-16 bg-primary-container/10 flex items-center justify-center rounded-full border border-primary/20 mx-auto mb-4">
-            <Star className="text-primary" size={24} fill="currentColor" />
+          <div className="p-4">
+            <p className="text-[9px] uppercase tracking-[0.14em] font-black text-[#D4AF37] mb-2">Destaque do Maná</p>
+            {loadingMana ? (
+              <p className="text-[11px] text-[#AFAFAF]">Carregando estudo mais recente...</p>
+            ) : (
+              <>
+                <h3 className="font-headline text-base font-extrabold text-[#E8E8E8] leading-tight">
+                  {newestMana?.title || 'Novo estudo em breve'}
+                </h3>
+                <p className="mt-2 text-[11px] text-[#B9B9B9] line-clamp-2">
+                  {newestMana?.description || 'Acompanhe os próximos estudos de preparo espiritual.'}
+                </p>
+              </>
+            )}
           </div>
-          <h3 className="font-headline text-lg font-extrabold mb-2 tracking-tight">Escola Bíblica de Dados</h3>
-          <p className="text-on-surface-variant text-[10px] mb-5 leading-relaxed">
-            Um sistema educacional projetado para a nova geração de investigadores sagrados.
+        </article>
+
+        <article className="rounded-2xl border border-[#232323] bg-[#0B0B0B] p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <BookOpenText size={16} className="text-[#D4AF37]" />
+            <h3 className="font-headline text-base font-extrabold text-[#D4AF37]">Geopolítica Celestial</h3>
+          </div>
+          <p className="text-[11px] text-[#B7B7B7] mb-4">
+            Vitrine da Bíblia (Os 7 Eixos): descubra as frentes iniciais da investigação.
           </p>
-          <button className="bg-primary-container text-on-primary-container w-full py-2.5 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-primary transition-all">
-            Saiba Mais
-          </button>
-        </div>
+          <div className="space-y-3">
+            {axisBanners.map((axis) => (
+              <button
+                key={axis.id}
+                onClick={() => onNavigate(Screen.BIBLE, 'push')}
+                className="interactive-card gold-glow-hover w-full text-left rounded-xl overflow-hidden border border-[#2E2E2E]"
+              >
+                <div
+                  className="h-24 bg-cover bg-center relative"
+                  style={{ backgroundImage: toCssImageUrl(axis.image, '/image/livraria/o trono e o templo.webp') }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-black/20"></div>
+                  <div className="relative h-full px-3 py-2 flex flex-col justify-center">
+                    <h4 className="font-headline text-sm font-black text-[#EAEAEA]">{axis.title}</h4>
+                    <p className="text-[10px] text-[#C2C2C2] mt-1 line-clamp-2">{axis.subtitle}</p>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </article>
+
+        <article className="rounded-2xl border border-[#232323] bg-[#0B0B0B] p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Flame size={16} className="text-[#D4AF37]" />
+            <h3 className="font-headline text-base font-extrabold text-[#D4AF37]">Lançamento da Livraria</h3>
+          </div>
+
+          <div className="rounded-xl overflow-hidden border border-[#2E2E2E] bg-[#050505]">
+            <div className="h-52 w-full bg-[#111111]">
+              <AppImage
+                src={coroaRoubadaLaunch?.image || '/image/livraria/o tribunal dos deuses.webp'}
+                alt={coroaRoubadaLaunch?.title || 'Trilogia A Coroa Roubada'}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="p-4">
+              <p className="text-[9px] uppercase tracking-[0.14em] font-black text-[#D4AF37] mb-2">
+                Trilogia · A Coroa Roubada
+              </p>
+              {loadingBooks ? (
+                <p className="text-[11px] text-[#AFAFAF]">Carregando lançamento...</p>
+              ) : (
+                <h4 className="font-headline text-sm font-extrabold text-[#E8E8E8] mb-4">
+                  {coroaRoubadaLaunch?.title || 'Acesso à trilogia em atualização'}
+                </h4>
+              )}
+
+              <button
+                onClick={() => onNavigate(Screen.BOOKSTORE, 'push')}
+                className="gold-glow-hover w-full bg-[#D4AF37] text-black py-3 rounded-lg font-black text-[11px] uppercase tracking-[0.12em] transition-all active:scale-95"
+              >
+                Acessar Biblioteca
+              </button>
+            </div>
+          </div>
+        </article>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#0E0E0E] py-10 px-6 mt-8 border-t border-[#50453B]/10">
+      <footer className="bg-[#000000] py-10 px-6 border-t border-[#1F1F1F]">
         <div className="flex flex-col items-center justify-center gap-6">
-          <div className="text-primary text-xl font-headline opacity-20 font-black uppercase tracking-tighter">ÊXODO</div>
+          <div className="text-[#D4AF37] text-xl font-headline opacity-30 font-black uppercase tracking-tighter">ÊXODO</div>
           <nav className="flex flex-wrap justify-center gap-5">
-            <button className="font-sans text-[8px] text-on-surface-variant uppercase tracking-[0.2em] font-bold">Termos</button>
-            <button className="font-sans text-[8px] text-on-surface-variant uppercase tracking-[0.2em] font-bold">Privacidade</button>
-            <button className="font-sans text-[8px] text-on-surface-variant uppercase tracking-[0.2em] font-bold">Apoie</button>
+            <button className="font-sans text-[8px] text-[#A7A7A7] uppercase tracking-[0.2em] font-bold">Termos</button>
+            <button className="font-sans text-[8px] text-[#A7A7A7] uppercase tracking-[0.2em] font-bold">Privacidade</button>
+            <button className="font-sans text-[8px] text-[#A7A7A7] uppercase tracking-[0.2em] font-bold">Apoie</button>
           </nav>
-          <p className="font-sans text-[7px] text-on-surface-variant uppercase tracking-[0.2em] text-center opacity-40 font-bold">
+          <p className="font-sans text-[7px] text-[#8A8A8A] uppercase tracking-[0.2em] text-center opacity-40 font-bold">
             © ÊXODO. O ARQUIVO SAGRADO.
           </p>
         </div>
