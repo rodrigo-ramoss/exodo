@@ -11,10 +11,7 @@ interface StudyItem {
   category: string;
   time: string;
   image?: string;
-  track: StudyTrack;
 }
-
-type StudyTrack = 'biblicos' | 'apocrifos';
 
 interface ManaTheme {
   id: string;
@@ -27,21 +24,36 @@ interface ManaConfig {
   themes: ManaTheme[];
 }
 
-const studyIndexModules = import.meta.glob('../content/estudos/{biblicos,apocrifos}/index.json', {
-  eager: true,
-  import: 'default',
-}) as Record<string, Omit<StudyItem, 'track'>[]>;
-
-const studyMarkdownModules = import.meta.glob('../content/estudos/{biblicos,apocrifos}/**/*.md', {
+const manaMarkdownModules = import.meta.glob('/public/content/mana/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
 }) as Record<string, string>;
 
-function loadStudies(track: StudyTrack): StudyItem[] {
-  const indexPath = `../content/estudos/${track}/index.json`;
-  const items = studyIndexModules[indexPath] || [];
-  return items.map(item => ({ ...item, track }));
+function normalizeKey(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+function resolveManaMarkdown(study: StudyItem | null): string | null {
+  if (!study) return null;
+  const slugTail = study.slug.split('/').pop() || study.slug;
+  const slugKey = normalizeKey(slugTail);
+  const titleKey = normalizeKey(study.title);
+
+  for (const [path, markdown] of Object.entries(manaMarkdownModules)) {
+    const fileName = path.split('/').pop()?.replace(/\.md$/i, '') || '';
+    const fileKey = normalizeKey(fileName);
+    if (fileKey === slugKey || fileKey === titleKey || fileKey.includes(slugKey) || fileKey.includes(titleKey)) {
+      return markdown;
+    }
+  }
+
+  return null;
 }
 
 export default function Studies() {
@@ -50,11 +62,9 @@ export default function Studies() {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [selectedThemeId, setSelectedThemeId] = useState<string | null>(null);
   const { data: manaConfig } = useFetch<ManaConfig>('/content/mana/mana.json');
+  const { data: manaStudies, error } = useFetch<StudyItem[]>('/content/mana/index.json');
 
-  const allStudies = useMemo(
-    () => [...loadStudies('biblicos'), ...loadStudies('apocrifos')],
-    [],
-  );
+  const allStudies = useMemo(() => manaStudies ?? [], [manaStudies]);
 
   const selectedTheme = useMemo(
     () => manaConfig?.themes?.find((theme) => theme.id === selectedThemeId) || null,
@@ -81,8 +91,7 @@ export default function Studies() {
       });
   }, [allStudies, searchTerm, selectedTheme]);
 
-  const loading = false;
-  const error = null;
+  const loading = !manaStudies;
 
   // Featured and Recent logic with deduplication
   const featuredStudies = studies ? studies.slice(0, 4) : [];
@@ -95,9 +104,7 @@ export default function Studies() {
     return acc;
   }, {} as Record<string, StudyItem[]>);
 
-  const markdownContent = selectedStudy
-    ? studyMarkdownModules[`../content/estudos/${selectedStudy.track}/${selectedStudy.slug}.md`] || null
-    : null;
+  const markdownContent = resolveManaMarkdown(selectedStudy);
 
   if (selectedStudy && markdownContent) {
     return (

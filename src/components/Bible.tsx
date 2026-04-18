@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode, type ElementType } from 'react';
+import { useEffect, useMemo, useState, type ReactNode, type ElementType } from 'react';
 import {
   Sparkles,
   Clock3,
@@ -19,7 +19,7 @@ interface AxisMeta {
   title: string;
   subtitle: string;
   description: string;
-  coverImage: string;
+  coverImage?: string;
   accentClass: string;
   glowClass: string;
   Icon: ElementType;
@@ -27,101 +27,98 @@ interface AxisMeta {
 
 interface InterpretationStudy {
   title: string;
+  displayTitle: string;
   description?: string;
   date?: string;
   pathKey: string;
   content: string;
   axisId: string;
   axisTitle: string;
-  axisCoverImage: string;
   subthemeId: string;
   subthemeLabel: string;
+  subthemeDescription: string;
   volume: number;
-  studySlug: string;
-  imageSlug: string;
-  image: string;
+  image?: string;
 }
 
 interface StudyGroup {
   subthemeId: string;
   subthemeLabel: string;
+  subthemeDescription: string;
   studies: InterpretationStudy[];
 }
 
 const AXIS_METADATA: AxisMeta[] = [
   {
-    id: 'eixo-01-geografia-mundo-invisivel',
+    id: 'eixo-1-geografia-invisivel',
     index: 1,
     title: 'Geografia do Mundo Invisível',
     subtitle: 'Mapas Celestiais e Territórios Espirituais',
     description: 'Cartografia bíblica do mundo invisível, montanha cósmica, tronos e fronteiras espirituais.',
-    coverImage: '/assets/imagens/interpretacao-biblica/verdadeiro-oficio-nachash-parte3.webp',
+    coverImage: '/assets/imagens/eixo-1-geografia-invisivel/a-corte-de-yahweh-parte-1.webp',
     accentClass: 'from-[#2f220f]/95 via-[#1b150f]/70 to-[#0d0f14]/40',
     glowClass: 'shadow-[0_0_30px_rgba(212,175,55,0.1)]',
     Icon: Orbit,
   },
   {
-    id: 'eixo-02-seres-celestiais-oficios',
+    id: 'eixo-2-seres-celestiais',
     index: 2,
     title: 'Seres Celestiais e Ofícios',
     subtitle: 'Conselho Divino, Funções e Hierarquias',
     description: 'Análise de querubins, vigilantes, mensageiros e seus ofícios na economia do Reino.',
-    coverImage: '/assets/imagens/interpretacao-biblica/verdadeiro-oficio-nachash-parte2.webp',
     accentClass: 'from-[#1e2a14]/95 via-[#141b12]/70 to-[#0d0f14]/40',
     glowClass: 'shadow-[0_0_30px_rgba(152,196,120,0.12)]',
     Icon: Shield,
   },
   {
-    id: 'eixo-03-rebeliao-guerra-cosmica',
+    id: 'eixo-3-rebeliao-cosmica',
     index: 3,
     title: 'Rebelião e Guerra Cósmica',
     subtitle: 'A Queda dos Vigilantes e o Conflito do Éden',
     description: 'Investigação do conflito primordial entre o governo divino e poderes rebeldes.',
-    coverImage: '/assets/imagens/interpretacao-biblica/verdadeiro-oficio-nachash-parte1.webp',
+    coverImage: '/assets/imagens/eixo-3-rebeliao-cosmica/o-verdadeiro-oficio-do-nachash-no-eden-parte-1.webp',
     accentClass: 'from-[#332114]/95 via-[#20140f]/70 to-[#0d0f14]/40',
     glowClass: 'shadow-[0_0_34px_rgba(255,135,84,0.12)]',
     Icon: Swords,
   },
   {
-    id: 'eixo-04-praticas-simbolos-liturgicos',
+    id: 'eixo-4-tecnologia-alianca',
     index: 4,
     title: 'Práticas, Símbolos e Liturgias',
     subtitle: 'Padrões de Aliança, Culto e Administração Sagrada',
     description: 'Leitura dos ritos bíblicos como tecnologia espiritual e linguagem do Templo celestial.',
-    coverImage: '/assets/imagens/interpretacao-biblica/portal-melquisedeque-dizimo-parte1.webp',
+    coverImage: '/assets/imagens/eixo-4-tecnologia-alianca/o-portal-de-melquisedeque-a-teologia-cosmica-do-dizimo-parte-1.webp',
     accentClass: 'from-[#34220f]/95 via-[#1f140f]/70 to-[#0d0f14]/40',
     glowClass: 'shadow-[0_0_34px_rgba(245,199,113,0.12)]',
     Icon: ScrollText,
   },
   {
-    id: 'eixo-05-linhagem-semente-corrupcao',
+    id: 'eixo-5-linhagem-semente',
     index: 5,
     title: 'Linhagem, Semente e Corrupção',
     subtitle: 'Genealogias, Fraturas e Disputas de Herança',
     description: 'Rastreio de linhagens espirituais, corrupção da semente e disputa pela promessa.',
-    coverImage: '/assets/imagens/interpretacao-biblica/portal-melquisedeque-dizimo-parte2.webp',
+    coverImage: '/assets/imagens/eixo-5-linhagem-semente/caim-semente-serpente-parte1.webp',
     accentClass: 'from-[#2d1f30]/95 via-[#1d1320]/70 to-[#0d0f14]/40',
     glowClass: 'shadow-[0_0_34px_rgba(197,142,214,0.12)]',
     Icon: Dna,
   },
   {
-    id: 'eixo-06-plano-redencao-restauracao',
+    id: 'eixo-6-plano-redencao',
     index: 6,
     title: 'Plano de Redenção e Restauração',
     subtitle: 'Do Éden à Nova Aliança',
     description: 'A arquitetura da redenção, o sacerdócio messiânico e a restauração de todas as coisas.',
-    coverImage: '/assets/imagens/interpretacao-biblica/portal-melquisedeque-dizimo-parte3.webp',
     accentClass: 'from-[#1a2e27]/95 via-[#101e18]/70 to-[#0d0f14]/40',
     glowClass: 'shadow-[0_0_34px_rgba(106,190,164,0.12)]',
     Icon: Cross,
   },
   {
-    id: 'eixo-07-escatologia-consumacao',
+    id: 'eixo-7-escatologia-consumacao',
     index: 7,
     title: 'Escatologia e Consumação',
     subtitle: 'Juízo, Reino e Plenitude Final',
     description: 'Panorama escatológico da consumação: juízo, reinado e Nova Criação.',
-    coverImage: '/assets/imagens/interpretacao-biblica/o verdadeiro oficio do nachash.webp',
     accentClass: 'from-[#2a232c]/95 via-[#171118]/70 to-[#0d0f14]/40',
     glowClass: 'shadow-[0_0_34px_rgba(219,157,245,0.12)]',
     Icon: Flame,
@@ -130,36 +127,7 @@ const AXIS_METADATA: AxisMeta[] = [
 
 const AXIS_BY_ID = Object.fromEntries(AXIS_METADATA.map((axis) => [axis.id, axis])) as Record<string, AxisMeta>;
 
-const SUBTHEME_LABEL_MAP: Record<string, string> = {
-  'nachash-no-eden': 'NACHASH NO ÉDEN',
-  'portal-de-melquisedeque': 'PORTAL DE MELQUISEDEQUE',
-};
-
-const STATIC_IMAGE_FILES = [
-  'verdadeiro-oficio-nachash-parte1',
-  'verdadeiro-oficio-nachash-parte2',
-  'verdadeiro-oficio-nachash-parte3',
-  'portal-melquisedeque-dizimo-parte1',
-  'portal-melquisedeque-dizimo-parte2',
-  'portal-melquisedeque-dizimo-parte3',
-  'o-verdadeiro-oficio-do-nachash',
-  'o-portal-de-melquisedeque',
-] as const;
-
-const IMAGE_SLUG_TO_PATH = STATIC_IMAGE_FILES.reduce<Record<string, string>>((acc, slug) => {
-  if (slug === 'o-verdadeiro-oficio-do-nachash') {
-    acc[slug] = '/image/interpretacao biblica/o verdadeiro oficio do nachash.webp';
-    return acc;
-  }
-  if (slug === 'o-portal-de-melquisedeque') {
-    acc[slug] = '/image/interpretacao biblica/O Portal de Melquisedeque.webp';
-    return acc;
-  }
-  acc[slug] = `/assets/imagens/interpretacao-biblica/${slug}.webp`;
-  return acc;
-}, {});
-
-const studyMarkdownModules = import.meta.glob('../content/interpretacao-biblica/eixo-*/**/*.md', {
+const studyMarkdownModules = import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -188,21 +156,40 @@ function slugify(raw: string): string {
     .replace(/(^-|-$)/g, '');
 }
 
-function toReadableLabel(rawSlug: string): string {
-  const mapped = SUBTHEME_LABEL_MAP[rawSlug];
-  if (mapped) return mapped;
-  return rawSlug
-    .split('-')
-    .map((word) => word.toUpperCase())
-    .join(' ');
-}
-
 function extractVolume(title: string, fileName: string): number {
   const fromTitle = title.match(/parte\s*(\d+)/i);
   if (fromTitle) return Number(fromTitle[1]);
   const fromFile = fileName.match(/parte\s*(\d+)/i);
   if (fromFile) return Number(fromFile[1]);
   return 1;
+}
+
+function formatRecentTitle(title: string): string {
+  const [head] = title.split(/\s[:\-–]\s|[:\-–]/);
+  return head?.trim() || title;
+}
+
+function normalizeSubtheme(raw: string): string {
+  return raw
+    .replace(/\s*[\-–]\s*parte\s*\d+.*$/i, '')
+    .replace(/:\s*.+$/, '')
+    .trim();
+}
+
+function toSubthemeDescription(subthemeId: string): string {
+  if (subthemeId.includes('nachash')) {
+    return 'A identidade e o ofício do Nachash no drama cósmico do Éden, da queda à consumação.';
+  }
+  if (subthemeId.includes('melquisedeque')) {
+    return 'O dízimo como linguagem litúrgica da aliança e administração espiritual do Reino.';
+  }
+  if (subthemeId.includes('fruto-proibido-de-caim')) {
+    return 'A disputa entre sementes, linhagem e corrupção na origem dos conflitos espirituais.';
+  }
+  if (subthemeId.includes('corte-de-yahweh') || subthemeId.includes('conselho-divino')) {
+    return 'Mapeamento da geografia invisível do conselho divino, seus ofícios e sua restauração em Cristo.';
+  }
+  return 'Série temática com estudos progressivos organizados por volume.';
 }
 
 function sortByNewest(a: InterpretationStudy, b: InterpretationStudy): number {
@@ -217,60 +204,34 @@ function sortByVolumeThenDate(a: InterpretationStudy, b: InterpretationStudy): n
   return sortByNewest(a, b);
 }
 
-function resolveImagePath(frontmatterImage: string | undefined, studySlug: string, axisCoverImage: string): { image: string; imageSlug: string } {
-  const imageField = frontmatterImage?.trim() ?? '';
-  if (!imageField) {
-    const fallbackSlug = slugify(studySlug);
-    const mapped = IMAGE_SLUG_TO_PATH[fallbackSlug] ?? axisCoverImage;
-    return { image: mapped, imageSlug: fallbackSlug };
-  }
-
-  if (/^https?:\/\//i.test(imageField) || imageField.startsWith('/')) {
-    return { image: imageField, imageSlug: slugify(imageField) };
-  }
-
-  const fileName = imageField.replace(/^.*[\\/]/, '');
-  const withoutExt = fileName.replace(/\.[a-z0-9]+$/i, '');
-  const imageSlug = slugify(withoutExt);
-  const mapped = IMAGE_SLUG_TO_PATH[imageSlug];
-  if (mapped) return { image: mapped, imageSlug };
-
-  return {
-    image: `/assets/imagens/interpretacao-biblica/${imageSlug}.webp`,
-    imageSlug,
-  };
-}
-
 function loadInterpretationStudies(): InterpretationStudy[] {
   return Object.entries(studyMarkdownModules)
     .map(([pathKey, content]) => {
       const normalizedPath = pathKey.replace(/\\/g, '/');
       const parts = normalizedPath.split('/');
-      const contentIndex = parts.findIndex((part) => part === 'interpretacao-biblica');
-      const axisId = parts[contentIndex + 1] ?? 'eixo-07-escatologia-consumacao';
-      const subthemeId = parts[contentIndex + 2] ?? 'geral';
+      const contentIndex = parts.findIndex((part) => part === 'eixos biblicos');
+      const axisId = parts[contentIndex + 1] ?? 'eixo-7-escatologia-consumacao';
       const fileName = parts[parts.length - 1] ?? '';
       const frontmatter = parseFrontmatter(content);
       const axis = AXIS_BY_ID[axisId] ?? AXIS_METADATA[6];
       const title = frontmatter.title || fileName.replace(/\.md$/i, '');
-      const studySlug = slugify(fileName.replace(/\.md$/i, ''));
-      const { image, imageSlug } = resolveImagePath(frontmatter.image, studySlug, axis.coverImage);
+      const subthemeSource = normalizeSubtheme(frontmatter.subtema || title || fileName.replace(/\.md$/i, ''));
+      const subthemeId = slugify(subthemeSource);
 
       return {
         title,
+        displayTitle: formatRecentTitle(title),
         description: frontmatter.description,
         date: frontmatter.date,
         pathKey,
         content,
         axisId: axis.id,
         axisTitle: axis.title,
-        axisCoverImage: axis.coverImage,
         subthemeId,
-        subthemeLabel: toReadableLabel(slugify(frontmatter.subtema || subthemeId)),
+        subthemeLabel: subthemeSource.toUpperCase(),
+        subthemeDescription: toSubthemeDescription(subthemeId),
         volume: extractVolume(title, fileName),
-        studySlug,
-        imageSlug,
-        image,
+        image: frontmatter.image?.trim() || undefined,
       };
     })
     .sort(sortByNewest);
@@ -298,6 +259,27 @@ function DragScrollRow({ children }: { children: ReactNode }) {
   );
 }
 
+function StudyImage({ src, alt, className }: { src?: string; alt: string; className: string }) {
+  const [broken, setBroken] = useState(false);
+
+  useEffect(() => {
+    setBroken(false);
+  }, [src]);
+
+  if (!src || broken) {
+    return <div className={`${className} bg-[#20242b]`} aria-label={alt} />;
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      onError={() => setBroken(true)}
+    />
+  );
+}
+
 export default function Bible() {
   const [selectedAxisId, setSelectedAxisId] = useState<string | null>(null);
   const [selectedStudy, setSelectedStudy] = useState<InterpretationStudy | null>(null);
@@ -317,17 +299,7 @@ export default function Bible() {
     return map;
   }, [studies]);
 
-  const recentStudies = useMemo(() => {
-    const seen = new Set<string>();
-    return studies.slice(0, 10).map((study) => {
-      const repeatedCover = seen.has(study.imageSlug);
-      seen.add(study.imageSlug);
-      return {
-        ...study,
-        previewImage: repeatedCover ? study.axisCoverImage : study.image,
-      };
-    });
-  }, [studies]);
+  const recentStudies = useMemo(() => studies.slice(0, 10), [studies]);
 
   const selectedAxis = selectedAxisId ? AXIS_BY_ID[selectedAxisId] : null;
 
@@ -339,6 +311,7 @@ export default function Bible() {
         acc[study.subthemeId] = {
           subthemeId: study.subthemeId,
           subthemeLabel: study.subthemeLabel,
+          subthemeDescription: study.subthemeDescription,
           studies: [],
         };
       }
@@ -381,15 +354,10 @@ export default function Bible() {
           <article
             className={`relative overflow-hidden rounded-2xl border border-white/10 h-44 ${selectedAxis.glowClass}`}
           >
-            <img
+            <StudyImage
               src={cover}
               alt={selectedAxis.title}
               className="absolute inset-0 w-full h-full object-cover opacity-45"
-              onError={(event) => {
-                const target = event.currentTarget;
-                target.onerror = null;
-                target.src = selectedAxis.coverImage;
-              }}
             />
             <div className={`absolute inset-0 bg-gradient-to-r ${selectedAxis.accentClass}`} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -435,7 +403,10 @@ export default function Bible() {
               <h3 className="font-headline text-lg font-black tracking-tight text-on-surface uppercase">
                 {group.subthemeLabel}
               </h3>
-              <p className="text-[10px] text-on-surface-variant/60 uppercase tracking-[0.12em] font-black mt-0.5">
+              <p className="mt-1 text-[10px] text-on-surface-variant/60 leading-snug max-w-xl font-medium">
+                {group.subthemeDescription}
+              </p>
+              <p className="text-[10px] text-on-surface-variant/55 uppercase tracking-[0.12em] font-black mt-1">
                 {group.studies.length} estudo{group.studies.length > 1 ? 's' : ''}
               </p>
             </div>
@@ -451,16 +422,7 @@ export default function Bible() {
                     className="gold-glow-hover min-w-[220px] max-w-[220px] rounded-xl border border-outline-variant/20 bg-surface-container-low overflow-hidden cursor-pointer hover:scale-[1.03] transition-transform duration-300 snap-start"
                   >
                     <div className="h-24 w-full border-b border-outline-variant/10">
-                      <img
-                        src={study.image}
-                        alt={study.title}
-                        className="w-full h-full object-cover"
-                        onError={(event) => {
-                          const target = event.currentTarget;
-                          target.onerror = null;
-                          target.src = study.axisCoverImage;
-                        }}
-                      />
+                      <StudyImage src={study.image} alt={study.title} className="w-full h-full object-cover" />
                     </div>
 
                     <div className="p-3">
@@ -516,7 +478,7 @@ export default function Bible() {
           BÍBLIA
         </h2>
         <p className="text-on-surface-variant/75 text-[11px] max-w-xl font-medium leading-relaxed">
-          Navegação profunda por 7 eixos de investigação. Selecione um eixo para entrar no hub temático em estilo streaming.
+          A Escritura é um mapa detalhado da realidade visível e invisível. Este painel organiza anos de investigação em 7 eixos estratégicos, permitindo uma imersão profunda na cosmologia bíblica, na geografia dos reinos espirituais e no governo dos coerdeiros de Cristo.
         </p>
       </header>
 
@@ -536,23 +498,14 @@ export default function Bible() {
               className="gold-glow-hover rounded-xl border border-outline-variant/15 bg-surface-container-low/80 backdrop-blur-sm px-2.5 py-2 flex items-center gap-2.5 cursor-pointer hover:scale-[1.01] transition-transform duration-300"
             >
               <div className="w-16 h-12 rounded-lg overflow-hidden border border-white/10 shrink-0">
-                <img
-                  src={study.previewImage}
-                  alt={study.title}
-                  className="w-full h-full object-cover"
-                  onError={(event) => {
-                    const target = event.currentTarget;
-                    target.onerror = null;
-                    target.src = study.axisCoverImage;
-                  }}
-                />
+                <StudyImage src={study.image} alt={study.title} className="w-full h-full object-cover" />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-[8px] uppercase tracking-[0.16em] font-black text-primary/80 mb-0.5 line-clamp-1">
                   {study.axisTitle}
                 </p>
                 <h4 className="font-headline text-[11px] font-extrabold tracking-tight text-on-surface line-clamp-1">
-                  {study.title}
+                  {study.displayTitle}
                 </h4>
                 <p className="text-[9px] text-on-surface-variant/65 line-clamp-1">
                   {study.subthemeLabel}
@@ -588,15 +541,10 @@ export default function Bible() {
               onClick={() => setSelectedAxisId(axis.id)}
               className={`gold-glow-hover group relative w-full h-44 rounded-2xl overflow-hidden cursor-pointer active:scale-[0.99] transition-all duration-300 border border-white/10 text-left ${axis.glowClass}`}
             >
-              <img
+              <StudyImage
                 src={cover}
                 alt={axis.title}
                 className="absolute inset-0 w-full h-full object-cover opacity-45 group-hover:opacity-55 group-hover:scale-105 transition-all duration-700"
-                onError={(event) => {
-                  const target = event.currentTarget;
-                  target.onerror = null;
-                  target.src = axis.coverImage;
-                }}
               />
               <div className={`absolute inset-0 bg-gradient-to-r ${axis.accentClass}`} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />

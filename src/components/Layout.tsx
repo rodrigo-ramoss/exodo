@@ -12,7 +12,7 @@ interface LayoutProps {
 
 export default function Layout({ children, currentScreen, setScreen }: LayoutProps) {
   const { photo } = useProfile();
-  const BLOG_URL = 'https://blog.seuprojeto.com';
+  const BLOG_URL = 'https://www.rodrigoramosvd.com/';
 
   const navItems = [
     { id: Screen.BIBLE, label: 'BÍBLIA', icon: BookOpen },

@@ -205,7 +205,7 @@ A Sabedoria de Provérbios é uma manifestação da segunda Pessoa da Trindade, 
 ### A Multiplicação do Pão de Eliseu
 Em 2 Reis 4:42-44, um homem traz a Eliseu "pão das primícias, vinte pães de cevada, e espigas verdes". Eliseu ordena que se dê ao povo para comer. O servo questiona: "Como hei de pôr isto diante de cem homens?" Eliseu insiste: *"Dá ao povo, para que coma; porque assim diz o Senhor: Comerão, e sobejará."*
 
-O milagre acontece. Vinte pães alimentam cem homens, e ainda sobra. Este é o arquétipo do Velho Testamento para a multiplicação dos pães por Jesus, que alimentou cinco mil com cinco pães e dois peixes, e ainda sobraram doze cestos cheios. O Banquete do Reino é um banquete de **abundância sobrenatural**.
+O milagre acontece. Vinte pães alimentam cem homens, e ainda sobra. Este é o arquétipo do Antigo Testamento para a multiplicação dos pães por Jesus, que alimentou cinco mil com cinco pães e dois peixes, e ainda sobraram doze cestos cheios. O Banquete do Reino é um banquete de **abundância sobrenatural**.
 
 ---
 

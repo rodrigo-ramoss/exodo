@@ -1,4 +1,4 @@
-import { useState, useRef, type ReactNode } from 'react';
+import { useState, useRef, useMemo, type ReactNode } from 'react';
 import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers } from 'lucide-react';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -12,6 +12,137 @@ interface BookItem {
   category: string;
   time: string;
   image?: string;
+}
+
+const livrariaMarkdownModules = import.meta.glob('/public/content/livraria/**/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
+
+const COVER_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg'] as const;
+
+function parseFrontmatter(markdown: string): Record<string, string> {
+  const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
+  const match = normalized.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---/);
+  if (!match) return {};
+
+  const result: Record<string, string> = {};
+  for (const line of match[1].split(/\r?\n/)) {
+    const item = line.match(/^\s*([A-Za-z_][\w-]*)\s*:\s*(.*?)\s*$/);
+    if (!item) continue;
+    result[item[1].toLowerCase()] = item[2].replace(/^["']|["']$/g, '');
+  }
+  return result;
+}
+
+function slugify(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+function normalizeTitlePreservingPunctuation(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function pickCategoryByFolder(folder: string): string {
+  const key = folder.toLowerCase();
+  const dynamicMap: Array<[string, string]> = [
+    ['serie - o codigo dos arquetipos', 'TIPOLOGIA BÍBLICA'],
+    ['serie - o codigo do jardim', 'Série — O Código do Jardim'],
+    ['serie - o conselho do altissimo', 'Série — O Conselho do Altíssimo'],
+    ['serie - sombras do reino de deus', 'SOMBRAS DO REINO DE DEUS'],
+    ['serie - a identidade do eterno', 'Série — A Identidade do Eterno'],
+    ['serie - a invecao do pecado', 'Série — A Invenção do Pecado'],
+    ['serie - a verdadeira historia da igreja', 'Série — A Verdadeira História da Igreja'],
+    ['serie - 1 enoque', 'A REVELAÇÃO DE ENOQUE'],
+    ['trilogia - o mapa da tempestade', 'Trilogia — O Mapa da Tempestade'],
+    ['trilogia - o estrangeiro prospero', 'Trilogia — O Estrangeiro Próspero'],
+    ['trilogia - a ciencia dos tempos', 'Trilogia — A Ciência dos Tempos'],
+    ['trilogia - a marca', 'Trilogia — A Marca'],
+    ['trilogia - o canon oculto', 'Trilogia — O Cânon Oculto'],
+    ['trilogia - o veu rasgado', 'Trilogia — O Véu Rasgado'],
+    ['trilogia - a coroa roubada', 'Trilogia — A Coroa Roubada'],
+  ];
+
+  for (const [matchFolder, category] of dynamicMap) {
+    if (key.includes(matchFolder)) return category;
+  }
+
+  return folder;
+}
+
+function inferBookCoverCandidates(frontmatter: Record<string, string>, title: string, slug: string): string[] {
+  const candidates = new Set<string>();
+  const fromMeta = (frontmatter.image || frontmatter.thumbnail || '').trim();
+
+  if (fromMeta) {
+    if (/^https?:\/\//i.test(fromMeta) || fromMeta.startsWith('/')) {
+      candidates.add(fromMeta);
+    } else {
+      candidates.add(`/image/livraria/${fromMeta.replace(/^.*[\\/]/, '')}`);
+    }
+  }
+
+  const normalizedTitle = slugify(title).replace(/-/g, ' ');
+  const normalizedTitleNoArticle = normalizedTitle.replace(/^(o|a|os|as)\s+/, '');
+  const slugFileName = slug.split('/').pop() ?? slug;
+  const normalizedSlug = slugify(slugFileName.replace(/^ebook\s*\d+\s*-\s*/i, '').replace(/^livro\s*\d+\s*-\s*/i, '')).replace(/-/g, ' ');
+  const rawStemFromTitle = normalizeTitlePreservingPunctuation(title).replace(/^(o|a|os|as)\s+/, '');
+  const rawStemFromFile = normalizeTitlePreservingPunctuation(
+    slugFileName.replace(/\.md$/i, '').replace(/^ebook\s*\d+\s*-\s*/i, '').replace(/^livro\s*\d+\s*-\s*/i, ''),
+  ).replace(/^(o|a|os|as)\s+/, '');
+
+  const variantStems = new Set<string>([
+    normalizedTitle,
+    normalizedTitleNoArticle,
+    normalizedSlug,
+    rawStemFromTitle,
+    rawStemFromFile,
+  ]);
+  for (const stem of variantStems) {
+    for (const extension of COVER_EXTENSIONS) {
+      candidates.add(`/image/livraria/${stem}.${extension}`);
+    }
+  }
+
+  return Array.from(candidates);
+}
+
+function discoverBooksFromMarkdown(): BookItem[] {
+  return Object.entries(livrariaMarkdownModules).map(([pathKey, content]) => {
+    const normalized = pathKey.replace(/\\/g, '/');
+    const marker = '/public/content/livraria/';
+    const relative = normalized.includes(marker) ? normalized.slice(normalized.indexOf(marker) + marker.length) : normalized;
+
+    const parts = relative.split('/').filter(Boolean);
+    const fileName = parts[parts.length - 1] ?? '';
+    const folder = parts[0] ?? 'livraria';
+    const slug = relative.replace(/\.md$/i, '');
+    const frontmatter = parseFrontmatter(content);
+    const firstHeading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
+    const title = frontmatter.title || firstHeading || fileName.replace(/\.md$/i, '');
+    const cover = inferBookCoverCandidates(frontmatter, title, slug)[0];
+
+    return {
+      title,
+      slug,
+      description: frontmatter.description || `Volume da coleção ${folder}.`,
+      date: frontmatter.date || '2026-04-18',
+      category: frontmatter.category || pickCategoryByFolder(folder),
+      time: frontmatter.time || 'LIVRO',
+      image: cover,
+    };
+  });
 }
 
 type SectionKey =
@@ -92,6 +223,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
   'Trilogia — A Marca':                       'IA & APOCALIPSE',
   'Trilogia — O Véu Rasgado':                 'IA & APOCALIPSE',
+  'Trilogia — A Coroa Roubada':               'MUNDO ESPIRITUAL',
 };
 
 // Short display labels per series
@@ -103,6 +235,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — A Invenção do Pecado':             'A Invenção do Pecado',
   'Trilogia — O Cânon Oculto':                'O Cânon Oculto',
   'Trilogia — O Véu Rasgado':                 'O Véu Rasgado',
+  'Trilogia — A Coroa Roubada':               'A Coroa Roubada',
   'A REVELAÇÃO DE ENOQUE':                    'A Revelação de Enoque',
   'SOMBRAS DO REINO DE DEUS':                 'Sombras do Reino de Deus',
   'Série — O Conselho do Altíssimo':          'O Conselho do Altíssimo',
@@ -126,6 +259,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Trilogia — A Ciência dos Tempos': 'Discernimento profético e estratégico para ler ciclos históricos, interpretar sinais e agir com precisão em tempos críticos.',
   'Trilogia — A Marca': 'Uma análise bíblica e contemporânea sobre controle, tecnologia e os mecanismos de conformação espiritual dos últimos tempos.',
   'Trilogia — O Véu Rasgado': 'Uma investigação sobre Babel, CERN e conhecimento proibido na fronteira entre tecnologia, mundo invisível e profecia bíblica.',
+  'Trilogia — A Coroa Roubada': 'Uma trilogia sobre conselho divino, queda dos príncipes e restauração da autoridade dos filhos em Cristo.',
 };
 
 function buildAutoSeriesDescription(category: string, items: BookItem[]): string {
@@ -195,6 +329,11 @@ function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: numb
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
           src={item.image || `https://picsum.photos/seed/${item.slug}/400/600`}
           alt={item.title}
+          onError={(event) => {
+            const target = event.currentTarget;
+            target.onerror = null;
+            target.src = `https://picsum.photos/seed/${item.slug}/400/600`;
+          }}
         />
       </div>
       <div className="mt-3 px-1 select-none">
@@ -307,10 +446,17 @@ export default function Bookstore() {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const { data: books, loading, error } = useFetch<BookItem[]>('/content/livraria/index.json');
+  const discoveredBooks = useMemo(() => discoverBooksFromMarkdown(), []);
+  const mergedBooks = useMemo(() => {
+    const map = new Map<string, BookItem>();
+    for (const discovered of discoveredBooks) map.set(discovered.slug, discovered);
+    for (const indexed of books ?? []) map.set(indexed.slug, indexed);
+    return Array.from(map.values());
+  }, [books, discoveredBooks]);
 
   // Group books by top-level section
   const booksBySection = SECTION_ORDER.reduce((acc, sec) => {
-    acc[sec] = (books ?? []).filter((b) => CATEGORY_TO_SECTION[b.category] === sec);
+    acc[sec] = mergedBooks.filter((b) => CATEGORY_TO_SECTION[b.category] === sec);
     return acc;
   }, {} as Record<SectionKey, BookItem[]>);
 
