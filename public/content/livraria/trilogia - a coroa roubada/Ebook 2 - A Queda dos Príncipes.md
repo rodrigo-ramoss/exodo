@@ -1,3 +1,11 @@
+---
+title: "A Queda dos Príncipes"
+description: "Dos Vigilantes rebeldes aos tronos vazios da terra."
+date: "2026-04-18"
+category: "Trilogia — A Coroa Roubada"
+time: "LIVRO"
+image: "/image/livraria/a queda dos principes.webp"
+---
 # A Queda dos Príncipes
 ## Dos Vigilantes Rebeldes aos Tronos Vazios da Terra
 *Rodrigo Ramos — Voz do Deserto*

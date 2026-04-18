@@ -4,7 +4,7 @@ date: "2026-04-17"
 versiculos: "Gênesis 3:1-7; Gênesis 2:25; Ezequiel 28:12-15 (alusão); Números 21:8-9"
 book: "Gênesis"
 description: "Investigação filológica e arquetípica da figura do Nachash no relato do Éden, demonstrando como o texto hebraico em sua camada literal já revela um ser celestial inteligente, brilhante e hostil à ordem divina, lançando as bases para a compreensão do ofício do Vigilante Rebelde."
-image: "/assets/imagens/eixo-3-rebeliao-cosmica/o-verdadeiro-oficio-do-nachash-no-eden-parte-1.webp"
+image: "/assets/imagens/eixos-biblicos/eixo-3-rebeliao-cosmica/o-verdadeiro-oficio-do-nachash-no-eden-parte-1.webp"
 ---
 
 # PARTE 1 – PESHAT & REMEZ: A SEMENTE TEXTUAL E O ARQUÉTIPO DO NACHASH
@@ -187,3 +187,4 @@ O arquétipo do **Vigilante Rebelde** está firmemente estabelecido no cânon he
 A semente foi plantada. Na próxima parte, veremos a árvore do conhecimento proibido crescer em plena floração apocalíptica.
 
 **Sela.**
+

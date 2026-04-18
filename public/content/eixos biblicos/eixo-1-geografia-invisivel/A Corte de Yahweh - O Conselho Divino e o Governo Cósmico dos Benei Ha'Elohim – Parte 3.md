@@ -5,7 +5,7 @@ versiculos: "Daniel 7:9-14, 18, 22, 27; Mateus 28:18-20; 1 Coríntios 6:2-3; Ef�
 book: "Salmos / Deuteronômio"
 eixo: "Eixo 1 – Geografia e Estruturas do Mundo Invisível"
 description: "A revelação do Sod: a restauração do Conselho Divino em Cristo, a Igreja como a assembleia dos primogênitos, a autoridade dos coerdeiros para julgar os anjos rebeldes, e a consumação do governo cósmico na Nova Jerusalém."
-image: "/assets/imagens/eixo-1-geografia-invisivel/a-corte-de-yahweh-parte-3.webp"
+image: "/assets/imagens/eixos-biblicos/eixo-1-geografia-invisivel/a-corte-de-yahweh-parte-3.webp"
 ---
 
 # PARTE 3 – SOD: A RESTAURAÇÃO DO CONSELHO E O DESTINO DOS COERDEIROS
@@ -195,3 +195,4 @@ O estudo do Conselho Divino não é uma curiosidade acadêmica. É um chamado à
 Que o Espírito Santo nos conceda **olhos para ver** a assembleia celestial da qual já fazemos parte pela fé. Que nos encha de **ousadia santa** para exercer a autoridade que nos foi delegada sobre os poderes das trevas. E que nos sustente com a **esperança gloriosa** de que, em breve, nos sentaremos com Cristo em Seu trono e reinaremos com Ele pelos séculos dos séculos.
 
 **Sela. Amém.**
+

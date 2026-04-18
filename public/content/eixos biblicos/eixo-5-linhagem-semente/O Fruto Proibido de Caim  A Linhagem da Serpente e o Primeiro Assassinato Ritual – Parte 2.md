@@ -5,7 +5,7 @@ versiculos: "Gênesis 4:1-16; 1 Enoque 69:6; Jubileus 4:1-9; Targum Pseudo-Jonat
 book: "Gênesis"
 eixo: "Eixo 5 – A Linhagem da Semente e a Corrupção da Carne"
 description: "Expansão do tema da linhagem de Caim pela literatura do Segundo Templo e tradição rabínica, revelando a crença antiga de que Caim era filho biológico ou espiritual do Nachash (Gadreel/Samael), fruto da corrupção edênica e primeiro elo da semente da serpente."
-image: "/assets/imagens/eixo-5-linhagem-semente/caim-semente-serpente-parte2.webp"
+image: "/assets/imagens/eixos-biblicos/eixo-5-linhagem-semente/caim-semente-serpente-parte2.webp"
 ---
 
 # PARTE 2 – DERASH: A IDENTIDADE DO PAI DE CAIM NA TRADIÇÃO DO SEGUNDO TEMPLO
@@ -202,3 +202,4 @@ O *Derash* nos mostrou a origem da corrupção e a identidade do falso primogên
 Na **Parte 3 (*Sod*)**, ascenderemos ao nível do Mistério Revelado para contemplar como Deus, em Sua sabedoria, **preservou a linhagem da Semente da Mulher** através de Sete, Noé, Abraão e, finalmente, Jesus Cristo. Veremos como o sangue de Abel, que clamava por vingança, é superado pelo **sangue de Cristo, que clama por redenção**. E compreenderemos o destino final das duas sementes: a **semente da serpente** será julgada e destruída, enquanto a **Semente da Mulher** — Cristo e Seus coerdeiros — reinará eternamente na Nova Criação.
 
 **Sela.**
+

@@ -1,3 +1,11 @@
+---
+title: "A Restauração dos Filhos"
+description: "Como a Igreja recupera o ofício perdido de Elohim em Cristo."
+date: "2026-04-18"
+category: "Trilogia — A Coroa Roubada"
+time: "LIVRO"
+image: "/image/livraria/a restauracao dos filhos.webp"
+---
 # A Restauração dos Filhos
 ## Como a Igreja Recupera o Ofício Perdido de *Elohim* em Cristo
 *Rodrigo Ramos — Voz do Deserto*

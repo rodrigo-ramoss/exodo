@@ -4,7 +4,7 @@ date: "2026-04-17"
 versiculos: "Gênesis 3:14-24; Salmo 82; Ezequiel 28:11-19; Apocalipse 12:7-12; 20:1-3; Romanos 16:20; 1 Coríntios 6:2-3"
 book: "Gênesis"
 description: "A revelação do Sod: a geografia invisível do Éden como montanha cósmica e templo primordial, o Nachash como querubim caído no Conselho Divino, e a vitória escatológica dos coerdeiros de Cristo sobre a antiga serpente."
-image: "/assets/imagens/eixo-3-rebeliao-cosmica/o-verdadeiro-oficio-do-nachash-no-eden-parte-3.webp"
+image: "/assets/imagens/eixos-biblicos/eixo-3-rebeliao-cosmica/o-verdadeiro-oficio-do-nachash-no-eden-parte-3.webp"
 ---
 
 # PARTE 3 – SOD: O MISTÉRIO REVELADO E O DESTINO DOS COERDEIROS
@@ -191,3 +191,4 @@ O ofício do *Nachash* no Éden foi o de **Instrutor do Conhecimento Proibido, C
 Que os olhos dos Coerdeiros sejam abertos para discernir o mapa do mundo invisível, para resistir aos enganos da antiga serpente, e para viver na expectativa gloriosa do dia em que pisaremos as pedras de fogo do monte santo, na presença Daquele que é a Luz eterna.
 
 **Sela. Amém.**
+

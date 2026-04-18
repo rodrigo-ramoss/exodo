@@ -5,7 +5,7 @@ versiculos: "Salmo 82:1-8; 89:5-7; Deuteronômio 32:8-9 (LXX/Qumran); Jó 1:6-12
 book: "Salmos / Deuteronômio"
 eixo: "Eixo 1 – Geografia e Estruturas do Mundo Invisível"
 description: "Investigação filológica e exegética dos textos fundantes do Conselho Divino no Antigo Testamento, revelando a assembleia celestial dos Benei Ha'Elohim como o governo cósmico de Yahweh e a base para a compreensão da guerra espiritual e da herança dos santos."
-image: "/assets/imagens/eixo-1-geografia-invisivel/a-corte-de-yahweh-parte-1.webp"
+image: "/assets/imagens/eixos-biblicos/eixo-1-geografia-invisivel/a-corte-de-yahweh-parte-1.webp"
 ---
 
 # PARTE 1 – PESHAT & REMEZ: OS FUNDAMENTOS TEXTUAIS DO CONSELHO NO CÂNON HEBRAICO
@@ -198,3 +198,4 @@ Mas o *Remez* também nos enche de esperança. A **história da redenção é a 
 Na **Parte 3 (*Sod*)**, contemplaremos o destino final: os **coerdeiros de Cristo** sentados no trono, julgando os anjos e reinando sobre as nações na Nova Jerusalém. O Conselho Divino não será mais uma realidade oculta; será a **assembleia visível e gloriosa** de todos os redimidos ao redor do Trono do Cordeiro.
 
 **Sela.**
+

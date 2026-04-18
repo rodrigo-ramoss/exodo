@@ -4,7 +4,7 @@ date: "2026-04-17"
 versiculos: "Gênesis 14:18-20; 28:20-22; Levítico 27:30-33; Números 18:21-32; Deuteronômio 14:22-29; Malaquias 3:8-12; Hebreus 7:1-10"
 book: "Malaquias"
 description: "Investigação filológica e arquetípica do dízimo no Antigo Testamento, demonstrando que o ato de devolver o décimo é um reconhecimento da soberania divina sobre a criação e uma sombra terrena de uma transação espiritual que ocorre no Conselho Divino."
-image: "/assets/imagens/eixo-4-tecnologia-alianca/o-portal-de-melquisedeque-a-teologia-cosmica-do-dizimo-parte-1.webp"
+image: "/assets/imagens/eixos-biblicos/eixo-4-tecnologia-alianca/o-portal-de-melquisedeque-a-teologia-cosmica-do-dizimo-parte-1.webp"
 ---
 
 # PARTE 1 – PESHAT & REMEZ: A SEMENTE TERRENA E O ARQUÉTIPO DO RETORNO
@@ -229,3 +229,4 @@ O *Remez* nos mostrou que, por trás de cada detalhe do *Peshat*, há uma **real
 Na **Parte 2 (*Derash*)**, mergulharemos na **Biblioteca do Segundo Templo** para expandir dramaticamente essa visão. Veremos como os textos de Qumran, Jubileus e a tradição enoquiana revelam o **Templo como um centro de distribuição cósmica**, os **anjos como administradores dos dízimos**, e o **devedor como um principado demoníaco** que só pode ser contido pela fidelidade da aliança. A semente que plantamos no *Peshat/Remez* brotará em plena floração apocalíptica.
 
 **Sela.**
+

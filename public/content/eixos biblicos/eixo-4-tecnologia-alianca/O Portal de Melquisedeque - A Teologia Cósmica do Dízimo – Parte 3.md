@@ -4,7 +4,7 @@ date: "2026-04-17"
 versiculos: "Hebreus 7:1-28; Gênesis 14:18-20; Salmo 110:4; Malaquias 3:8-12; Apocalipse 5:9-10; 21:24-26; 1 Coríntios 9:13-14; 2 Coríntios 9:6-15"
 book: "Malaquias"
 description: "A revelação do Sod: o dízimo como participação na Ordem de Melquisedeque, o devorador como principado vencido, as janelas do céu como portal de tráfego angelical, e a autoridade dos coerdeiros de Cristo para administrar as riquezas do Reino na Nova Criação."
-image: "/assets/imagens/eixo-4-tecnologia-alianca/o-portal-de-melquisedeque-a-teologia-cosmica-do-dizimo-parte-3.webp"
+image: "/assets/imagens/eixos-biblicos/eixo-4-tecnologia-alianca/o-portal-de-melquisedeque-a-teologia-cosmica-do-dizimo-parte-3.webp"
 ---
 
 # PARTE 3 – SOD: O MISTÉRIO DO PORTAL E A AUTORIDADE DOS COERDEIROS
@@ -182,3 +182,4 @@ Para os **Coerdeiros de Cristo**, o dízimo não é uma doutrina para debate; é
 Que os olhos dos Coerdeiros sejam abertos para ver o Portal. Que seus corações sejam movidos pela alegria de participar da economia do céu. E que suas mãos sejam fiéis em trazer todos os dízimos à Casa do Tesouro, para que haja mantimento na Casa de Deus, as janelas do céu se abram, o devorador seja repreendido, e o Nome do Senhor seja glorificado em toda a terra.
 
 **Sela. Amém.**
+

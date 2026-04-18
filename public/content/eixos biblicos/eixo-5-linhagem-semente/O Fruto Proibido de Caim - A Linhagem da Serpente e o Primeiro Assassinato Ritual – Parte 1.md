@@ -5,7 +5,7 @@ versiculos: "Gênesis 4:1-16; Gênesis 3:15; 1 João 3:12; Judas 11; Hebreus 11:
 book: "Gênesis"
 eixo: "Eixo 5 – A Linhagem da Semente e a Corrupção da Carne"
 description: "Investigação filológica e arquetípica da figura de Caim no relato de Gênesis 4, revelando-o como o protótipo da 'semente da serpente' — fruto da corrupção edênica e primeiro representante da linhagem que se opõe à Semente da Mulher."
-image: "/assets/imagens/eixo-5-linhagem-semente/caim-semente-serpente-parte1.webp"
+image: "/assets/imagens/eixos-biblicos/eixo-5-linhagem-semente/caim-semente-serpente-parte1.webp"
 ---
 
 # PARTE 1 – PESHAT & REMEZ: O ARQUÉTIPO DO FALSO PRIMOGÊNITO
@@ -223,3 +223,4 @@ Nesta primeira parte, demonstramos, com base exclusiva no *Peshat* e *Remez* do 
 Na **Parte 2 (*Derash*)**, mergulharemos na **Biblioteca do Segundo Templo** para responder à pergunta mais perturbadora: **Quem era o pai de Caim?** A tradição judaica antiga, preservada em 1 Enoque, Jubileus, nos Targumim e no Midrash, revela uma resposta chocante e iluminadora. Veremos como a "semente da serpente" não é apenas uma metáfora espiritual, mas, segundo essas fontes, o resultado de uma **corrupção biológica e espiritual** no próprio Éden.
 
 **Sela.**
+

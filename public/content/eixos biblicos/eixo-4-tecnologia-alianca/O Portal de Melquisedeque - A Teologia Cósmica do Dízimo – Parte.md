@@ -4,7 +4,7 @@ date: "2026-04-17"
 versiculos: "Gênesis 14:18-20; Números 18:21-32; Malaquias 3:8-12; Jubileus 13:25-27; 32:1-15; 1 Enoque 89:50-75; 11QMelch; 11QTemple; Neemias 10:37-39"
 book: "Malaquias"
 description: "Expansão do tema do dízimo pela literatura do Segundo Templo e Manuscritos do Mar Morto, revelando o Templo como centro de distribuição cósmica, os sacerdotes como representantes dos anjos e o dízimo como combustível da guerra espiritual contra os principados devoradores."
-image: "/assets/imagens/eixo-4-tecnologia-alianca/o-portal-de-melquisedeque-a-teologia-cosmica-do-dizimo-parte-2.webp"
+image: "/assets/imagens/eixos-biblicos/eixo-4-tecnologia-alianca/o-portal-de-melquisedeque-a-teologia-cosmica-do-dizimo-parte-2.webp"
 ---
 
 # PARTE 2 – DERASH: O TEMPLO CÓSMICO E A LOGÍSTICA DOS VIGILANTES
@@ -192,3 +192,4 @@ O *Derash* nos mostrou que o dízimo não é uma mera transação financeira; é
 Na **Parte 3 (*Sod*)**, daremos o passo final. Ascenderemos ao nível do **Mistério Revelado** para contemplar como o dízimo se relaciona com a **Ordem de Melquisedeque na Nova Aliança**, como Jesus Cristo cumpre e transfigura o dízimo, e como os **Coerdeiros de Cristo** participam dessa realidade cósmica como **reis e sacerdotes** que administram as riquezas do Reino. Veremos que o dízimo não é uma obrigação legalista, mas um **privilégio sacerdotal**, um **portal aberto** para a provisão sobrenatural e a autoridade sobre o devorador.
 
 **Sela.**
+

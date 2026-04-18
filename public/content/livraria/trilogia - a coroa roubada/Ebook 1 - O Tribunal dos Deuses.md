@@ -1,3 +1,11 @@
+---
+title: "O Tribunal dos Deuses"
+description: "Exegese profunda do Salmo 82 e da citação de Jesus em João 10."
+date: "2026-04-18"
+category: "Trilogia — A Coroa Roubada"
+time: "LIVRO"
+image: "/image/livraria/o tribunal dos deuses.webp"
+---
 # O Tribunal dos Deuses
 ## Exegese Profunda do Salmo 82 e a Citação de Jesus em João 10
 *Rodrigo Ramos — Voz do Deserto*

@@ -5,7 +5,7 @@ versiculos: "Deuteronômio 32:8-9 (LXX/Qumran); Salmo 82; 1 Enoque 1–16; 89–
 book: "Salmos / Deuteronômio"
 eixo: "Eixo 1 – Geografia e Estruturas do Mundo Invisível"
 description: "Expansão do tema do Conselho Divino pela literatura apocalíptica do Segundo Templo e Manuscritos do Mar Morto, revelando a hierarquia angelical, a guerra entre os Filhos da Luz e das Trevas, e o papel de Melquisedeque como sumo sacerdote do Conselho celestial."
-image: "/assets/imagens/eixo-1-geografia-invisivel/a-corte-de-yahweh-parte-2.webp"
+image: "/assets/imagens/eixos-biblicos/eixo-1-geografia-invisivel/a-corte-de-yahweh-parte-2.webp"
 ---
 
 # PARTE 2 – DERASH: A ASSEMBLEIA CELESTIAL NA LITERATURA DO SEGUNDO TEMPLO E EM QUMRAN
@@ -181,3 +181,4 @@ Na **Parte 3 (*Sod*)**, daremos o passo final. Contemplaremos como **Jesus Crist
 O Conselho Divino não é uma curiosidade teológica do Antigo Testamento. É o **destino glorioso dos coerdeiros de Cristo**, que reinarão com Ele sobre a Nova Criação.
 
 **Sela.**
+

@@ -4,7 +4,7 @@ date: "2026-04-17"
 versiculos: "1 Enoque 6–11; 69:6; Jubileus 3–5; Gênesis Apócrifo (1Q20); Apocalipse de Abraão 13; 23"
 book: "Gênesis"
 description: "Investigação aprofundada da tradição do Segundo Templo sobre a identidade e o ofício do Nachash, revelando-o como Gadreel, o Vigilante que desencaminhou Eva, e Azazel, o líder da corrupção tecnológica e espiritual da humanidade."
-image: "/assets/imagens/eixo-3-rebeliao-cosmica/o-verdadeiro-oficio-do-nachash-no-eden-parte-2.webp"
+image: "/assets/imagens/eixos-biblicos/eixo-3-rebeliao-cosmica/o-verdadeiro-oficio-do-nachash-no-eden-parte-2.webp"
 ---
 
 # PARTE 2 – DERASH: A REBELIÃO CÓSMICA NA BIBLIOTECA DO SEGUNDO TEMPLO
@@ -214,3 +214,4 @@ Esta tradição não é uma invenção tardia ou uma “mitologia” pagã. Ela 
 Na terceira e última parte de nosso estudo (*Sod*), ascenderemos ao nível do **Mistério Revelado**. Lá, integraremos tudo o que aprendemos no *Peshat*, *Remez* e *Derash* para contemplar a **geografia invisível do Éden**, o lugar do *Nachash* no **Conselho Divino** e as **implicações cósmicas para os Coerdeiros de Cristo**. Veremos como o ofício do *Nachash* é derrotado pelo ofício do **Segundo Adão**, e como a **Semente da Mulher** esmaga a cabeça da antiga serpenta, restaurando o acesso à Árvore da Vida.
 
 **Sela.**
+

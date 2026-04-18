@@ -5,7 +5,7 @@ versiculos: "Gênesis 4:25-26; 5:1-32; Mateus 13:24-30, 36-43; Hebreus 12:22-24;
 book: "Gênesis"
 eixo: "Eixo 5 – A Linhagem da Semente e a Corrupção da Carne"
 description: "A revelação do Sod: a substituição de Abel por Sete como restauração da linhagem sagrada, o sangue que clama por redenção versus o sangue que clama por vingança, a parábola do joio e do trigo como explicação da coexistência das sementes, e a vitória final da Semente da Mulher sobre a semente da serpente."
-image: "/assets/imagens/eixo-5-linhagem-semente/caim-semente-serpente-parte3.webp"
+image: "/assets/imagens/eixos-biblicos/eixo-5-linhagem-semente/caim-semente-serpente-parte3.webp"
 ---
 
 # PARTE 3 – SOD: O MISTÉRIO DAS DUAS SEMENTES E O DESTINO DOS COERDEIROS
@@ -229,3 +229,4 @@ O **Fruto Proibido de Caim** nos ensina que a história humana é um campo de ba
 Que o Espírito Santo nos conceda **olhos para discernir** as duas sementes em nosso tempo, **corações para amar** os irmãos como Abel não pôde amar Caim, e **fé para perseverar** até o dia da ceifa, quando resplandeceremos como o sol no Reino de nosso Pai.
 
 **Sela. Amém.**
+
