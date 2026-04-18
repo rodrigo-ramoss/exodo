@@ -1,3 +1,12 @@
+---
+title: "A Dança dos Ciclos"
+description: "A precessão dos equinócios e o calendário de Deus em uma leitura bíblica dos ciclos do tempo."
+date: "2026-04-18"
+category: "Série — O Código das Eras"
+time: "LIVRO"
+image: "/image/livraria/a danca dos ciclos.webp"
+---
+
 # A Dança dos Ciclos
 ## A Precessão dos Equinócios e o Calendário de Deus
 *Rodrigo Ramos — Voz do Deserto*
