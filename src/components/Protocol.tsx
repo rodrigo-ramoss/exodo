@@ -2,6 +2,7 @@ import { useState, useRef, type ReactNode } from 'react';
 import { Check, Shield } from 'lucide-react';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
+import { AppImage } from './AppImage';
 
 interface ApoBook {
   title: string;
@@ -66,7 +67,7 @@ function BookCard({ book, index, onSelect }: { book: ApoBook; index: number; onS
       className="group shrink-0 w-[148px] sm:w-[168px] flex flex-col cursor-pointer active:scale-95 transition-transform snap-start"
     >
       <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden shadow-2xl border border-outline-variant/10 bg-surface-container-high group-hover:border-primary/50 transition-colors">
-        <img
+        <AppImage
           src={book.image}
           alt={book.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"

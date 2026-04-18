@@ -2,6 +2,7 @@ import { ArrowRight, Shield, Star } from 'lucide-react';
 import { Screen } from '../types';
 import { useFetch } from '../hooks/useFetch';
 import { useProfile } from '../state/ProfileContext';
+import { AppImage } from './AppImage';
 
 interface StudyItem {
   title: string;
@@ -20,6 +21,14 @@ interface HomeProps {
 export default function Home({ onNavigate }: HomeProps) {
   const { data: studies, loading: loadingStudies } = useFetch<StudyItem[]>('/content/mana/index.json');
   const { name: profileName } = useProfile();
+  const heroImage = '/image/livraria/a sabedoria do deserto.webp';
+  const apocryphaImage = '/image/apocrifos/o livro dos vigilantes.webp';
+  const bookstoreImage = '/image/livraria/o mapa ants da tempestade.webp';
+
+  const toCssImageUrl = (path?: string, fallback = '/image/estudos/A espera que renova.webp') => {
+    const safePath = encodeURI(path || fallback);
+    return `url('${safePath}')`;
+  };
 
   return (
     <div className="flex flex-col">
@@ -27,7 +36,7 @@ export default function Home({ onNavigate }: HomeProps) {
       <section className="relative h-[480px] w-full overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://picsum.photos/seed/exodo-hero/1200/800?blur=1')" }}
+          style={{ backgroundImage: toCssImageUrl(heroImage) }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
@@ -70,7 +79,7 @@ export default function Home({ onNavigate }: HomeProps) {
         >
           <div 
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800')" }}
+            style={{ backgroundImage: toCssImageUrl(apocryphaImage) }}
           ></div>
           <div className="absolute inset-0 bg-gradient-to-r from-coal via-coal/80 to-transparent"></div>
           <div className="relative h-full flex flex-col justify-center p-6">
@@ -112,7 +121,7 @@ export default function Home({ onNavigate }: HomeProps) {
             >
               <div 
                 className="h-28 bg-cover bg-center relative"
-                style={{ backgroundImage: `url('${study.image || `https://picsum.photos/seed/${study.slug}/600/400`}')` }}
+                style={{ backgroundImage: toCssImageUrl(study.image) }}
               >
                 <div className="absolute top-3 left-3 bg-primary-container/90 backdrop-blur-sm text-[8px] font-black px-2 py-1 rounded-md text-on-primary-container uppercase tracking-wider">
                   {study.category}
@@ -174,7 +183,7 @@ export default function Home({ onNavigate }: HomeProps) {
               className="interactive-card gold-glow-hover min-w-[120px] h-[80px] bg-surface-container-high rounded-2xl flex flex-col items-center justify-center gap-1 hover:bg-surface-bright transition-all cursor-pointer border border-outline-variant/5 active:scale-95"
             >
               <div className="w-6 h-6 rounded-md overflow-hidden mb-1">
-                <img src={doutrina.image} alt={doutrina.title} className="w-full h-full object-cover" />
+                <AppImage src={doutrina.image} alt={doutrina.title} className="w-full h-full object-cover" />
               </div>
               <span className="font-headline text-[9px] font-bold uppercase tracking-widest px-2 text-center line-clamp-1">{doutrina.title}</span>
             </div>
@@ -190,7 +199,7 @@ export default function Home({ onNavigate }: HomeProps) {
         >
           <div 
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url('https://picsum.photos/seed/bookstore/800/600')" }}
+            style={{ backgroundImage: toCssImageUrl(bookstoreImage) }}
           ></div>
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent"></div>
           <div className="relative h-full flex flex-col justify-center p-6">

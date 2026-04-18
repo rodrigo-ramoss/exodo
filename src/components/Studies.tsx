@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Search, Star, Clock } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 import { useFetch } from '../hooks/useFetch';
+import { AppImage } from './AppImage';
 
 interface StudyItem {
   title: string;
@@ -227,7 +228,7 @@ export default function Studies() {
                 onClick={() => setSelectedStudy(item)}
                 className="interactive-card gold-glow-hover relative aspect-[16/10] rounded-2xl overflow-hidden group cursor-pointer active:scale-95 transition-transform"
               >
-                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src={item.image || `https://picsum.photos/seed/${item.slug}/600/400`} />
+                <AppImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src={item.image} alt={item.title} />
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4">
                   <span className="text-[8px] font-black tracking-[0.3em] uppercase text-primary mb-1 block">✦ {item.category.toUpperCase()}</span>
@@ -270,8 +271,9 @@ export default function Studies() {
                     className="interactive-card gold-glow-hover flex-shrink-0 w-40 sm:w-48 snap-start group cursor-pointer active:scale-[0.98] transition-all"
                   >
                     <div className="aspect-[4/3] rounded-xl overflow-hidden mb-2 border border-outline-variant/10 shadow-sm relative">
-                      <img 
-                        src={item.image || `https://picsum.photos/seed/${item.slug}/400/300`} 
+                      <AppImage
+                        src={item.image}
+                        alt={item.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
                       {progress && parseInt(progress) > 0 && (
@@ -318,9 +320,10 @@ export default function Studies() {
               className="interactive-card gold-glow-hover flex flex-col group cursor-pointer active:scale-[0.98] transition-all"
             >
               <div className="aspect-[16/9] rounded-xl overflow-hidden mb-3 border border-outline-variant/10">
-                <img 
-                  src={item.image || `https://picsum.photos/seed/${item.slug}/400/225`} 
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
+                <AppImage
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
                 />
               </div>
               <div className="flex flex-col flex-1">

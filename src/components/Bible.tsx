@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode, type ElementType } from 'react';
+import { useMemo, useState, type ReactNode, type ElementType } from 'react';
 import {
   Sparkles,
   Clock3,
@@ -12,6 +12,7 @@ import {
   Flame,
 } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
+import { AppImage } from './AppImage';
 
 interface AxisMeta {
   id: string;
@@ -259,27 +260,6 @@ function DragScrollRow({ children }: { children: ReactNode }) {
   );
 }
 
-function StudyImage({ src, alt, className }: { src?: string; alt: string; className: string }) {
-  const [broken, setBroken] = useState(false);
-
-  useEffect(() => {
-    setBroken(false);
-  }, [src]);
-
-  if (!src || broken) {
-    return <div className={`${className} bg-[#20242b]`} aria-label={alt} />;
-  }
-
-  return (
-    <img
-      src={src}
-      alt={alt}
-      className={className}
-      onError={() => setBroken(true)}
-    />
-  );
-}
-
 export default function Bible() {
   const [selectedAxisId, setSelectedAxisId] = useState<string | null>(null);
   const [selectedStudy, setSelectedStudy] = useState<InterpretationStudy | null>(null);
@@ -354,10 +334,11 @@ export default function Bible() {
           <article
             className={`relative overflow-hidden rounded-2xl border border-white/10 h-44 ${selectedAxis.glowClass}`}
           >
-            <StudyImage
+            <AppImage
               src={cover}
               alt={selectedAxis.title}
               className="absolute inset-0 w-full h-full object-cover opacity-45"
+              priority
             />
             <div className={`absolute inset-0 bg-gradient-to-r ${selectedAxis.accentClass}`} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -422,7 +403,7 @@ export default function Bible() {
                     className="gold-glow-hover min-w-[220px] max-w-[220px] rounded-xl border border-outline-variant/20 bg-surface-container-low overflow-hidden cursor-pointer hover:scale-[1.03] transition-transform duration-300 snap-start"
                   >
                     <div className="h-24 w-full border-b border-outline-variant/10">
-                      <StudyImage src={study.image} alt={study.title} className="w-full h-full object-cover" />
+                      <AppImage src={study.image} alt={study.title} className="w-full h-full object-cover" />
                     </div>
 
                     <div className="p-3">
@@ -498,7 +479,7 @@ export default function Bible() {
               className="gold-glow-hover rounded-xl border border-outline-variant/15 bg-surface-container-low/80 backdrop-blur-sm px-2.5 py-2 flex items-center gap-2.5 cursor-pointer hover:scale-[1.01] transition-transform duration-300"
             >
               <div className="w-16 h-12 rounded-lg overflow-hidden border border-white/10 shrink-0">
-                <StudyImage src={study.image} alt={study.title} className="w-full h-full object-cover" />
+                <AppImage src={study.image} alt={study.title} className="w-full h-full object-cover" />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-[8px] uppercase tracking-[0.16em] font-black text-primary/80 mb-0.5 line-clamp-1">
@@ -541,7 +522,7 @@ export default function Bible() {
               onClick={() => setSelectedAxisId(axis.id)}
               className={`gold-glow-hover group relative w-full h-44 rounded-2xl overflow-hidden cursor-pointer active:scale-[0.99] transition-all duration-300 border border-white/10 text-left ${axis.glowClass}`}
             >
-              <StudyImage
+              <AppImage
                 src={cover}
                 alt={axis.title}
                 className="absolute inset-0 w-full h-full object-cover opacity-45 group-hover:opacity-55 group-hover:scale-105 transition-all duration-700"

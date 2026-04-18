@@ -2,6 +2,7 @@ import { useState, useRef, useMemo, type ReactNode } from 'react';
 import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers } from 'lucide-react';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
+import { AppImage } from './AppImage';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface BookItem {
@@ -325,15 +326,10 @@ function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: numb
       className="interactive-card group shrink-0 w-[148px] sm:w-[168px] flex flex-col cursor-pointer active:scale-95 transition-transform snap-start"
     >
       <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden shadow-2xl border border-outline-variant/10 bg-surface-container-high group-hover:border-primary/50 transition-colors">
-        <img
+        <AppImage
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-          src={item.image || `https://picsum.photos/seed/${item.slug}/400/600`}
+          src={item.image}
           alt={item.title}
-          onError={(event) => {
-            const target = event.currentTarget;
-            target.onerror = null;
-            target.src = `https://picsum.photos/seed/${item.slug}/400/600`;
-          }}
         />
       </div>
       <div className="mt-3 px-1 select-none">
@@ -392,7 +388,7 @@ function SectionCard({ sectionKey, books, onSelect }: {
     >
       {/* Cover image — blurred, zooms out on hover */}
       {cover && (
-        <img
+        <AppImage
           src={cover}
           alt=""
           className="absolute inset-0 w-full h-full object-cover scale-110 group-hover:scale-105 transition-transform duration-700 opacity-40 group-hover:opacity-55"

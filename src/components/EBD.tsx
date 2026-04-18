@@ -3,6 +3,7 @@ import { Star, BookOpen, GraduationCap, Gavel } from 'lucide-react';
 import { Screen } from '../types';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
+import { AppImage } from './AppImage';
 
 interface EBDItem {
   title: string;
@@ -18,6 +19,7 @@ interface EBDProps {
 }
 
 export default function EBD({ onNavigate }: EBDProps) {
+  const heroImage = '/image/livraria/o mapa ants da tempestade.webp';
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const { data: lessons, loading, error } = useFetch<EBDItem[]>('/content/ebd/index.json');
@@ -56,9 +58,11 @@ export default function EBD({ onNavigate }: EBDProps) {
       {/* Hero Section */}
       <section className="relative min-h-[520px] flex flex-col justify-center items-start px-6 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            className="w-full h-full object-cover opacity-20 blur-sm" 
-            src="https://picsum.photos/seed/ebd-hero/800/600" 
+          <AppImage
+            className="w-full h-full object-cover opacity-20 blur-sm"
+            src={heroImage}
+            alt="Fundo EBD"
+            priority
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent"></div>
         </div>
