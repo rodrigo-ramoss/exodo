@@ -23,9 +23,11 @@ export function AppImage({
 }: AppImageProps) {
   const normalizedSrc = useMemo(() => normalizeImageSrc(src), [src]);
   const [broken, setBroken] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     setBroken(false);
+    setRetryCount(0);
   }, [normalizedSrc]);
 
   if (!normalizedSrc || broken) {
@@ -38,16 +40,27 @@ export function AppImage({
     );
   }
 
+  const srcWithRetry =
+    retryCount === 0
+      ? normalizedSrc
+      : `${normalizedSrc}${normalizedSrc.includes('?') ? '&' : '?'}retry=${retryCount}`;
+
   return (
     <img
       {...rest}
-      src={normalizedSrc}
+      src={srcWithRetry}
       alt={alt}
       className={className}
       loading={priority ? 'eager' : 'lazy'}
       decoding="async"
       fetchPriority={priority ? 'high' : 'low'}
-      onError={() => setBroken(true)}
+      onError={() => {
+        if (retryCount < 1) {
+          setRetryCount((value) => value + 1);
+          return;
+        }
+        setBroken(true);
+      }}
     />
   );
 }

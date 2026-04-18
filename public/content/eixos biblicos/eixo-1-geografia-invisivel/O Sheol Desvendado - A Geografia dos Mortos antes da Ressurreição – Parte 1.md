@@ -5,7 +5,7 @@ versiculos: "Gênesis 37:35; Números 16:30-33; Jó 7:9-10; 10:21-22; 14:13; Sal
 book: "Jó / Salmos / Isaías"
 eixo: "Eixo 1 – Geografia e Estruturas do Mundo Invisível"
 description: "Investigação filológica e exegética do conceito de Sheol no Antigo Testamento, revelando-o como o reino subterrâneo dos mortos, com distinções embrionárias entre justos e ímpios, e preparando o caminho para a geografia detalhada do mundo vindouro."
-image: "sheol-desvendado-parte1.jpg"
+image: "/assets/imagens/eixos-biblicos/eixo-1-geografia-invisivel/o-sheol-desvendado-parte-1.webp"
 ---
 
 # PARTE 1 – PESHAT & REMEZ: OS FUNDAMENTOS DO SHEOL NO ANTIGO TESTAMENTO

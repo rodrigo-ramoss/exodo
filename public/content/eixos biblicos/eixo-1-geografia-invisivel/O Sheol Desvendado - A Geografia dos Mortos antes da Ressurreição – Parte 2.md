@@ -5,7 +5,7 @@ versiculos: "1 Enoque 17–36; 1 Enoque 22; Jubileus 5:6-10; 10:1-6; 4 Esdras 7:
 book: "Jó / Salmos / Isaías"
 eixo: "Eixo 1 – Geografia e Estruturas do Mundo Invisível"
 description: "Expansão do tema do Sheol pela literatura apocalíptica do Segundo Templo e Manuscritos do Mar Morto, revelando as quatro câmaras do submundo, a prisão dos Vigilantes e o destino das almas justas e ímpias antes do juízo final."
-image: "sheol-desvendado-parte2.jpg"
+image: "/assets/imagens/eixos-biblicos/eixo-1-geografia-invisivel/o-sheol-desvendado-parte-2.webp"
 ---
 
 # PARTE 2 – DERASH: AS CÂMARAS DO SUBMUNDO NA LITERATURA DO SEGUNDO TEMPLO

@@ -65,6 +65,7 @@ function pickCategoryByFolder(folder: string): string {
     ['serie - a identidade do eterno', 'Série — A Identidade do Eterno'],
     ['serie - a invecao do pecado', 'Série — A Invenção do Pecado'],
     ['serie - a verdadeira historia da igreja', 'Série — A Verdadeira História da Igreja'],
+    ['serie - o codigo das eras', 'Série — O Código das Eras'],
     ['serie - 1 enoque', 'A REVELAÇÃO DE ENOQUE'],
     ['trilogia - o mapa da tempestade', 'Trilogia — O Mapa da Tempestade'],
     ['trilogia - o estrangeiro prospero', 'Trilogia — O Estrangeiro Próspero'],
@@ -225,6 +226,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Trilogia — A Marca':                       'IA & APOCALIPSE',
   'Trilogia — O Véu Rasgado':                 'IA & APOCALIPSE',
   'Trilogia — A Coroa Roubada':               'MUNDO ESPIRITUAL',
+  'Série — O Código das Eras':                'IA & APOCALIPSE',
 };
 
 // Short display labels per series
@@ -243,6 +245,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — O Código do Jardim':               'O Código do Jardim',
   'Série — A Identidade do Eterno':           'A Identidade do Eterno',
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
+  'Série — O Código das Eras':                'O Código das Eras',
 };
 
 // Description shown below each series header
@@ -261,6 +264,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Trilogia — A Marca': 'Uma análise bíblica e contemporânea sobre controle, tecnologia e os mecanismos de conformação espiritual dos últimos tempos.',
   'Trilogia — O Véu Rasgado': 'Uma investigação sobre Babel, CERN e conhecimento proibido na fronteira entre tecnologia, mundo invisível e profecia bíblica.',
   'Trilogia — A Coroa Roubada': 'Uma trilogia sobre conselho divino, queda dos príncipes e restauração da autoridade dos filhos em Cristo.',
+  'Série — O Código das Eras': 'Uma leitura profética das eras bíblicas: sinais celestes, ciclos históricos e convergência escatológica até a consumação do Reino.',
 };
 
 function buildAutoSeriesDescription(category: string, items: BookItem[]): string {

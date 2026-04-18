@@ -190,6 +190,9 @@ function toSubthemeDescription(subthemeId: string): string {
   if (subthemeId.includes('corte-de-yahweh') || subthemeId.includes('conselho-divino')) {
     return 'Mapeamento da geografia invisível do conselho divino, seus ofícios e sua restauração em Cristo.';
   }
+  if (subthemeId.includes('sheol-desvendado')) {
+    return 'A geografia do Sheol antes da ressurreição, a descida de Cristo ao Hades e o destino final da morte.';
+  }
   return 'Série temática com estudos progressivos organizados por volume.';
 }
 
