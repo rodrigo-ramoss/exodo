@@ -2,18 +2,11 @@ import { useMemo } from 'react';
 import { TrendingUp } from 'lucide-react';
 import { useFetch } from '../hooks/useFetch';
 
-// ── Doctrine data (same import.meta.glob as Doctrines.tsx) ───────────────────
-const doctrineIndexModules = import.meta.glob(
-  '../content/doutrinas/{expostas,biblicas}/index.json',
-  { eager: true, import: 'default' },
-) as Record<string, Array<{ title: string; layers: Array<{ slug: string }> }>>;
-
-function loadAllDoctrines() {
-  return (['expostas', 'biblicas'] as const).flatMap((track) => {
-    const path = `../content/doutrinas/${track}/index.json`;
-    return (doctrineIndexModules[path] ?? []) as Array<{ title: string; layers: Array<{ slug: string }> }>;
-  });
-}
+const refutationModules = import.meta.glob('../content/refutacao/*/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface ApoBook { slug: string; }
@@ -42,14 +35,17 @@ export default function ProgressSection() {
     return { total: apoBooks.length, read, pct: pctOf(read, apoBooks.length) };
   }, [apoBooks]);
 
-  // ── 2. Doctrines ──────────────────────────────────────────────────────────
+  // ── 2. Refutação ─────────────────────────────────────────────────────────
   const docStats = useMemo(() => {
-    const docs = loadAllDoctrines();
-    let total = 0, read = 0;
-    for (const d of docs) {
-      total += d.layers.length;
-      read += d.layers.filter((l) => isRead(l.slug)).length;
-    }
+    const slugs = Object.keys(refutationModules).map((path) =>
+      path
+        .replace(/\\/g, '/')
+        .split('/')
+        .pop()
+        ?.replace(/\.md$/i, '') ?? '',
+    ).filter(Boolean);
+    const total = slugs.length;
+    const read = slugs.filter((slug) => isRead(slug)).length;
     return { total, read, pct: pctOf(read, total) };
   }, []);
 
@@ -77,7 +73,7 @@ export default function ProgressSection() {
 
   const pillars = [
     { label: 'Apócrifos', pct: apoStats.pct },
-    { label: 'Doutrinas', pct: docStats.pct },
+    { label: 'Refutação', pct: docStats.pct },
     { label: 'Livraria', pct: libStats.pct },
     { label: 'MANÁ', pct: studyStats.pct },
   ];
@@ -98,7 +94,7 @@ export default function ProgressSection() {
           <div>
             <p className="text-xs font-bold text-on-surface">Progresso Geral</p>
             <p className="text-[10px] text-on-surface-variant/60 mt-0.5">
-              Apócrifos · Doutrinas · Livraria · MANÁ
+              Apócrifos · Refutação · Livraria · MANÁ
             </p>
           </div>
           <span className="font-headline text-2xl font-black text-primary tracking-tighter">

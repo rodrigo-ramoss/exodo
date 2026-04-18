@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Star, BookOpen, GraduationCap, Gavel, Library, Eye, Users, MessageSquare, ArrowLeft } from 'lucide-react';
+import { Star, BookOpen, GraduationCap, Gavel } from 'lucide-react';
 import { Screen } from '../types';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -129,11 +129,11 @@ export default function EBD({ onNavigate }: EBDProps) {
               <span className="font-headline font-bold text-[10px] tracking-widest uppercase">MANÁ</span>
             </button>
             <button 
-              onClick={() => onNavigate(Screen.DOCTRINES, 'push')}
+              onClick={() => onNavigate(Screen.REFUTACAO, 'push')}
               className="group flex items-center justify-center gap-2 border border-outline-variant/30 px-6 py-3.5 rounded-xl text-on-surface hover:bg-surface-container-high transition-all active:scale-95"
             >
               <Gavel className="text-primary" size={18} />
-              <span className="font-headline font-bold text-[10px] tracking-widest uppercase">Doutrinas</span>
+              <span className="font-headline font-bold text-[10px] tracking-widest uppercase">Refutação</span>
             </button>
           </div>
         </div>

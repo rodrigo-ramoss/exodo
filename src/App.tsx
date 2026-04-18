@@ -13,8 +13,7 @@ import Bible from './components/Bible';
 import Studies from './components/Studies';
 import EBD from './components/EBD';
 import Bookstore from './components/Bookstore';
-import Signs from './components/Signs';
-import Doctrines from './components/Doctrines';
+import Refutation from './components/Refutation';
 import Protocol from './components/Protocol';
 import Settings from './components/Settings';
 
@@ -41,10 +40,8 @@ export default function App() {
         return <EBD onNavigate={handleNavigate} />;
       case Screen.BOOKSTORE:
         return <Bookstore />;
-      case Screen.SIGNS:
-        return <Signs />;
-      case Screen.DOCTRINES:
-        return <Doctrines />;
+      case Screen.REFUTACAO:
+        return <Refutation />;
       case Screen.APOCRYPHA:
         return <Protocol />;
       case Screen.SETTINGS:

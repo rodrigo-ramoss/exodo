@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Menu, Settings, GraduationCap, Gavel, Library, Eye, BookOpen } from 'lucide-react';
+import { Menu, Settings, GraduationCap, Gavel, Library, BookOpen, ExternalLink } from 'lucide-react';
 import { Screen } from '../types';
 import { cn } from '../lib/utils';
 import { useProfile } from '../state/ProfileContext';
@@ -12,13 +12,13 @@ interface LayoutProps {
 
 export default function Layout({ children, currentScreen, setScreen }: LayoutProps) {
   const { photo } = useProfile();
+  const BLOG_URL = 'https://blog.seuprojeto.com';
 
   const navItems = [
     { id: Screen.BIBLE, label: 'BÍBLIA', icon: BookOpen },
     { id: Screen.MANA, label: 'MANÁ', icon: GraduationCap },
-    { id: Screen.DOCTRINES, label: 'Doutrinas', icon: Gavel },
+    { id: Screen.REFUTACAO, label: 'Refutação', icon: Gavel },
     { id: Screen.BOOKSTORE, label: 'Livraria', icon: Library },
-    { id: Screen.SIGNS, label: 'Sinais', icon: Eye },
   ];
 
   return (
@@ -72,6 +72,20 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
             </button>
           );
         })}
+
+        <a
+          href={BLOG_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col items-center justify-center py-1 px-0.5 transition-all active:scale-90 flex-1 min-w-0 text-on-surface-variant hover:text-on-surface"
+        >
+          <div className="flex items-center justify-center w-10 h-6 rounded-full transition-all">
+            <ExternalLink size={18} strokeWidth={1.8} />
+          </div>
+          <span className="font-sans text-[8px] uppercase font-bold tracking-tight mt-0.5 truncate max-w-full leading-none">
+            Blog
+          </span>
+        </a>
 
         {/* Settings — always at the end */}
         <button
