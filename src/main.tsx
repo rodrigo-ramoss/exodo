@@ -7,7 +7,7 @@ import { ProfileProvider } from './state/ProfileContext.tsx';
 // Register Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    const swUrl = `${import.meta.env.BASE_URL}sw.js`;
+    const swUrl = `${import.meta.env.BASE_URL}sw.js?v=2026-04-19-ebook-desktop-fix`;
     navigator.serviceWorker
       .register(swUrl)
       .then((registration) => {

@@ -129,6 +129,26 @@ function resolveContentUrlForDesktopAndWeb(slug: string): string {
   return new URL(`${runtimeBase}${relativeAssetPath}`, window.location.href).toString();
 }
 
+function buildFallbackContentUrls(slug: string): string[] {
+  const encodedSlug = slug
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/');
+  const configuredBase = import.meta.env.BASE_URL || '/';
+  const normalizedBase = configuredBase.endsWith('/') ? configuredBase : `${configuredBase}/`;
+  const runtimeBase = window.location.protocol === 'file:' && normalizedBase === '/' ? './' : normalizedBase;
+
+  const candidates = [
+    resolveContentUrlForDesktopAndWeb(slug),
+    `${runtimeBase}content/livraria/${encodedSlug}.md`,
+    `${runtimeBase}content/livraria/${slug}.md`,
+    `./content/livraria/${encodedSlug}.md`,
+    `/content/livraria/${encodedSlug}.md`,
+  ];
+
+  return Array.from(new Set(candidates));
+}
+
 function inferBookCoverCandidates(frontmatter: Record<string, string>, title: string, slug: string): string[] {
   const candidates = new Set<string>();
   const fromMeta = (frontmatter.image || frontmatter.thumbnail || '').trim();
@@ -523,10 +543,18 @@ export default function Bookstore() {
       return;
     }
 
-    try {
-      const res = await fetch(resolveContentUrlForDesktopAndWeb(slug));
-      if (res.ok) setMarkdownContent(await res.text());
-    } catch { /* silent */ }
+    for (const url of buildFallbackContentUrls(slug)) {
+      try {
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) continue;
+        const text = await res.text();
+        if (!text.trim()) continue;
+        setMarkdownContent(text);
+        return;
+      } catch {
+        // Try next candidate URL.
+      }
+    }
   };
 
   const handleCloseReader = () => { setSelectedSlug(null); setMarkdownContent(null); };
