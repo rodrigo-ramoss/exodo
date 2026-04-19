@@ -27,14 +27,14 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
       <header className="fixed top-0 w-full z-50 glass-header flex justify-between items-center px-4 h-14 border-b border-outline-variant/10">
         <div className="flex items-center gap-3">
           <button 
-            onClick={() => setScreen(Screen.HOME)}
+            onClick={() => setScreen(Screen.BIBLE)}
             className="text-primary hover:text-primary/80 transition-colors active:scale-95 p-1"
           >
             <Menu size={20} />
           </button>
           <h1 
             className="text-xl font-black text-primary tracking-tighter font-headline uppercase cursor-pointer"
-            onClick={() => setScreen(Screen.HOME)}
+            onClick={() => setScreen(Screen.BIBLE)}
           >
             ÊXODO
           </h1>
