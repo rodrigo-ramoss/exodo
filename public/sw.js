@@ -4,7 +4,7 @@
  */
 
 const CACHE_NAME = 'exodo-v1';
-const PRECACHE_URLS = ['/'];
+const PRECACHE_URLS = ['./', './manifest.json', './logo-192.png', './logo-512.png'];
 
 // Install: pré-cache dos recursos principais
 self.addEventListener('install', (event) => {
@@ -42,11 +42,12 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
   const data = event.data?.json() ?? {};
   const title = data.title ?? 'Êxodo';
+  const iconUrl = new URL('./logo-192.png', self.registration.scope).toString();
   const options = {
     body: data.body ?? 'Nova mensagem do Êxodo.',
-    icon: '/logo-192.png',
-    badge: '/logo-192.png',
-    data: { url: data.url ?? '/' },
+    icon: iconUrl,
+    badge: iconUrl,
+    data: { url: data.url ?? './' },
   };
   event.waitUntil(self.registration.showNotification(title, options));
 });
@@ -56,7 +57,7 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      const target = event.notification.data?.url ?? '/';
+      const target = event.notification.data?.url ?? './';
       for (const client of clientList) {
         if (client.url === target && 'focus' in client) return client.focus();
       }
