@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, type ReactNode } from 'react';
-import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check } from 'lucide-react';
+import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame } from 'lucide-react';
 import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -218,7 +218,8 @@ type SectionKey =
   | 'TIPOLOGIA BÍBLICA'
   | 'MUNDO ESPIRITUAL'
   | 'ANTISISTEMA'
-  | 'IA & APOCALIPSE';
+  | 'IA & APOCALIPSE'
+  | 'FERRAMENTAS ESPIRITUAIS';
 
 // ── Section metadata ──────────────────────────────────────────────────────────
 const SECTIONS: Record<SectionKey, {
@@ -263,6 +264,12 @@ const SECTIONS: Record<SectionKey, {
     Icon: Cpu,
     accent: 'from-rose-900/70 to-rose-800/10',
   },
+  'FERRAMENTAS ESPIRITUAIS': {
+    label: 'Ferramentas Espirituais',
+    description: 'Guias práticos de oração, jejum, intercessão e guerra espiritual. Conteúdo aplicado para fortalecer a vida interior e a caminhada com Deus.',
+    Icon: Flame,
+    accent: 'from-orange-900/70 to-orange-800/10',
+  },
 };
 
 const SECTION_ORDER: SectionKey[] = [
@@ -272,6 +279,7 @@ const SECTION_ORDER: SectionKey[] = [
   'MUNDO ESPIRITUAL',
   'ANTISISTEMA',
   'IA & APOCALIPSE',
+  'FERRAMENTAS ESPIRITUAIS',
 ];
 
 // Maps existing category strings → top-level section
@@ -292,6 +300,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Trilogia — O Véu Rasgado':                 'IA & APOCALIPSE',
   'Trilogia — A Coroa Roubada':               'MUNDO ESPIRITUAL',
   'Série — O Código das Eras':                'IA & APOCALIPSE',
+  'FERRAMENTAS ESPIRITUAIS':                  'FERRAMENTAS ESPIRITUAIS',
 };
 
 // Short display labels per series
@@ -311,6 +320,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — A Identidade do Eterno':           'A Identidade do Eterno',
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
   'Série — O Código das Eras':                'O Código das Eras',
+  'TIPOLOGIA BÍBLICA':                        'O Código dos Arquétipos',
 };
 
 // Description shown below each series header
@@ -330,6 +340,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Trilogia — O Véu Rasgado': 'Uma investigação sobre Babel, CERN e conhecimento proibido na fronteira entre tecnologia, mundo invisível e profecia bíblica.',
   'Trilogia — A Coroa Roubada': 'Uma trilogia sobre conselho divino, queda dos príncipes e restauração da autoridade dos filhos em Cristo.',
   'Série — O Código das Eras': 'Uma leitura profética das eras bíblicas: sinais celestes, ciclos históricos e convergência escatológica até a consumação do Reino.',
+  'TIPOLOGIA BÍBLICA': 'Adão, o Sangue, a Arca, o Templo — cada narrativa do Antigo Testamento é uma sombra que aponta para Cristo. Uma série que decodifica a linguagem tipológica da Escritura e revela a unidade profunda de toda a Bíblia.',
 };
 
 function buildAutoSeriesDescription(category: string, items: BookItem[]): string {

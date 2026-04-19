@@ -1,9 +1,80 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X } from 'lucide-react';
+import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X, Highlighter, Trash2 } from 'lucide-react';
 import type { Components } from 'react-markdown';
 import { pm, type Category } from '../lib/progressManager';
+
+// ── Highlight helpers ─────────────────────────────────────────────────────────
+const HL_KEY = (slug: string) => `exodo_hl_${slug}`;
+
+function loadHighlights(slug: string): string[] {
+  try {
+    const raw = localStorage.getItem(HL_KEY(slug));
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch { return []; }
+}
+
+function saveHighlights(slug: string, list: string[]): void {
+  try { localStorage.setItem(HL_KEY(slug), JSON.stringify(list)); } catch { /* noop */ }
+}
+
+/**
+ * Caminha pelos nós de texto do elemento e envolve cada ocorrência de `text`
+ * num <mark data-hl> com a classe dourada. Case-insensitive.
+ */
+function applyHighlightToDOM(root: HTMLElement, text: string): void {
+  if (!text.trim()) return;
+  const lower = text.toLowerCase();
+
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: (node) => {
+      const p = node.parentElement;
+      if (!p || p.tagName === 'MARK' || p.closest('button, input, textarea')) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    },
+  });
+
+  const toWrap: { node: Text; idx: number }[] = [];
+  let node: Node | null;
+  while ((node = walker.nextNode())) {
+    const textNode = node as Text;
+    const idx = textNode.textContent?.toLowerCase().indexOf(lower) ?? -1;
+    if (idx !== -1) toWrap.push({ node: textNode, idx });
+  }
+
+  // Process in reverse so insertions don't shift indices
+  for (let i = toWrap.length - 1; i >= 0; i--) {
+    const { node: textNode, idx } = toWrap[i]!;
+    const content = textNode.textContent ?? '';
+    const parent = textNode.parentNode;
+    if (!parent) continue;
+
+    const before = document.createTextNode(content.slice(0, idx));
+    const mark = document.createElement('mark');
+    mark.setAttribute('data-hl', text);
+    mark.style.cssText =
+      'background:rgba(212,175,55,0.35);color:inherit;border-radius:3px;padding:0 2px;cursor:pointer;';
+    mark.textContent = content.slice(idx, idx + text.length);
+    const after = document.createTextNode(content.slice(idx + text.length));
+
+    parent.replaceChild(after, textNode);
+    parent.insertBefore(mark, after);
+    parent.insertBefore(before, mark);
+  }
+}
+
+/** Remove todos os <mark data-hl> e restaura o texto plano */
+function clearHighlightsFromDOM(root: HTMLElement): void {
+  root.querySelectorAll('mark[data-hl]').forEach((mark) => {
+    const parent = mark.parentNode;
+    if (!parent) return;
+    parent.replaceChild(document.createTextNode(mark.textContent ?? ''), mark);
+    (parent as Element | Text).normalize?.();
+  });
+}
 
 interface MarkdownViewerProps {
   content?: string | null;
@@ -137,9 +208,15 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
   const [savedScrollPos, setSavedScrollPos] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const contentBodyRef = useRef<HTMLDivElement>(null);
   const didFinalizeRef = useRef(false);
   const reachedEndRef = useRef(false);
   const completionCountedRef = useRef(false);
+
+  // ── Highlight state ────────────────────────────────────────────────────────
+  const [highlights, setHighlights] = useState<string[]>(() => loadHighlights(slug));
+  const [selPopup, setSelPopup] = useState<{ x: number; y: number; text: string } | null>(null);
+  const [rmPopup, setRmPopup] = useState<{ x: number; y: number; text: string } | null>(null);
 
   /**
    * Marca a leitura como concluída (via progressManager).
@@ -319,6 +396,78 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
     sepia: 'bg-[#f4ecd8] text-[#433422] prose-sepia'
   };
 
+  // ── Apply / re-apply highlights after render ────────────────────────────────
+  useEffect(() => {
+    const el = contentBodyRef.current;
+    if (!el) return;
+    clearHighlightsFromDOM(el);
+    highlights.forEach((hl) => applyHighlightToDOM(el, hl));
+  // parsedContent included so highlights re-apply when content changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [highlights, parsedContent]);
+
+  // ── Selection → popup ──────────────────────────────────────────────────────
+  const handleContentMouseUp = useCallback((e: React.MouseEvent) => {
+    // Slight delay so selection is finalised before we read it
+    setTimeout(() => {
+      const sel = window.getSelection();
+      const text = sel?.toString().trim() ?? '';
+      if (!text || text.length < 3 || text.length > 400) {
+        setSelPopup(null);
+        return;
+      }
+      const range = sel?.getRangeAt(0);
+      const rect = range?.getBoundingClientRect();
+      if (!rect) return;
+      setSelPopup({ x: rect.left + rect.width / 2, y: rect.top + window.scrollY - 8, text });
+      setRmPopup(null);
+    }, 0);
+  }, []);
+
+  // ── Click on a <mark> → show remove popup ─────────────────────────────────
+  const handleContentClick = useCallback((e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName !== 'MARK') { setRmPopup(null); return; }
+    const hl = target.getAttribute('data-hl');
+    if (!hl) return;
+    e.stopPropagation();
+    const rect = target.getBoundingClientRect();
+    setRmPopup({ x: rect.left + rect.width / 2, y: rect.top + window.scrollY - 8, text: hl });
+    setSelPopup(null);
+  }, []);
+
+  // ── Add / remove highlight helpers ─────────────────────────────────────────
+  const addHighlight = useCallback(() => {
+    if (!selPopup) return;
+    const { text } = selPopup;
+    setHighlights((prev) => {
+      if (prev.includes(text)) return prev;
+      const next = [...prev, text];
+      saveHighlights(slug, next);
+      return next;
+    });
+    setSelPopup(null);
+    window.getSelection()?.removeAllRanges();
+  }, [selPopup, slug]);
+
+  const removeHighlight = useCallback((text: string) => {
+    setHighlights((prev) => {
+      const next = prev.filter((h) => h !== text);
+      saveHighlights(slug, next);
+      return next;
+    });
+    setRmPopup(null);
+  }, [slug]);
+
+  // Close popups on scroll
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const hide = () => { setSelPopup(null); setRmPopup(null); };
+    el.addEventListener('scroll', hide, { passive: true });
+    return () => el.removeEventListener('scroll', hide);
+  }, []);
+
   const markdownComponents: Components = {
     table: ({ children }) => (
       <div className="table-responsive overflow-x-auto">
@@ -477,8 +626,11 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
 
         {/* Markdown Body */}
         <div
+          ref={contentBodyRef}
           className={`prose max-w-none prose-p:leading-relaxed prose-headings:font-headline prose-headings:tracking-tight prose-li:marker:text-primary transition-all duration-300 ${theme === 'dark' ? 'prose-invert' : 'prose-p:text-current'}`}
           style={{ fontSize: `${fontSize}px` }}
+          onMouseUp={handleContentMouseUp}
+          onClick={handleContentClick}
         >
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
             {parsedContent}
@@ -488,6 +640,41 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
         {/* Sentinel: IntersectionObserver observa este elemento para detectar fim de leitura */}
         <div ref={sentinelRef} className="h-1 w-full mt-4" aria-hidden="true" />
       </div>
+
+      {/* ── Highlight: selection popup ──────────────────────────────────────── */}
+      {selPopup && (
+        <div
+          className="fixed z-[10010] -translate-x-1/2 -translate-y-full pointer-events-auto"
+          style={{ left: selPopup.x, top: selPopup.y }}
+        >
+          <button
+            onMouseDown={(e) => { e.preventDefault(); addHighlight(); }}
+            className="flex items-center gap-1.5 bg-[#D4AF37] text-black text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-full shadow-2xl border border-[#F5D76E]/50 active:scale-95 transition-transform"
+          >
+            <Highlighter size={12} />
+            Destacar
+          </button>
+          {/* Small arrow */}
+          <div className="w-2.5 h-2.5 bg-[#D4AF37] rotate-45 mx-auto -mt-1.5 border-r border-b border-[#F5D76E]/50" />
+        </div>
+      )}
+
+      {/* ── Highlight: remove popup ─────────────────────────────────────────── */}
+      {rmPopup && (
+        <div
+          className="fixed z-[10010] -translate-x-1/2 -translate-y-full pointer-events-auto"
+          style={{ left: rmPopup.x, top: rmPopup.y }}
+        >
+          <button
+            onMouseDown={(e) => { e.preventDefault(); removeHighlight(rmPopup.text); }}
+            className="flex items-center gap-1.5 bg-surface-container-high text-on-surface-variant text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-full shadow-2xl border border-white/10 active:scale-95 transition-transform"
+          >
+            <Trash2 size={12} />
+            Remover destaque
+          </button>
+          <div className="w-2.5 h-2.5 bg-surface-container-high rotate-45 mx-auto -mt-1.5 border-r border-b border-white/10" />
+        </div>
+      )}
 
       {/* Continue Reading Button */}
       {showToast && savedScrollPos !== null && (

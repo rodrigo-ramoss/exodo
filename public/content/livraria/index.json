@@ -538,5 +538,59 @@
     "category": "Série — A Identidade do Eterno",
     "time": "LIVRO",
     "image": "/image/livraria/a familia do reino.webp"
+  },
+  {
+    "title": "O Arquétipo do Primeiro Adão",
+    "slug": "serie - o codigo dos arquetipos/Ebook 1 - O Arquétipo do Primeiro Adão",
+    "description": "Adão não é apenas o primeiro homem — é o molde original de toda a humanidade. Um estudo profundo sobre como Cristo recapitula e supera o arquétipo adâmico, restaurando os três ofícios perdidos na Queda.",
+    "date": "2026-01-01",
+    "category": "TIPOLOGIA BÍBLICA",
+    "time": "LIVRO",
+    "image": "/image/livraria/arquetipo primeiro adao.webp"
+  },
+  {
+    "title": "O Arquétipo do Sacrifício e do Sangue",
+    "slug": "serie - o codigo dos arquetipos/Ebook 2 - O Arquétipo do Sacrifício e do Sangue",
+    "description": "De Abel ao Cordeiro de Deus: uma investigação bíblica sobre o sangue como linguagem de aliança, redenção e vitória. Por que toda a Bíblia aponta para esse único ato sacrificial.",
+    "date": "2026-01-01",
+    "category": "TIPOLOGIA BÍBLICA",
+    "time": "LIVRO",
+    "image": "/image/livraria/arquetipo do sacrificio.webp"
+  },
+  {
+    "title": "O Arquétipo do Dilúvio e da Arca",
+    "slug": "serie - o codigo dos arquetipos/Ebook 3 - O Arquétipo do Dilúvio e da Arca",
+    "description": "O Dilúvio como padrão eterno do julgamento e da salvação. De Noé ao batismo cristão: como as águas que destroem são as mesmas que guardam os que estão dentro da Arca.",
+    "date": "2026-01-01",
+    "category": "TIPOLOGIA BÍBLICA",
+    "time": "LIVRO",
+    "image": "/image/livraria/arquetipo do diluvio.webp"
+  },
+  {
+    "title": "O Arquétipo do Profeta, Sacerdote e Rei",
+    "slug": "serie - o codigo dos arquetipos/Ebook 4 - O Arquétipo do Profeta, Sacerdote e Rei",
+    "description": "Os três ofícios do Ungido percorrendo toda a Escritura. Cristo como cumprimento perfeito dos três, e a Igreja como corpo ungido chamado a profetizar, interceder e governar.",
+    "date": "2026-01-01",
+    "category": "TIPOLOGIA BÍBLICA",
+    "time": "LIVRO",
+    "image": "/image/livraria/arquetipo do profeta, sacerdote e rei.webp"
+  },
+  {
+    "title": "O Arquétipo do Templo e da Cidade",
+    "slug": "serie - o codigo dos arquetipos/Ebook 5 - O Arquétipo do Templo e da Cidade",
+    "description": "Do Éden ao Templo de Salomão e à Nova Jerusalém: a trajetória da habitação de Deus entre os homens. A geografia secreta da presença divina e seu cumprimento escatológico.",
+    "date": "2026-01-01",
+    "category": "TIPOLOGIA BÍBLICA",
+    "time": "LIVRO",
+    "image": "/image/livraria/arquetipo do templo e cidade.webp"
+  },
+  {
+    "title": "O Arquétipo do Banquete e das Bodas",
+    "slug": "serie - o codigo dos arquetipos/Ebook 6 - O Arquétipo do Banquete e das Bodas",
+    "description": "A mesa como centro da aliança bíblica. Da Páscoa à Última Ceia, do Maná no deserto ao Banquete das Bodas do Cordeiro — a festa que atravessa toda a Escritura e não terá fim.",
+    "date": "2026-01-01",
+    "category": "TIPOLOGIA BÍBLICA",
+    "time": "LIVRO",
+    "image": "/image/livraria/arquetipo do banqueta e das bodas.webp"
   }
 ]
