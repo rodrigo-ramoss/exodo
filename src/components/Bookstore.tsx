@@ -203,7 +203,7 @@ function discoverBooksFromMarkdown(): BookItem[] {
     return {
       title,
       slug,
-      description: frontmatter.description || `Volume da coleção ${folder}.`,
+      description: frontmatter.description || '',
       date: frontmatter.date || '2026-04-18',
       category: frontmatter.category || pickCategoryByFolder(folder),
       time: frontmatter.time || 'LIVRO',
@@ -437,36 +437,44 @@ function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: numb
           </div>
         )}
       </div>
-      <div className="mt-3 px-1 select-none">
-        <div className="mb-1">
-          <span className="text-[10px] font-black uppercase tracking-[0.12em] text-on-surface-variant/50">
-            Volume {volIndex + 1}
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="h-5 flex-1 bg-outline-variant/20 rounded-full overflow-hidden border border-outline-variant/15">
+      <div className="mt-2.5 px-0.5 select-none flex flex-col gap-1.5">
+
+        {/* Volume label */}
+        <span className="text-[8px] font-black uppercase tracking-[0.15em] text-on-surface-variant/40 leading-none">
+          Vol. {String(volIndex + 1).padStart(2, '0')}
+        </span>
+
+        {/* Description (only if available) */}
+        {item.description && (
+          <p className="text-[9px] text-on-surface-variant/60 leading-snug line-clamp-2 font-medium">
+            {item.description}
+          </p>
+        )}
+
+        {/* Progress bar + % */}
+        <div className="flex items-center gap-1.5 mt-0.5">
+          <div className="h-1 flex-1 bg-outline-variant/20 rounded-full overflow-hidden">
             <div
               className={
                 isCompleted
-                  ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_10px_rgba(212,175,55,0.35)] flex items-center justify-center'
-                  : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_8px_rgba(249,115,22,0.35)] flex items-center justify-center'
+                  ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_6px_rgba(212,175,55,0.4)]'
+                  : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_5px_rgba(249,115,22,0.3)]'
               }
               style={{ width: `${isReading ? clamped : isCompleted ? 100 : 0}%` }}
-            >
-              {(isReading || isCompleted) && (
-                <span className="text-[10px] font-black tracking-tight text-black/90 whitespace-nowrap leading-none">
-                  {isCompleted ? '100%' : `${clamped}%`}
-                </span>
-              )}
-            </div>
+            />
           </div>
-        </div>
-        {readsCount > 0 && (
-          <div className="mt-1.5">
-            <span className="text-[9px] font-black uppercase tracking-widest text-[#D4AF37]">
-              Lido {readsCount} vez(es)
+          {(isReading || isCompleted) && (
+            <span className={`text-[8px] font-black leading-none shrink-0 ${isCompleted ? 'text-[#D4AF37]' : 'text-orange-400'}`}>
+              {isCompleted ? '100' : clamped}%
             </span>
-          </div>
+          )}
+        </div>
+
+        {/* Lido badge */}
+        {readsCount > 0 && (
+          <span className="text-[8px] font-black uppercase tracking-widest text-[#D4AF37]/80">
+            Lido {readsCount}×
+          </span>
         )}
       </div>
     </div>
