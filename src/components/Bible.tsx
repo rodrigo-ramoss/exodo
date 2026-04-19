@@ -208,7 +208,17 @@ function sortByVolumeThenDate(a: InterpretationStudy, b: InterpretationStudy): n
   return sortByNewest(a, b);
 }
 
-function resolveStudyImage(rawImage: string | undefined, axis: AxisMeta): string | undefined {
+function resolveStudyImage(
+  rawImage: string | undefined,
+  axis: AxisMeta,
+  subthemeId: string,
+  volume: number,
+): string | undefined {
+  // Hard map para impedir troca de capas nos volumes de "A Corte de Yahweh".
+  if (subthemeId.includes('corte-de-yahweh')) {
+    return `/assets/imagens/eixos-biblicos/eixo-1-geografia-invisivel/a-corte-de-yahweh-parte-${Math.max(1, Math.min(3, volume))}.webp`;
+  }
+
   if (!rawImage) return axis.coverImage;
   const image = rawImage.trim();
   if (!image) return axis.coverImage;
@@ -229,6 +239,7 @@ function loadInterpretationStudies(): InterpretationStudy[] {
       const title = frontmatter.title || fileName.replace(/\.md$/i, '');
       const subthemeSource = normalizeSubtheme(frontmatter.subtema || title || fileName.replace(/\.md$/i, ''));
       const subthemeId = slugify(subthemeSource);
+      const volume = extractVolume(title, fileName);
 
       return {
         title,
@@ -242,8 +253,8 @@ function loadInterpretationStudies(): InterpretationStudy[] {
         subthemeId,
         subthemeLabel: subthemeSource.toUpperCase(),
         subthemeDescription: toSubthemeDescription(subthemeId),
-        volume: extractVolume(title, fileName),
-        image: resolveStudyImage(frontmatter.image, axis),
+        volume,
+        image: resolveStudyImage(frontmatter.image, axis, subthemeId, volume),
       };
     })
     .sort(sortByNewest);
