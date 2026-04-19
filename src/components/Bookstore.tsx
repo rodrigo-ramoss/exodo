@@ -351,28 +351,75 @@ function buildAutoSeriesDescription(category: string, items: BookItem[]): string
 // ── DragScrollRow ─────────────────────────────────────────────────────────────
 function DragScrollRow({ children }: { children: ReactNode }) {
   const rowRef = useRef<HTMLDivElement>(null);
-  const drag = useRef({ isDown: false, startX: 0, scrollLeft: 0, didDrag: false });
+  const drag = useRef({
+    isDown: false,
+    startX: 0,
+    scrollLeft: 0,
+    didDrag: false,
+    pointerId: null as number | null,
+  });
+
+  const scheduleClearDragSuppression = () => {
+    setTimeout(() => {
+      drag.current.didDrag = false;
+    }, 0);
+  };
+
+  const stopDragging = (clearSuppression = false) => {
+    drag.current.isDown = false;
+    drag.current.pointerId = null;
+    if (clearSuppression) drag.current.didDrag = false;
+  };
+
   return (
     <div
       ref={rowRef}
       className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      onClickCapture={(e) => { if (drag.current.didDrag) { e.preventDefault(); e.stopPropagation(); } }}
+      onClickCapture={(e) => {
+        if (!drag.current.didDrag) return;
+        e.preventDefault();
+        e.stopPropagation();
+        drag.current.didDrag = false;
+      }}
       onPointerDown={(e) => {
-        if (e.pointerType !== 'mouse') return;
-        const el = rowRef.current; if (!el) return;
-        drag.current = { isDown: true, startX: e.clientX, scrollLeft: el.scrollLeft, didDrag: false };
+        if (e.pointerType !== 'mouse' || e.button !== 0) return;
+        const el = rowRef.current;
+        if (!el) return;
+        drag.current = {
+          isDown: true,
+          startX: e.clientX,
+          scrollLeft: el.scrollLeft,
+          didDrag: false,
+          pointerId: e.pointerId,
+        };
         el.setPointerCapture(e.pointerId);
       }}
       onPointerMove={(e) => {
         if (e.pointerType !== 'mouse' || !drag.current.isDown) return;
-        const el = rowRef.current; if (!el) return;
+        if (drag.current.pointerId !== null && e.pointerId !== drag.current.pointerId) return;
+        const el = rowRef.current;
+        if (!el) return;
         const walk = e.clientX - drag.current.startX;
         if (Math.abs(walk) > 4) drag.current.didDrag = true;
         el.scrollLeft = drag.current.scrollLeft - walk;
       }}
-      onPointerUp={() => { drag.current.isDown = false; setTimeout(() => { drag.current.didDrag = false; }, 0); }}
-      onPointerCancel={() => { drag.current.isDown = false; }}
-      onPointerLeave={() => { drag.current.isDown = false; }}
+      onPointerUp={(e) => {
+        if (drag.current.pointerId !== null && e.pointerId !== drag.current.pointerId) return;
+        const el = rowRef.current;
+        if (el?.hasPointerCapture(e.pointerId)) {
+          el.releasePointerCapture(e.pointerId);
+        }
+        stopDragging(false);
+        scheduleClearDragSuppression();
+      }}
+      onPointerCancel={(e) => {
+        if (drag.current.pointerId !== null && e.pointerId !== drag.current.pointerId) return;
+        stopDragging(true);
+      }}
+      onLostPointerCapture={() => {
+        stopDragging(false);
+        scheduleClearDragSuppression();
+      }}
     >
       {children}
     </div>
