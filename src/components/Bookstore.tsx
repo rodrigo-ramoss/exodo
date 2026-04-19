@@ -83,6 +83,52 @@ function pickCategoryByFolder(folder: string): string {
   return folder;
 }
 
+function toLivrariaRelativePath(pathKey: string): string {
+  const normalized = pathKey.replace(/\\/g, '/');
+  const marker = '/public/content/livraria/';
+  return normalized.includes(marker) ? normalized.slice(normalized.indexOf(marker) + marker.length) : normalized;
+}
+
+function stripMarkdownExtension(path: string): string {
+  return path.replace(/\.md$/i, '');
+}
+
+function normalizeSlugLookupKey(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\\/g, '/')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function buildMarkdownBySlugIndex(): Record<string, string> {
+  const bySlug: Record<string, string> = {};
+
+  for (const [pathKey, content] of Object.entries(livrariaMarkdownModules)) {
+    const relativePath = toLivrariaRelativePath(pathKey);
+    const slug = stripMarkdownExtension(relativePath);
+    bySlug[slug] = content;
+    bySlug[normalizeSlugLookupKey(slug)] = content;
+  }
+
+  return bySlug;
+}
+
+function resolveContentUrlForDesktopAndWeb(slug: string): string {
+  const encodedSlug = slug
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/');
+
+  const relativeAssetPath = `content/livraria/${encodedSlug}.md`;
+  const configuredBase = import.meta.env.BASE_URL || '/';
+  const normalizedBase = configuredBase.endsWith('/') ? configuredBase : `${configuredBase}/`;
+  const runtimeBase = window.location.protocol === 'file:' && normalizedBase === '/' ? './' : normalizedBase;
+  return new URL(`${runtimeBase}${relativeAssetPath}`, window.location.href).toString();
+}
+
 function inferBookCoverCandidates(frontmatter: Record<string, string>, title: string, slug: string): string[] {
   const candidates = new Set<string>();
   const fromMeta = (frontmatter.image || frontmatter.thumbnail || '').trim();
@@ -122,9 +168,7 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
 
 function discoverBooksFromMarkdown(): BookItem[] {
   return Object.entries(livrariaMarkdownModules).map(([pathKey, content]) => {
-    const normalized = pathKey.replace(/\\/g, '/');
-    const marker = '/public/content/livraria/';
-    const relative = normalized.includes(marker) ? normalized.slice(normalized.indexOf(marker) + marker.length) : normalized;
+    const relative = toLivrariaRelativePath(pathKey);
 
     const parts = relative.split('/').filter(Boolean);
     const fileName = parts[parts.length - 1] ?? '';
@@ -447,6 +491,7 @@ export default function Bookstore() {
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const { data: books, loading, error } = useFetch<BookItem[]>('/content/livraria/index.json');
   const discoveredBooks = useMemo(() => discoverBooksFromMarkdown(), []);
+  const markdownBySlug = useMemo(() => buildMarkdownBySlugIndex(), []);
   const mergedBooks = useMemo(() => {
     const map = new Map<string, BookItem>();
     for (const discovered of discoveredBooks) map.set(discovered.slug, discovered);
@@ -472,8 +517,14 @@ export default function Bookstore() {
 
   const handleSelectBook = async (slug: string) => {
     setSelectedSlug(slug);
+    const localContent = markdownBySlug[slug] || markdownBySlug[normalizeSlugLookupKey(slug)];
+    if (localContent) {
+      setMarkdownContent(localContent);
+      return;
+    }
+
     try {
-      const res = await fetch(`/content/livraria/${slug}.md`);
+      const res = await fetch(resolveContentUrlForDesktopAndWeb(slug));
       if (res.ok) setMarkdownContent(await res.text());
     } catch { /* silent */ }
   };
