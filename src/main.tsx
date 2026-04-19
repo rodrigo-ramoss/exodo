@@ -7,7 +7,14 @@ import { ProfileProvider } from './state/ProfileContext.tsx';
 // Register Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {/* silent — SW optional */});
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        console.info('[PWA] Service Worker ativo no escopo:', registration.scope);
+      })
+      .catch((error) => {
+        console.error('[PWA] Falha ao registrar Service Worker:', error);
+      });
   });
 }
 

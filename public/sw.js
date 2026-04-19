@@ -44,8 +44,8 @@ self.addEventListener('push', (event) => {
   const title = data.title ?? 'Êxodo';
   const options = {
     body: data.body ?? 'Nova mensagem do Êxodo.',
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
+    icon: '/logo-192.png',
+    badge: '/logo-192.png',
     data: { url: data.url ?? '/' },
   };
   event.waitUntil(self.registration.showNotification(title, options));
