@@ -592,5 +592,131 @@
     "category": "TIPOLOGIA BÍBLICA",
     "time": "LIVRO",
     "image": "/image/livraria/arquetipo do banqueta e das bodas.webp"
+  },
+  {
+    "title": "O Relógio de Deus",
+    "slug": "serie - o codigo das eras/Ebook 1 - O Relógio de Deus",
+    "description": "O evangelho escrito nas estrelas antes mesmo da Bíblia. Uma investigação sobre o Mazzaroth hebraico, o zodíaco original de Deus, e como a astrologia babilônica corrompeu um mapa de redenção.",
+    "date": "2026-01-01",
+    "category": "Série — O Código das Eras",
+    "time": "LIVRO",
+    "image": "/image/livraria/o relogio de deus.webp"
+  },
+  {
+    "title": "A Dança dos Ciclos",
+    "slug": "serie - o codigo das eras/Ebook 2 - A Dança dos Ciclos",
+    "description": "A precessão dos equinócios e o calendário de Deus em uma leitura bíblica dos ciclos do tempo.",
+    "date": "2026-01-02",
+    "category": "Série — O Código das Eras",
+    "time": "LIVRO",
+    "image": "/image/livraria/a danca dos ciclos.webp"
+  },
+  {
+    "title": "Peixes — A Era do Cordeiro Oculto",
+    "slug": "serie - o codigo das eras/Ebook 3 - A Era do Cordeiro Oculto e a Fé Perseguida",
+    "description": "Dois milênios de fé, fogo e fragmentação. A Era Pisciana da Igreja: das catacumbas ao Iluminismo, da Reforma ao secularismo — a história dos dois peixes nadando em direções opostas.",
+    "date": "2026-01-03",
+    "category": "Série — O Código das Eras",
+    "time": "LIVRO",
+    "image": "/image/livraria/peixes.webp"
+  },
+  {
+    "title": "Aquário — A Era do Conhecimento Derramado",
+    "slug": "serie - o codigo das eras/Ebook 4 - A Era do Conhecimento Derramado e o Retorno do Rei",
+    "description": "O homem com o cântaro e a era do derramamento do Espírito. IA, Dataísmo e espiritualidade sem Cristo: discernindo o verdadeiro Aquário do falso em tempos de inundação de informação.",
+    "date": "2026-01-04",
+    "category": "Série — O Código das Eras",
+    "time": "LIVRO",
+    "image": "/image/livraria/aquario.webp"
+  },
+  {
+    "title": "A Convergência dos Tempos",
+    "slug": "serie - o codigo das eras/Ebook 5 - A Convergência dos Tempos",
+    "description": "Babel digital, marca da besta e transumanismo: a convergência final de tecnologia, poder e engano que prepara o palco do Anticristo. A profecia que a IA generativa está cumprindo.",
+    "date": "2026-01-05",
+    "category": "Série — O Código das Eras",
+    "time": "LIVRO",
+    "image": "/image/livraria/a convergencia dos tempos.webp"
+  },
+  {
+    "title": "O Reino que Não Terá Fim",
+    "slug": "serie - o codigo das eras/Ebook 6 - O Reino que Não Terá Fim",
+    "description": "A Nova Jerusalém descendo do céu. O Grande Trono Branco, o Jardim restaurado e o fim do tempo. O destino final de todas as eras: o Reino eterno e o Eterno Presente de Deus.",
+    "date": "2026-01-06",
+    "category": "Série — O Código das Eras",
+    "time": "LIVRO",
+    "image": "/image/livraria/o reino que nao tera fim.webp"
+  },
+  {
+    "title": "O Calendário Secreto do Céu",
+    "slug": "serie - jubileus/Ebook 1 - o calendario secreto do ceu",
+    "description": "A guerra do Sol contra a Lua e o relógio esquecido de Deus. O calendário de 364 dias de Jubileus, a batalha de Qumran pelo tempo sagrado e o código que estrutura o cosmos bíblico.",
+    "date": "2026-02-01",
+    "category": "SÉRIE — JUBILEUS",
+    "time": "LIVRO",
+    "image": "/image/livraria/o calendario secreto do ceu.webp"
+  },
+  {
+    "title": "O Jardim que o Tempo Esqueceu",
+    "slug": "serie - jubileus/Ebook 2 - O Jardim que o Tempo Esqueceu",
+    "description": "Os anos perdidos de Adão, Eva e a primeira família da Terra. O que Jubileus revela sobre os sete anos no Éden, a Queda, Caim e Abel — as lacunas que o Gênesis não preencheu.",
+    "date": "2026-02-02",
+    "category": "SÉRIE — JUBILEUS",
+    "time": "LIVRO",
+    "image": "/image/livraria/o jardim que o tempo esqueceu.webp"
+  },
+  {
+    "title": "Quando os Nefilins Ressurgiram",
+    "slug": "serie - jubileus/Ebook 3 - Quando os Nefilins Ressurgiram",
+    "description": "O Dilúvio como arma de purificação cósmica. Jubileus revela os Vigilantes, o nascimento dos Nefilins e o clamor da terra que forçou o tribunal celestial a agir.",
+    "date": "2026-02-03",
+    "category": "SÉRIE — JUBILEUS",
+    "time": "LIVRO",
+    "image": "/image/livraria/quando os nefilins ressurgiram.webp"
+  },
+  {
+    "title": "A Herança Amaldiçoada de Noé",
+    "slug": "serie - jubileus/Ebook 4 - A Herança Amaldiçoada de Noé",
+    "description": "O mapa oculto das nações e a Torre de Babel. A divisão da terra entre os filhos de Noé, a maldição de Canaã e como os demônios de Mastema se tornaram os deuses das nações.",
+    "date": "2026-02-04",
+    "category": "SÉRIE — JUBILEUS",
+    "time": "LIVRO",
+    "image": "/image/livraria/a herança amaldicoada de noe.webp"
+  },
+  {
+    "title": "O Pacto de Fogo de Abraão",
+    "slug": "serie - jubileus/Ebook 5 - O Pacto de Fogo de Abraão",
+    "description": "Como um astrólogo de Ur se tornou amigo de Deus. Jubileus revela o incêndio do templo dos ídolos, a fornalha de Ur e o pacto de sangue e fogo que selou a aliança com Abraão.",
+    "date": "2026-02-05",
+    "category": "SÉRIE — JUBILEUS",
+    "time": "LIVRO",
+    "image": "/image/livraria/o pacto de fogo de abraao.webp"
+  },
+  {
+    "title": "A Bênção Roubada",
+    "slug": "serie - jubileus/Ebook 6 - A Bênção Roubada e o Príncipe que Lutou com Deus",
+    "description": "Jacó e a linhagem do dragão no Livro dos Jubileus. Da bênção roubada ao sonho da escada, dos vinte anos com Labão à luta noturna com o anjo — a formação de Israel.",
+    "date": "2026-02-06",
+    "category": "SÉRIE — JUBILEUS",
+    "time": "LIVRO",
+    "image": "/image/livraria/a bencao roubada.webp"
+  },
+  {
+    "title": "O Faraó, o Grão-Vizir e a Fome Divina",
+    "slug": "serie - jubileus/Ebook 7 - O Faraó, o Grão-Vizir e a Fome Divina",
+    "description": "A história oculta de José do Egito no Livro dos Jubileus. O sonhador vendido pelos irmãos que se tornou salvador do mundo — o arquétipo messiânico do rejeitado exaltado.",
+    "date": "2026-02-07",
+    "category": "SÉRIE — JUBILEUS",
+    "time": "LIVRO",
+    "image": "/image/livraria/o farao, o grao-vizir e a fome divina.webp"
+  },
+  {
+    "title": "O Primeiro Cordeiro e o Último Relógio",
+    "slug": "serie - jubileus/Ebook 8 - O Primeiro Cordeiro e o Último Relógio",
+    "description": "A instituição da Páscoa e o fim do tempo no Livro dos Jubileus. Do silêncio de quatrocentos anos ao Êxodo: a data que nunca deveria mudar e o cordeiro que aponta para o fim da história.",
+    "date": "2026-02-08",
+    "category": "SÉRIE — JUBILEUS",
+    "time": "LIVRO",
+    "image": "/image/livraria/o primeiro cordero e o ultimo relogio.webp"
   }
 ]

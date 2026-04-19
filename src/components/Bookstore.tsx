@@ -67,6 +67,7 @@ function pickCategoryByFolder(folder: string): string {
     ['serie - a invecao do pecado', 'Série — A Invenção do Pecado'],
     ['serie - a verdadeira historia da igreja', 'Série — A Verdadeira História da Igreja'],
     ['serie - o codigo das eras', 'Série — O Código das Eras'],
+    ['serie - jubileus', 'SÉRIE — JUBILEUS'],
     ['serie - 1 enoque', 'A REVELAÇÃO DE ENOQUE'],
     ['trilogia - o mapa da tempestade', 'Trilogia — O Mapa da Tempestade'],
     ['trilogia - o estrangeiro prospero', 'Trilogia — O Estrangeiro Próspero'],
@@ -285,6 +286,7 @@ const SECTION_ORDER: SectionKey[] = [
 // Maps existing category strings → top-level section
 const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'A REVELAÇÃO DE ENOQUE':                   'APÓCRIFOS',
+  'SÉRIE — JUBILEUS':                        'APÓCRIFOS',
   'Série — A Invenção do Pecado':             'HISTÓRIA DA IGREJA',
   'Trilogia — O Cânon Oculto':                'HISTÓRIA DA IGREJA',
   'Série — A Verdadeira História da Igreja':  'HISTÓRIA DA IGREJA',
@@ -314,6 +316,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Trilogia — O Véu Rasgado':                 'O Véu Rasgado',
   'Trilogia — A Coroa Roubada':               'A Coroa Roubada',
   'A REVELAÇÃO DE ENOQUE':                    'A Revelação de Enoque',
+  'SÉRIE — JUBILEUS':                         'Série dos Jubileus',
   'SOMBRAS DO REINO DE DEUS':                 'Sombras do Reino de Deus',
   'Série — O Conselho do Altíssimo':          'O Conselho do Altíssimo',
   'Série — O Código do Jardim':               'O Código do Jardim',
@@ -326,6 +329,7 @@ const SERIES_LABEL: Record<string, string> = {
 // Description shown below each series header
 const SERIES_DESCRIPTION: Record<string, string> = {
   'A REVELAÇÃO DE ENOQUE': 'Uma jornada profunda pelas visões e revelações do profeta Enoque sobre o mundo espiritual, os vigilantes e o destino da humanidade.',
+  'SÉRIE — JUBILEUS': 'O livro que Moisés recebeu dos anjos e que a tradição oficial silenciou. Uma jornada pelos segredos do calendário sagrado, dos patriarcas e da guerra invisível que moldou a história bíblica.',
   'SOMBRAS DO REINO DE DEUS': 'Uma leitura bíblica do mundo espiritual: Reino de Deus, conselho celeste e as realidades invisíveis que Hebreus 8:5 chama de sombra das coisas celestiais.',
   'Série — O Conselho do Altíssimo': 'Uma exploração bíblica do conselho divino: rebelião celestial, restauração em Cristo e governo do Reino na eternidade.',
   'Série — O Código do Jardim': 'Uma série sobre os arquétipos de Gênesis: conhecimento, nomeação, Babel e sabedoria para discernir o conflito espiritual no presente.',

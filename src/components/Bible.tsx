@@ -195,6 +195,9 @@ function toSubthemeDescription(subthemeId: string): string {
   if (subthemeId.includes('sheol-desvendado')) {
     return 'A geografia do Sheol antes da ressurreição, a descida de Cristo ao Hades e o destino final da morte.';
   }
+  if (subthemeId.includes('torre-de-babel') || subthemeId.includes('babel')) {
+    return 'A Torre de Babel como arquétipo da globalização forçada, da rebelião cósmica e da entrega das nações — do Peshat ao Sod, de Nimrod à Grande Babilônia do Apocalipse.';
+  }
   return 'Série temática com estudos progressivos organizados por volume.';
 }
 
