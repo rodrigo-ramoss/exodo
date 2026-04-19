@@ -1,5 +1,6 @@
 import { useState, useRef, useMemo, type ReactNode } from 'react';
-import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers } from 'lucide-react';
+import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check } from 'lucide-react';
+import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
 import { AppImage } from './AppImage';
@@ -349,76 +350,50 @@ function buildAutoSeriesDescription(category: string, items: BookItem[]): string
 }
 
 // ── DragScrollRow ─────────────────────────────────────────────────────────────
+// IMPORTANTE: NÃO usar setPointerCapture aqui.
+// Com pointer capture, o pointerup é redirecionado para o container, então o
+// browser cria o evento click no LCA(pointerdown, pointerup) = container,
+// e o click jamais atravessa os filhos (BookCard) → onClick nunca dispara.
+// Sem pointer capture, pointerup cai no elemento real (BookCard) e o click
+// propaga corretamente para cima, acionando BookCard.onClick.
 function DragScrollRow({ children }: { children: ReactNode }) {
   const rowRef = useRef<HTMLDivElement>(null);
-  const drag = useRef({
-    isDown: false,
-    startX: 0,
-    scrollLeft: 0,
-    didDrag: false,
-    pointerId: null as number | null,
-  });
-
-  const scheduleClearDragSuppression = () => {
-    setTimeout(() => {
-      drag.current.didDrag = false;
-    }, 0);
-  };
-
-  const stopDragging = (clearSuppression = false) => {
-    drag.current.isDown = false;
-    drag.current.pointerId = null;
-    if (clearSuppression) drag.current.didDrag = false;
-  };
+  const drag = useRef({ isDown: false, startX: 0, scrollLeft: 0, didDrag: false });
 
   return (
     <div
       ref={rowRef}
       className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       onClickCapture={(e) => {
-        if (!drag.current.didDrag) return;
-        e.preventDefault();
-        e.stopPropagation();
-        drag.current.didDrag = false;
+        if (drag.current.didDrag) {
+          e.preventDefault();
+          e.stopPropagation();
+          drag.current.didDrag = false;
+        }
       }}
       onPointerDown={(e) => {
         if (e.pointerType !== 'mouse' || e.button !== 0) return;
         const el = rowRef.current;
         if (!el) return;
-        drag.current = {
-          isDown: true,
-          startX: e.clientX,
-          scrollLeft: el.scrollLeft,
-          didDrag: false,
-          pointerId: e.pointerId,
-        };
-        el.setPointerCapture(e.pointerId);
+        // Não chamar setPointerCapture — ver comentário acima
+        drag.current = { isDown: true, startX: e.clientX, scrollLeft: el.scrollLeft, didDrag: false };
       }}
       onPointerMove={(e) => {
         if (e.pointerType !== 'mouse' || !drag.current.isDown) return;
-        if (drag.current.pointerId !== null && e.pointerId !== drag.current.pointerId) return;
         const el = rowRef.current;
         if (!el) return;
         const walk = e.clientX - drag.current.startX;
-        if (Math.abs(walk) > 8) drag.current.didDrag = true;
+        if (Math.abs(walk) > 10) drag.current.didDrag = true;
         el.scrollLeft = drag.current.scrollLeft - walk;
       }}
-      onPointerUp={(e) => {
-        if (drag.current.pointerId !== null && e.pointerId !== drag.current.pointerId) return;
-        const el = rowRef.current;
-        if (el?.hasPointerCapture(e.pointerId)) {
-          el.releasePointerCapture(e.pointerId);
-        }
-        stopDragging(false);
-        scheduleClearDragSuppression();
+      onPointerUp={() => {
+        drag.current.isDown = false;
+        setTimeout(() => { drag.current.didDrag = false; }, 0);
       }}
-      onPointerCancel={(e) => {
-        if (drag.current.pointerId !== null && e.pointerId !== drag.current.pointerId) return;
-        stopDragging(true);
-      }}
-      onLostPointerCapture={() => {
-        stopDragging(false);
-        scheduleClearDragSuppression();
+      onPointerLeave={() => {
+        // Mouse saiu do container durante o arrasto — reseta estado
+        drag.current.isDown = false;
+        drag.current.didDrag = false;
       }}
     >
       {children}
@@ -428,12 +403,10 @@ function DragScrollRow({ children }: { children: ReactNode }) {
 
 // ── Book Card ─────────────────────────────────────────────────────────────────
 function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: number; onSelect: () => void }) {
-  const progressValue = parseInt(localStorage.getItem(`progress_${item.slug}`) || '0', 10);
-  const clamped = Math.max(0, Math.min(100, Number.isFinite(progressValue) ? progressValue : 0));
-  const readsCount = parseInt(localStorage.getItem(`reads_${item.slug}`) || '0', 10);
-  const hasBeenRead = readsCount > 0;
-  const isReading = clamped > 0;
-  const showReadCount = hasBeenRead && !isReading;
+  const clamped = pm.getProgress('livraria', item.slug);
+  const readsCount = pm.getReadCount('livraria', item.slug);
+  const isCompleted = pm.isRead('livraria', item.slug);
+  const isReading = clamped > 0 && !isCompleted;
 
   return (
     <div
@@ -446,6 +419,12 @@ function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: numb
           src={item.image}
           alt={item.title}
         />
+        {isCompleted && (
+          <div className="absolute top-1.5 right-1.5 flex items-center gap-1 rounded-full bg-black/70 border border-[#D4AF37]/60 px-1.5 py-0.5">
+            <Check size={8} className="text-[#D4AF37]" />
+            <span className="text-[7px] font-black uppercase tracking-widest text-[#D4AF37]">Lido</span>
+          </div>
+        )}
       </div>
       <div className="mt-3 px-1 select-none">
         <div className="mb-1">
@@ -457,21 +436,21 @@ function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: numb
           <div className="h-5 flex-1 bg-outline-variant/20 rounded-full overflow-hidden border border-outline-variant/15">
             <div
               className={
-                showReadCount
+                isCompleted
                   ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_10px_rgba(212,175,55,0.35)] flex items-center justify-center'
                   : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_8px_rgba(249,115,22,0.35)] flex items-center justify-center'
               }
-              style={{ width: `${clamped}%` }}
+              style={{ width: `${isReading ? clamped : isCompleted ? 100 : 0}%` }}
             >
-              {clamped > 0 && (
+              {(isReading || isCompleted) && (
                 <span className="text-[10px] font-black tracking-tight text-black/90 whitespace-nowrap leading-none">
-                  {clamped}%
+                  {isCompleted ? '100%' : `${clamped}%`}
                 </span>
               )}
             </div>
           </div>
         </div>
-        {showReadCount && (
+        {readsCount > 0 && (
           <div className="mt-1.5">
             <span className="text-[9px] font-black uppercase tracking-widest text-[#D4AF37]">
               Lido {readsCount} vez(es)
@@ -491,10 +470,7 @@ function SectionCard({ sectionKey, books, onSelect }: {
 }) {
   const { label, description, Icon, accent } = SECTIONS[sectionKey];
   const cover = books[0]?.image;
-  const totalRead = books.filter(
-    (b) => parseInt(localStorage.getItem(`reads_${b.slug}`) || '0', 10) > 0
-      || parseInt(localStorage.getItem(`progress_${b.slug}`) || '0', 10) >= 100
-  ).length;
+  const totalRead = pm.countRead('livraria', books.map((b) => b.slug));
 
   return (
     <div
@@ -608,7 +584,7 @@ export default function Bookstore() {
 
   // ── Reader ─────────────────────────────────────────────────────────────────
   if (selectedSlug && markdownContent) {
-    return <MarkdownViewer content={markdownContent} slug={selectedSlug} onClose={handleCloseReader} />;
+    return <MarkdownViewer content={markdownContent} slug={selectedSlug} category="livraria" onClose={handleCloseReader} />;
   }
 
   // ── Section detail ─────────────────────────────────────────────────────────
@@ -638,7 +614,7 @@ export default function Bookstore() {
         </div>
 
         {seriesInSection.map(([cat, items], index) => {
-          const reads = items.map((b) => parseInt(localStorage.getItem(`reads_${b.slug}`) || '0', 10));
+          const reads = items.map((b) => pm.getReadCount('livraria', b.slug));
           const minReads = reads.length ? Math.min(...reads) : 0;
           const label = SERIES_LABEL[cat] ?? cat;
           const seriesDescription = buildAutoSeriesDescription(cat, items);

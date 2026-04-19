@@ -3,10 +3,12 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X } from 'lucide-react';
 import type { Components } from 'react-markdown';
+import { pm, type Category } from '../lib/progressManager';
 
 interface MarkdownViewerProps {
   content?: string | null;
   slug: string;
+  category?: Category;
   onClose: () => void;
 }
 
@@ -126,7 +128,7 @@ function safeParseMarkdown(rawContent?: string | null): { metadata: MarkdownMeta
   }
 }
 
-export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, onClose }) => {
+export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, category = 'biblica', onClose }) => {
   const [progress, setProgress] = useState(0);
   const [fontSize, setFontSize] = useState(18);
   const [theme, setTheme] = useState<ReadingTheme>('dark');
@@ -134,33 +136,34 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
   const [showToast, setShowToast] = useState(false);
   const [savedScrollPos, setSavedScrollPos] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
   const didFinalizeRef = useRef(false);
   const reachedEndRef = useRef(false);
   const completionCountedRef = useRef(false);
 
-  const incrementReadCountOnCompletion = useCallback((updateUi: boolean) => {
+  /**
+   * Marca a leitura como concluída (via progressManager).
+   * O progressManager tem debounce de 1 min contra reload duplicado.
+   * O completionCountedRef evita dupla contagem na mesma sessão.
+   */
+  const markReadCompletion = useCallback((updateUi: boolean) => {
     if (completionCountedRef.current) return;
     completionCountedRef.current = true;
 
-    const readsKey = `reads_${slug}`;
-    const currentReads = parseInt(localStorage.getItem(readsKey) || '0', 10);
-    const normalizedReads = Number.isFinite(currentReads) ? currentReads : 0;
-    localStorage.setItem(readsKey, String(normalizedReads + 1));
-    localStorage.setItem(`progress_${slug}`, '0');
-    localStorage.removeItem(`scroll_${slug}`);
+    pm.markAsRead(category, slug);
     reachedEndRef.current = false;
 
     if (updateUi) {
       setProgress(0);
     }
-  }, [slug]);
+  }, [category, slug]);
 
   const persistCompletionIfNeeded = useCallback((percentage: number, updateUi: boolean) => {
     if (percentage < 100) return false;
-    localStorage.setItem(`progress_${slug}`, '100');
-    incrementReadCountOnCompletion(updateUi);
+    pm.setProgress(category, slug, 100);
+    markReadCompletion(updateUi);
     return true;
-  }, [slug, incrementReadCountOnCompletion]);
+  }, [category, slug, markReadCompletion]);
 
   // History sync for hardware back button
   useEffect(() => {
@@ -199,29 +202,29 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
   useEffect(() => {
     const savedFontSize = localStorage.getItem('reader_font_size');
     const savedTheme = localStorage.getItem('reader_theme') as ReadingTheme;
-    const savedProgressRaw = localStorage.getItem(`progress_${slug}`);
-    const savedProgress = parseInt(savedProgressRaw || '0', 10);
 
     if (savedFontSize) setFontSize(parseInt(savedFontSize, 10));
     if (savedTheme) setTheme(savedTheme);
 
-    if (savedProgress >= 100) {
-      localStorage.setItem(`progress_${slug}`, '100');
-      incrementReadCountOnCompletion(true);
-    } else if (savedProgress > 0) {
+    // CORREÇÃO DO BUG DE DUPLA CONTAGEM:
+    // Não chamamos markReadCompletion ao abrir um artigo já lido.
+    // A contagem só acontece quando o usuário de fato chega ao fim durante
+    // a sessão atual (via IntersectionObserver ou handleScroll).
+    const savedProgress = pm.getProgress(category, slug);
+    if (savedProgress > 0 && savedProgress < 100) {
       setProgress(savedProgress);
     }
+    // Se estava em 100, começa do zero — nova leitura
 
-    // Always open from the top. If there's a saved position, offer a button
-    // so the user can choose to jump back — instead of auto-scrolling past title/index.
-    const savedScroll = localStorage.getItem(`scroll_${slug}`);
-    if (savedScroll && parseInt(savedScroll, 10) > 100) {
-      setSavedScrollPos(parseInt(savedScroll, 10));
+    // Oferece botão para retomar na posição salva
+    const savedScroll = pm.getScrollPos(category, slug);
+    if (savedScroll > 100) {
+      setSavedScrollPos(savedScroll);
       setShowToast(true);
     }
-  }, [slug, incrementReadCountOnCompletion]);
+  }, [category, slug]);
 
-  // Finalize session on close/unmount
+  // Finaliza sessão ao fechar/desmontar
   useEffect(() => {
     return () => {
       if (didFinalizeRef.current) return;
@@ -237,14 +240,14 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
         }
       }
 
-      const savedProgress = parseInt(localStorage.getItem(`progress_${slug}`) || '0', 10);
+      const savedProgress = pm.getProgress(category, slug);
       const didComplete = reachedEndRef.current || completionByScroll || savedProgress >= 100;
 
       if (didComplete && !completionCountedRef.current) {
         persistCompletionIfNeeded(100, false);
       }
     };
-  }, [slug, persistCompletionIfNeeded]);
+  }, [category, slug, persistCompletionIfNeeded]);
 
   // Save settings
   useEffect(() => {
@@ -255,7 +258,28 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
     localStorage.setItem('reader_theme', theme);
   }, [theme]);
 
-  // Track scroll
+  // IntersectionObserver no sentinel (div no fim do conteúdo)
+  // Gatilho robusto de conclusão — complementa o scroll listener
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && progress >= 10) {
+          // Só conta se o usuário rolou pelo menos 10% — evita artigos curtíssimos
+          reachedEndRef.current = true;
+          persistCompletionIfNeeded(100, true);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [progress, persistCompletionIfNeeded]);
+
+  // Scroll listener: rastreia progresso % e posição de scroll
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -275,21 +299,18 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
       }
 
       if (scrollTop > 0) {
-        localStorage.setItem(`scroll_${slug}`, scrollTop.toString());
+        pm.setProgress(category, slug, scrolled, scrollTop);
       }
 
       setProgress((current) => {
         const next = Math.max(current, scrolled);
-        if (next !== current) {
-          localStorage.setItem(`progress_${slug}`, String(next));
-        }
         return next;
       });
     };
 
     container.addEventListener('scroll', handleScroll, { passive: true });
     return () => container.removeEventListener('scroll', handleScroll);
-  }, [slug, persistCompletionIfNeeded]);
+  }, [category, slug, persistCompletionIfNeeded]);
 
   // Theme styles - Cleaned up to rely on global CSS for red headings
   const themeStyles = {
@@ -455,7 +476,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
         )}
 
         {/* Markdown Body */}
-        <div 
+        <div
           className={`prose max-w-none prose-p:leading-relaxed prose-headings:font-headline prose-headings:tracking-tight prose-li:marker:text-primary transition-all duration-300 ${theme === 'dark' ? 'prose-invert' : 'prose-p:text-current'}`}
           style={{ fontSize: `${fontSize}px` }}
         >
@@ -463,6 +484,9 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, o
             {parsedContent}
           </ReactMarkdown>
         </div>
+
+        {/* Sentinel: IntersectionObserver observa este elemento para detectar fim de leitura */}
+        <div ref={sentinelRef} className="h-1 w-full mt-4" aria-hidden="true" />
       </div>
 
       {/* Continue Reading Button */}

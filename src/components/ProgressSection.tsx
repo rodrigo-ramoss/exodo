@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { TrendingUp } from 'lucide-react';
 import { useFetch } from '../hooks/useFetch';
+import { pm } from '../lib/progressManager';
 
 const refutationModules = import.meta.glob('../content/refutacao/*/*.md', {
   eager: true,
@@ -17,13 +18,6 @@ interface LibraryItem { slug: string; }
 function pctOf(value: number, total: number) {
   return total > 0 ? Math.round((value / total) * 100) : 0;
 }
-function readProgress(slug: string) {
-  return Math.min(100, parseInt(localStorage.getItem(`progress_${slug}`) ?? '0', 10) || 0);
-}
-function isRead(slug: string) {
-  const reads = parseInt(localStorage.getItem(`reads_${slug}`) ?? '0', 10);
-  return reads > 0 || readProgress(slug) >= 100;
-}
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function ProgressSection() {
@@ -31,7 +25,7 @@ export default function ProgressSection() {
   const { data: apoBooks } = useFetch<ApoBook[]>('/content/apocrifos/apocrifos-index.json');
   const apoStats = useMemo(() => {
     if (!apoBooks) return { pct: 0, read: 0, total: 0 };
-    const read = apoBooks.filter((b) => isRead(b.slug)).length;
+    const read = pm.countRead('apocrifos', apoBooks.map((b) => b.slug));
     return { total: apoBooks.length, read, pct: pctOf(read, apoBooks.length) };
   }, [apoBooks]);
 
@@ -45,7 +39,7 @@ export default function ProgressSection() {
         ?.replace(/\.md$/i, '') ?? '',
     ).filter(Boolean);
     const total = slugs.length;
-    const read = slugs.filter((slug) => isRead(slug)).length;
+    const read = pm.countRead('refutacao', slugs);
     return { total, read, pct: pctOf(read, total) };
   }, []);
 
@@ -53,7 +47,7 @@ export default function ProgressSection() {
   const { data: libBooks } = useFetch<LibraryItem[]>('/content/livraria/index.json');
   const libStats = useMemo(() => {
     if (!libBooks) return { pct: 0, read: 0, total: 0 };
-    const read = libBooks.filter((b) => isRead(b.slug)).length;
+    const read = pm.countRead('livraria', libBooks.map((b) => b.slug));
     return { total: libBooks.length, read, pct: pctOf(read, libBooks.length) };
   }, [libBooks]);
 
@@ -61,7 +55,7 @@ export default function ProgressSection() {
   const { data: studies } = useFetch<StudyItem[]>('/content/mana/index.json');
   const studyStats = useMemo(() => {
     if (!studies) return { pct: 0, read: 0, total: 0 };
-    const read = studies.filter((s) => isRead(s.slug)).length;
+    const read = pm.countRead('mana', studies.map((s) => s.slug));
     return { total: studies.length, read, pct: pctOf(read, studies.length) };
   }, [studies]);
 

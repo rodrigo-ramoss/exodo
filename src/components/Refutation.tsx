@@ -127,6 +127,7 @@ export default function Refutation() {
       <MarkdownViewer
         content={selectedStudy.content}
         slug={selectedStudy.slug}
+        category="refutacao"
         onClose={() => setSelectedStudy(null)}
       />
     );

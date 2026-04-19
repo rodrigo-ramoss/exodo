@@ -10,9 +10,11 @@ import {
   Dna,
   Cross,
   Flame,
+  Check,
 } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 import { AppImage } from './AppImage';
+import { pm } from '../lib/progressManager';
 
 interface AxisMeta {
   id: string;
@@ -261,13 +263,11 @@ function loadInterpretationStudies(): InterpretationStudy[] {
 }
 
 function getProgress(slug: string): number {
-  const value = parseInt(localStorage.getItem(`progress_${slug}`) || '0', 10);
-  return Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0));
+  return pm.getProgress('biblica', slug);
 }
 
 function getReads(slug: string): number {
-  const value = parseInt(localStorage.getItem(`reads_${slug}`) || '0', 10);
-  return Number.isFinite(value) ? Math.max(0, value) : 0;
+  return pm.getReadCount('biblica', slug);
 }
 
 function AnimatedDivider() {
@@ -333,6 +333,7 @@ export default function Bible() {
       <MarkdownViewer
         content={selectedStudy.content}
         slug={selectedStudy.pathKey}
+        category="biblica"
         onClose={() => setSelectedStudy(null)}
       />
     );
@@ -418,14 +419,21 @@ export default function Bible() {
               {group.studies.map((study) => {
                 const progress = getProgress(study.pathKey);
                 const reads = getReads(study.pathKey);
+                const isCompleted = pm.isRead('biblica', study.pathKey);
                 return (
                   <article
                     key={study.pathKey}
                     onClick={() => setSelectedStudy(study)}
                     className="gold-glow-hover min-w-[220px] max-w-[220px] rounded-xl border border-outline-variant/20 bg-surface-container-low overflow-hidden cursor-pointer hover:scale-[1.03] transition-transform duration-300 snap-start"
                   >
-                    <div className="h-24 w-full border-b border-outline-variant/10">
+                    <div className="relative h-24 w-full border-b border-outline-variant/10">
                       <AppImage src={study.image} alt={study.title} className="w-full h-full object-cover" />
+                      {isCompleted && (
+                        <div className="absolute top-1.5 right-1.5 flex items-center gap-1 rounded-full bg-black/70 border border-[#D4AF37]/60 px-1.5 py-0.5">
+                          <Check size={8} className="text-[#D4AF37]" />
+                          <span className="text-[7px] font-black uppercase tracking-widest text-[#D4AF37]">Lido</span>
+                        </div>
+                      )}
                     </div>
 
                     <div className="p-3">
@@ -441,14 +449,16 @@ export default function Bible() {
 
                       <div className="h-1.5 bg-outline-variant/20 rounded-full overflow-hidden border border-outline-variant/20">
                         <div
-                          className="h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E]"
+                          className={isCompleted
+                            ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_8px_rgba(212,175,55,0.35)]'
+                            : 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E]'}
                           style={{ width: `${progress}%` }}
                         />
                       </div>
 
                       <div className="mt-1.5 flex items-center justify-between">
-                        <span className="text-[8px] uppercase tracking-wider font-black text-on-surface-variant/55">
-                          {reads > 0 && progress === 0 ? `Lido ${reads}x` : 'Em andamento'}
+                        <span className={`text-[8px] uppercase tracking-wider font-black ${isCompleted ? 'text-[#D4AF37]' : 'text-on-surface-variant/55'}`}>
+                          {reads > 0 ? `Lido ${reads}x` : progress > 0 ? 'Em andamento' : 'Não iniciado'}
                         </span>
                         <span className="text-[8px] uppercase tracking-widest font-bold text-on-surface-variant/45">
                           {study.date || 'sem data'}

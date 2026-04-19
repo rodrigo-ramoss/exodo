@@ -3,6 +3,7 @@ import { Check, Shield } from 'lucide-react';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
 import { AppImage } from './AppImage';
+import { pm } from '../lib/progressManager';
 
 interface ApoBook {
   title: string;
@@ -22,6 +23,7 @@ const seriesInfo: Record<string, { title: string; description: string }> = {
 };
 
 // ── DragScrollRow (same as Bookstore) ────────────────────────────────────────
+// Não usa setPointerCapture — ver explicação em Bookstore.tsx
 function DragScrollRow({ children }: { children: ReactNode }) {
   const rowRef = useRef<HTMLDivElement>(null);
   const drag = useRef({ isDown: false, startX: 0, scrollLeft: 0, didDrag: false });
@@ -31,24 +33,26 @@ function DragScrollRow({ children }: { children: ReactNode }) {
       ref={rowRef}
       className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       onClickCapture={(e) => {
-        if (drag.current.didDrag) { e.preventDefault(); e.stopPropagation(); }
+        if (drag.current.didDrag) {
+          e.preventDefault();
+          e.stopPropagation();
+          drag.current.didDrag = false;
+        }
       }}
       onPointerDown={(e) => {
         if (e.pointerType !== 'mouse') return;
         const el = rowRef.current; if (!el) return;
         drag.current = { isDown: true, startX: e.clientX, scrollLeft: el.scrollLeft, didDrag: false };
-        el.setPointerCapture(e.pointerId);
       }}
       onPointerMove={(e) => {
         if (e.pointerType !== 'mouse' || !drag.current.isDown) return;
         const el = rowRef.current; if (!el) return;
         const walk = e.clientX - drag.current.startX;
-        if (Math.abs(walk) > 8) drag.current.didDrag = true;
+        if (Math.abs(walk) > 10) drag.current.didDrag = true;
         el.scrollLeft = drag.current.scrollLeft - walk;
       }}
       onPointerUp={() => { drag.current.isDown = false; setTimeout(() => { drag.current.didDrag = false; }, 0); }}
-      onPointerCancel={() => { drag.current.isDown = false; }}
-      onPointerLeave={() => { drag.current.isDown = false; }}
+      onPointerLeave={() => { drag.current.isDown = false; drag.current.didDrag = false; }}
     >
       {children}
     </div>
@@ -57,9 +61,9 @@ function DragScrollRow({ children }: { children: ReactNode }) {
 
 // ── Book card ─────────────────────────────────────────────────────────────────
 function BookCard({ book, index, onSelect }: { book: ApoBook; index: number; onSelect: () => void }) {
-  const progressValue = parseInt(localStorage.getItem(`progress_${book.slug}`) || '0', 10);
-  const clamped = Math.max(0, Math.min(100, Number.isFinite(progressValue) ? progressValue : 0));
-  const isCompleted = clamped >= 100;
+  const clamped = pm.getProgress('apocrifos', book.slug);
+  const isCompleted = pm.isRead('apocrifos', book.slug);
+  const readsCount = pm.getReadCount('apocrifos', book.slug);
 
   return (
     <div
@@ -79,6 +83,12 @@ function BookCard({ book, index, onSelect }: { book: ApoBook; index: number; onS
             Parte {String(index + 1).padStart(2, '0')}
           </span>
         </div>
+        {isCompleted && (
+          <div className="absolute top-1.5 right-1.5 flex items-center gap-1 rounded-full bg-black/70 border border-[#D4AF37]/60 px-1.5 py-0.5">
+            <Check size={8} className="text-[#D4AF37]" />
+            <span className="text-[7px] font-black uppercase tracking-widest text-[#D4AF37]">Lido</span>
+          </div>
+        )}
       </div>
 
       {/* Title */}
@@ -96,7 +106,7 @@ function BookCard({ book, index, onSelect }: { book: ApoBook; index: number; onS
                   ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_10px_rgba(212,175,55,0.35)]'
                   : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_8px_rgba(249,115,22,0.35)]'
               }
-              style={{ width: `${clamped}%` }}
+              style={{ width: `${isCompleted ? 100 : clamped}%` }}
             />
           </div>
           <div className="flex items-center gap-1">
@@ -109,11 +119,16 @@ function BookCard({ book, index, onSelect }: { book: ApoBook; index: number; onS
                     : 'text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40'
               }
             >
-              {clamped}%
+              {isCompleted ? '100' : clamped}%
             </span>
             {isCompleted && <Check size={11} className="text-[#D4AF37]" />}
           </div>
         </div>
+        {readsCount > 0 && (
+          <p className="mt-1 text-[8px] font-black uppercase tracking-widest text-[#D4AF37]/70">
+            Lido {readsCount}x
+          </p>
+        )}
       </div>
     </div>
   );
@@ -143,7 +158,7 @@ export default function Protocol() {
   };
 
   if (selectedSlug && markdownContent) {
-    return <MarkdownViewer content={markdownContent} slug={selectedSlug} onClose={handleClose} />;
+    return <MarkdownViewer content={markdownContent} slug={selectedSlug} category="apocrifos" onClose={handleClose} />;
   }
 
   // Group by category (same pattern as Bookstore)
@@ -182,9 +197,7 @@ export default function Protocol() {
       {!loading && categories.map((cat) => {
         const items = grouped[cat];
         const info = seriesInfo[cat];
-        const reads = items.map((b) =>
-          parseInt(localStorage.getItem(`reads_${b.slug}`) || '0', 10)
-        );
+        const reads = items.map((b) => pm.getReadCount('apocrifos', b.slug));
         const minReads = reads.length ? Math.min(...reads) : 0;
 
         return (

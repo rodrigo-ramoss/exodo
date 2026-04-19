@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
-import { Search, Star, Clock } from 'lucide-react';
+import { Search, Star, Clock, Check } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 import { useFetch } from '../hooks/useFetch';
 import { AppImage } from './AppImage';
+import { pm } from '../lib/progressManager';
 
 interface StudyItem {
   title: string;
@@ -109,10 +110,11 @@ export default function Studies() {
 
   if (selectedStudy && markdownContent) {
     return (
-      <MarkdownViewer 
-        content={markdownContent} 
-        slug={selectedStudy.slug} 
-        onClose={() => setSelectedStudy(null)} 
+      <MarkdownViewer
+        content={markdownContent}
+        slug={selectedStudy.slug}
+        category="mana"
+        onClose={() => setSelectedStudy(null)}
       />
     );
   }
@@ -262,11 +264,12 @@ export default function Studies() {
             <div className="flex gap-4 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
               <div className="w-4 sm:w-6 flex-shrink-0" /> {/* Left Spacer to align with px-4/sm:px-6 */}
               {groupedStudies[cat].map((item, j) => {
-                const progress = typeof window !== 'undefined' ? localStorage.getItem(`progress_${item.slug}`) : null;
-                
+                const progress = pm.getProgress('mana', item.slug);
+                const isCompleted = pm.isRead('mana', item.slug);
+
                 return (
-                  <div 
-                    key={j} 
+                  <div
+                    key={j}
                     onClick={() => setSelectedStudy(item)}
                     className="interactive-card gold-glow-hover flex-shrink-0 w-40 sm:w-48 snap-start group cursor-pointer active:scale-[0.98] transition-all"
                   >
@@ -276,11 +279,20 @@ export default function Studies() {
                         alt={item.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
-                      {progress && parseInt(progress) > 0 && (
+                      {isCompleted && (
+                        <div className="absolute top-1.5 right-1.5 flex items-center gap-1 rounded-full bg-black/70 border border-[#D4AF37]/60 px-1.5 py-0.5">
+                          <Check size={8} className="text-[#D4AF37]" />
+                          <span className="text-[7px] font-black uppercase tracking-widest text-[#D4AF37]">Lido</span>
+                        </div>
+                      )}
+                      {progress > 0 && (
                         <div className="absolute bottom-0 left-0 w-full h-1 bg-black/40">
-                          <div 
-                            className="h-full bg-gradient-to-r from-orange-500 to-yellow-400" 
-                            style={{ width: `${progress}%` }}
+                          <div
+                            className={isCompleted
+                              ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E]'
+                              : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400'
+                            }
+                            style={{ width: `${isCompleted ? 100 : progress}%` }}
                           />
                         </div>
                       )}

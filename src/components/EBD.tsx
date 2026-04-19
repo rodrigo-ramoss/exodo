@@ -45,10 +45,11 @@ export default function EBD({ onNavigate }: EBDProps) {
 
   if (selectedSlug && markdownContent) {
     return (
-      <MarkdownViewer 
-        content={markdownContent} 
-        slug={selectedSlug} 
-        onClose={() => setSelectedSlug(null)} 
+      <MarkdownViewer
+        content={markdownContent}
+        slug={selectedSlug}
+        category="ebd"
+        onClose={() => setSelectedSlug(null)}
       />
     );
   }
