@@ -43,7 +43,7 @@ function DragScrollRow({ children }: { children: ReactNode }) {
         if (e.pointerType !== 'mouse' || !drag.current.isDown) return;
         const el = rowRef.current; if (!el) return;
         const walk = e.clientX - drag.current.startX;
-        if (Math.abs(walk) > 4) drag.current.didDrag = true;
+        if (Math.abs(walk) > 8) drag.current.didDrag = true;
         el.scrollLeft = drag.current.scrollLeft - walk;
       }}
       onPointerUp={() => { drag.current.isDown = false; setTimeout(() => { drag.current.didDrag = false; }, 0); }}
