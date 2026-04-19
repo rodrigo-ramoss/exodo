@@ -5,7 +5,7 @@ versiculos: "Gênesis 10:8-12; 11:1-9; Deuteronômio 32:8-9 (LXX/Qumran); Jubile
 book: "Gênesis"
 eixo: "Eixo 1 – Geografia e Estruturas do Mundo Invisível"
 description: "Expansão do tema da Torre de Babel pela literatura apocalíptica do Segundo Templo e tradição rabínica, revelando Nimrod como o líder da rebelião global, o papel dos Vigilantes e a entrega das nações aos Benei Ha'Elohim."
-image: "torre-babel-parte2.jpg"
+image: '/image/eixos biblicos/A Torre de Babel Arquétipo da Globalização e a Herança das Nações.webp'
 ---
 
 # PARTE 2 – DERASH: A REBELIÃO DE NIMROD E A ENTREGA DAS NAÇÕES NA LITERATURA DO SEGUNDO TEMPLO

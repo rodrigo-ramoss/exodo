@@ -5,7 +5,7 @@ versiculos: "Gênesis 10:8-12; 11:1-9; Deuteronômio 32:8-9 (LXX/Qumran); Salmo 
 book: "Gênesis"
 eixo: "Eixo 1 – Geografia e Estruturas do Mundo Invisível"
 description: "Investigação filológica e arquetípica do relato da Torre de Babel, revelando-a como uma tentativa de unificação cósmica forçada, um portal artificial para o céu, e o momento da divisão das nações sob os Benei Ha'Elohim."
-image: "torre-babel-parte1.jpg"
+image: '/image/eixos biblicos/A Torre de Babel Arquétipo da Globalização e a Herança das Nações.webp'
 ---
 
 # PARTE 1 – PESHAT & REMEZ: O ZIGURATE, O NOME E A DISPERSÃO

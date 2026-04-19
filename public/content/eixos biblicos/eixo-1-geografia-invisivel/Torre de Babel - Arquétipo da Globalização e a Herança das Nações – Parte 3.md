@@ -5,7 +5,7 @@ versiculos: "Atos 2:1-21; Apocalipse 17–18; 21:22–22:5; Gênesis 11:1-9; Sof
 book: "Gênesis"
 eixo: "Eixo 1 – Geografia e Estruturas do Mundo Invisível"
 description: "A revelação do Sod: Pentecostes como a reversão da maldição de Babel, a Grande Babilônia como a consumação do espírito de Nimrod, e a restauração das nações redimidas na Nova Jerusalém, onde a diversidade glorifica ao Cordeiro."
-image: "torre-babel-parte3.jpg"
+image: '/image/eixos biblicos/A Torre de Babel Arquétipo da Globalização e a Herança das Nações.webp'
 ---
 
 # PARTE 3 – SOD: PENTECOSTES, A GRANDE BABILÔNIA E A RESTAURAÇÃO DAS NAÇÕES

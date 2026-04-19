@@ -200,12 +200,20 @@ function sortByNewest(a: InterpretationStudy, b: InterpretationStudy): number {
   const dateA = new Date(a.date ?? 0).getTime();
   const dateB = new Date(b.date ?? 0).getTime();
   if (dateA !== dateB) return dateB - dateA;
-  return a.volume - b.volume;
+  return b.volume - a.volume;
 }
 
 function sortByVolumeThenDate(a: InterpretationStudy, b: InterpretationStudy): number {
   if (a.volume !== b.volume) return a.volume - b.volume;
   return sortByNewest(a, b);
+}
+
+function resolveStudyImage(rawImage: string | undefined, axis: AxisMeta): string | undefined {
+  if (!rawImage) return axis.coverImage;
+  const image = rawImage.trim();
+  if (!image) return axis.coverImage;
+  if (image.startsWith('/')) return image;
+  return `/image/eixos biblicos/${image}`;
 }
 
 function loadInterpretationStudies(): InterpretationStudy[] {
@@ -235,7 +243,7 @@ function loadInterpretationStudies(): InterpretationStudy[] {
         subthemeLabel: subthemeSource.toUpperCase(),
         subthemeDescription: toSubthemeDescription(subthemeId),
         volume: extractVolume(title, fileName),
-        image: frontmatter.image?.trim() || undefined,
+        image: resolveStudyImage(frontmatter.image, axis),
       };
     })
     .sort(sortByNewest);
@@ -282,7 +290,7 @@ export default function Bible() {
     return map;
   }, [studies]);
 
-  const recentStudies = useMemo(() => studies.slice(0, 10), [studies]);
+  const recentStudies = useMemo(() => studies.slice(0, 5), [studies]);
 
   const selectedAxis = selectedAxisId ? AXIS_BY_ID[selectedAxisId] : null;
 
