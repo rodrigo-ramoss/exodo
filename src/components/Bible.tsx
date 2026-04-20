@@ -69,6 +69,7 @@ const AXIS_METADATA: AxisMeta[] = [
     title: 'Seres Celestiais e Ofícios',
     subtitle: 'Conselho Divino, Funções e Hierarquias',
     description: 'Análise de querubins, vigilantes, mensageiros e seus ofícios na economia do Reino.',
+    coverImage: '/image/eixos biblicos/os querubins e serafins.webp',
     accentClass: 'from-[#1e2a14]/95 via-[#141b12]/70 to-[#0d0f14]/40',
     glowClass: 'shadow-[0_0_30px_rgba(152,196,120,0.12)]',
     Icon: Shield,

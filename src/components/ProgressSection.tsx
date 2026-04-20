@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { TrendingUp } from 'lucide-react';
 import { useFetch } from '../hooks/useFetch';
-import { pm } from '../lib/progressManager';
+import { pm, type Category } from '../lib/progressManager';
 
 const refutationModules = import.meta.glob('../content/refutacao/*/*.md', {
   eager: true,
@@ -9,25 +9,49 @@ const refutationModules = import.meta.glob('../content/refutacao/*/*.md', {
   import: 'default',
 }) as Record<string, string>;
 
+const bibleStudyModules = import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
+
+const bibleStudySlugs = Object.keys(bibleStudyModules).map((path) => path.replace(/\\/g, '/'));
+
 // ── Types ────────────────────────────────────────────────────────────────────
-interface ApoBook { slug: string; }
 interface StudyItem { slug: string; }
 interface LibraryItem { slug: string; }
+interface ProgressStats {
+  pct: number;
+  read: number;
+  total: number;
+}
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
-function pctOf(value: number, total: number) {
-  return total > 0 ? Math.round((value / total) * 100) : 0;
+function clampPct(value: number) {
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function resolveItemPct(category: Category, slug: string) {
+  if (pm.isRead(category, slug)) return 100;
+  return clampPct(pm.getProgress(category, slug));
+}
+
+function buildStats(category: Category, slugs: string[]): ProgressStats {
+  const uniqueSlugs = Array.from(new Set(slugs.filter(Boolean)));
+  const total = uniqueSlugs.length;
+  if (!total) return { pct: 0, read: 0, total: 0 };
+
+  const read = uniqueSlugs.filter((slug) => pm.isRead(category, slug)).length;
+  const accumulatedPct = uniqueSlugs.reduce((sum, slug) => sum + resolveItemPct(category, slug), 0);
+  const pct = clampPct(accumulatedPct / total);
+
+  return { total, read, pct };
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function ProgressSection() {
-  // ── 1. Apocrypha ──────────────────────────────────────────────────────────
-  const { data: apoBooks } = useFetch<ApoBook[]>('/content/apocrifos/apocrifos-index.json');
-  const apoStats = useMemo(() => {
-    if (!apoBooks) return { pct: 0, read: 0, total: 0 };
-    const read = pm.countRead('apocrifos', apoBooks.map((b) => b.slug));
-    return { total: apoBooks.length, read, pct: pctOf(read, apoBooks.length) };
-  }, [apoBooks]);
+  // ── 1. Bíblia ─────────────────────────────────────────────────────────────
+  const bibleStats = useMemo(() => buildStats('biblica', bibleStudySlugs), []);
 
   // ── 2. Refutação ─────────────────────────────────────────────────────────
   const docStats = useMemo(() => {
@@ -38,35 +62,31 @@ export default function ProgressSection() {
         .pop()
         ?.replace(/\.md$/i, '') ?? '',
     ).filter(Boolean);
-    const total = slugs.length;
-    const read = pm.countRead('refutacao', slugs);
-    return { total, read, pct: pctOf(read, total) };
+    return buildStats('refutacao', slugs);
   }, []);
 
   // ── 3. Livraria ───────────────────────────────────────────────────────────
   const { data: libBooks } = useFetch<LibraryItem[]>('/content/livraria/index.json');
   const libStats = useMemo(() => {
     if (!libBooks) return { pct: 0, read: 0, total: 0 };
-    const read = pm.countRead('livraria', libBooks.map((b) => b.slug));
-    return { total: libBooks.length, read, pct: pctOf(read, libBooks.length) };
+    return buildStats('livraria', libBooks.map((b) => b.slug));
   }, [libBooks]);
 
   // ── 4. MANÁ ───────────────────────────────────────────────────────────────
   const { data: studies } = useFetch<StudyItem[]>('/content/mana/index.json');
   const studyStats = useMemo(() => {
     if (!studies) return { pct: 0, read: 0, total: 0 };
-    const read = pm.countRead('mana', studies.map((s) => s.slug));
-    return { total: studies.length, read, pct: pctOf(read, studies.length) };
+    return buildStats('mana', studies.map((s) => s.slug));
   }, [studies]);
 
   // ── Overall ───────────────────────────────────────────────────────────────
   const overallPct = useMemo(() => {
-    const scores = [apoStats.pct, docStats.pct, libStats.pct, studyStats.pct];
+    const scores = [bibleStats.pct, docStats.pct, libStats.pct, studyStats.pct];
     return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
-  }, [apoStats.pct, docStats.pct, libStats.pct, studyStats.pct]);
+  }, [bibleStats.pct, docStats.pct, libStats.pct, studyStats.pct]);
 
   const pillars = [
-    { label: 'Apócrifos', pct: apoStats.pct },
+    { label: 'Bíblia', pct: bibleStats.pct },
     { label: 'Refutação', pct: docStats.pct },
     { label: 'Livraria', pct: libStats.pct },
     { label: 'MANÁ', pct: studyStats.pct },
@@ -88,7 +108,7 @@ export default function ProgressSection() {
           <div>
             <p className="text-xs font-bold text-on-surface">Progresso Geral</p>
             <p className="text-[10px] text-on-surface-variant/60 mt-0.5">
-              Apócrifos · Refutação · Livraria · MANÁ
+              Bíblia · Refutação · Livraria · MANÁ
             </p>
           </div>
           <span className="font-headline text-2xl font-black text-primary tracking-tighter">

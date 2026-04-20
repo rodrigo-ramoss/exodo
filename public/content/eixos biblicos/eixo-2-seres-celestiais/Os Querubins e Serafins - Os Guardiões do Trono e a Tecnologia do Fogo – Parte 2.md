@@ -5,7 +5,7 @@ versiculos: "1 Enoque 14; 40; 61; 71; 2 Enoque 19–22; Apocalipse de Abraão 18
 book: "Ezequiel / Isaías / Êxodo"
 eixo: "Eixo 2 – Seres Celestiais e Seus Ofícios"
 description: "Expansão da tradição sobre Querubins, Serafins e Ofanim na literatura apocalíptica do Segundo Templo e nos Manuscritos do Mar Morto, revelando a hierarquia do Trono, a liturgia dos sumos sacerdotes angelicais e o misticismo da Merkavah."
-image: "querubins-serafins-parte2.jpg"
+image: "os querubins e serafins.webp"
 ---
 
 # PARTE 2 – DERASH: A LITURGIA CELESTIAL NA LITERATURA DO SEGUNDO TEMPLO E EM QUMRAN
