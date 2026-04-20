@@ -417,7 +417,7 @@
     "title": "A Queda do Querubim",
     "slug": "serie - o conselho do altissimo/Ebook 2 - A Queda do Querubim",
     "description": "A rebelião no conselho celestial, a origem do mal e seus desdobramentos na história bíblica.",
-    "date": "2026-04-17",
+    "date": "2026-04-19",
     "category": "Série — O Conselho do Altíssimo",
     "time": "LIVRO",
     "image": "/image/livraria/a queda do querubim.webp"
@@ -525,7 +525,7 @@
     "title": "A Origem do Adversário",
     "slug": "serie - a identidade do Eterno/Ebook 5 - A Origem do Adversário",
     "description": "A queda, a rebelião e o desenvolvimento do adversário na narrativa bíblica.",
-    "date": "2026-04-17",
+    "date": "2026-04-19",
     "category": "Série — A Identidade do Eterno",
     "time": "LIVRO",
     "image": "/image/livraria/a origem do adversario.webp"
@@ -660,7 +660,7 @@
     "title": "O Jardim que o Tempo Esqueceu",
     "slug": "serie - jubileus/Ebook 2 - O Jardim que o Tempo Esqueceu",
     "description": "Os anos perdidos de Adão, Eva e a primeira família da Terra. O que Jubileus revela sobre os sete anos no Éden, a Queda, Caim e Abel — as lacunas que o Gênesis não preencheu.",
-    "date": "2026-02-02",
+    "date": "2026-04-19",
     "category": "SÉRIE — JUBILEUS",
     "time": "LIVRO",
     "image": "/image/livraria/o jardim que o tempo esqueceu.webp"
@@ -718,5 +718,14 @@
     "category": "SÉRIE — JUBILEUS",
     "time": "LIVRO",
     "image": "/image/livraria/o primeiro cordero e o ultimo relogio.webp"
+  },
+  {
+    "title": "O Desejo do Querubim",
+    "slug": "serie - o trono abalado/Ebook 1 - O Desejo do Querubim",
+    "description": "A anatomia do primeiro pecado e a queda de Satanás.",
+    "date": "2026-04-19",
+    "category": "Série — O Trono Abalado",
+    "time": "LIVRO",
+    "image": "/image/livraria/a queda do querubim.webp"
   }
 ]
