@@ -5,7 +5,7 @@ versiculos: "Levítico 16:1-34; 17:7; 1 Enoque 8:1-3; 10:4-8; Apocalipse de Abra
 book: "Levítico"
 eixo: "Eixo 3 – Rebelião e Guerra Cósmica / Eixo 4 – Práticas e Símbolos Litúrgicos"
 description: "Investigação filológica e exegética do ritual do Dia da Expiação em Levítico 16, revelando a identidade de Azazel como o Vigilante rebelde do deserto, a transferência cósmica do pecado e o arquétipo da obra redentora de Cristo."
-image: "azazel-bode-expiatorio-parte1.jpg"
+image: "azazel e o bode expiatório.webp"
 ---
 
 # PARTE 1 – PESHAT & REMEZ: O RITUAL DOS DOIS BODES E O ENVIO AO DESERTO

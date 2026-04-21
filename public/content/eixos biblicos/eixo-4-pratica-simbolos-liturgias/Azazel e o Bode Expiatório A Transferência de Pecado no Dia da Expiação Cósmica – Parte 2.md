@@ -5,7 +5,7 @@ versiculos: "Levítico 16; 1 Enoque 6–11; 13; 54–55; Jubileus 4–5; 10; Apo
 book: "Levítico"
 eixo: "Eixo 3 – Rebelião e Guerra Cósmica / Eixo 4 – Práticas e Símbolos Litúrgicos"
 description: "Expansão do tema de Azazel pela literatura apocalíptica do Segundo Templo e Manuscritos do Mar Morto, revelando sua identidade como o líder dos Vigilantes rebeldes, a geografia de sua prisão em Dudael, e o julgamento escatológico executado por Melquisedeque."
-image: "azazel-bode-expiatorio-parte2.jpg"
+image: "azazel e o bode expiatório.webp"
 ---
 
 # PARTE 2 – DERASH: AZAZEL NA LITERATURA DO SEGUNDO TEMPLO E EM QUMRAN
