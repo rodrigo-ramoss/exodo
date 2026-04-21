@@ -34,6 +34,7 @@ interface InterpretationStudy {
   description?: string;
   date?: string;
   pathKey: string;
+  slugKey: string;
   content: string;
   axisId: string;
   axisTitle: string;
@@ -86,7 +87,7 @@ const AXIS_METADATA: AxisMeta[] = [
     Icon: Swords,
   },
   {
-    id: 'eixo-4-tecnologia-alianca',
+    id: 'eixo-4-pratica-simbolos-liturgias',
     index: 4,
     title: 'Práticas, Símbolos e Liturgias',
     subtitle: 'Padrões de Aliança, Culto e Administração Sagrada',
@@ -239,6 +240,7 @@ function loadInterpretationStudies(): InterpretationStudy[] {
       const parts = normalizedPath.split('/');
       const contentIndex = parts.findIndex((part) => part === 'eixos biblicos');
       const axisId = parts[contentIndex + 1] ?? 'eixo-7-escatologia-consumacao';
+      const slugKey = normalizedPath.replace('/eixo-4-pratica-simbolos-liturgias/', '/eixo-4-tecnologia-alianca/');
       const fileName = parts[parts.length - 1] ?? '';
       const frontmatter = parseFrontmatter(content);
       const axis = AXIS_BY_ID[axisId] ?? AXIS_METADATA[6];
@@ -253,6 +255,7 @@ function loadInterpretationStudies(): InterpretationStudy[] {
         description: frontmatter.description,
         date: frontmatter.date,
         pathKey,
+        slugKey,
         content,
         axisId: axis.id,
         axisTitle: axis.title,
@@ -336,7 +339,7 @@ export default function Bible() {
     return (
       <MarkdownViewer
         content={selectedStudy.content}
-        slug={selectedStudy.pathKey}
+        slug={selectedStudy.slugKey}
         category="biblica"
         onClose={() => setSelectedStudy(null)}
       />

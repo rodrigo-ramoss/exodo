@@ -144,11 +144,27 @@ export default function Protocol() {
 
   const handleSelect = async (slug: string) => {
     setSelectedSlug(slug);
-    try {
-      const res = await fetch(`/content/livraria/${slug}.md`);
-      if (res.ok) setMarkdownContent(await res.text());
-    } catch {
-      // silent
+    const encodedSlug = slug
+      .split('/')
+      .map((segment) => encodeURIComponent(segment))
+      .join('/');
+
+    const candidates = [
+      `/content/livraria/${encodedSlug}.md`,
+      `/content/livraria/apocrifos/${encodedSlug}.md`,
+    ];
+
+    for (const url of candidates) {
+      try {
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) continue;
+        const text = await res.text();
+        if (!text.trim()) continue;
+        setMarkdownContent(text);
+        return;
+      } catch {
+        // try next candidate
+      }
     }
   };
 

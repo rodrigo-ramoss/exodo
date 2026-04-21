@@ -61,6 +61,7 @@ function pickCategoryByFolder(folder: string): string {
   const dynamicMap: Array<[string, string]> = [
     ['serie - o codigo dos arquetipos', 'TIPOLOGIA BÍBLICA'],
     ['serie - o codigo do jardim', 'Série — O Código do Jardim'],
+    ['serie - o guerreiro divino', 'Série — O Guerreiro Divino'],
     ['serie - o conselho do altissimo', 'Série — O Conselho do Altíssimo'],
     ['serie - sombras do reino de deus', 'SOMBRAS DO REINO DE DEUS'],
     ['serie - a identidade do eterno', 'Série — A Identidade do Eterno'],
@@ -111,9 +112,15 @@ function buildMarkdownBySlugIndex(): Record<string, string> {
 
   for (const [pathKey, content] of Object.entries(livrariaMarkdownModules)) {
     const relativePath = toLivrariaRelativePath(pathKey);
-    const slug = stripMarkdownExtension(relativePath);
+    const normalizedRelative = stripMarkdownExtension(relativePath);
+    const parts = normalizedRelative.split('/').filter(Boolean);
+    const seriesFolder = parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? '');
+    const fileStem = parts[parts.length - 1] ?? '';
+    const slug = seriesFolder && fileStem ? `${seriesFolder}/${fileStem}` : normalizedRelative;
     bySlug[slug] = content;
     bySlug[normalizeSlugLookupKey(slug)] = content;
+    bySlug[normalizedRelative] = content;
+    bySlug[normalizeSlugLookupKey(normalizedRelative)] = content;
   }
 
   return bySlug;
@@ -140,6 +147,16 @@ function buildFallbackContentUrls(slug: string): string[] {
   const configuredBase = import.meta.env.BASE_URL || '/';
   const normalizedBase = configuredBase.endsWith('/') ? configuredBase : `${configuredBase}/`;
   const runtimeBase = window.location.protocol === 'file:' && normalizedBase === '/' ? './' : normalizedBase;
+  const sectionFolders = [
+    'apocrifos',
+    'historia-da-igreja',
+    'tipologia-biblica',
+    'mundo-espiritual',
+    'antissistema',
+    'ia-e-apocalipse',
+    'batalha-espiritual',
+    'ferramentas-espirituais',
+  ];
 
   const candidates = [
     resolveContentUrlForDesktopAndWeb(slug),
@@ -147,6 +164,8 @@ function buildFallbackContentUrls(slug: string): string[] {
     `${runtimeBase}content/livraria/${slug}.md`,
     `./content/livraria/${encodedSlug}.md`,
     `/content/livraria/${encodedSlug}.md`,
+    ...sectionFolders.map((section) => `${runtimeBase}content/livraria/${section}/${encodedSlug}.md`),
+    ...sectionFolders.map((section) => `/content/livraria/${section}/${encodedSlug}.md`),
   ];
 
   return Array.from(new Set(candidates));
@@ -195,8 +214,9 @@ function discoverBooksFromMarkdown(): BookItem[] {
 
     const parts = relative.split('/').filter(Boolean);
     const fileName = parts[parts.length - 1] ?? '';
-    const folder = parts[0] ?? 'livraria';
-    const slug = relative.replace(/\.md$/i, '');
+    const seriesFolder = parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? 'livraria');
+    const fileStem = fileName.replace(/\.md$/i, '');
+    const slug = `${seriesFolder}/${fileStem}`;
     const frontmatter = parseFrontmatter(content);
     const firstHeading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
     const title = frontmatter.title || firstHeading || fileName.replace(/\.md$/i, '');
@@ -207,7 +227,7 @@ function discoverBooksFromMarkdown(): BookItem[] {
       slug,
       description: frontmatter.description || '',
       date: frontmatter.date || '2026-04-18',
-      category: frontmatter.category || pickCategoryByFolder(folder),
+      category: frontmatter.category || pickCategoryByFolder(seriesFolder),
       time: frontmatter.time || 'LIVRO',
       image: cover,
     };
@@ -221,6 +241,7 @@ type SectionKey =
   | 'MUNDO ESPIRITUAL'
   | 'ANTISISTEMA'
   | 'IA & APOCALIPSE'
+  | 'BATALHA ESPIRITUAL'
   | 'FERRAMENTAS ESPIRITUAIS';
 
 // ── Section metadata ──────────────────────────────────────────────────────────
@@ -266,6 +287,12 @@ const SECTIONS: Record<SectionKey, {
     Icon: Cpu,
     accent: 'from-rose-900/70 to-rose-800/10',
   },
+  'BATALHA ESPIRITUAL': {
+    label: 'Batalha Espiritual',
+    description: 'Discernimento, resistência e estratégias bíblicas para enfrentar as guerras invisíveis do nosso tempo.',
+    Icon: Flame,
+    accent: 'from-red-900/70 to-red-800/10',
+  },
   'FERRAMENTAS ESPIRITUAIS': {
     label: 'Ferramentas Espirituais',
     description: 'Guias práticos de oração, jejum, intercessão e guerra espiritual. Conteúdo aplicado para fortalecer a vida interior e a caminhada com Deus.',
@@ -281,6 +308,7 @@ const SECTION_ORDER: SectionKey[] = [
   'MUNDO ESPIRITUAL',
   'ANTISISTEMA',
   'IA & APOCALIPSE',
+  'BATALHA ESPIRITUAL',
   'FERRAMENTAS ESPIRITUAIS',
 ];
 
@@ -294,7 +322,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'TIPOLOGIA BÍBLICA':                        'TIPOLOGIA BÍBLICA',
   'SOMBRAS DO REINO DE DEUS':                 'MUNDO ESPIRITUAL',
   'Série — O Conselho do Altíssimo':          'MUNDO ESPIRITUAL',
-  'Série — O Código do Jardim':               'MUNDO ESPIRITUAL',
+  'Série — O Código do Jardim':               'IA & APOCALIPSE',
   'Série — A Identidade do Eterno':           'MUNDO ESPIRITUAL',
   'Série — O Trono Abalado':                  'MUNDO ESPIRITUAL',
   'Trilogia — O Mapa da Tempestade':          'ANTISISTEMA',
@@ -304,6 +332,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Trilogia — O Véu Rasgado':                 'IA & APOCALIPSE',
   'Trilogia — A Coroa Roubada':               'MUNDO ESPIRITUAL',
   'Série — O Código das Eras':                'IA & APOCALIPSE',
+  'Série — O Guerreiro Divino':               'BATALHA ESPIRITUAL',
   'FERRAMENTAS ESPIRITUAIS':                  'FERRAMENTAS ESPIRITUAIS',
 };
 
@@ -326,6 +355,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — O Trono Abalado':                  'O Trono Abalado',
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
   'Série — O Código das Eras':                'O Código das Eras',
+  'Série — O Guerreiro Divino':               'O Guerreiro Divino',
   'TIPOLOGIA BÍBLICA':                        'O Código dos Arquétipos',
 };
 
@@ -348,6 +378,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Trilogia — O Véu Rasgado': 'Uma investigação sobre Babel, CERN e conhecimento proibido na fronteira entre tecnologia, mundo invisível e profecia bíblica.',
   'Trilogia — A Coroa Roubada': 'Uma trilogia sobre conselho divino, queda dos príncipes e restauração da autoridade dos filhos em Cristo.',
   'Série — O Código das Eras': 'Uma leitura profética das eras bíblicas: sinais celestes, ciclos históricos e convergência escatológica até a consumação do Reino.',
+  'Série — O Guerreiro Divino': 'Uma série sobre Yahweh como Homem de Guerra: batalhas visíveis e invisíveis, exércitos celestiais e o chamado para discernimento e firmeza espiritual.',
   'TIPOLOGIA BÍBLICA': 'Adão, o Sangue, a Arca, o Templo — cada narrativa do Antigo Testamento é uma sombra que aponta para Cristo. Uma série que decodifica a linguagem tipológica da Escritura e revela a unidade profunda de toda a Bíblia.',
 };
 

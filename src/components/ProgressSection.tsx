@@ -15,7 +15,11 @@ const bibleStudyModules = import.meta.glob('/public/content/eixos biblicos/eixo-
   import: 'default',
 }) as Record<string, string>;
 
-const bibleStudySlugs = Object.keys(bibleStudyModules).map((path) => path.replace(/\\/g, '/'));
+const bibleStudySlugs = Object.keys(bibleStudyModules).map((path) =>
+  path
+    .replace(/\\/g, '/')
+    .replace('/eixo-4-pratica-simbolos-liturgias/', '/eixo-4-tecnologia-alianca/'),
+);
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface StudyItem { slug: string; }
