@@ -274,6 +274,8 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
 
   const title = metadata?.title;
   const subcategory = metadata?.subcategory;
+  const isMatrixReader = category === 'refutacao';
+  const matrixOverlayActive = isMatrixReader && theme === 'dark';
 
   // Load settings and progress
   useEffect(() => {
@@ -593,13 +595,27 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
       {/* Progress Bar */}
       <div className="fixed top-0 left-0 w-full h-1 z-[10002]">
         <div 
-          className="h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_10px_rgba(249,115,22,0.5)] transition-all duration-300" 
+          className={`h-full transition-all duration-300 ${
+            matrixOverlayActive
+              ? 'bg-gradient-to-r from-[#0f7a3a] via-[#21d07a] to-[#9bffc3] shadow-[0_0_10px_rgba(34,197,94,0.55)]'
+              : 'bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_10px_rgba(249,115,22,0.5)]'
+          }`}
           style={{ width: `${progress}%` }}
         />
       </div>
 
       {/* Reader Content */}
-      <div className="max-w-2xl mx-auto w-full px-6 py-12 pb-32">
+      <div className="relative max-w-2xl mx-auto w-full px-6 py-12 pb-32">
+        {matrixOverlayActive && (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 -mx-2 rounded-3xl overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(34,197,94,0.14),transparent_58%),radial-gradient(ellipse_at_bottom,rgba(16,185,129,0.10),transparent_62%)]" />
+            <div className="absolute inset-0 opacity-25 bg-[repeating-linear-gradient(180deg,rgba(134,255,184,0.12)_0px,rgba(134,255,184,0.12)_1px,transparent_1px,transparent_7px)]" />
+            <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#1ee07a]/10 to-transparent" />
+          </div>
+        )}
         {/* Header Section */}
         {(title || subcategory) && (
           <header className="mb-12 pt-4">
