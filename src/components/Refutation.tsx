@@ -23,34 +23,16 @@ interface RefutationTheme {
 
 const REFUTATION_THEMES: RefutationTheme[] = [
   {
-    id: 'dizimo',
-    label: 'Dízimo',
-    subtitle: 'Refutação exegética dos abusos financeiros travestidos de doutrina.',
-    accent: 'from-[#2e1116]/95 via-[#1a1416]/80 to-[#0f1115]/45',
-  },
-  {
-    id: 'arrebatamento-secreto',
-    label: 'Arrebatamento Secreto',
-    subtitle: 'Análise histórica e textual contra a narrativa dispensacionalista moderna.',
-    accent: 'from-[#311920]/95 via-[#1b1518]/80 to-[#0f1115]/45',
-  },
-  {
-    id: 'inferno-eterno',
-    label: 'Inferno Eterno',
-    subtitle: 'Revisão bíblica do juízo final além do dogma de tormento infinito.',
-    accent: 'from-[#362116]/95 via-[#1d1713]/80 to-[#0f1115]/45',
-  },
-  {
-    id: 'batismo-espirito-santo-pentecostal',
-    label: 'Batismo no Espírito Santo Pentecostal',
-    subtitle: 'Exame crítico da evidência inicial como padrão normativo universal.',
-    accent: 'from-[#222033]/95 via-[#17141f]/80 to-[#0f1115]/45',
+    id: 'revelacao-adversaria',
+    label: 'Cosmologia / Matrix',
+    subtitle: 'A ordem mundial opera sob uma economia de revelação ritual. O sistema anuncia seus movimentos através de símbolos públicos, ficção preditiva e cerimônias.',
+    accent: 'from-[#271a30]/95 via-[#171223]/82 to-[#0f1115]/45',
   },
 ];
 
 const THEME_BY_ID = Object.fromEntries(REFUTATION_THEMES.map((theme) => [theme.id, theme])) as Record<string, RefutationTheme>;
 
-const refutationModules = import.meta.glob('../content/refutacao/*/*.md', {
+const refutationModules = import.meta.glob('/public/content/livraria da matrix/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -82,8 +64,8 @@ function loadRefutations(): RefutationStudy[] {
     .map(([pathKey, content]) => {
       const normalizedPath = pathKey.replace(/\\/g, '/');
       const parts = normalizedPath.split('/');
-      const contentIndex = parts.findIndex((part) => part === 'refutacao');
-      const themeId = parts[contentIndex + 1] ?? 'dizimo';
+      const contentIndex = parts.findIndex((part) => part === 'livraria da matrix');
+      const themeId = parts[contentIndex + 1] ?? 'revelacao-adversaria';
       const fileName = parts[parts.length - 1] ?? '';
       const frontmatter = parseFrontmatter(content);
       const slug = fileName.replace(/\.md$/i, '');
@@ -92,7 +74,7 @@ function loadRefutations(): RefutationStudy[] {
         title: frontmatter.title || fileName.replace(/\.md$/i, ''),
         description: frontmatter.description,
         date: frontmatter.date,
-        image: frontmatter.image || '/assets/imagens/refutacao/dizimo.webp',
+        image: frontmatter.image || '/image/livraria da matrix/a paisagem da crise.webp',
         slug,
         pathKey,
         content,
@@ -135,7 +117,7 @@ export default function Refutation() {
 
   if (selectedTheme && selectedThemeId) {
     const themeStudies = studiesByTheme.get(selectedThemeId) ?? [];
-    const cover = themeStudies[0]?.image || '/assets/imagens/refutacao/dizimo.webp';
+    const cover = themeStudies[0]?.image || '/image/livraria da matrix/a paisagem da crise.webp';
 
     return (
       <div className="pt-6 pb-32 px-5 max-w-7xl mx-auto">
@@ -144,7 +126,7 @@ export default function Refutation() {
           className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors mb-5 active:scale-95 text-[10px] font-black uppercase tracking-widest"
         >
           <ChevronLeft size={15} />
-          Refutação
+          Livraria da Matrix
         </button>
 
         <article className="relative w-full h-44 rounded-2xl overflow-hidden border border-white/10 mb-6">
@@ -169,7 +151,7 @@ export default function Refutation() {
               className="gold-glow-hover group cursor-pointer rounded-2xl border border-outline-variant/20 bg-surface-container-low/80 backdrop-blur-sm p-4 hover:scale-[1.02] transition-transform duration-300"
             >
               <p className="text-[8px] uppercase tracking-[0.16em] font-black text-primary/85 mb-1">
-                Refutação
+                Revelação Adversária
               </p>
               <h4 className="font-headline text-base font-extrabold tracking-tight text-on-surface line-clamp-2 group-hover:text-primary transition-colors">
                 {study.title}
@@ -193,21 +175,21 @@ export default function Refutation() {
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 mb-3">
           <Shield size={12} className="text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.16em] text-primary">
-            Núcleo de Refutação
+            Livraria da Matrix
           </span>
         </div>
         <h2 className="font-headline font-extrabold text-3xl text-primary tracking-tighter mb-2 uppercase">
-          REFUTAÇÃO DE DOUTRINAS
+          LIVRARIA DA MATRIX
         </h2>
         <p className="text-on-surface-variant/75 text-[11px] max-w-2xl font-medium leading-relaxed">
-          A Verdade que Liberta: Desconstruindo dogmas de medo e controle. Uma análise exegética para romper as correntes da manipulação religiosa e resgatar a clareza do Texto Sagrado.
+          A ordem mundial opera sobre uma economia de revelação ritual. O sistema precisa anunciar seus movimentos por símbolos públicos, ficção preditiva e cerimônias. Esta sessão organiza essas leituras para discernimento estratégico.
         </p>
       </header>
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {REFUTATION_THEMES.map((theme) => {
           const themeStudies = studiesByTheme.get(theme.id) ?? [];
-          const cover = themeStudies[0]?.image || '/assets/imagens/refutacao/dizimo.webp';
+          const cover = themeStudies[0]?.image || '/image/livraria da matrix/a paisagem da crise.webp';
           return (
             <button
               key={theme.id}
@@ -225,7 +207,7 @@ export default function Refutation() {
                 <div className="inline-flex items-center gap-2 w-fit px-2 py-1 rounded-full border border-[#ff9c9c]/25 bg-[#1a1114]/60 backdrop-blur-sm">
                   <AlertTriangle size={12} className="text-[#f4b1b1]" />
                   <span className="text-[9px] font-black uppercase tracking-[0.16em] text-[#f4b1b1]">
-                    Refutação
+                    Nova Sessão
                   </span>
                 </div>
                 <div>

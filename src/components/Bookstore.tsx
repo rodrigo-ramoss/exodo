@@ -63,7 +63,8 @@ function pickCategoryByFolder(folder: string): string {
     ['serie - o codigo do jardim', 'Série — O Código do Jardim'],
     ['serie - o guerreiro divino', 'Série — O Guerreiro Divino'],
     ['serie - a queda do mundo espiritual', 'Série — A Queda do Mundo Espiritual'],
-    ['serie - o conselho do altissimo', 'Série — O Conselho do Altíssimo'],
+    ['serie - a queda do querubim ungido', 'Série — A Queda do Querubim Ungido'],
+    ['serie - a onisciencia como atributo exclusivo', 'Série — A Onisciência como Atributo Exclusivo'],
     ['serie - sombras do reino de deus', 'SOMBRAS DO REINO DE DEUS'],
     ['serie - a verdadeira historia da igreja', 'Série — A Verdadeira História da Igreja'],
     ['serie - o codigo das eras', 'Série — O Código das Eras'],
@@ -318,9 +319,9 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Série — A Verdadeira História da Igreja':  'HISTÓRIA DA IGREJA',
   'TIPOLOGIA BÍBLICA':                        'TIPOLOGIA BÍBLICA',
   'SOMBRAS DO REINO DE DEUS':                 'MUNDO ESPIRITUAL',
-  'Série — O Conselho do Altíssimo':          'MUNDO ESPIRITUAL',
   'Série — O Código do Jardim':               'IA & APOCALIPSE',
   'Série — A Queda do Mundo Espiritual':      'MUNDO ESPIRITUAL',
+  'Série — A Queda do Querubim Ungido':       'MUNDO ESPIRITUAL',
   'Trilogia — O Mapa da Tempestade':          'ANTISISTEMA',
   'Trilogia — O Estrangeiro Próspero':        'ANTISISTEMA',
   'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
@@ -328,6 +329,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Trilogia — O Véu Rasgado':                 'IA & APOCALIPSE',
   'Trilogia — A Coroa Roubada':               'MUNDO ESPIRITUAL',
   'Série — O Código das Eras':                'IA & APOCALIPSE',
+  'Série — A Onisciência como Atributo Exclusivo': 'IA & APOCALIPSE',
   'Série — O Guerreiro Divino':               'BATALHA ESPIRITUAL',
   'FERRAMENTAS ESPIRITUAIS':                  'FERRAMENTAS ESPIRITUAIS',
 };
@@ -344,11 +346,12 @@ const SERIES_LABEL: Record<string, string> = {
   'A REVELAÇÃO DE ENOQUE':                    'A Revelação de Enoque',
   'SÉRIE — JUBILEUS':                         'Série dos Jubileus',
   'SOMBRAS DO REINO DE DEUS':                 'Sombras do Reino de Deus',
-  'Série — O Conselho do Altíssimo':          'O Conselho do Altíssimo',
   'Série — O Código do Jardim':               'O Código do Jardim',
   'Série — A Queda do Mundo Espiritual':      'A Queda do Mundo Espiritual',
+  'Série — A Queda do Querubim Ungido':       'A Queda do Querubim Ungido',
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
   'Série — O Código das Eras':                'O Código das Eras',
+  'Série — A Onisciência como Atributo Exclusivo': 'A Onisciência como Atributo Exclusivo',
   'Série — O Guerreiro Divino':               'O Guerreiro Divino',
   'TIPOLOGIA BÍBLICA':                        'O Código dos Arquétipos',
 };
@@ -358,9 +361,9 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'A REVELAÇÃO DE ENOQUE': 'Uma jornada profunda pelas visões e revelações do profeta Enoque sobre o mundo espiritual, os vigilantes e o destino da humanidade.',
   'SÉRIE — JUBILEUS': 'O livro que Moisés recebeu dos anjos e que a tradição oficial silenciou. Uma jornada pelos segredos do calendário sagrado, dos patriarcas e da guerra invisível que moldou a história bíblica.',
   'SOMBRAS DO REINO DE DEUS': 'Uma leitura bíblica do mundo espiritual: Reino de Deus, conselho celeste e as realidades invisíveis que Hebreus 8:5 chama de sombra das coisas celestiais.',
-  'Série — O Conselho do Altíssimo': 'Uma exploração bíblica do conselho divino: rebelião celestial, restauração em Cristo e governo do Reino na eternidade.',
   'Série — O Código do Jardim': 'Uma série sobre os arquétipos de Gênesis: conhecimento, nomeação, Babel e sabedoria para discernir o conflito espiritual no presente.',
   'Série — A Queda do Mundo Espiritual': 'Uma série sobre a rebelião no céu e a origem da guerra espiritual: Nachash, querubins caídos e as raízes invisíveis do conflito humano.',
+  'Série — A Queda do Querubim Ungido': 'Uma investigação bíblica da trajetória de Satanás: da glória no conselho divino à consumação do juízo final, com aplicações práticas para discernimento espiritual.',
   'Série — A Verdadeira História da Igreja': 'Uma arqueologia da fé cristã primitiva, revelando o caminho entre a ekklesia viva e a institucionalização religiosa ao longo dos séculos.',
   'Trilogia — O Cânon Oculto': 'Uma imersão nos bastidores da formação bíblica, nos textos suprimidos e nas leituras que ficaram fora da narrativa oficial.',
   'Trilogia — O Mapa da Tempestade': 'Um diagnóstico de ruptura civilizacional e um mapa prático para atravessar colapsos sistêmicos com lucidez, preparo e fé.',
@@ -370,6 +373,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Trilogia — O Véu Rasgado': 'Uma investigação sobre Babel, CERN e conhecimento proibido na fronteira entre tecnologia, mundo invisível e profecia bíblica.',
   'Trilogia — A Coroa Roubada': 'Uma trilogia sobre conselho divino, queda dos príncipes e restauração da autoridade dos filhos em Cristo.',
   'Série — O Código das Eras': 'Uma leitura profética das eras bíblicas: sinais celestes, ciclos históricos e convergência escatológica até a consumação do Reino.',
+  'Série — A Onisciência como Atributo Exclusivo': 'Uma série sobre a diferença entre a onisciência absoluta de Deus e o conhecimento inferido do inimigo, conectando teologia bíblica, tecnologia e discernimento contemporâneo.',
   'Série — O Guerreiro Divino': 'Uma série sobre Yahweh como Homem de Guerra: batalhas visíveis e invisíveis, exércitos celestiais e o chamado para discernimento e firmeza espiritual.',
   'TIPOLOGIA BÍBLICA': 'Adão, o Sangue, a Arca, o Templo — cada narrativa do Antigo Testamento é uma sombra que aponta para Cristo. Uma série que decodifica a linguagem tipológica da Escritura e revela a unidade profunda de toda a Bíblia.',
 };
@@ -648,7 +652,7 @@ export default function Bookstore() {
             className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors mb-6 active:scale-95 text-[10px] font-black uppercase tracking-widest"
           >
             <ChevronLeft size={15} />
-            Arquivo Secreto
+            Livraria Espiritual
           </button>
           <div className="flex items-center gap-3 mb-2">
             <div className="bg-primary/15 border border-primary/25 rounded-xl p-2">
@@ -732,17 +736,17 @@ export default function Bookstore() {
         <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px]" />
         <div className="relative z-10">
           <h2 className="font-headline font-extrabold text-3xl text-primary tracking-tighter mb-2">
-            Arquivo Secreto
+            Livraria Espiritual
           </h2>
           <p className="text-on-surface-variant/70 text-[11px] max-w-[300px] font-medium leading-relaxed">
-            O subsolo da história cristã. Manuscritos ocultos, textos banidos e a anatomia do sistema religioso que tentaram apagar. Escolha sua frente de estudo e acesse o conhecimento não filtrado.
+            Biblioteca de estudos para discernimento bíblico, história da fé e guerra espiritual. Escolha sua frente de estudo e avance por séries, trilogias e investigações aprofundadas.
           </p>
         </div>
       </header>
 
       {loading ? (
         <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">
-          Carregando Arquivo...
+          Carregando Livraria...
         </div>
       ) : (
         <div className="flex flex-col gap-4">

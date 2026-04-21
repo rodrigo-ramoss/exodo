@@ -3,7 +3,13 @@ import { TrendingUp } from 'lucide-react';
 import { useFetch } from '../hooks/useFetch';
 import { pm, type Category } from '../lib/progressManager';
 
-const refutationModules = import.meta.glob('../content/refutacao/*/*.md', {
+const refutationModules = import.meta.glob('/public/content/livraria da matrix/**/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
+
+const livrariaModules = import.meta.glob('/public/content/livraria/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -20,6 +26,19 @@ const bibleStudySlugs = Object.keys(bibleStudyModules).map((path) =>
     .replace(/\\/g, '/')
     .replace('/eixo-4-pratica-simbolos-liturgias/', '/eixo-4-tecnologia-alianca/'),
 );
+
+const livrariaModuleSlugs = Object.keys(livrariaModules).map((path) => {
+  const normalizedPath = path.replace(/\\/g, '/');
+  const marker = '/public/content/livraria/';
+  const relative = normalizedPath.includes(marker)
+    ? normalizedPath.slice(normalizedPath.indexOf(marker) + marker.length)
+    : normalizedPath;
+  const withoutExt = relative.replace(/\.md$/i, '');
+  const parts = withoutExt.split('/').filter(Boolean);
+  const fileStem = parts[parts.length - 1] ?? '';
+  const seriesFolder = parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? '');
+  return seriesFolder && fileStem ? `${seriesFolder}/${fileStem}` : withoutExt;
+}).filter(Boolean);
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface StudyItem { slug: string; }
@@ -57,7 +76,7 @@ export default function ProgressSection() {
   // ── 1. Bíblia ─────────────────────────────────────────────────────────────
   const bibleStats = useMemo(() => buildStats('biblica', bibleStudySlugs), []);
 
-  // ── 2. Refutação ─────────────────────────────────────────────────────────
+  // ── 2. Livraria da Matrix ───────────────────────────────────────────────
   const docStats = useMemo(() => {
     const slugs = Object.keys(refutationModules).map((path) =>
       path
@@ -69,11 +88,13 @@ export default function ProgressSection() {
     return buildStats('refutacao', slugs);
   }, []);
 
-  // ── 3. Livraria ───────────────────────────────────────────────────────────
+  // ── 3. Livraria Espiritual ───────────────────────────────────────────────
   const { data: libBooks } = useFetch<LibraryItem[]>('/content/livraria/index.json');
   const libStats = useMemo(() => {
-    if (!libBooks) return { pct: 0, read: 0, total: 0 };
-    return buildStats('livraria', libBooks.map((b) => b.slug));
+    const fromIndex = libBooks?.map((b) => b.slug) ?? [];
+    const allSlugs = Array.from(new Set([...fromIndex, ...livrariaModuleSlugs]));
+    if (allSlugs.length === 0) return { pct: 0, read: 0, total: 0 };
+    return buildStats('livraria', allSlugs);
   }, [libBooks]);
 
   // ── 4. MANÁ ───────────────────────────────────────────────────────────────
@@ -91,8 +112,8 @@ export default function ProgressSection() {
 
   const pillars = [
     { label: 'Bíblia', pct: bibleStats.pct },
-    { label: 'Refutação', pct: docStats.pct },
-    { label: 'Livraria', pct: libStats.pct },
+    { label: 'Matrix', pct: docStats.pct },
+    { label: 'Liv. Espiritual', pct: libStats.pct },
     { label: 'MANÁ', pct: studyStats.pct },
   ];
 
@@ -112,7 +133,7 @@ export default function ProgressSection() {
           <div>
             <p className="text-xs font-bold text-on-surface">Progresso Geral</p>
             <p className="text-[10px] text-on-surface-variant/60 mt-0.5">
-              Bíblia · Refutação · Livraria · MANÁ
+              Bíblia · Livraria da Matrix · Livraria Espiritual · MANÁ
             </p>
           </div>
           <span className="font-headline text-2xl font-black text-primary tracking-tighter">
