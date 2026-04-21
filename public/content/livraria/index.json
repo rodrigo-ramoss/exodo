@@ -108,42 +108,6 @@
     "image": "/image/livraria/ação calculada.webp"
   },
   {
-    "title": "A Invenção do Pecado Original",
-    "slug": "serie - a invecao do pecado/05_Invencao_do_Pecado - Livro 1 - A Invenção do Pecado Original",
-    "description": "Como o conceito de pecado original foi construído teologicamente ao longo da história.",
-    "date": "2024-03-01",
-    "category": "Série — A Invenção do Pecado",
-    "time": "LIVRO",
-    "image": "/image/livraria/A Invenção do Pecado Original.webp"
-  },
-  {
-    "title": "O Jardim que Nunca Existiu",
-    "slug": "serie - a invecao do pecado/05_Invencao_do_Pecado - Livro 2 - O Jardim que Nunca Existiu",
-    "description": "Uma análise do Éden como metáfora e suas implicações teológicas.",
-    "date": "2024-03-04",
-    "category": "Série — A Invenção do Pecado",
-    "time": "LIVRO",
-    "image": "/image/livraria/O Jardim que Nunca Existiu.webp"
-  },
-  {
-    "title": "As Palavras que Aprisionam",
-    "slug": "serie - a invecao do pecado/05_Invencao_do_Pecado - Livro 3 - As Palavras que Aprisionam",
-    "description": "Como a linguagem religiosa molda e aprisiona a fé.",
-    "date": "2024-03-03",
-    "category": "Série — A Invenção do Pecado",
-    "time": "LIVRO",
-    "image": "/image/livraria/As Palavras que Aprisionam.webp"
-  },
-  {
-    "title": "A Sabedoria que Liberta",
-    "slug": "serie - a invecao do pecado/05_Invencao_do_Pecado - Livro 4 - A Sabedoria que Liberta",
-    "description": "Desconstruindo as correntes teológicas para encontrar a liberdade bíblica real.",
-    "date": "2024-03-02",
-    "category": "Série — A Invenção do Pecado",
-    "time": "LIVRO",
-    "image": "/image/livraria/A Sabedoria que Liberta.webp"
-  },
-  {
     "title": "A Bíblia que Não Caiu do Céu",
     "slug": "trilogia - o canon oculto/06_Canon_Oculto - Livro 1 - A Bíblia que Não Caiu do Céu",
     "description": "A formação política e histórica do cânon bíblico.",
@@ -486,60 +450,6 @@
     "image": "/image/livraria/a voz dos nefelins.webp"
   },
   {
-    "title": "O Pai de Glória",
-    "slug": "serie - a identidade do Eterno/Ebook 1 - O Pai de Glória",
-    "description": "Uma investigação bíblica sobre a revelação do Pai e sua glória no conselho divino.",
-    "date": "2026-04-17",
-    "category": "Série — A Identidade do Eterno",
-    "time": "LIVRO",
-    "image": "/image/livraria/o pai de gloria.webp"
-  },
-  {
-    "title": "O Filho do Homem",
-    "slug": "serie - a identidade do Eterno/Ebook 2 - O Filho do Homem",
-    "description": "A identidade messiânica do Filho do Homem e suas implicações no Reino de Deus.",
-    "date": "2026-04-17",
-    "category": "Série — A Identidade do Eterno",
-    "time": "LIVRO",
-    "image": "/image/livraria/o filho do homem.webp"
-  },
-  {
-    "title": "O Sopro do Altíssimo",
-    "slug": "serie - a identidade do Eterno/Ebook 3 - O Sopro do Altíssimo",
-    "description": "O agir do Espírito do Altíssimo na criação, restauração e governo espiritual.",
-    "date": "2026-04-17",
-    "category": "Série — A Identidade do Eterno",
-    "time": "LIVRO",
-    "image": "/image/livraria/o sopro do altissimo.webp"
-  },
-  {
-    "title": "O Mistério da Unidade",
-    "slug": "serie - a identidade do Eterno/Ebook 4 - O Mistério da Unidade",
-    "description": "Uma leitura sobre unidade divina, comunhão e aliança no plano eterno.",
-    "date": "2026-04-17",
-    "category": "Série — A Identidade do Eterno",
-    "time": "LIVRO",
-    "image": "/image/livraria/o misterio da unidade.webp"
-  },
-  {
-    "title": "A Origem do Adversário",
-    "slug": "serie - a identidade do Eterno/Ebook 5 - A Origem do Adversário",
-    "description": "A queda, a rebelião e o desenvolvimento do adversário na narrativa bíblica.",
-    "date": "2026-04-19",
-    "category": "Série — A Identidade do Eterno",
-    "time": "LIVRO",
-    "image": "/image/livraria/a origem do adversario.webp"
-  },
-  {
-    "title": "A Família do Reino",
-    "slug": "serie - a identidade do Eterno/Ebook 6 - A Família do Reino",
-    "description": "O chamado dos filhos de Deus para viver governo, herança e missão no Reino.",
-    "date": "2026-04-17",
-    "category": "Série — A Identidade do Eterno",
-    "time": "LIVRO",
-    "image": "/image/livraria/a familia do reino.webp"
-  },
-  {
     "title": "O Arquétipo do Primeiro Adão",
     "slug": "serie - o codigo dos arquetipos/Ebook 1 - O Arquétipo do Primeiro Adão",
     "description": "Adão não é apenas o primeiro homem — é o molde original de toda a humanidade. Um estudo profundo sobre como Cristo recapitula e supera o arquétipo adâmico, restaurando os três ofícios perdidos na Queda.",
@@ -718,14 +628,5 @@
     "category": "SÉRIE — JUBILEUS",
     "time": "LIVRO",
     "image": "/image/livraria/o primeiro cordero e o ultimo relogio.webp"
-  },
-  {
-    "title": "O Desejo do Querubim",
-    "slug": "serie - o trono abalado/Ebook 1 - O Desejo do Querubim",
-    "description": "A anatomia do primeiro pecado e a queda de Satanás.",
-    "date": "2026-04-19",
-    "category": "Série — O Trono Abalado",
-    "time": "LIVRO",
-    "image": "/image/livraria/a queda do querubim.webp"
   }
 ]
