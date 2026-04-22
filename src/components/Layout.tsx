@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Menu, Settings, GraduationCap, Gavel, Library, BookOpen, ExternalLink, UserCircle2 } from 'lucide-react';
+import { Menu, Settings, GraduationCap, Library, BookOpen, ExternalLink, UserCircle2, BookMarked } from 'lucide-react';
 import { Screen } from '../types';
 import { cn } from '../lib/utils';
 import { useProfile } from '../state/ProfileContext';
@@ -17,7 +17,7 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
   const navItems = [
     { id: Screen.BIBLE, label: 'BÍBLIA', icon: BookOpen },
     { id: Screen.MANA, label: 'MANÁ', icon: GraduationCap },
-    { id: Screen.REFUTACAO, label: 'Livraria da Matrix', icon: Gavel },
+    { id: Screen.REFUTACAO, label: 'Livraria da Matrix', icon: BookMarked },
     { id: Screen.BOOKSTORE, label: 'Livraria Espiritual', icon: Library },
   ];
 
@@ -27,10 +27,17 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
       <header className="fixed top-0 w-full z-50 glass-header flex justify-between items-center px-4 h-14 border-b border-outline-variant/10">
         <div className="flex items-center gap-3">
           <button 
-            onClick={() => setScreen(Screen.BIBLE)}
+            onClick={() => setScreen(Screen.SETTINGS)}
+            aria-label="Abrir configurações"
             className="text-primary hover:text-primary/80 transition-colors active:scale-95 p-1"
           >
-            <Menu size={20} />
+            <span className="relative inline-flex">
+              <Menu size={20} />
+              <Settings
+                size={10}
+                className="absolute -right-1 -bottom-1 text-primary bg-background rounded-full p-[1px] border border-primary/30"
+              />
+            </span>
           </button>
           <h1 
             className="text-xl font-black text-primary tracking-tighter font-headline uppercase cursor-pointer"

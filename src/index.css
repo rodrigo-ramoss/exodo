@@ -108,6 +108,41 @@
   animation: divider-sheen-run 4.5s ease-in-out infinite;
 }
 
+@keyframes matrix-barcode-fall {
+  0% {
+    transform: translateY(-140px);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.25;
+  }
+  85% {
+    opacity: 0.18;
+  }
+  100% {
+    transform: translateY(calc(100vh + 160px));
+    opacity: 0;
+  }
+}
+
+@keyframes firefly-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.9);
+    opacity: 0.2;
+  }
+  30% {
+    opacity: 0.65;
+  }
+  60% {
+    transform: translate3d(12px, -16px, 0) scale(1.08);
+    opacity: 0.45;
+  }
+  100% {
+    transform: translate3d(-10px, 10px, 0) scale(0.95);
+    opacity: 0.25;
+  }
+}
+
 @layer components {
   .prose {
     @apply leading-relaxed;

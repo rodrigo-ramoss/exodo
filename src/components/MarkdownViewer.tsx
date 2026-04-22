@@ -409,22 +409,42 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
   }, [highlights, parsedContent]);
 
   // ── Selection → popup ──────────────────────────────────────────────────────
-  const handleContentMouseUp = useCallback((e: React.MouseEvent) => {
+  const showSelectionPopup = useCallback(() => {
+    const root = contentBodyRef.current;
+    if (!root) return;
+
     // Slight delay so selection is finalised before we read it
     setTimeout(() => {
       const sel = window.getSelection();
       const text = sel?.toString().trim() ?? '';
-      if (!text || text.length < 3 || text.length > 400) {
+      if (!text || text.length < 3 || text.length > 400 || !sel || sel.rangeCount === 0) {
         setSelPopup(null);
         return;
       }
-      const range = sel?.getRangeAt(0);
-      const rect = range?.getBoundingClientRect();
-      if (!rect) return;
-      setSelPopup({ x: rect.left + rect.width / 2, y: rect.top + window.scrollY - 8, text });
+
+      const range = sel.getRangeAt(0);
+      const common = range.commonAncestorContainer;
+      const commonElement = common.nodeType === Node.TEXT_NODE ? common.parentElement : (common as HTMLElement);
+      if (!commonElement || !root.contains(commonElement)) {
+        setSelPopup(null);
+        return;
+      }
+
+      const rect = range.getBoundingClientRect();
+      if (!rect || (rect.width === 0 && rect.height === 0)) return;
+
+      setSelPopup({ x: rect.left + rect.width / 2, y: rect.top - 8, text });
       setRmPopup(null);
     }, 0);
   }, []);
+
+  const handleContentMouseUp = useCallback(() => {
+    showSelectionPopup();
+  }, [showSelectionPopup]);
+
+  const handleContentTouchEnd = useCallback(() => {
+    showSelectionPopup();
+  }, [showSelectionPopup]);
 
   // ── Click on a <mark> → show remove popup ─────────────────────────────────
   const handleContentClick = useCallback((e: React.MouseEvent) => {
@@ -435,6 +455,16 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
     e.stopPropagation();
     const rect = target.getBoundingClientRect();
     setRmPopup({ x: rect.left + rect.width / 2, y: rect.top + window.scrollY - 8, text: hl });
+    setSelPopup(null);
+  }, []);
+
+  const handleContentTouchStart = useCallback((e: React.TouchEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName !== 'MARK') return;
+    const hl = target.getAttribute('data-hl');
+    if (!hl) return;
+    const rect = target.getBoundingClientRect();
+    setRmPopup({ x: rect.left + rect.width / 2, y: rect.top - 8, text: hl });
     setSelPopup(null);
   }, []);
 
@@ -469,6 +499,24 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
     el.addEventListener('scroll', hide, { passive: true });
     return () => el.removeEventListener('scroll', hide);
   }, []);
+
+  // Keeps highlight popup usable on mobile while user adjusts native selection handles.
+  useEffect(() => {
+    let frame = 0;
+    const onSelectionChange = () => {
+      if (!contentBodyRef.current) return;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        showSelectionPopup();
+      });
+    };
+
+    document.addEventListener('selectionchange', onSelectionChange);
+    return () => {
+      cancelAnimationFrame(frame);
+      document.removeEventListener('selectionchange', onSelectionChange);
+    };
+  }, [showSelectionPopup]);
 
   const markdownComponents: Components = {
     table: ({ children }) => (
@@ -646,6 +694,8 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
           className={`prose max-w-none prose-p:leading-relaxed prose-headings:font-headline prose-headings:tracking-tight prose-li:marker:text-primary transition-all duration-300 ${theme === 'dark' ? 'prose-invert' : 'prose-p:text-current'}`}
           style={{ fontSize: `${fontSize}px` }}
           onMouseUp={handleContentMouseUp}
+          onTouchEnd={handleContentTouchEnd}
+          onTouchStart={handleContentTouchStart}
           onClick={handleContentClick}
         >
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>

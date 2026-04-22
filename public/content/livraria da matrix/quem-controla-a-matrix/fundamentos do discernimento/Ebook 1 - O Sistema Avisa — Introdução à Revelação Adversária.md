@@ -519,3 +519,4 @@ Rodrigo Ramos é o fundador e a voz principal do projeto **Voz do Deserto**, um 
 *Este ebook é parte do ecossistema Voz do Deserto. Seu conteúdo reflete anos de pesquisa e uma base editorial rigorosa que preza pela verdade, pela honestidade intelectual e pela fidelidade às Escrituras.*
 
 *Versão 1.0 — Abril de 2026*
+

@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState, type ReactNode } from 'react';
-import { AlertTriangle, ChevronLeft, Cpu, Shield, Sparkles } from 'lucide-react';
+import { BookMarked, ChevronLeft, Cpu, Sparkles } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 import { AppImage } from './AppImage';
 
@@ -26,16 +26,46 @@ interface RefutationTheme {
 
 const REFUTATION_THEMES: RefutationTheme[] = [
   {
-    id: 'revelacao-adversaria',
-    label: 'Revelação Adversária',
+    id: 'quem-controla-a-matrix',
+    label: 'Quem Controla a Matrix?',
     subtitle:
-      'A ordem mundial opera sob uma economia de revelação ritual. O sistema anuncia seus movimentos por símbolos públicos, ficção preditiva e cerimônias.',
+      'Mapeamento documental das estruturas visíveis e invisíveis de poder: fundamentos, arquitetura global, ordens e ideologias que moldam o sistema.',
     accent: 'from-[#0b2a1b]/92 via-[#071910]/86 to-[#030807]/90',
-    signal: 'MATRIX::DISCERN',
+    signal: 'MATRIX::SCAN',
   },
 ];
 
 const THEME_BY_ID = Object.fromEntries(REFUTATION_THEMES.map((theme) => [theme.id, theme])) as Record<string, RefutationTheme>;
+
+const MATRIX_BARCODE_COLUMNS = [
+  { left: '4%', delay: '0.2s', duration: '10s' },
+  { left: '12%', delay: '1.1s', duration: '12s' },
+  { left: '21%', delay: '0.6s', duration: '11s' },
+  { left: '32%', delay: '1.8s', duration: '9s' },
+  { left: '44%', delay: '0.4s', duration: '13s' },
+  { left: '57%', delay: '2.1s', duration: '10s' },
+  { left: '68%', delay: '1.3s', duration: '12s' },
+  { left: '79%', delay: '0.9s', duration: '11s' },
+  { left: '90%', delay: '1.7s', duration: '10s' },
+];
+
+const MATRIX_IMAGE_ALIASES: Record<string, string> = {
+  'capa-nos-do-poder': 'os nos do poder.webp',
+  'os-nos-do-poder': 'os nos do poder.webp',
+  'capa-as-familias': 'as familias.webp',
+  'as-familias': 'as familias.webp',
+  'capa-ordens-iniciaticas': 'as ordens iniciaticas.webp',
+  'as-ordens-iniciaticas': 'as ordens iniciaticas.webp',
+  'capa-ideologia-declarada': 'a ideologia declarada.webp',
+  'a-ideologia-declarada': 'a ideologia declarada.webp',
+  'capa-tres-camadas': 'as tres camadas na pratica.webp',
+  'as-tres-camadas-na-pratica': 'as tres camadas na pratica.webp',
+  'o-sistema-avisa-introducao-a-revelacao-adversaria': 'a paisagem da crise.webp',
+  'capa-arquitetura-invisivel': 'a paisagem da crise.webp',
+  'a-arquitetura-invisivel-belial-os-principes-e-as-hostes-da-mentira': 'a paisagem da crise.webp',
+  'capa-tres-armadilhas': 'as tres armadilhas.webp',
+  'as-tres-armadilhas-paranoia-militancia-e-escapismo': 'as tres armadilhas.webp',
+};
 
 const refutationModules = import.meta.glob('/public/content/livraria da matrix/**/*.md', {
   eager: true,
@@ -57,11 +87,59 @@ function parseFrontmatter(markdown: string): Record<string, string> {
   return result;
 }
 
+function slugify(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
 function extractVolume(raw: string): number | null {
-  const match = raw.match(/(?:ebook|livro|parte)\s*(\d{1,3})/i);
+  const match = raw.match(/(?:ebook|livro|parte|volume|vol\.)\s*(\d{1,3})/i);
   if (!match) return null;
   const parsed = Number.parseInt(match[1], 10);
   return Number.isFinite(parsed) ? parsed : null;
+}
+
+function normalizeSeriesName(folder: string, fallbackCategory?: string): string {
+  const normalized = folder
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+
+  if (normalized.includes('fundamentos do discernimento')) return 'Fundamentos do Discernimento';
+  if (normalized.includes('arquiterura visivel') || normalized.includes('arquitetura visivel')) return 'A Arquitetura Visível';
+  if (fallbackCategory && !fallbackCategory.toLowerCase().includes('matrix')) return fallbackCategory;
+
+  const compact = folder.replace(/[-_]/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!compact) return 'Coleção Matrix';
+  return compact
+    .split(' ')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
+function resolveMatrixCover(frontmatter: Record<string, string>, title: string, fileStem: string): string {
+  const fromMeta = (frontmatter.image || '').trim();
+  if (fromMeta) {
+    if (/^https?:\/\//i.test(fromMeta) || fromMeta.startsWith('/')) return fromMeta;
+    const stem = slugify(fromMeta.replace(/\.[^.]+$/g, ''));
+    const mapped = MATRIX_IMAGE_ALIASES[stem];
+    if (mapped) return `/image/livraria da matrix/${mapped}`;
+  }
+
+  const titleStem = slugify(title);
+  const mappedByTitle = MATRIX_IMAGE_ALIASES[titleStem];
+  if (mappedByTitle) return `/image/livraria da matrix/${mappedByTitle}`;
+
+  const fileStemSlug = slugify(fileStem.replace(/^ebook\s*\d+\s*-\s*/i, ''));
+  const mappedByFile = MATRIX_IMAGE_ALIASES[fileStemSlug];
+  if (mappedByFile) return `/image/livraria da matrix/${mappedByFile}`;
+
+  return '/image/livraria da matrix/a paisagem da crise.webp';
 }
 
 function sortByNewest(a: RefutationStudy, b: RefutationStudy): number {
@@ -72,9 +150,7 @@ function sortByNewest(a: RefutationStudy, b: RefutationStudy): number {
 }
 
 function sortByVolume(a: RefutationStudy, b: RefutationStudy): number {
-  if (a.volume !== null && b.volume !== null && a.volume !== b.volume) {
-    return a.volume - b.volume;
-  }
+  if (a.volume !== null && b.volume !== null && a.volume !== b.volume) return a.volume - b.volume;
   if (a.volume !== null && b.volume === null) return -1;
   if (a.volume === null && b.volume !== null) return 1;
   return sortByNewest(a, b);
@@ -86,7 +162,8 @@ function loadRefutations(): RefutationStudy[] {
       const normalizedPath = pathKey.replace(/\\/g, '/');
       const parts = normalizedPath.split('/');
       const contentIndex = parts.findIndex((part) => part === 'livraria da matrix');
-      const themeId = parts[contentIndex + 1] ?? 'revelacao-adversaria';
+      const themeId = parts[contentIndex + 1] ?? 'quem-controla-a-matrix';
+      const seriesFolder = parts[contentIndex + 2] ?? 'colecao';
       const fileName = parts[parts.length - 1] ?? '';
       const frontmatter = parseFrontmatter(content);
       const fileStem = fileName.replace(/\.md$/i, '');
@@ -96,13 +173,13 @@ function loadRefutations(): RefutationStudy[] {
         title,
         description: frontmatter.description,
         date: frontmatter.date,
-        image: frontmatter.image || '/image/livraria da matrix/a paisagem da crise.webp',
-        slug: fileStem,
+        image: resolveMatrixCover(frontmatter, title, fileStem),
+        slug: `${seriesFolder}/${fileStem}`,
         pathKey,
         content,
         themeId,
-        series: frontmatter.category || 'Revelação Adversária',
-        volume: extractVolume(fileStem) ?? extractVolume(title),
+        series: normalizeSeriesName(seriesFolder, frontmatter.category),
+        volume: extractVolume(fileStem) ?? extractVolume(title) ?? extractVolume(frontmatter.volume ?? ''),
       };
     })
     .sort(sortByNewest);
@@ -149,6 +226,23 @@ function DragScrollRow({ children }: { children: ReactNode }) {
       }}
     >
       {children}
+    </div>
+  );
+}
+
+function MatrixBarcodeRain() {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+      {MATRIX_BARCODE_COLUMNS.map((column, index) => (
+        <span
+          key={`${column.left}-${index}`}
+          className="absolute top-[-120px] w-[18px] h-40 rounded-sm border border-[#8bffc4]/20 bg-[repeating-linear-gradient(90deg,rgba(139,255,196,0.45)_0px,rgba(139,255,196,0.45)_1px,transparent_1px,transparent_3px)] opacity-0"
+          style={{
+            left: column.left,
+            animation: `matrix-barcode-fall ${column.duration} linear ${column.delay} infinite`,
+          }}
+        />
+      ))}
     </div>
   );
 }
@@ -201,9 +295,7 @@ export default function Refutation() {
       group.push(study);
       map.set(study.themeId, group);
     }
-    for (const [key, value] of map.entries()) {
-      map.set(key, [...value].sort(sortByNewest));
-    }
+    for (const [key, value] of map.entries()) map.set(key, [...value].sort(sortByNewest));
     return map;
   }, [studies]);
 
@@ -220,14 +312,7 @@ export default function Refutation() {
   }, [selectedThemeId, studiesByTheme]);
 
   if (selectedStudy) {
-    return (
-      <MarkdownViewer
-        content={selectedStudy.content}
-        slug={selectedStudy.slug}
-        category="refutacao"
-        onClose={() => setSelectedStudy(null)}
-      />
-    );
+    return <MarkdownViewer content={selectedStudy.content} slug={selectedStudy.slug} category="refutacao" onClose={() => setSelectedStudy(null)} />;
   }
 
   if (selectedTheme && selectedThemeId) {
@@ -235,10 +320,11 @@ export default function Refutation() {
     const cover = themeStudies[0]?.image || '/image/livraria da matrix/a paisagem da crise.webp';
 
     return (
-      <div className="pt-6 pb-32 px-5 max-w-7xl mx-auto">
+      <div className="relative pt-6 pb-32 px-5 max-w-7xl mx-auto">
+        <MatrixBarcodeRain />
         <button
           onClick={() => setSelectedThemeId(null)}
-          className="flex items-center gap-1.5 text-[#8ceab5]/80 hover:text-[#79ffad] transition-colors mb-5 active:scale-95 text-[10px] font-black uppercase tracking-widest"
+          className="relative flex items-center gap-1.5 text-[#8ceab5]/80 hover:text-[#79ffad] transition-colors mb-5 active:scale-95 text-[10px] font-black uppercase tracking-widest"
         >
           <ChevronLeft size={15} />
           Livraria da Matrix
@@ -255,9 +341,7 @@ export default function Refutation() {
             <h2 className="font-headline font-black text-2xl text-[#d8ffe9] tracking-tight uppercase leading-none">
               {selectedTheme.label}
             </h2>
-            <p className="mt-1 text-[10px] text-[#b9f4d2]/78 max-w-lg leading-relaxed">
-              {selectedTheme.subtitle}
-            </p>
+            <p className="mt-1 text-[10px] text-[#b9f4d2]/78 max-w-lg leading-relaxed">{selectedTheme.subtitle}</p>
           </div>
         </article>
 
@@ -265,32 +349,23 @@ export default function Refutation() {
           const isSeries = items.length > 3;
           const seriesDescription = items.find((item) => item.description)?.description || selectedTheme.subtitle;
           return (
-            <section key={series} className="mb-6">
+            <section key={series} className="relative mb-6">
               <div className="mb-2.5">
                 <div className="mb-1">
                   <span className="inline-flex items-center rounded-full border border-[#1ee07a]/45 bg-[#07130d] px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-[#93ffbf]">
                     {isSeries ? 'SÉRIE' : 'COLEÇÃO'}
                   </span>
                 </div>
-                <h4 className="font-headline font-extrabold text-xl text-[#deffed] tracking-tighter uppercase leading-none">
-                  {series}
-                </h4>
+                <h4 className="font-headline font-extrabold text-xl text-[#deffed] tracking-tighter uppercase leading-none">{series}</h4>
                 {seriesDescription && (
-                  <p className="mt-1.5 text-[10px] text-[#baf4d2]/72 leading-snug font-medium max-w-sm">
-                    {seriesDescription}
-                  </p>
+                  <p className="mt-1.5 text-[10px] text-[#baf4d2]/72 leading-snug font-medium max-w-sm">{seriesDescription}</p>
                 )}
               </div>
 
               <div className="relative -mx-5 px-5">
                 <DragScrollRow>
                   {items.map((study, volIndex) => (
-                    <MatrixBookCard
-                      key={study.pathKey}
-                      study={study}
-                      volIndex={volIndex}
-                      onSelect={() => setSelectedStudy(study)}
-                    />
+                    <MatrixBookCard key={study.pathKey} study={study} volIndex={volIndex} onSelect={() => setSelectedStudy(study)} />
                   ))}
                 </DragScrollRow>
               </div>
@@ -308,20 +383,17 @@ export default function Refutation() {
   }
 
   return (
-    <div className="pt-6 pb-32 px-5 max-w-7xl mx-auto">
+    <div className="relative pt-6 pb-32 px-5 max-w-7xl mx-auto">
+      <MatrixBarcodeRain />
       <header className="mb-7 relative">
         <div className="absolute -top-20 -left-12 h-48 w-48 rounded-full bg-[#1ee07a]/10 blur-[90px]" />
         <div className="inline-flex items-center gap-2 rounded-full border border-[#1ee07a]/40 bg-[#07130d]/80 px-3 py-1 mb-3">
-          <Shield size={12} className="text-[#8cffba]" />
-          <span className="text-[9px] font-black uppercase tracking-[0.16em] text-[#8cffba]">
-            Livraria da Matrix
-          </span>
+          <BookMarked size={12} className="text-[#8cffba]" />
+          <span className="text-[9px] font-black uppercase tracking-[0.16em] text-[#8cffba]">Livraria da Matrix</span>
         </div>
-        <h2 className="font-headline font-extrabold text-3xl text-[#d6ffe9] tracking-tighter mb-2 uppercase">
-          LIVRARIA DA MATRIX
-        </h2>
+        <h2 className="font-headline font-extrabold text-3xl text-[#d6ffe9] tracking-tighter mb-2 uppercase">LIVRARIA DA MATRIX</h2>
         <p className="text-[#b4f2cd]/75 text-[11px] max-w-2xl font-medium leading-relaxed">
-          A ordem mundial opera sobre uma economia de revelação ritual. O sistema precisa anunciar seus movimentos por símbolos públicos, ficção preditiva e cerimônias. Esta sessão organiza essas leituras para discernimento estratégico.
+          Arquiteturas de poder, narrativas de controle e discernimento estratégico para ler os sinais do sistema com método, sobriedade e base documental.
         </p>
       </header>
 
@@ -345,18 +417,12 @@ export default function Refutation() {
               <div className="absolute inset-0 bg-[repeating-linear-gradient(180deg,rgba(34,197,94,0.07)_0px,rgba(34,197,94,0.07)_1px,transparent_1px,transparent_7px)] opacity-30 pointer-events-none" />
               <div className="relative h-full p-5 flex flex-col justify-between">
                 <div className="inline-flex items-center gap-2 w-fit px-2 py-1 rounded-full border border-[#1ee07a]/40 bg-[#05100a]/75 backdrop-blur-sm">
-                  <AlertTriangle size={12} className="text-[#9bffc3]" />
-                  <span className="text-[9px] font-black uppercase tracking-[0.16em] text-[#9bffc3] font-mono">
-                    {theme.signal}
-                  </span>
+                  <BookMarked size={12} className="text-[#9bffc3]" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.16em] text-[#9bffc3] font-mono">{theme.signal}</span>
                 </div>
                 <div>
-                  <h3 className="font-headline font-black text-[22px] text-[#e0ffef] tracking-tight uppercase leading-none mb-1">
-                    {theme.label}
-                  </h3>
-                  <p className="text-[10px] text-[#baf5d2]/72 leading-snug font-medium line-clamp-2">
-                    {theme.subtitle}
-                  </p>
+                  <h3 className="font-headline font-black text-[22px] text-[#e0ffef] tracking-tight uppercase leading-none mb-1">{theme.label}</h3>
+                  <p className="text-[10px] text-[#baf5d2]/72 leading-snug font-medium line-clamp-2">{theme.subtitle}</p>
                   <p className="mt-2 text-[9px] uppercase tracking-[0.14em] font-black text-[#9bffc3]/85">
                     {themeStudies.length} conteúdo{themeStudies.length > 1 ? 's' : ''}
                   </p>
@@ -370,12 +436,10 @@ export default function Refutation() {
       <section className="mt-7">
         <div className="flex items-center gap-2 mb-3">
           <Sparkles size={13} className="text-[#86ffb8]" />
-          <h3 className="font-headline text-[10px] uppercase tracking-[0.2em] font-bold text-[#c3f6d9]/85">
-            Últimas Publicações
-          </h3>
+          <h3 className="font-headline text-[10px] uppercase tracking-[0.2em] font-bold text-[#c3f6d9]/85">Últimas Publicações</h3>
         </div>
         <div className="space-y-2">
-          {studies.slice(0, 6).map((study) => (
+          {studies.slice(0, 8).map((study) => (
             <article
               key={study.pathKey}
               onClick={() => setSelectedStudy(study)}
@@ -385,12 +449,8 @@ export default function Refutation() {
                 <AppImage src={study.image} alt={study.title} className="w-full h-full object-cover" />
               </div>
               <div className="min-w-0 flex-1">
-                <h4 className="font-headline text-[11px] font-extrabold tracking-tight text-[#e2fff0] line-clamp-1">
-                  {study.title}
-                </h4>
-                <p className="text-[9px] text-[#b8f2cf]/70 line-clamp-1">
-                  {study.description || 'Clique para abrir a análise.'}
-                </p>
+                <h4 className="font-headline text-[11px] font-extrabold tracking-tight text-[#e2fff0] line-clamp-1">{study.title}</h4>
+                <p className="text-[9px] text-[#b8f2cf]/70 line-clamp-1">{study.description || 'Clique para abrir a análise.'}</p>
               </div>
               <Cpu size={14} className="text-[#85ffb8]/70 shrink-0" />
             </article>

@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, type ReactNode } from 'react';
-import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame } from 'lucide-react';
+import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Wrench } from 'lucide-react';
 import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -65,6 +65,8 @@ function pickCategoryByFolder(folder: string): string {
     ['serie - a queda do mundo espiritual', 'Série — A Queda do Mundo Espiritual'],
     ['serie - a queda do querubim ungido', 'Série — A Queda do Querubim Ungido'],
     ['serie - a onisciencia como atributo exclusivo', 'Série — A Onisciência como Atributo Exclusivo'],
+    ['serie - o relogio de deus', 'Série — O Relógio de Deus'],
+    ['serie - ferramentas de estudo', 'FERRAMENTAS'],
     ['serie - sombras do reino de deus', 'SOMBRAS DO REINO DE DEUS'],
     ['serie - a verdadeira historia da igreja', 'Série — A Verdadeira História da Igreja'],
     ['serie - o codigo das eras', 'Série — O Código das Eras'],
@@ -77,6 +79,8 @@ function pickCategoryByFolder(folder: string): string {
     ['trilogia - o canon oculto', 'Trilogia — O Cânon Oculto'],
     ['trilogia - o veu rasgado', 'Trilogia — O Véu Rasgado'],
     ['trilogia - a coroa roubada', 'Trilogia — A Coroa Roubada'],
+    ['ferramentas-espirituais', 'FERRAMENTAS'],
+    ['ferramentas', 'FERRAMENTAS'],
   ];
 
   for (const [matchFolder, category] of dynamicMap) {
@@ -241,7 +245,7 @@ type SectionKey =
   | 'ANTISISTEMA'
   | 'IA & APOCALIPSE'
   | 'BATALHA ESPIRITUAL'
-  | 'FERRAMENTAS ESPIRITUAIS';
+  | 'FERRAMENTAS';
 
 // ── Section metadata ──────────────────────────────────────────────────────────
 const SECTIONS: Record<SectionKey, {
@@ -292,11 +296,11 @@ const SECTIONS: Record<SectionKey, {
     Icon: Flame,
     accent: 'from-red-900/70 to-red-800/10',
   },
-  'FERRAMENTAS ESPIRITUAIS': {
-    label: 'Ferramentas Espirituais',
-    description: 'Guias práticos de oração, jejum, intercessão e guerra espiritual. Conteúdo aplicado para fortalecer a vida interior e a caminhada com Deus.',
-    Icon: Flame,
-    accent: 'from-orange-900/70 to-orange-800/10',
+  'FERRAMENTAS': {
+    label: 'Ferramentas',
+    description: 'Ferramentas para o seu estudo pessoal: sem teologia sistemática, dogmática ou institucional. Só você, a Bíblia e o conhecimento que estava na mente dos autores bíblicos.',
+    Icon: Wrench,
+    accent: 'from-slate-800/80 via-zinc-800/65 to-cyan-900/20',
   },
 };
 
@@ -308,7 +312,7 @@ const SECTION_ORDER: SectionKey[] = [
   'ANTISISTEMA',
   'IA & APOCALIPSE',
   'BATALHA ESPIRITUAL',
-  'FERRAMENTAS ESPIRITUAIS',
+  'FERRAMENTAS',
 ];
 
 // Maps existing category strings → top-level section
@@ -330,8 +334,13 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Trilogia — A Coroa Roubada':               'MUNDO ESPIRITUAL',
   'Série — O Código das Eras':                'IA & APOCALIPSE',
   'Série — A Onisciência como Atributo Exclusivo': 'IA & APOCALIPSE',
+  'Série — O Relógio de Deus':              'APÓCRIFOS',
   'Série — O Guerreiro Divino':               'BATALHA ESPIRITUAL',
-  'FERRAMENTAS ESPIRITUAIS':                  'FERRAMENTAS ESPIRITUAIS',
+  'FERRAMENTAS':                              'FERRAMENTAS',
+  'FERRAMENTAS ESPIRITUAIS':                  'FERRAMENTAS',
+  'apocrifos':                                'APÓCRIFOS',
+  'ia-e-apocalipse':                          'IA & APOCALIPSE',
+  'ferramentas de estudo':                    'FERRAMENTAS',
 };
 
 // Short display labels per series
@@ -352,8 +361,11 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
   'Série — O Código das Eras':                'O Código das Eras',
   'Série — A Onisciência como Atributo Exclusivo': 'A Onisciência como Atributo Exclusivo',
+  'Série — O Relógio de Deus':               'O Relógio de Deus',
   'Série — O Guerreiro Divino':               'O Guerreiro Divino',
   'TIPOLOGIA BÍBLICA':                        'O Código dos Arquétipos',
+  'FERRAMENTAS':                              'Ferramentas',
+  'FERRAMENTAS ESPIRITUAIS':                  'Ferramentas',
 };
 
 // Description shown below each series header
@@ -374,9 +386,43 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Trilogia — A Coroa Roubada': 'Uma trilogia sobre conselho divino, queda dos príncipes e restauração da autoridade dos filhos em Cristo.',
   'Série — O Código das Eras': 'Uma leitura profética das eras bíblicas: sinais celestes, ciclos históricos e convergência escatológica até a consumação do Reino.',
   'Série — A Onisciência como Atributo Exclusivo': 'Uma série sobre a diferença entre a onisciência absoluta de Deus e o conhecimento inferido do inimigo, conectando teologia bíblica, tecnologia e discernimento contemporâneo.',
+  'Série — O Relógio de Deus': 'Uma série sobre o calendário divino, a guerra dos tempos e a restauração do relógio bíblico revelado em Jubileus, Enoque e Apocalipse.',
   'Série — O Guerreiro Divino': 'Uma série sobre Yahweh como Homem de Guerra: batalhas visíveis e invisíveis, exércitos celestiais e o chamado para discernimento e firmeza espiritual.',
   'TIPOLOGIA BÍBLICA': 'Adão, o Sangue, a Arca, o Templo — cada narrativa do Antigo Testamento é uma sombra que aponta para Cristo. Uma série que decodifica a linguagem tipológica da Escritura e revela a unidade profunda de toda a Bíblia.',
+  'FERRAMENTAS': 'Ferramentas para estudo pessoal direto na Escritura, sem filtros institucionais: você, a Bíblia e o horizonte mental dos autores bíblicos.',
+  'FERRAMENTAS ESPIRITUAIS': 'Ferramentas para estudo pessoal direto na Escritura, sem filtros institucionais: você, a Bíblia e o horizonte mental dos autores bíblicos.',
 };
+
+const FIREFLY_PARTICLES = [
+  { left: '7%', top: '12%', size: 4, delay: '0s', duration: '11s' },
+  { left: '18%', top: '34%', size: 3, delay: '1.2s', duration: '13s' },
+  { left: '28%', top: '22%', size: 2, delay: '0.6s', duration: '10s' },
+  { left: '41%', top: '14%', size: 3, delay: '1.8s', duration: '14s' },
+  { left: '56%', top: '29%', size: 4, delay: '0.2s', duration: '12s' },
+  { left: '67%', top: '18%', size: 2, delay: '2.2s', duration: '9s' },
+  { left: '74%', top: '35%', size: 3, delay: '0.9s', duration: '15s' },
+  { left: '88%', top: '16%', size: 4, delay: '1.4s', duration: '13s' },
+];
+
+function FireflyLayer() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {FIREFLY_PARTICLES.map((dot, index) => (
+        <span
+          key={`${dot.left}-${dot.top}-${index}`}
+          className="absolute rounded-full bg-[#ffdcae]/70 shadow-[0_0_10px_rgba(242,192,141,0.65)]"
+          style={{
+            left: dot.left,
+            top: dot.top,
+            width: dot.size,
+            height: dot.size,
+            animation: `firefly-drift ${dot.duration} ease-in-out ${dot.delay} infinite alternate`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 function buildAutoSeriesDescription(category: string, items: BookItem[]): string {
   const curated = SERIES_DESCRIPTION[category];
@@ -393,6 +439,53 @@ function buildAutoSeriesDescription(category: string, items: BookItem[]): string
 
   const seriesLabel = SERIES_LABEL[category] ?? category;
   return `${seriesLabel}: coleção de estudos e livros com análise bíblica, histórica e aplicação prática.`;
+}
+
+function extractVolumeFromBook(item: BookItem): number | null {
+  const byTitle = item.title.match(/(?:ebook|livro|volume|vol\.)\s*0*(\d{1,3})/i);
+  if (byTitle) return Number.parseInt(byTitle[1], 10);
+
+  const slugPart = item.slug.split('/').pop() ?? '';
+  const bySlug = slugPart.match(/(?:ebook|livro|parte)\s*0*(\d{1,3})/i);
+  if (bySlug) return Number.parseInt(bySlug[1], 10);
+
+  return null;
+}
+
+function sortBooksInSeries(category: string, items: BookItem[]): BookItem[] {
+  if (category === 'Série — A Queda do Querubim Ungido') {
+    const manualPriority = (title: string): number => {
+      const normalized = title
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+      if (normalized.includes('antes da queda')) return 1;
+      if (normalized.includes('o pecado que quebrou o ceu')) return 2;
+      return 99;
+    };
+
+    return [...items].sort((a, b) => {
+      const pa = manualPriority(a.title);
+      const pb = manualPriority(b.title);
+      if (pa !== pb) return pa - pb;
+
+      const va = extractVolumeFromBook(a);
+      const vb = extractVolumeFromBook(b);
+      if (va !== null && vb !== null && va !== vb) return va - vb;
+      if (va !== null && vb === null) return -1;
+      if (va === null && vb !== null) return 1;
+      return a.title.localeCompare(b.title, 'pt-BR');
+    });
+  }
+
+  return [...items].sort((a, b) => {
+    const va = extractVolumeFromBook(a);
+    const vb = extractVolumeFromBook(b);
+    if (va !== null && vb !== null && va !== vb) return va - vb;
+    if (va !== null && vb === null) return -1;
+    if (va === null && vb !== null) return 1;
+    return a.title.localeCompare(b.title, 'pt-BR');
+  });
 }
 
 // ── DragScrollRow ─────────────────────────────────────────────────────────────
@@ -525,11 +618,16 @@ function SectionCard({ sectionKey, books, onSelect }: {
   const { label, description, Icon, accent } = SECTIONS[sectionKey];
   const cover = books[0]?.image;
   const totalRead = pm.countRead('livraria', books.map((b) => b.slug));
+  const isToolsSection = sectionKey === 'FERRAMENTAS';
 
   return (
     <div
       onClick={onSelect}
-      className="interactive-card gold-glow-hover group relative w-full h-44 rounded-2xl overflow-hidden cursor-pointer active:scale-[0.98] transition-all duration-300 border border-white/5 hover:border-primary/30 hover:shadow-[0_0_40px_rgba(242,192,141,0.10)]"
+      className={`interactive-card group relative w-full h-44 rounded-2xl overflow-hidden cursor-pointer active:scale-[0.98] transition-all duration-300 border ${
+        isToolsSection
+          ? 'border-cyan-300/25 hover:border-cyan-300/45 hover:shadow-[0_0_40px_rgba(34,211,238,0.12)]'
+          : 'gold-glow-hover border-white/5 hover:border-primary/30 hover:shadow-[0_0_40px_rgba(242,192,141,0.10)]'
+      }`}
     >
       {/* Cover image — blurred, zooms out on hover */}
       {cover && (
@@ -542,6 +640,9 @@ function SectionCard({ sectionKey, books, onSelect }: {
 
       {/* Coloured gradient overlay */}
       <div className={`absolute inset-0 bg-gradient-to-r ${accent} to-transparent`} />
+      {isToolsSection && (
+        <div className="absolute inset-0 opacity-30 bg-[repeating-linear-gradient(135deg,rgba(148,163,184,0.20)_0px,rgba(148,163,184,0.20)_1px,transparent_1px,transparent_9px)]" />
+      )}
       {/* Bottom dark vignette */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
@@ -553,10 +654,23 @@ function SectionCard({ sectionKey, books, onSelect }: {
         {/* Top row */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
-            <div className="bg-black/40 border border-white/10 rounded-lg p-1.5 group-hover:border-primary/30 group-hover:bg-primary/10 transition-all">
-              <Icon size={14} className="text-primary/80 group-hover:text-primary transition-colors" />
+            <div
+              className={`rounded-lg p-1.5 transition-all ${
+                isToolsSection
+                  ? 'bg-zinc-950/75 border border-cyan-300/30 group-hover:border-cyan-300/50 group-hover:bg-cyan-900/20'
+                  : 'bg-black/40 border border-white/10 group-hover:border-primary/30 group-hover:bg-primary/10'
+              }`}
+            >
+              <Icon
+                size={14}
+                className={isToolsSection ? 'text-cyan-200/90 group-hover:text-cyan-100 transition-colors' : 'text-primary/80 group-hover:text-primary transition-colors'}
+              />
             </div>
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40 group-hover:text-primary/70 transition-colors">
+            <span
+              className={`text-[9px] font-black uppercase tracking-[0.2em] transition-colors ${
+                isToolsSection ? 'text-cyan-100/55 group-hover:text-cyan-100/85' : 'text-white/40 group-hover:text-primary/70'
+              }`}
+            >
               {books.length} volume{books.length !== 1 ? 's' : ''}
             </span>
           </div>
@@ -598,7 +712,11 @@ export default function Bookstore() {
 
   // Group books by top-level section
   const booksBySection = SECTION_ORDER.reduce((acc, sec) => {
-    acc[sec] = mergedBooks.filter((b) => CATEGORY_TO_SECTION[b.category] === sec);
+    acc[sec] = mergedBooks.filter((b) => {
+      const category = (b.category || '').trim();
+      const mapped = CATEGORY_TO_SECTION[category] ?? CATEGORY_TO_SECTION[category.toLowerCase()];
+      return mapped === sec;
+    });
     return acc;
   }, {} as Record<SectionKey, BookItem[]>);
 
@@ -609,7 +727,7 @@ export default function Bookstore() {
           (acc[book.category] ??= []).push(book);
           return acc;
         }, {} as Record<string, BookItem[]>)
-      )
+      ).map(([category, items]) => [category, sortBooksInSeries(category, items)] as [string, BookItem[]])
     : [];
 
   const handleSelectBook = async (slug: string) => {
@@ -645,7 +763,8 @@ export default function Bookstore() {
   if (selectedSection) {
     const { label, description, Icon } = SECTIONS[selectedSection];
     return (
-      <div className="pt-6 pb-32 px-5 max-w-7xl mx-auto">
+      <div className="relative pt-6 pb-32 px-5 max-w-7xl mx-auto">
+        <FireflyLayer />
         <div className="mb-8">
           <button
             onClick={() => setSelectedSection(null)}
@@ -673,13 +792,14 @@ export default function Bookstore() {
           const label = SERIES_LABEL[cat] ?? cat;
           const seriesDescription = buildAutoSeriesDescription(cat, items);
           const isSeries = items.length > 3;
+          const badgeLabel = selectedSection === 'FERRAMENTAS' ? 'FERRAMENTA' : isSeries ? 'SÉRIE' : 'TRILOGIA';
 
           return (
             <div key={cat} className="mb-6">
               <div className="mb-2.5">
                 <div className="mb-1">
                   <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-primary">
-                    {isSeries ? 'SÉRIE' : 'TRILOGIA'}
+                    {badgeLabel}
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2 flex-wrap">
@@ -731,7 +851,8 @@ export default function Bookstore() {
 
   // ── Main grid ──────────────────────────────────────────────────────────────
   return (
-    <div className="pt-6 pb-32 px-5 max-w-7xl mx-auto">
+    <div className="relative pt-6 pb-32 px-5 max-w-7xl mx-auto">
+      <FireflyLayer />
       <header className="mb-10 relative">
         <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px]" />
         <div className="relative z-10">
