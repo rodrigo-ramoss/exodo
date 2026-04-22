@@ -17,6 +17,7 @@ export type Category = 'mana' | 'apocrifos' | 'refutacao' | 'livraria' | 'biblic
 export interface ContentEntry {
   readCount: number;
   lastRead: string;   // ISO timestamp — usado pelo debounce de 1 minuto
+  updatedAt: string;  // ISO timestamp da última atividade (scroll ou conclusão)
   progress: number;   // 0–100 (progresso de scroll)
   scrollPos: number;  // pixels do topo (para restaurar posição)
 }
@@ -80,7 +81,7 @@ function save(db: ProgressDB): void {
 }
 
 function defaultEntry(): ContentEntry {
-  return { readCount: 0, lastRead: '', progress: 0, scrollPos: 0 };
+  return { readCount: 0, lastRead: '', updatedAt: '', progress: 0, scrollPos: 0 };
 }
 
 // ─── API pública (pm) ─────────────────────────────────────────────────────────
@@ -119,6 +120,7 @@ export const pm = {
     const db = load();
     const entry = db[category][slug] ?? defaultEntry();
     entry.progress = Math.min(100, Math.max(0, Math.round(pct)));
+    entry.updatedAt = new Date().toISOString();
     if (scrollPos !== undefined) entry.scrollPos = scrollPos;
     db[category][slug] = entry;
     save(db);
@@ -152,6 +154,7 @@ export const pm = {
 
     entry.readCount += 1;
     entry.lastRead = new Date().toISOString();
+    entry.updatedAt = entry.lastRead;
     entry.progress = 0;   // Zera o progresso para próxima leitura
     entry.scrollPos = 0;
     db[category][slug] = entry;
@@ -189,6 +192,24 @@ export const pm = {
     if (entry && entry.readCount > 0) return entry.readCount;
     const old = parseInt(localStorage.getItem(`reads_${slug}`) ?? '0', 10);
     return isNaN(old) ? 0 : old;
+  },
+
+  /**
+   * Retorna o timestamp ISO da última conclusão (markAsRead).
+   */
+  getLastReadAt(category: Category, slug: string): string {
+    const db = load();
+    const entry = db[category][slug];
+    return entry?.lastRead ?? '';
+  },
+
+  /**
+   * Retorna o timestamp ISO da última atividade (scroll ou conclusão).
+   */
+  getLastActivity(category: Category, slug: string): string {
+    const db = load();
+    const entry = db[category][slug];
+    return entry?.updatedAt || entry?.lastRead || '';
   },
 
   /**

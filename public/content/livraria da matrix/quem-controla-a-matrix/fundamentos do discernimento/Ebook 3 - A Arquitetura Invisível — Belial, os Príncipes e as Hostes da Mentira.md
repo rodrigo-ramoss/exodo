@@ -3,7 +3,7 @@ title: A Arquitetura Invisível — Belial, os Príncipes e as Hostes da Mentira
 description: Terceiro volume da série Fundamentos do Discernimento. Um mergulho profundo na hierarquia do adversário conforme revelada nas Escrituras e na literatura do Segundo Templo. Descubra quem é Belial, como operam os príncipes territoriais, o que são os daimonia e quem são os filhos das trevas humanos. Compreenda a cadeia de comando espiritual por trás dos eventos mundiais e aprenda a orar e a guerrear com inteligência, não com superstição. Baseado em anos de estudo exegético e em uma metodologia editorial de altíssimo rigor.
 seção: livraria
 category: cosmovisao, matrix
-image: /image/livraria da matrix/a paisagem da crise.webp
+image: /image/livraria da matrix/a arquiterura invisivel.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

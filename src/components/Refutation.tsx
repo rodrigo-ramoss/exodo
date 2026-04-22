@@ -1,7 +1,8 @@
 import { useMemo, useRef, useState, type ReactNode } from 'react';
-import { BookMarked, ChevronLeft, Cpu, Sparkles } from 'lucide-react';
+import { BookMarked, Check, ChevronLeft, Cpu, Sparkles } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 import { AppImage } from './AppImage';
+import { pm } from '../lib/progressManager';
 
 interface RefutationStudy {
   title: string;
@@ -61,10 +62,19 @@ const MATRIX_IMAGE_ALIASES: Record<string, string> = {
   'capa-tres-camadas': 'as tres camadas na pratica.webp',
   'as-tres-camadas-na-pratica': 'as tres camadas na pratica.webp',
   'o-sistema-avisa-introducao-a-revelacao-adversaria': 'a paisagem da crise.webp',
-  'capa-arquitetura-invisivel': 'a paisagem da crise.webp',
-  'a-arquitetura-invisivel-belial-os-principes-e-as-hostes-da-mentira': 'a paisagem da crise.webp',
+  'capa-arquitetura-invisivel': 'a arquiterura invisivel.webp',
+  'a-arquitetura-invisivel': 'a arquiterura invisivel.webp',
+  'a-arquitetura-invisivel-belial-os-principes-e-as-hostes-da-mentira': 'a arquiterura invisivel.webp',
+  'a-arquitetura-invisivel-belial-os-principes-e-as-hostias-da-mentira': 'a arquiterura invisivel.webp',
   'capa-tres-armadilhas': 'as tres armadilhas.webp',
   'as-tres-armadilhas-paranoia-militancia-e-escapismo': 'as tres armadilhas.webp',
+};
+
+const MATRIX_SERIES_DESCRIPTIONS: Record<string, string> = {
+  'Fundamentos do Discernimento':
+    'Base de discernimento cristão para ler sinais públicos com sobriedade: método, cosmovisão bíblica, guerra espiritual e maturidade para não cair em paranoia, militância ou escapismo.',
+  'A Arquitetura Visível':
+    'Mapeamento documental da camada humana do sistema: nós de poder, dinastias, ordens iniciáticas e ideologias que estruturam a governança global no plano visível.',
 };
 
 const refutationModules = import.meta.glob('/public/content/livraria da matrix/**/*.md', {
@@ -87,6 +97,13 @@ function parseFrontmatter(markdown: string): Record<string, string> {
   return result;
 }
 
+function stripFrontmatter(markdown: string): string {
+  const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
+  const match = normalized.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*/);
+  if (!match) return normalized;
+  return normalized.slice(match[0].length).trim();
+}
+
 function slugify(raw: string): string {
   return raw
     .normalize('NFD')
@@ -94,6 +111,49 @@ function slugify(raw: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
+}
+
+function normalizeDescription(raw: string): string {
+  return raw.replace(/\s+/g, ' ').trim();
+}
+
+function looksLikeVolumePreface(raw: string): boolean {
+  const normalized = normalizeDescription(raw).toLowerCase();
+  if (!normalized) return true;
+  return /^(?:este|esse|esta|primeiro|segundo|terceiro|quarto|quinto)\b[\s\S]{0,80}\bvolume\b/.test(normalized);
+}
+
+function toPlainParagraph(raw: string): string {
+  return normalizeDescription(
+    raw
+      .replace(/!\[[^\]]*]\([^)]*\)/g, ' ')
+      .replace(/\[([^\]]+)]\([^)]*\)/g, '$1')
+      .replace(/[`*_>#]/g, ' ')
+      .replace(/^[-\d.)\s]+/g, ' ')
+      .replace(/\|/g, ' ')
+      .replace(/\s+/g, ' '),
+  );
+}
+
+function truncate(raw: string, max = 230): string {
+  if (raw.length <= max) return raw;
+  return `${raw.slice(0, max - 1).trimEnd()}…`;
+}
+
+function pickInterestingExcerpt(content: string, fallback?: string): string {
+  const body = stripFrontmatter(content);
+  const paragraphs = body
+    .split(/\r?\n\r?\n+/)
+    .map((block) => toPlainParagraph(block))
+    .filter((block) => block.length >= 70)
+    .filter((block) => !/^(?:rodrigo ramos|serie:|indice|prefacio|capitulo|fim do livro)/i.test(block))
+    .filter((block) => !looksLikeVolumePreface(block));
+
+  if (paragraphs.length > 0) return truncate(paragraphs[0]);
+
+  const cleanFallback = normalizeDescription(fallback || '');
+  if (cleanFallback && !looksLikeVolumePreface(cleanFallback)) return truncate(cleanFallback);
+  return 'Clique para abrir o ebook e continuar a leitura.';
 }
 
 function extractVolume(raw: string): number | null {
@@ -171,7 +231,7 @@ function loadRefutations(): RefutationStudy[] {
 
       return {
         title,
-        description: frontmatter.description,
+        description: pickInterestingExcerpt(content, frontmatter.description),
         date: frontmatter.date,
         image: resolveMatrixCover(frontmatter, title, fileStem),
         slug: `${seriesFolder}/${fileStem}`,
@@ -257,6 +317,12 @@ function MatrixBookCard({
   onSelect: () => void;
 }) {
   const volume = study.volume ?? volIndex + 1;
+  const progress = pm.getProgress('refutacao', study.slug);
+  const isCompleted = pm.isRead('refutacao', study.slug);
+  const readsCount = pm.getReadCount('refutacao', study.slug);
+  const progressPct = isCompleted ? 100 : Math.max(0, Math.min(100, Math.round(progress)));
+  const isReading = progressPct > 0 && !isCompleted;
+
   return (
     <article
       onClick={onSelect}
@@ -270,6 +336,12 @@ function MatrixBookCard({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#021006]/80 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-[repeating-linear-gradient(180deg,rgba(34,197,94,0.08)_0px,rgba(34,197,94,0.08)_1px,transparent_1px,transparent_6px)] opacity-20 pointer-events-none" />
+        {isCompleted && (
+          <div className="absolute top-1.5 right-1.5 flex items-center gap-1 rounded-full bg-black/70 border border-[#8cffba]/70 px-1.5 py-0.5">
+            <Check size={8} className="text-[#8cffba]" />
+            <span className="text-[7px] font-black uppercase tracking-widest text-[#8cffba]">Lido</span>
+          </div>
+        )}
       </div>
       <div className="mt-2.5 px-0.5 select-none flex flex-col gap-1.5">
         <span className="text-[8px] font-black uppercase tracking-[0.15em] text-[#7dffb2]/80 leading-none">
@@ -278,6 +350,28 @@ function MatrixBookCard({
         <p className="text-[9px] text-[#c8f9dc]/70 leading-snug line-clamp-2 font-medium">
           {study.description || 'Clique para abrir o ebook e continuar a leitura.'}
         </p>
+        <div className="flex items-center gap-1.5 mt-0.5">
+          <div className="h-1 flex-1 bg-[#0f1a13] rounded-full overflow-hidden border border-[#1ee07a]/20">
+            <div
+              className={
+                isCompleted
+                  ? 'h-full bg-gradient-to-r from-[#2df3a1] to-[#95ffd0] shadow-[0_0_6px_rgba(45,243,161,0.45)]'
+                  : 'h-full bg-gradient-to-r from-[#1ee07a] to-[#80ffc1] shadow-[0_0_5px_rgba(34,197,94,0.4)]'
+              }
+              style={{ width: `${isReading || isCompleted ? progressPct : 0}%` }}
+            />
+          </div>
+          {(isReading || isCompleted) && (
+            <span className={`text-[8px] font-black leading-none shrink-0 ${isCompleted ? 'text-[#95ffd0]' : 'text-[#71ffb3]'}`}>
+              {progressPct}%
+            </span>
+          )}
+        </div>
+        {readsCount > 0 && (
+          <span className="text-[8px] font-black uppercase tracking-widest text-[#95ffd0]/80">
+            Lido {readsCount}×
+          </span>
+        )}
       </div>
     </article>
   );
@@ -347,7 +441,7 @@ export default function Refutation() {
 
         {seriesInTheme.map(([series, items], index) => {
           const isSeries = items.length > 3;
-          const seriesDescription = items.find((item) => item.description)?.description || selectedTheme.subtitle;
+          const seriesDescription = MATRIX_SERIES_DESCRIPTIONS[series] || selectedTheme.subtitle;
           return (
             <section key={series} className="relative mb-6">
               <div className="mb-2.5">
