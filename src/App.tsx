@@ -37,6 +37,8 @@ export default function App() {
         return <EBD onNavigate={handleNavigate} />;
       case Screen.BOOKSTORE:
         return <Bookstore />;
+      case Screen.TOOLS:
+        return <Bookstore mode="tools" />;
       case Screen.REFUTACAO:
         return <Refutation />;
       case Screen.APOCRYPHA:

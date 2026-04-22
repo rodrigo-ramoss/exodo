@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, type ReactNode } from 'react';
-import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Wrench } from 'lucide-react';
+import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Wrench, Hourglass } from 'lucide-react';
 import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -21,6 +21,15 @@ const livrariaMarkdownModules = import.meta.glob('/public/content/livraria/**/*.
   query: '?raw',
   import: 'default',
 }) as Record<string, string>;
+const ferramentasMarkdownModules = import.meta.glob('/public/content/ferramentas-espirituais/**/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
+const contentMarkdownModules = {
+  ...livrariaMarkdownModules,
+  ...ferramentasMarkdownModules,
+};
 
 const COVER_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg'] as const;
 
@@ -61,7 +70,9 @@ function pickCategoryByFolder(folder: string): string {
   const dynamicMap: Array<[string, string]> = [
     ['serie - o codigo dos arquetipos', 'TIPOLOGIA BÍBLICA'],
     ['serie - o codigo do jardim', 'Série — O Código do Jardim'],
-    ['serie - o guerreiro divino', 'Série — O Guerreiro Divino'],
+    ['serie - a revelacao do seculo', 'Série — A Revelação do Século'],
+    ['serie - invasao legal', 'Série — Invasão Legal'],
+    ['serie - a armadura do remanescente', 'Série — A Armadura do Remanescente'],
     ['serie - a queda do mundo espiritual', 'Série — A Queda do Mundo Espiritual'],
     ['serie - a queda do querubim ungido', 'Série — A Queda do Querubim Ungido'],
     ['serie - a onisciencia como atributo exclusivo', 'Série — A Onisciência como Atributo Exclusivo'],
@@ -91,10 +102,14 @@ function pickCategoryByFolder(folder: string): string {
   return folder;
 }
 
-function toLivrariaRelativePath(pathKey: string): string {
+function toContentRelativePath(pathKey: string): string {
   const normalized = pathKey.replace(/\\/g, '/');
-  const marker = '/public/content/livraria/';
-  return normalized.includes(marker) ? normalized.slice(normalized.indexOf(marker) + marker.length) : normalized;
+  const marker = '/public/content/';
+  if (!normalized.includes(marker)) return normalized;
+  const relativeFromContent = normalized.slice(normalized.indexOf(marker) + marker.length);
+  if (relativeFromContent.startsWith('livraria/')) return relativeFromContent.slice('livraria/'.length);
+  if (relativeFromContent.startsWith('ferramentas-espirituais/')) return relativeFromContent.slice('ferramentas-espirituais/'.length);
+  return relativeFromContent;
 }
 
 function stripMarkdownExtension(path: string): string {
@@ -114,8 +129,8 @@ function normalizeSlugLookupKey(raw: string): string {
 function buildMarkdownBySlugIndex(): Record<string, string> {
   const bySlug: Record<string, string> = {};
 
-  for (const [pathKey, content] of Object.entries(livrariaMarkdownModules)) {
-    const relativePath = toLivrariaRelativePath(pathKey);
+  for (const [pathKey, content] of Object.entries(contentMarkdownModules)) {
+    const relativePath = toContentRelativePath(pathKey);
     const normalizedRelative = stripMarkdownExtension(relativePath);
     const parts = normalizedRelative.split('/').filter(Boolean);
     const seriesFolder = parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? '');
@@ -160,6 +175,7 @@ function buildFallbackContentUrls(slug: string): string[] {
     'ia-e-apocalipse',
     'batalha-espiritual',
     'ferramentas-espirituais',
+    'fim-dos-tempos',
   ];
 
   const candidates = [
@@ -170,6 +186,8 @@ function buildFallbackContentUrls(slug: string): string[] {
     `/content/livraria/${encodedSlug}.md`,
     ...sectionFolders.map((section) => `${runtimeBase}content/livraria/${section}/${encodedSlug}.md`),
     ...sectionFolders.map((section) => `/content/livraria/${section}/${encodedSlug}.md`),
+    `${runtimeBase}content/ferramentas-espirituais/${encodedSlug}.md`,
+    `/content/ferramentas-espirituais/${encodedSlug}.md`,
   ];
 
   return Array.from(new Set(candidates));
@@ -213,8 +231,8 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
 }
 
 function discoverBooksFromMarkdown(): BookItem[] {
-  return Object.entries(livrariaMarkdownModules).map(([pathKey, content]) => {
-    const relative = toLivrariaRelativePath(pathKey);
+  return Object.entries(contentMarkdownModules).map(([pathKey, content]) => {
+    const relative = toContentRelativePath(pathKey);
 
     const parts = relative.split('/').filter(Boolean);
     const fileName = parts[parts.length - 1] ?? '';
@@ -245,6 +263,7 @@ type SectionKey =
   | 'MUNDO ESPIRITUAL'
   | 'ANTISISTEMA'
   | 'IA & APOCALIPSE'
+  | 'FIM DOS TEMPOS'
   | 'BATALHA ESPIRITUAL'
   | 'FERRAMENTAS';
 
@@ -291,6 +310,12 @@ const SECTIONS: Record<SectionKey, {
     Icon: Cpu,
     accent: 'from-rose-900/70 to-rose-800/10',
   },
+  'FIM DOS TEMPOS': {
+    label: 'Fim dos Tempos',
+    description: 'Escatologia bíblica, sinais proféticos e a reta final da história sob a perspectiva das Escrituras.',
+    Icon: Hourglass,
+    accent: 'from-orange-900/70 to-amber-800/10',
+  },
   'BATALHA ESPIRITUAL': {
     label: 'Batalha Espiritual',
     description: 'Discernimento, resistência e estratégias bíblicas para enfrentar as guerras invisíveis do nosso tempo.',
@@ -312,6 +337,7 @@ const SECTION_ORDER: SectionKey[] = [
   'MUNDO ESPIRITUAL',
   'ANTISISTEMA',
   'IA & APOCALIPSE',
+  'FIM DOS TEMPOS',
   'BATALHA ESPIRITUAL',
   'FERRAMENTAS',
 ];
@@ -330,19 +356,24 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Trilogia — O Mapa da Tempestade':          'ANTISISTEMA',
   'Trilogia — O Estrangeiro Próspero':        'ANTISISTEMA',
   'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
-  'Trilogia — A Marca':                       'IA & APOCALIPSE',
+  'Trilogia — A Marca':                       'FIM DOS TEMPOS',
   'Trilogia — O Véu Rasgado':                 'IA & APOCALIPSE',
   'Trilogia — A Coroa Roubada':               'MUNDO ESPIRITUAL',
-  'Série — O Código das Eras':                'IA & APOCALIPSE',
+  'Série — O Código das Eras':                'FIM DOS TEMPOS',
+  'Série — A Revelação do Século':            'FIM DOS TEMPOS',
   'Série — A Onisciência como Atributo Exclusivo': 'IA & APOCALIPSE',
   'Série — O Relógio de Deus':              'APÓCRIFOS',
-  'Série — O Guerreiro Divino':               'BATALHA ESPIRITUAL',
+  'Série — Invasão Legal':                    'BATALHA ESPIRITUAL',
+  'Série — A Armadura do Remanescente':       'BATALHA ESPIRITUAL',
   'Série — A Arquitetura da Guerra Invisível': 'BATALHA ESPIRITUAL',
+  'FIM DOS TEMPOS':                           'FIM DOS TEMPOS',
   'FERRAMENTAS':                              'FERRAMENTAS',
   'FERRAMENTAS ESPIRITUAIS':                  'FERRAMENTAS',
   'batalha-espiritual':                       'BATALHA ESPIRITUAL',
   'apocrifos':                                'APÓCRIFOS',
   'ia-e-apocalipse':                          'IA & APOCALIPSE',
+  'fim dos tempos':                           'FIM DOS TEMPOS',
+  'fim-dos-tempos':                           'FIM DOS TEMPOS',
   'ferramentas de estudo':                    'FERRAMENTAS',
 };
 
@@ -363,9 +394,11 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — A Queda do Querubim Ungido':       'A Queda do Querubim Ungido',
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
   'Série — O Código das Eras':                'O Código das Eras',
+  'Série — A Revelação do Século':            'A Revelação do Século',
   'Série — A Onisciência como Atributo Exclusivo': 'A Onisciência como Atributo Exclusivo',
   'Série — O Relógio de Deus':               'O Relógio de Deus',
-  'Série — O Guerreiro Divino':               'O Guerreiro Divino',
+  'Série — Invasão Legal':                    'Invasão Legal',
+  'Série — A Armadura do Remanescente':       'A Armadura do Remanescente',
   'Série — A Arquitetura da Guerra Invisível': 'A Arquitetura da Guerra Invisível',
   'TIPOLOGIA BÍBLICA':                        'O Código dos Arquétipos',
   'FERRAMENTAS':                              'Ferramentas',
@@ -389,9 +422,11 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Trilogia — O Véu Rasgado': 'Uma investigação sobre Babel, CERN e conhecimento proibido na fronteira entre tecnologia, mundo invisível e profecia bíblica.',
   'Trilogia — A Coroa Roubada': 'Uma trilogia sobre conselho divino, queda dos príncipes e restauração da autoridade dos filhos em Cristo.',
   'Série — O Código das Eras': 'Uma leitura profética das eras bíblicas: sinais celestes, ciclos históricos e convergência escatológica até a consumação do Reino.',
+  'Série — A Revelação do Século': 'Uma série escatológica com os marcos proféticos do juízo final: vigilantes, cronogramas, queda de Babilônia, além, guerra final e consumação do Reino.',
   'Série — A Onisciência como Atributo Exclusivo': 'Uma série sobre a diferença entre a onisciência absoluta de Deus e o conhecimento inferido do inimigo, conectando teologia bíblica, tecnologia e discernimento contemporâneo.',
   'Série — O Relógio de Deus': 'Uma série sobre o calendário divino, a guerra dos tempos e a restauração do relógio bíblico revelado em Jubileus, Enoque e Apocalipse.',
-  'Série — O Guerreiro Divino': 'Uma série sobre Yahweh como Homem de Guerra: batalhas visíveis e invisíveis, exércitos celestiais e o chamado para discernimento e firmeza espiritual.',
+  'Série — Invasão Legal': 'Uma série sobre a ofensiva judicial do Reino contra os poderes das trevas: cruz, tribunal celestial, ocupação territorial e execução da sentença final.',
+  'Série — A Armadura do Remanescente': 'Uma série prática sobre preparo espiritual do remanescente: verdade, justiça e permanência no dia mau.',
   'Série — A Arquitetura da Guerra Invisível': 'Uma série sobre a estrutura da guerra espiritual: hierarquia do adversário, atuação de Miguel, cartografia dos principados e estratégias de combate bíblico para o remanescente.',
   'TIPOLOGIA BÍBLICA': 'Adão, o Sangue, a Arca, o Templo — cada narrativa do Antigo Testamento é uma sombra que aponta para Cristo. Uma série que decodifica a linguagem tipológica da Escritura e revela a unidade profunda de toda a Bíblia.',
   'FERRAMENTAS': 'Ferramentas para estudo pessoal direto na Escritura, sem filtros institucionais: você, a Bíblia e o horizonte mental dos autores bíblicos.',
@@ -701,8 +736,13 @@ function SectionCard({ sectionKey, books, onSelect }: {
 }
 
 // ── Root component ────────────────────────────────────────────────────────────
-export default function Bookstore() {
-  const [selectedSection, setSelectedSection] = useState<SectionKey | null>(null);
+interface BookstoreProps {
+  mode?: 'default' | 'tools';
+}
+
+export default function Bookstore({ mode = 'default' }: BookstoreProps) {
+  const isToolsMode = mode === 'tools';
+  const [selectedSection, setSelectedSection] = useState<SectionKey | null>(isToolsMode ? 'FERRAMENTAS' : null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const { data: books, loading, error } = useFetch<BookItem[]>('/content/livraria/index.json');
@@ -715,8 +755,12 @@ export default function Bookstore() {
     return Array.from(map.values());
   }, [books, discoveredBooks]);
 
+  const visibleSectionOrder: SectionKey[] = isToolsMode
+    ? ['FERRAMENTAS']
+    : SECTION_ORDER.filter((section) => section !== 'FERRAMENTAS');
+
   // Group books by top-level section
-  const booksBySection = SECTION_ORDER.reduce((acc, sec) => {
+  const booksBySection = visibleSectionOrder.reduce((acc, sec) => {
     acc[sec] = mergedBooks.filter((b) => {
       const category = (b.category || '').trim();
       const mapped = CATEGORY_TO_SECTION[category] ?? CATEGORY_TO_SECTION[category.toLowerCase()];
@@ -771,13 +815,15 @@ export default function Bookstore() {
       <div className="relative pt-6 pb-32 px-5 max-w-7xl mx-auto">
         <FireflyLayer />
         <div className="mb-8">
-          <button
-            onClick={() => setSelectedSection(null)}
-            className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors mb-6 active:scale-95 text-[10px] font-black uppercase tracking-widest"
-          >
-            <ChevronLeft size={15} />
-            Livraria Espiritual
-          </button>
+          {!isToolsMode && (
+            <button
+              onClick={() => setSelectedSection(null)}
+              className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors mb-6 active:scale-95 text-[10px] font-black uppercase tracking-widest"
+            >
+              <ChevronLeft size={15} />
+              Livraria Espiritual
+            </button>
+          )}
           <div className="flex items-center gap-3 mb-2">
             <div className="bg-primary/15 border border-primary/25 rounded-xl p-2">
               <Icon size={18} className="text-primary" />
@@ -862,10 +908,12 @@ export default function Bookstore() {
         <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px]" />
         <div className="relative z-10">
           <h2 className="font-headline font-extrabold text-3xl text-primary tracking-tighter mb-2">
-            Livraria Espiritual
+            {isToolsMode ? 'Ferramentas' : 'Livraria Espiritual'}
           </h2>
           <p className="text-on-surface-variant/70 text-[11px] max-w-[300px] font-medium leading-relaxed">
-            Biblioteca de estudos para discernimento bíblico, história da fé e guerra espiritual. Escolha sua frente de estudo e avance por séries, trilogias e investigações aprofundadas.
+            {isToolsMode
+              ? 'Ferramentas para estudo pessoal direto na Escritura, sem filtros institucionais.'
+              : 'Biblioteca de estudos para discernimento bíblico, história da fé e guerra espiritual. Escolha sua frente de estudo e avance por séries, trilogias e investigações aprofundadas.'}
           </p>
         </div>
       </header>
@@ -876,7 +924,7 @@ export default function Bookstore() {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {SECTION_ORDER.map((sec) => (
+          {visibleSectionOrder.map((sec) => (
             <SectionCard
               key={sec}
               sectionKey={sec}

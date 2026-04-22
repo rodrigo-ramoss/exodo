@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Menu, Settings, GraduationCap, Library, BookOpen, ExternalLink, UserCircle2, BookMarked } from 'lucide-react';
+import { Menu, Settings, GraduationCap, Library, BookOpen, ExternalLink, UserCircle2, BookMarked, Wrench } from 'lucide-react';
 import { Screen } from '../types';
 import { cn } from '../lib/utils';
 import { useProfile } from '../state/ProfileContext';
@@ -19,6 +19,7 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
     { id: Screen.MANA, label: 'MANÁ', icon: GraduationCap },
     { id: Screen.REFUTACAO, label: 'Livraria da Matrix', icon: BookMarked },
     { id: Screen.BOOKSTORE, label: 'Livraria Espiritual', icon: Library },
+    { id: Screen.TOOLS, label: 'Ferramentas', icon: Wrench },
   ];
 
   return (
@@ -31,13 +32,7 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
             aria-label="Abrir configurações"
             className="text-primary hover:text-primary/80 transition-colors active:scale-95 p-1"
           >
-            <span className="relative inline-flex">
-              <Menu size={20} />
-              <Settings
-                size={10}
-                className="absolute -right-1 -bottom-1 text-primary bg-background rounded-full p-[1px] border border-primary/30"
-              />
-            </span>
+            <Menu size={20} />
           </button>
           <h1 
             className="text-xl font-black text-primary tracking-tighter font-headline uppercase cursor-pointer"
@@ -47,15 +42,24 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
           </h1>
         </div>
 
-        <div
-          aria-hidden="true"
-          className="w-8 h-8 rounded-full border border-[#D4AF37]/35 bg-black/40 flex items-center justify-center"
-        >
-          {photo ? (
-            <img src={photo} alt="" className="w-6 h-6 rounded-full object-cover border border-[#D4AF37]/40" />
-          ) : (
-            <UserCircle2 size={18} className="text-[#D4AF37]/85" />
-          )}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setScreen(Screen.SETTINGS)}
+            aria-label="Abrir configurações"
+            className="text-primary hover:text-primary/80 transition-colors active:scale-95 p-1"
+          >
+            <Settings size={18} />
+          </button>
+          <div
+            aria-hidden="true"
+            className="w-8 h-8 rounded-full border border-[#D4AF37]/35 bg-black/40 flex items-center justify-center"
+          >
+            {photo ? (
+              <img src={photo} alt="" className="w-6 h-6 rounded-full object-cover border border-[#D4AF37]/40" />
+            ) : (
+              <UserCircle2 size={18} className="text-[#D4AF37]/85" />
+            )}
+          </div>
         </div>
       </header>
 
@@ -104,35 +108,6 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
             Blog
           </span>
         </a>
-
-        {/* Settings — always at the end */}
-        <button
-          onClick={() => setScreen(Screen.SETTINGS)}
-          className={cn(
-            "flex flex-col items-center justify-center py-1 px-0.5 transition-all active:scale-90 flex-1 min-w-0",
-            currentScreen === Screen.SETTINGS
-              ? "text-primary"
-              : "text-on-surface-variant hover:text-on-surface"
-          )}
-        >
-          <div className={cn(
-            "flex items-center justify-center w-10 h-6 rounded-full transition-all",
-            currentScreen === Screen.SETTINGS && "bg-surface-container-high/60"
-          )}>
-            {photo ? (
-              <img
-                src={photo}
-                alt="Perfil"
-                className="w-5 h-5 rounded-full object-cover border border-primary/40"
-              />
-            ) : (
-              <Settings size={18} strokeWidth={currentScreen === Screen.SETTINGS ? 2.5 : 1.8} />
-            )}
-          </div>
-          <span className="font-sans text-[8px] uppercase font-bold tracking-tight mt-0.5 truncate max-w-full leading-none">
-            Config
-          </span>
-        </button>
       </nav>
     </div>
   );

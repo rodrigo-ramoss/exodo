@@ -3,6 +3,7 @@ export enum Screen {
   MANA = 'MANA',
   EBD = 'EBD',
   BOOKSTORE = 'BOOKSTORE',
+  TOOLS = 'TOOLS',
   REFUTACAO = 'REFUTACAO',
   APOCRYPHA = 'APOCRYPHA',
   SETTINGS = 'SETTINGS',
