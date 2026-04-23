@@ -2,7 +2,7 @@
 title: A Arquitetura da Guerra Invisível — Volume 5 — Melquisedeque e o Jubileu da Guerra: O Fim do Cativeiro Cósmico
 description: Quem é Melquisedeque na teologia de Qumran e em Hebreus? Como o Sacerdote-Rei celestial decreta o Jubileu escatológico e executa o juízo sobre Belial e os Sarim. Uma jornada por 11QMelch, Lucas 4 e o coração da vitória cósmica.
 seção: livraria
-category: batalha-espiritual
+category: Série — A Arquitetura da Guerra Invisível
 image: https://placeholder-voz-do-deserto.com/capa-volume5-melquisedeque.jpg
 ---
 *Rodrigo Ramos — Voz do Deserto*

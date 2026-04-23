@@ -2,7 +2,7 @@
 title: A Armadura do Remanescente — Volume 1 — O Cinto da Verdade: A Integridade que Sustenta a Batalha
 description: Primeiro volume da série sobre a Armadura de Deus. A verdade como fundamento da estabilidade espiritual. Uma leitura paulina de Efésios 6:14 à luz do Segundo Templo, de Isaías e da formação rabínica do apóstolo.
 seção: livraria
-category: batalha-espiritual
+category: Série — A Armadura do Remanescente
 image: https://placeholder-voz-do-deserto.com/capa-armadura-vol1-cinto.jpg
 ---
 *Rodrigo Ramos — Voz do Deserto*

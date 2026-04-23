@@ -2,7 +2,7 @@
 title: A Arquitetura da Guerra Invisível — Volume 7 — A Restauração da Herança: Desfazendo a Maldição de Babel
 description: O destino final das nações redimidas. Como a Igreja, como remanescente, reverte a sentença de Deuteronômio 32 e Salmo 82, ocupando territórios antes dominados pelos Sarim e cumprindo a Grande Comissão como ato de guerra e restauração cósmica.
 seção: livraria
-category: batalha-espiritual
+category: Série — A Arquitetura da Guerra Invisível
 image: https://placeholder-voz-do-deserto.com/capa-volume7-restauracao.jpg
 ---
 *Rodrigo Ramos — Voz do Deserto*

@@ -102,6 +102,32 @@ function pickCategoryByFolder(folder: string): string {
   return folder;
 }
 
+const SECTION_CATEGORY_ALIASES = new Set<string>([
+  'apocrifos',
+  'historia da igreja',
+  'tipologia biblica',
+  'mundo espiritual',
+  'antissistema',
+  'ia apocalipse',
+  'ia e apocalipse',
+  'fim dos tempos',
+  'batalha espiritual',
+  'ferramentas',
+  'ferramentas espirituais',
+  'livraria',
+]);
+
+function normalizeBookCategory(rawCategory: string | undefined, seriesFolder: string): string {
+  const categoryFromFolder = pickCategoryByFolder(seriesFolder);
+  const category = (rawCategory || '').trim();
+  if (!category) return categoryFromFolder;
+
+  const normalizedCategory = slugify(category).replace(/-/g, ' ');
+  if (SECTION_CATEGORY_ALIASES.has(normalizedCategory)) return categoryFromFolder;
+
+  return category;
+}
+
 function toContentRelativePath(pathKey: string): string {
   const normalized = pathKey.replace(/\\/g, '/');
   const marker = '/public/content/';
@@ -249,7 +275,7 @@ function discoverBooksFromMarkdown(): BookItem[] {
       slug,
       description: frontmatter.description || '',
       date: frontmatter.date || '2026-04-18',
-      category: frontmatter.category || pickCategoryByFolder(seriesFolder),
+      category: normalizeBookCategory(frontmatter.category, seriesFolder),
       time: frontmatter.time || 'LIVRO',
       image: cover,
     };
@@ -528,6 +554,13 @@ function sortBooksInSeries(category: string, items: BookItem[]): BookItem[] {
   });
 }
 
+function getSeriesBadgeLabel(section: SectionKey, category: string): 'FERRAMENTA' | 'SÉRIE' | 'TRILOGIA' {
+  if (section === 'FERRAMENTAS') return 'FERRAMENTA';
+  const normalized = slugify(category).replace(/-/g, ' ');
+  if (normalized.startsWith('trilogia ')) return 'TRILOGIA';
+  return 'SÉRIE';
+}
+
 // ── DragScrollRow ─────────────────────────────────────────────────────────────
 // IMPORTANTE: NÃO usar setPointerCapture aqui.
 // Com pointer capture, o pointerup é redirecionado para o container, então o
@@ -581,7 +614,7 @@ function DragScrollRow({ children }: { children: ReactNode }) {
 }
 
 // ── Book Card ─────────────────────────────────────────────────────────────────
-function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: number; onSelect: () => void }) {
+function BookCard({ item, displayVolume, onSelect }: { item: BookItem; displayVolume: number; onSelect: () => void }) {
   const clamped = pm.getProgress('livraria', item.slug);
   const readsCount = pm.getReadCount('livraria', item.slug);
   const isCompleted = pm.isRead('livraria', item.slug);
@@ -609,7 +642,7 @@ function BookCard({ item, volIndex, onSelect }: { item: BookItem; volIndex: numb
 
         {/* Volume label */}
         <span className="text-[8px] font-black uppercase tracking-[0.15em] text-on-surface-variant/40 leading-none">
-          Vol. {String(volIndex + 1).padStart(2, '0')}
+          Vol. {String(displayVolume).padStart(2, '0')}
         </span>
 
         {/* Description (only if available) */}
@@ -748,10 +781,17 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
   const { data: books, loading, error } = useFetch<BookItem[]>('/content/livraria/index.json');
   const discoveredBooks = useMemo(() => discoverBooksFromMarkdown(), []);
   const markdownBySlug = useMemo(() => buildMarkdownBySlugIndex(), []);
+  const normalizeMergedBookCategory = (book: BookItem): BookItem => {
+    const seriesFolder = book.slug.split('/')[0] ?? '';
+    return {
+      ...book,
+      category: normalizeBookCategory(book.category, seriesFolder),
+    };
+  };
   const mergedBooks = useMemo(() => {
     const map = new Map<string, BookItem>();
-    for (const discovered of discoveredBooks) map.set(discovered.slug, discovered);
-    for (const indexed of books ?? []) map.set(indexed.slug, indexed);
+    for (const discovered of discoveredBooks) map.set(discovered.slug, normalizeMergedBookCategory(discovered));
+    for (const indexed of books ?? []) map.set(indexed.slug, normalizeMergedBookCategory(indexed));
     return Array.from(map.values());
   }, [books, discoveredBooks]);
 
@@ -842,8 +882,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
           const minReads = reads.length ? Math.min(...reads) : 0;
           const label = SERIES_LABEL[cat] ?? cat;
           const seriesDescription = buildAutoSeriesDescription(cat, items);
-          const isSeries = items.length > 3;
-          const badgeLabel = selectedSection === 'FERRAMENTAS' ? 'FERRAMENTA' : isSeries ? 'SÉRIE' : 'TRILOGIA';
+          const badgeLabel = getSeriesBadgeLabel(selectedSection, cat);
 
           return (
             <div key={cat} className="mb-6">
@@ -875,7 +914,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
                     <BookCard
                       key={item.slug}
                       item={item}
-                      volIndex={j}
+                      displayVolume={extractVolumeFromBook(item) ?? (j + 1)}
                       onSelect={() => handleSelectBook(item.slug)}
                     />
                   ))}

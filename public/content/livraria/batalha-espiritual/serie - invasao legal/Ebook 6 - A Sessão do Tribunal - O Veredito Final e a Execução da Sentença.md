@@ -2,7 +2,7 @@
 title: Invasão Legal — Volume 6 — A Sessão do Tribunal: O Veredito Final e a Execução da Sentença
 description: O clímax da guerra cósmica: o Grande Trono Branco. Baseado em Apocalipse 20, Daniel 7 e 1 Enoque, este volume revela o julgamento final de Satanás, dos Vigilantes, dos Sarim e dos ímpios, e a execução da sentença definitiva no Lago de Fogo.
 seção: livraria
-category: batalha-espiritual
+category: Série — Invasão Legal
 image: https://placeholder-voz-do-deserto.com/capa-invasao-legal-vol6.jpg
 ---
 *Rodrigo Ramos — Voz do Deserto*

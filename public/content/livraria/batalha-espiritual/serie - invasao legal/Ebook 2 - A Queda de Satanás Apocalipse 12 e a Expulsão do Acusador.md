@@ -2,7 +2,7 @@
 title: Invasão Legal — Volume 2 — A Queda de Satanás: Apocalipse 12 e a Expulsão do Acusador
 description: Apocalipse 12 descreve uma guerra cósmica e a expulsão definitiva do Acusador. Mas quando essa guerra ocorreu? Quem são os combatentes? E como essa vitória celestial se manifesta na vida da Igreja? Baseado em Apocalipse 12, Daniel e 1QM, este volume revela a execução da sentença da Cruz nos lugares celestiais.
 seção: livraria
-category: batalha-espiritual
+category: Série — Invasão Legal
 image: https://placeholder-voz-do-deserto.com/capa-invasao-legal-vol2.jpg
 ---
 *Rodrigo Ramos — Voz do Deserto*
