@@ -36,7 +36,12 @@ const contentMarkdownModules = {
   ...livrariaEspitirualMarkdownModules,
   ...ferramentasMarkdownModules,
 };
-const imageModules = import.meta.glob('/public/image/**/*.{webp,png,jpg,jpeg}');
+const imageModules = {
+  ...import.meta.glob('/public/image/**/*.webp'),
+  ...import.meta.glob('/public/image/**/*.png'),
+  ...import.meta.glob('/public/image/**/*.jpg'),
+  ...import.meta.glob('/public/image/**/*.jpeg'),
+};
 
 const COVER_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg'] as const;
 const WEAK_REMOTE_IMAGE_HOSTS = ['placeholder-voz-do-deserto.com', 'images.unsplash.com'];
@@ -102,6 +107,14 @@ const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
     2: 'a nova mistura',
     3: 'do diluvio ao fogo',
   },
+  'tabernaculo': {
+    1: 'a sombra e o modelo',
+    2: 'o patio e a terra',
+    3: 'o lugar santo e o firmamento',
+    4: 'o veu e a fronteira',
+    5: 'o santo dos santos',
+    6: 'o cosmo e o templo',
+  },
 };
 
 function parseFrontmatter(markdown: string): Record<string, string> {
@@ -139,6 +152,7 @@ function normalizeTitlePreservingPunctuation(raw: string): string {
 function pickCategoryByFolder(folder: string): string {
   const key = folder.toLowerCase();
   const dynamicMap: Array<[string, string]> = [
+    ['tabernaculo', 'TABERNACULO'],
     ['serie - o codigo dos arquetipos', 'TIPOLOGIA BÍBLICA'],
     ['serie - o codigo do jardim', 'Série — O Código do Jardim'],
     ['serie - a revelacao do seculo', 'Série — A Revelação do Século'],
@@ -200,6 +214,7 @@ function normalizeBookCategory(rawCategory: string | undefined, seriesFolder: st
   if (!category) return categoryFromFolder;
 
   const normalizedCategory = slugify(category).replace(/-/g, ' ');
+  if (normalizedCategory.includes('tabernaculo')) return 'TABERNACULO';
   if (SECTION_CATEGORY_ALIASES.has(normalizedCategory)) return categoryFromFolder;
 
   return category;
@@ -353,6 +368,32 @@ function inferSeriesVolumeCoverStem(title: string, slug: string, category?: stri
   if (haystack.includes('terceiro ceu de paulo')) return SERIES_VOLUME_COVER_STEMS['o terceiro ceu de paulo'][volume] ?? null;
   if (haystack.includes('fio do trono')) return SERIES_VOLUME_COVER_STEMS['o fio do trono'][volume] ?? null;
   if (haystack.includes('como nos dias de noe')) return SERIES_VOLUME_COVER_STEMS['como nos dias de noe'][volume] ?? null;
+  if (haystack.includes('tabernaculo')) return SERIES_VOLUME_COVER_STEMS['tabernaculo'][volume] ?? null;
+
+  return null;
+}
+
+function inferSeriesFallbackCover(title: string, slug: string, category?: string): string | null {
+  const haystack = normalizeTitlePreservingPunctuation(`${category || ''} ${title} ${slug}`);
+  if (!haystack.includes('armadura do remanescente')) return null;
+
+  const volume = extractVolumeFromText(title) ?? extractVolumeFromText(slug);
+  if (volume) {
+    const byVolume = SERIES_VOLUME_COVER_STEMS['a armadura do remanescente'][volume];
+    if (byVolume) {
+      for (const extension of COVER_EXTENSIONS) {
+        const path = `/image/livraria/${byVolume}.${extension}`;
+        if (isAvailableCoverCandidate(path)) return path;
+      }
+    }
+  }
+
+  for (const stem of ['o cinto da verdade', 'couraca da justica', 'o capacete da salvacao', 'a espada do espirito', 'a oracao do espirito']) {
+    for (const extension of COVER_EXTENSIONS) {
+      const path = `/image/livraria/${stem}.${extension}`;
+      if (isAvailableCoverCandidate(path)) return path;
+    }
+  }
 
   return null;
 }
@@ -360,10 +401,13 @@ function inferSeriesVolumeCoverStem(title: string, slug: string, category?: stri
 function inferBookCoverCandidates(frontmatter: Record<string, string>, title: string, slug: string): string[] {
   const candidates = new Set<string>();
   const fromMeta = (frontmatter.image || frontmatter.thumbnail || '').trim();
+  const seriesFolder = slug.split('/')[0] ?? '';
 
   if (fromMeta) {
     if (fromMeta.startsWith('/')) {
       candidates.add(fromMeta);
+      const metaFileName = fromMeta.split('/').pop();
+      if (metaFileName && seriesFolder) candidates.add(`/image/livraria/${seriesFolder}/${metaFileName}`);
     } else if (/^https?:\/\//i.test(fromMeta)) {
       if (!isWeakRemoteImage(fromMeta)) candidates.add(fromMeta);
     } else {
@@ -395,6 +439,7 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
     if (!stem) continue;
     for (const extension of COVER_EXTENSIONS) {
       candidates.add(`/image/livraria/${stem}.${extension}`);
+      if (seriesFolder) candidates.add(`/image/livraria/${seriesFolder}/${stem}.${extension}`);
     }
   }
 
@@ -413,7 +458,9 @@ function discoverBooksFromMarkdown(): BookItem[] {
     const frontmatter = parseFrontmatter(content);
     const firstHeading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
     const title = frontmatter.title || firstHeading || fileName.replace(/\.md$/i, '');
-    const cover = inferBookCoverCandidates(frontmatter, title, slug).find((candidate) => isAvailableCoverCandidate(candidate));
+    const cover =
+      inferBookCoverCandidates(frontmatter, title, slug).find((candidate) => isAvailableCoverCandidate(candidate))
+      || inferSeriesFallbackCover(title, slug, frontmatter.category);
 
     return {
       title,
@@ -460,8 +507,8 @@ const SECTIONS: Record<SectionKey, {
     accent: 'from-sky-900/70 to-sky-800/10',
   },
   'TIPOLOGIA BÍBLICA': {
-    label: 'Tipologia Bíblica',
-    description: 'Conexões entre tipos, sombras e cumprimentos proféticos para mapear a unidade da Escritura em profundidade.',
+    label: 'Tipologia',
+    description: 'Como um Deus infinito usa uma tenda portátil para explicar o universo. As bases teológicas da tipologia bíblica — tavnit, hypodeigma e skia — e o que significa que o tabernáculo foi construído como réplica de uma realidade celestial.',
     Icon: Layers,
     accent: 'from-indigo-900/70 to-indigo-800/10',
   },
@@ -536,6 +583,10 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Trilogia — O Cânon Oculto':                'HISTÓRIA DA IGREJA',
   'Série — A Verdadeira História da Igreja':  'HISTÓRIA DA IGREJA',
   'TIPOLOGIA BÍBLICA':                        'TIPOLOGIA BÍBLICA',
+  'TABERNACULO':                              'TIPOLOGIA BÍBLICA',
+  'tabernaculo':                              'TIPOLOGIA BÍBLICA',
+  'tipologia/tabernaculo':                    'TIPOLOGIA BÍBLICA',
+  'tipologia tabernaculo':                    'TIPOLOGIA BÍBLICA',
   'SOMBRAS DO REINO DE DEUS':                 'MUNDO ESPIRITUAL',
   'Série — Parábolas de Jesus':               'PARÁBOLAS DE JESUS',
   'Série — O Código do Jardim':               'IA & APOCALIPSE',
@@ -600,6 +651,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — A Armadura do Remanescente':       'A Armadura do Remanescente',
   'Série — A Arquitetura da Guerra Invisível': 'A Arquitetura da Guerra Invisível',
   'TIPOLOGIA BÍBLICA':                        'O Código dos Arquétipos',
+  'TABERNACULO':                              'TABERNACULO',
   'FERRAMENTAS':                              'Ferramentas',
   'FERRAMENTAS ESPIRITUAIS':                  'Ferramentas',
 };
@@ -632,6 +684,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Série — A Armadura do Remanescente': 'Uma série prática sobre preparo espiritual do remanescente: verdade, justiça e permanência no dia mau.',
   'Série — A Arquitetura da Guerra Invisível': 'Uma série sobre a estrutura da guerra espiritual: hierarquia do adversário, atuação de Miguel, cartografia dos principados e estratégias de combate bíblico para o remanescente.',
   'TIPOLOGIA BÍBLICA': 'Adão, o Sangue, a Arca, o Templo — cada narrativa do Antigo Testamento é uma sombra que aponta para Cristo. Uma série que decodifica a linguagem tipológica da Escritura e revela a unidade profunda de toda a Bíblia.',
+  'TABERNACULO': 'Como um Deus infinito usa uma tenda portátil para explicar o universo. As bases teológicas da tipologia bíblica — tavnit, hypodeigma e skia — e o que significa que o tabernáculo foi construído como réplica de uma realidade celestial.',
   'FERRAMENTAS': 'Ferramentas para estudo pessoal direto na Escritura, sem filtros institucionais: você, a Bíblia e o horizonte mental dos autores bíblicos.',
   'FERRAMENTAS ESPIRITUAIS': 'Ferramentas para estudo pessoal direto na Escritura, sem filtros institucionais: você, a Bíblia e o horizonte mental dos autores bíblicos.',
 };
