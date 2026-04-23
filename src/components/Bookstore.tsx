@@ -36,6 +36,7 @@ const contentMarkdownModules = {
   ...livrariaEspitirualMarkdownModules,
   ...ferramentasMarkdownModules,
 };
+const imageModules = import.meta.glob('/public/image/**/*.{webp,png,jpg,jpeg}');
 
 const COVER_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg'] as const;
 const WEAK_REMOTE_IMAGE_HOSTS = ['placeholder-voz-do-deserto.com', 'images.unsplash.com'];
@@ -311,6 +312,34 @@ function isWeakRemoteImage(url: string): boolean {
   return WEAK_REMOTE_IMAGE_HOSTS.some((host) => url.toLowerCase().includes(host));
 }
 
+function normalizeLocalCoverPath(path: string): string {
+  return decodeURI(path)
+    .split('?')[0]
+    .split('#')[0]
+    .replace(/\\/g, '/')
+    .trim()
+    .toLowerCase();
+}
+
+function buildAvailableLocalCoverSet(): Set<string> {
+  const available = new Set<string>();
+  for (const key of Object.keys(imageModules)) {
+    const normalized = key.replace(/\\/g, '/');
+    if (!normalized.startsWith('/public/')) continue;
+    available.add(normalizeLocalCoverPath(normalized.slice('/public'.length)));
+  }
+  return available;
+}
+
+const AVAILABLE_LOCAL_COVERS = buildAvailableLocalCoverSet();
+
+function isAvailableCoverCandidate(candidate: string): boolean {
+  if (candidate.startsWith('/')) {
+    return AVAILABLE_LOCAL_COVERS.has(normalizeLocalCoverPath(candidate));
+  }
+  return /^https?:\/\//i.test(candidate) && !isWeakRemoteImage(candidate);
+}
+
 function inferSeriesVolumeCoverStem(title: string, slug: string, category?: string): string | null {
   const volume = extractVolumeFromText(title) ?? extractVolumeFromText(slug);
   if (!volume) return null;
@@ -384,10 +413,7 @@ function discoverBooksFromMarkdown(): BookItem[] {
     const frontmatter = parseFrontmatter(content);
     const firstHeading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
     const title = frontmatter.title || firstHeading || fileName.replace(/\.md$/i, '');
-    const cover = inferBookCoverCandidates(frontmatter, title, slug).find((candidate) => {
-      if (candidate.startsWith('/')) return true;
-      return /^https?:\/\//i.test(candidate) && !isWeakRemoteImage(candidate);
-    });
+    const cover = inferBookCoverCandidates(frontmatter, title, slug).find((candidate) => isAvailableCoverCandidate(candidate));
 
     return {
       title,
