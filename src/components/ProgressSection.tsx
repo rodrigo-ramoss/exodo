@@ -21,6 +21,15 @@ const livrariaModules = import.meta.glob('/public/content/livraria/**/*.md', {
   query: '?raw',
   import: 'default',
 }) as Record<string, string>;
+const livrariaEspitirualModules = import.meta.glob('/public/content/livraria espitirual/**/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
+const allLivrariaModules = {
+  ...livrariaModules,
+  ...livrariaEspitirualModules,
+};
 
 const bibleStudyModules = import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.md', {
   eager: true,
@@ -313,12 +322,15 @@ const matrixStudyEntries: MatrixStudyEntry[] = Object.entries(refutationModules)
 
 const matrixModuleSlugs = matrixStudyEntries.map((entry) => entry.slug);
 
-const livrariaModuleEntries: LivrariaEntry[] = Object.keys(livrariaModules)
+const livrariaModuleEntries: LivrariaEntry[] = Object.keys(allLivrariaModules)
   .map((path) => {
     const normalizedPath = path.replace(/\\/g, '/');
-    const marker = '/public/content/livraria/';
-    const relative = normalizedPath.includes(marker)
-      ? normalizedPath.slice(normalizedPath.indexOf(marker) + marker.length)
+    const markerLivraria = '/public/content/livraria/';
+    const markerLivrariaEspitirual = '/public/content/livraria espitirual/';
+    const relative = normalizedPath.includes(markerLivraria)
+      ? normalizedPath.slice(normalizedPath.indexOf(markerLivraria) + markerLivraria.length)
+      : normalizedPath.includes(markerLivrariaEspitirual)
+      ? normalizedPath.slice(normalizedPath.indexOf(markerLivrariaEspitirual) + markerLivrariaEspitirual.length)
       : normalizedPath;
     const withoutExt = relative.replace(/\.md$/i, '');
     const parts = withoutExt.split('/').filter(Boolean);

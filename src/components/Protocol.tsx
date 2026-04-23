@@ -14,6 +14,14 @@ interface ApoBook {
   time: string;
 }
 
+const APOCRYPHA_CATEGORIES = new Set<string>([
+  'APÓCRIFOS',
+  'A REVELAÇÃO DE ENOQUE',
+  'SÉRIE — JUBILEUS',
+  'Série — O Relógio de Deus',
+  'apocrifos',
+]);
+
 const seriesInfo: Record<string, { title: string; description: string }> = {
   APÓCRIFOS: {
     title: 'Apócrifos',
@@ -140,7 +148,15 @@ export default function Protocol() {
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const { data: books, loading, error } = useFetch<ApoBook[]>('/content/livraria/index.json');
 
-  const apocryphaBooks = (books || []).filter((book) => book.category === 'APÓCRIFOS');
+  const apocryphaBooks = (books || []).filter((book) => {
+    const category = (book.category || '').trim();
+    if (APOCRYPHA_CATEGORIES.has(category)) return true;
+    const normalized = category
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+    return normalized.includes('apocrif');
+  });
 
   const handleSelect = async (slug: string) => {
     setSelectedSlug(slug);
@@ -152,6 +168,10 @@ export default function Protocol() {
     const candidates = [
       `/content/livraria/${encodedSlug}.md`,
       `/content/livraria/apocrifos/${encodedSlug}.md`,
+      `/content/livraria%20espitirual/${encodedSlug}.md`,
+      `/content/livraria%20espitirual/apocrifos/${encodedSlug}.md`,
+      `/content/livraria espitirual/${encodedSlug}.md`,
+      `/content/livraria espitirual/apocrifos/${encodedSlug}.md`,
     ];
 
     for (const url of candidates) {

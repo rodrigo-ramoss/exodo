@@ -15,13 +15,29 @@ export function useFetch<T>(url: string): FetchResult<T> {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
+        const candidateUrls = [url];
+        if (url === '/content/livraria/index.json') {
+          candidateUrls.push('/content/livraria%20espitirual/index.json');
+          candidateUrls.push('/content/livraria espitirual/index.json');
         }
-        const result = await response.json();
-        setData(result);
-        setError(null);
+
+        let lastError: Error | null = null;
+        let loaded = false;
+        for (const candidate of candidateUrls) {
+          try {
+            const response = await fetch(candidate);
+            if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+            const result = await response.json();
+            setData(result);
+            setError(null);
+            loaded = true;
+            break;
+          } catch (innerErr) {
+            lastError = innerErr instanceof Error ? innerErr : new Error('Unknown error');
+          }
+        }
+
+        if (!loaded && lastError) throw lastError;
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {

@@ -21,6 +21,11 @@ const livrariaMarkdownModules = import.meta.glob('/public/content/livraria/**/*.
   query: '?raw',
   import: 'default',
 }) as Record<string, string>;
+const livrariaEspitirualMarkdownModules = import.meta.glob('/public/content/livraria espitirual/**/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
 const ferramentasMarkdownModules = import.meta.glob('/public/content/ferramentas-espirituais/**/*.md', {
   eager: true,
   query: '?raw',
@@ -28,6 +33,7 @@ const ferramentasMarkdownModules = import.meta.glob('/public/content/ferramentas
 }) as Record<string, string>;
 const contentMarkdownModules = {
   ...livrariaMarkdownModules,
+  ...livrariaEspitirualMarkdownModules,
   ...ferramentasMarkdownModules,
 };
 
@@ -56,6 +62,11 @@ const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
   'a armadura do remanescente': {
     1: 'o cinto da verdade',
     2: 'couraca da justica',
+    3: 'o cinto da verdade',
+    4: 'o capacete da salvacao',
+    5: 'o capacete da salvacao',
+    6: 'a espada do espirito',
+    7: 'a oracao do espirito',
   },
   'a revelacao do seculo': {
     1: 'o dspertar dos vigilantes',
@@ -64,6 +75,31 @@ const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
     4: 'a casa de muitas moradas',
     5: 'a guerra dos dois espiritos',
     6: 'a nova jerusalem',
+  },
+  'o relogio de deus': {
+    1: 'o tempo como profecia',
+    2: 'o calendario solar dos anjos',
+    3: 'a corrupcao do tempo',
+    4: 'quram e a guerra dos calendario',
+    5: 'o tempo restaurado',
+  },
+  'o terceiro ceu de paulo': {
+    1: 'o primeiro ceu',
+    2: 'do segundo ao quinto ceu',
+    3: 'o sexto e o setimo ceu',
+    4: 'a escada de enoque',
+    5: 'o terceiro ceu de paulo',
+  },
+  'o fio do trono': {
+    1: 'o fundamento da oracao',
+    2: 'a oracao no segundo templo',
+    3: 'a oracao de jesus',
+    4: 'a oracao do espirito',
+  },
+  'como nos dias de noe': {
+    1: 'corrupacao original',
+    2: 'a nova mistura',
+    3: 'do diluvio ao fogo',
   },
 };
 
@@ -112,6 +148,9 @@ function pickCategoryByFolder(folder: string): string {
     ['serie - a onisciencia como atributo exclusivo', 'Série — A Onisciência como Atributo Exclusivo'],
     ['serie - o relogio de deus', 'Série — O Relógio de Deus'],
     ['serie - a arquitetura da guerra invisivel', 'Série — A Arquitetura da Guerra Invisível'],
+    ['serie - o terceiro ceu de paulo', 'Série — O Terceiro Céu de Paulo'],
+    ['serie - o fio do trono', 'Série — O Fio do Trono'],
+    ['serie - como nos dias de noe', 'Série — Como nos Dias de Noé'],
     ['serie - ferramentas de estudo', 'FERRAMENTAS'],
     ['serie - sombras do reino de deus', 'SOMBRAS DO REINO DE DEUS'],
     ['serie - a verdadeira historia da igreja', 'Série — A Verdadeira História da Igreja'],
@@ -148,6 +187,7 @@ const SECTION_CATEGORY_ALIASES = new Set<string>([
   'fim dos tempos',
   'parabolas de jesus',
   'batalha espiritual',
+  'antropologia espiritual',
   'ferramentas',
   'ferramentas espirituais',
   'livraria',
@@ -170,6 +210,7 @@ function toContentRelativePath(pathKey: string): string {
   if (!normalized.includes(marker)) return normalized;
   const relativeFromContent = normalized.slice(normalized.indexOf(marker) + marker.length);
   if (relativeFromContent.startsWith('livraria/')) return relativeFromContent.slice('livraria/'.length);
+  if (relativeFromContent.startsWith('livraria espitirual/')) return relativeFromContent.slice('livraria espitirual/'.length);
   if (relativeFromContent.startsWith('ferramentas-espirituais/')) return relativeFromContent.slice('ferramentas-espirituais/'.length);
   return relativeFromContent;
 }
@@ -239,6 +280,8 @@ function buildFallbackContentUrls(slug: string): string[] {
     'batalha-espiritual',
     'ferramentas-espirituais',
     'fim-dos-tempos',
+    'antropologia-espiritual',
+    'antropologia espiritual',
   ];
 
   const candidates = [
@@ -277,6 +320,10 @@ function inferSeriesVolumeCoverStem(title: string, slug: string, category?: stri
   if (haystack.includes('arquitetura da guerra invisivel')) return SERIES_VOLUME_COVER_STEMS['a arquitetura da guerra invisivel'][volume] ?? null;
   if (haystack.includes('armadura do remanescente')) return SERIES_VOLUME_COVER_STEMS['a armadura do remanescente'][volume] ?? null;
   if (haystack.includes('revelacao do seculo')) return SERIES_VOLUME_COVER_STEMS['a revelacao do seculo'][volume] ?? null;
+  if (haystack.includes('relogio de deus')) return SERIES_VOLUME_COVER_STEMS['o relogio de deus'][volume] ?? null;
+  if (haystack.includes('terceiro ceu de paulo')) return SERIES_VOLUME_COVER_STEMS['o terceiro ceu de paulo'][volume] ?? null;
+  if (haystack.includes('fio do trono')) return SERIES_VOLUME_COVER_STEMS['o fio do trono'][volume] ?? null;
+  if (haystack.includes('como nos dias de noe')) return SERIES_VOLUME_COVER_STEMS['como nos dias de noe'][volume] ?? null;
 
   return null;
 }
@@ -360,6 +407,7 @@ type SectionKey =
   | 'TIPOLOGIA BÍBLICA'
   | 'PARÁBOLAS DE JESUS'
   | 'MUNDO ESPIRITUAL'
+  | 'ANTROPOLOGIA ESPIRITUAL'
   | 'ANTISISTEMA'
   | 'IA & APOCALIPSE'
   | 'FIM DOS TEMPOS'
@@ -403,6 +451,12 @@ const SECTIONS: Record<SectionKey, {
     Icon: Eye,
     accent: 'from-violet-900/70 to-violet-800/10',
   },
+  'ANTROPOLOGIA ESPIRITUAL': {
+    label: 'Antropologia Espiritual',
+    description: 'Centraliza os temas sobre a natureza humana: alma, espírito, corpo, estado intermediário, possessão, ressurreição e os impactos do transhumanismo.',
+    Icon: BookOpen,
+    accent: 'from-teal-900/70 to-cyan-800/10',
+  },
   'ANTISISTEMA': {
     label: 'Antissistema',
     description: 'Os protocolos de sobrevivência espiritual dentro de sistemas hostis. Daniel, José e os que atravessaram.',
@@ -441,6 +495,7 @@ const SECTION_ORDER: SectionKey[] = [
   'TIPOLOGIA BÍBLICA',
   'PARÁBOLAS DE JESUS',
   'MUNDO ESPIRITUAL',
+  'ANTROPOLOGIA ESPIRITUAL',
   'ANTISISTEMA',
   'IA & APOCALIPSE',
   'FIM DOS TEMPOS',
@@ -460,6 +515,9 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Série — O Código do Jardim':               'IA & APOCALIPSE',
   'Série — A Queda do Mundo Espiritual':      'MUNDO ESPIRITUAL',
   'Série — A Queda do Querubim Ungido':       'MUNDO ESPIRITUAL',
+  'Série — O Terceiro Céu de Paulo':          'MUNDO ESPIRITUAL',
+  'Série — O Fio do Trono':                   'BATALHA ESPIRITUAL',
+  'Série — Como nos Dias de Noé':             'ANTROPOLOGIA ESPIRITUAL',
   'Trilogia — O Mapa da Tempestade':          'ANTISISTEMA',
   'Trilogia — O Estrangeiro Próspero':        'ANTISISTEMA',
   'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
@@ -481,6 +539,8 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'ia-e-apocalipse':                          'IA & APOCALIPSE',
   'fim dos tempos':                           'FIM DOS TEMPOS',
   'fim-dos-tempos':                           'FIM DOS TEMPOS',
+  'antropologia espiritual':                  'ANTROPOLOGIA ESPIRITUAL',
+  'antropologia-espiritual':                  'ANTROPOLOGIA ESPIRITUAL',
   'parabolas de jesus':                       'PARÁBOLAS DE JESUS',
   'parabolas-de-jesus':                       'PARÁBOLAS DE JESUS',
   'ferramentas de estudo':                    'FERRAMENTAS',
@@ -501,6 +561,9 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — O Código do Jardim':               'O Código do Jardim',
   'Série — A Queda do Mundo Espiritual':      'A Queda do Mundo Espiritual',
   'Série — A Queda do Querubim Ungido':       'A Queda do Querubim Ungido',
+  'Série — O Terceiro Céu de Paulo':          'O Terceiro Céu de Paulo',
+  'Série — O Fio do Trono':                   'O Fio do Trono',
+  'Série — Como nos Dias de Noé':             'Como nos Dias de Noé',
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
   'Série — O Código das Eras':                'O Código das Eras',
   'Série — Parábolas de Jesus':               'Parábolas de Jesus',
@@ -523,6 +586,9 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Série — O Código do Jardim': 'Uma série sobre os arquétipos de Gênesis: conhecimento, nomeação, Babel e sabedoria para discernir o conflito espiritual no presente.',
   'Série — A Queda do Mundo Espiritual': 'Uma série sobre a rebelião no céu e a origem da guerra espiritual: Nachash, querubins caídos e as raízes invisíveis do conflito humano.',
   'Série — A Queda do Querubim Ungido': 'Uma investigação bíblica da trajetória de Satanás: da glória no conselho divino à consumação do juízo final, com aplicações práticas para discernimento espiritual.',
+  'Série — O Terceiro Céu de Paulo': 'Uma jornada pelos céus descritos na literatura judaica e apostólica, conectando Levi, Baruque, Isaías, Enoque e Paulo na cartografia do mundo celestial.',
+  'Série — O Fio do Trono': 'Uma série sobre oração bíblica como governo espiritual: aliança, intercessão, prática do Segundo Templo e a formação de uma vida de súplica no Espírito.',
+  'Série — Como nos Dias de Noé': 'Uma série sobre antropologia espiritual e os limites da natureza humana: alma, espírito, corpo, corrupção, juízo, ressurreição e discernimento diante do transhumanismo.',
   'Série — A Verdadeira História da Igreja': 'Uma arqueologia da fé cristã primitiva, revelando o caminho entre a ekklesia viva e a institucionalização religiosa ao longo dos séculos.',
   'Trilogia — O Cânon Oculto': 'Uma imersão nos bastidores da formação bíblica, nos textos suprimidos e nas leituras que ficaram fora da narrativa oficial.',
   'Trilogia — O Mapa da Tempestade': 'Um diagnóstico de ruptura civilizacional e um mapa prático para atravessar colapsos sistêmicos com lucidez, preparo e fé.',

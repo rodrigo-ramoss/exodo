@@ -3,7 +3,7 @@ title: Qumran e a Guerra dos Calendários — A Comunidade que Preferiu o Desert
 description: No século II a.C., uma comunidade judaica se isolou no deserto da Judeia, rejeitou o Templo de Jerusalém e travou uma guerra santa... por causa do calendário. Este ebook revela a história dos essênios de Qumran e sua luta pelo tempo de Deus.
 seção: livraria
 category: Série — O Relógio de Deus
-image: /image/livraria/o calendario solar dos anjos.webp
+image: /image/livraria/quram e a guerra dos calendario.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: O Relógio de Deus — Volume 4*
@@ -340,3 +340,4 @@ Prepare-se para ver o tempo do fim — e descobrir que, no Reino, não haverá m
 **Fim do Volume 4 — Série: O Relógio de Deus**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+
