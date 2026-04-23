@@ -3,7 +3,7 @@ title: A Arquitetura da Guerra Invisível — Volume 5 — Melquisedeque e o Jub
 description: Quem é Melquisedeque na teologia de Qumran e em Hebreus? Como o Sacerdote-Rei celestial decreta o Jubileu escatológico e executa o juízo sobre Belial e os Sarim. Uma jornada por 11QMelch, Lucas 4 e o coração da vitória cósmica.
 seção: livraria
 category: Série — A Arquitetura da Guerra Invisível
-image: https://placeholder-voz-do-deserto.com/capa-volume5-melquisedeque.jpg
+image: /image/livraria/arquitetura da guerra invisivl - melquisedeque e o jubileu da guerra.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Arquitetura da Guerra Invisível — Volume 5*
@@ -327,3 +327,4 @@ Prepare-se para ocupar seu assento no tribunal do Reino.
 *Fim do Volume 5 — Série: A Arquitetura da Guerra Invisível*
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

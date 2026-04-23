@@ -3,7 +3,7 @@ title: A Arquitetura da Guerra Invisível — Volume 6 — Julgaremos os Anjos: 
 description: O que significa "julgar os anjos"? Qual é o papel dos santos no tribunal escatológico? Baseado em 1 Coríntios 6:3, 1 Enoque 10, Daniel 7 e Apocalipse 20, este volume revela a participação do remanescente no juízo final sobre Vigilantes, Sarim e Nefilim.
 seção: livraria
 category: Série — A Arquitetura da Guerra Invisível
-image: https://placeholder-voz-do-deserto.com/capa-volume6-julgamento.jpg
+image: /image/livraria/arquitetura da guerra invisivl - julgaremos os anjos.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Arquitetura da Guerra Invisível — Volume 6*
@@ -384,3 +384,4 @@ A guerra termina com a **herança dos santos**: as nações são curadas, a dive
 *Fim do Volume 6 — Série: A Arquitetura da Guerra Invisível*
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

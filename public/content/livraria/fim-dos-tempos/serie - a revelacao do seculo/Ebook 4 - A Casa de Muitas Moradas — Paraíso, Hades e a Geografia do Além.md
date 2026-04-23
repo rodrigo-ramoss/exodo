@@ -2,8 +2,8 @@
 title: A Casa de Muitas Moradas — Paraíso, Hades e a Geografia do Além
 description: O que acontece imediatamente após a morte? Este ebook investiga a geografia espiritual do além na literatura apocalíptica judaica: o Seio de Abraão, o Hades, a psicostasia, os sete céus, e o Paraíso.
 seção: livraria
-category: fim-dos-tempos
-image: https://images.unsplash.com/photo-1506703719100-f0b3c9c4e5f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80
+category: Série — A Revelação do Século
+image: /image/livraria/a casa de muitas moradas.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Revelação dos Séculos — Volume 4*

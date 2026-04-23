@@ -2,8 +2,8 @@
 title: O Selo dos 490 Anos — O Cronograma Mestre da História
 description: As 70 semanas de Daniel são o calendário profético que governa a história da redenção. Este ebook revela como o relógio das 70 semanas foi programado, como foi corrompido, e o que ainda resta para se cumprir.
 seção: livraria
-category: fim-dos-tempos
-image: https://images.unsplash.com/photo-1506703719100-f0b3c9c4e5f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80
+category: Série — A Revelação do Século
+image: /image/livraria/o selo dos 490 anos.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Revelação dos Séculos — Volume 2*

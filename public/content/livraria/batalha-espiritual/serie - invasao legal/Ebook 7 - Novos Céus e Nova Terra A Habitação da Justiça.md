@@ -3,7 +3,7 @@ title: Invasão Legal — Volume 7 — Novos Céus e Nova Terra: A Habitação d
 description: O desfecho glorioso da guerra cósmica. Baseado em Apocalipse 21-22, Isaías 65-66 e 1 Enoque, este volume contempla a Nova Jerusalém, o rio da vida, a árvore da vida e a cura das nações — a eternidade de paz e justiça.
 seção: livraria
 category: Série — Invasão Legal
-image: https://placeholder-voz-do-deserto.com/capa-invasao-legal-vol7.jpg
+image: /image/livraria/invasao legal volume 7.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: Invasão Legal — Volume 7*
@@ -412,3 +412,4 @@ Que a graça do Senhor Jesus Cristo, o amor de Deus e a comunhão do Espírito S
 *Fim do Volume 7 e da Série — Invasão Legal*
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

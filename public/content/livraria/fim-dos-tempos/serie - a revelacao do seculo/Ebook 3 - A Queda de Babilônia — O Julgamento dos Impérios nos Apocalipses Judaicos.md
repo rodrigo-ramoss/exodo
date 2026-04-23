@@ -2,8 +2,8 @@
 title: A Queda de Babilônia — O Julgamento dos Impérios nos Apocalipses Judaicos
 description: Roma é chamada de Babilônia nos apocalipses judaicos. Este ebook revela como os Oráculos Sibilinos, 4 Esdras, 2 Baruque e o Apocalipse de Abraão profetizaram a queda do império romano — e como esses textos iluminam o julgamento final.
 seção: livraria
-category: fim-dos-tempos
-image: https://images.unsplash.com/photo-1506703719100-f0b3c9c4e5f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80
+category: Série — A Revelação do Século
+image: /image/livraria/a queda de babilonia.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Revelação dos Séculos — Volume 3*

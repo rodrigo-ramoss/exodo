@@ -3,7 +3,7 @@ title: A Arquitetura da Guerra Invisível — Volume 7 — A Restauração da He
 description: O destino final das nações redimidas. Como a Igreja, como remanescente, reverte a sentença de Deuteronômio 32 e Salmo 82, ocupando territórios antes dominados pelos Sarim e cumprindo a Grande Comissão como ato de guerra e restauração cósmica.
 seção: livraria
 category: Série — A Arquitetura da Guerra Invisível
-image: https://placeholder-voz-do-deserto.com/capa-volume7-restauracao.jpg
+image: /image/livraria/arquitetura da guerra invisivl - restauracao da herenca.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Arquitetura da Guerra Invisível — Volume 7*
@@ -437,3 +437,4 @@ Por ora, que a bênção do Deus Altíssimo, a proteção de Miguel, o Príncipe
 *Fim do Volume 7 e da Série — A Arquitetura da Guerra Invisível*
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

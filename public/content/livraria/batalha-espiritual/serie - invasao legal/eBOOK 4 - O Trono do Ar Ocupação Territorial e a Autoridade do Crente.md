@@ -3,7 +3,7 @@ title: Invasão Legal — Volume 4 — O Trono do Ar: Ocupação Territorial e a
 description: Como a Igreja exerce a autoridade delegada de Cristo para ocupar o território do "ar", a esfera de influência do príncipe da potestade do ar. Baseado em Efésios 2:2, Lucas 10:19 e na Grande Comissão, este volume revela as estratégias de ocupação territorial do Reino.
 seção: livraria
 category: Série — Invasão Legal
-image: https://placeholder-voz-do-deserto.com/capa-invasao-legal-vol4.jpg
+image: /image/livraria/invasao legal volume 4.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: Invasão Legal — Volume 4*
@@ -363,3 +363,4 @@ Prepare-se para se equipar com as **Armas da Luz** e se tornar um guerreiro efic
 *Fim do Volume 4 — Série: Invasão Legal*
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

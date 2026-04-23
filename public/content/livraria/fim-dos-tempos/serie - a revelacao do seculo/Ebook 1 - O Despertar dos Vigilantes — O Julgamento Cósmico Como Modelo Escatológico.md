@@ -2,8 +2,8 @@
 title: O Despertar dos Vigilantes — O Julgamento Cósmico Como Modelo Escatológico
 description: Antes do Armagedom, anjos foram julgados. Este ebook revela como a queda dos Vigilantes serve como o arquétipo para o Juízo Final. Explore a escatologia do Yom Kippur, a psicostasia, o Messias nos apócrifos e a visão do fim dos tempos na literatura do Segundo Templo.
 seção: livraria
-category: fim-dos-tempos
-image: https://images.unsplash.com/photo-1506703719100-f0b3c9c4e5f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80
+category: Série — A Revelação do Século
+image: /image/livraria/o dspertar dos vigilantes.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Revelação dos Séculos — Volume 1*

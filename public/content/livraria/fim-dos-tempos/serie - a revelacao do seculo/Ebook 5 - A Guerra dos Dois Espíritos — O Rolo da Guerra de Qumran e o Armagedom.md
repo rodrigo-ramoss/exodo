@@ -2,8 +2,8 @@
 title: A Guerra dos Dois Espíritos — O Rolo da Guerra de Qumran e o Armagedom
 description: Antes do Apocalipse, os essênios de Qumran já haviam descrito a batalha final entre os filhos da luz e os filhos das trevas. Este ebook revela o Rolo da Guerra (1QM), o papel de Belial e Melquisedeque, e a visão judaica da guerra escatológica que moldou o Novo Testamento.
 seção: livraria
-category: fim-dos-tempos
-image: https://images.unsplash.com/photo-1506703719100-f0b3c9c4e5f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80
+category: Série — A Revelação do Século
+image: /image/livraria/a guerra dos dois espiritos.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Revelação dos Séculos — Volume 5*

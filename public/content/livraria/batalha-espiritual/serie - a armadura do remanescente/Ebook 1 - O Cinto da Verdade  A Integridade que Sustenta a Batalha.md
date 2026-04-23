@@ -3,7 +3,7 @@ title: A Armadura do Remanescente — Volume 1 — O Cinto da Verdade: A Integri
 description: Primeiro volume da série sobre a Armadura de Deus. A verdade como fundamento da estabilidade espiritual. Uma leitura paulina de Efésios 6:14 à luz do Segundo Templo, de Isaías e da formação rabínica do apóstolo.
 seção: livraria
 category: Série — A Armadura do Remanescente
-image: https://placeholder-voz-do-deserto.com/capa-armadura-vol1-cinto.jpg
+image: /image/livraria/o cinto da verdade.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Armadura do Remanescente — Volume 1*
@@ -375,3 +375,4 @@ Prepare-se para blindar o coração.
 *Fim do Volume 1 — Série: A Armadura do Remanescente*
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

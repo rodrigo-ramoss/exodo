@@ -32,6 +32,40 @@ const contentMarkdownModules = {
 };
 
 const COVER_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg'] as const;
+const WEAK_REMOTE_IMAGE_HOSTS = ['placeholder-voz-do-deserto.com', 'images.unsplash.com'];
+
+const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
+  'invasao legal': {
+    1: 'invasao legal volume 1',
+    2: 'invasao legal volume 2',
+    3: 'invasao legal volume 3',
+    4: 'invasao legal volume 4',
+    5: 'invasao legal volume 5',
+    6: 'invasao legal volume 6',
+    7: 'invasao legal volume 7',
+  },
+  'a arquitetura da guerra invisivel': {
+    1: 'arquitetura da guerra invisivl - o conselho das trevas',
+    2: 'arquitetura da guerra invisivl - miguel',
+    3: 'arquitetura da guerra invisivl - o mapado territorio',
+    4: 'arquitetura da guerra invisivl - a estrategia qumranita',
+    5: 'arquitetura da guerra invisivl - melquisedeque e o jubileu da guerra',
+    6: 'arquitetura da guerra invisivl - julgaremos os anjos',
+    7: 'arquitetura da guerra invisivl - restauracao da herenca',
+  },
+  'a armadura do remanescente': {
+    1: 'o cinto da verdade',
+    2: 'couraca da justica',
+  },
+  'a revelacao do seculo': {
+    1: 'o dspertar dos vigilantes',
+    2: 'o selo dos 490 anos',
+    3: 'a queda de babilonia',
+    4: 'a casa de muitas moradas',
+    5: 'a guerra dos dois espiritos',
+    6: 'a nova jerusalem',
+  },
+};
 
 function parseFrontmatter(markdown: string): Record<string, string> {
   const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
@@ -82,6 +116,7 @@ function pickCategoryByFolder(folder: string): string {
     ['serie - sombras do reino de deus', 'SOMBRAS DO REINO DE DEUS'],
     ['serie - a verdadeira historia da igreja', 'Série — A Verdadeira História da Igreja'],
     ['serie - o codigo das eras', 'Série — O Código das Eras'],
+    ['serie - parabolas de jesus', 'Série — Parábolas de Jesus'],
     ['serie - jubileus', 'SÉRIE — JUBILEUS'],
     ['serie - 1 enoque', 'A REVELAÇÃO DE ENOQUE'],
     ['trilogia - o mapa da tempestade', 'Trilogia — O Mapa da Tempestade'],
@@ -111,6 +146,7 @@ const SECTION_CATEGORY_ALIASES = new Set<string>([
   'ia apocalipse',
   'ia e apocalipse',
   'fim dos tempos',
+  'parabolas de jesus',
   'batalha espiritual',
   'ferramentas',
   'ferramentas espirituais',
@@ -199,6 +235,7 @@ function buildFallbackContentUrls(slug: string): string[] {
     'mundo-espiritual',
     'antissistema',
     'ia-e-apocalipse',
+    'parabolas-de-jesus',
     'batalha-espiritual',
     'ferramentas-espirituais',
     'fim-dos-tempos',
@@ -219,13 +256,40 @@ function buildFallbackContentUrls(slug: string): string[] {
   return Array.from(new Set(candidates));
 }
 
+function extractVolumeFromText(raw: string): number | null {
+  const match = raw.match(/(?:ebook|livro|parte|volume|vol\.)\s*0*(\d{1,3})/i);
+  if (!match) return null;
+  const parsed = Number.parseInt(match[1], 10);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function isWeakRemoteImage(url: string): boolean {
+  if (!/^https?:\/\//i.test(url)) return false;
+  return WEAK_REMOTE_IMAGE_HOSTS.some((host) => url.toLowerCase().includes(host));
+}
+
+function inferSeriesVolumeCoverStem(title: string, slug: string, category?: string): string | null {
+  const volume = extractVolumeFromText(title) ?? extractVolumeFromText(slug);
+  if (!volume) return null;
+  const haystack = normalizeTitlePreservingPunctuation(`${category || ''} ${title} ${slug}`);
+
+  if (haystack.includes('invasao legal')) return SERIES_VOLUME_COVER_STEMS['invasao legal'][volume] ?? null;
+  if (haystack.includes('arquitetura da guerra invisivel')) return SERIES_VOLUME_COVER_STEMS['a arquitetura da guerra invisivel'][volume] ?? null;
+  if (haystack.includes('armadura do remanescente')) return SERIES_VOLUME_COVER_STEMS['a armadura do remanescente'][volume] ?? null;
+  if (haystack.includes('revelacao do seculo')) return SERIES_VOLUME_COVER_STEMS['a revelacao do seculo'][volume] ?? null;
+
+  return null;
+}
+
 function inferBookCoverCandidates(frontmatter: Record<string, string>, title: string, slug: string): string[] {
   const candidates = new Set<string>();
   const fromMeta = (frontmatter.image || frontmatter.thumbnail || '').trim();
 
   if (fromMeta) {
-    if (/^https?:\/\//i.test(fromMeta) || fromMeta.startsWith('/')) {
+    if (fromMeta.startsWith('/')) {
       candidates.add(fromMeta);
+    } else if (/^https?:\/\//i.test(fromMeta)) {
+      if (!isWeakRemoteImage(fromMeta)) candidates.add(fromMeta);
     } else {
       candidates.add(`/image/livraria/${fromMeta.replace(/^.*[\\/]/, '')}`);
     }
@@ -239,6 +303,8 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
   const rawStemFromFile = normalizeTitlePreservingPunctuation(
     slugFileName.replace(/\.md$/i, '').replace(/^ebook\s*\d+\s*-\s*/i, '').replace(/^livro\s*\d+\s*-\s*/i, ''),
   ).replace(/^(o|a|os|as)\s+/, '');
+  const shortTitleStem = normalizeTitlePreservingPunctuation(title).split('—')[0]?.split(':')[0]?.trim() || '';
+  const seriesVolumeStem = inferSeriesVolumeCoverStem(title, slug, frontmatter.category);
 
   const variantStems = new Set<string>([
     normalizedTitle,
@@ -246,8 +312,11 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
     normalizedSlug,
     rawStemFromTitle,
     rawStemFromFile,
+    shortTitleStem,
+    seriesVolumeStem || '',
   ]);
   for (const stem of variantStems) {
+    if (!stem) continue;
     for (const extension of COVER_EXTENSIONS) {
       candidates.add(`/image/livraria/${stem}.${extension}`);
     }
@@ -268,7 +337,10 @@ function discoverBooksFromMarkdown(): BookItem[] {
     const frontmatter = parseFrontmatter(content);
     const firstHeading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
     const title = frontmatter.title || firstHeading || fileName.replace(/\.md$/i, '');
-    const cover = inferBookCoverCandidates(frontmatter, title, slug)[0];
+    const cover = inferBookCoverCandidates(frontmatter, title, slug).find((candidate) => {
+      if (candidate.startsWith('/')) return true;
+      return /^https?:\/\//i.test(candidate) && !isWeakRemoteImage(candidate);
+    });
 
     return {
       title,
@@ -286,6 +358,7 @@ type SectionKey =
   | 'APÓCRIFOS'
   | 'HISTÓRIA DA IGREJA'
   | 'TIPOLOGIA BÍBLICA'
+  | 'PARÁBOLAS DE JESUS'
   | 'MUNDO ESPIRITUAL'
   | 'ANTISISTEMA'
   | 'IA & APOCALIPSE'
@@ -317,6 +390,12 @@ const SECTIONS: Record<SectionKey, {
     description: 'Conexões entre tipos, sombras e cumprimentos proféticos para mapear a unidade da Escritura em profundidade.',
     Icon: Layers,
     accent: 'from-indigo-900/70 to-indigo-800/10',
+  },
+  'PARÁBOLAS DE JESUS': {
+    label: 'Parábolas de Jesus',
+    description: 'Leituras exegéticas das parábolas de Cristo com contexto judaico, aplicação espiritual e profundidade do Reino.',
+    Icon: BookOpen,
+    accent: 'from-yellow-900/70 to-amber-800/10',
   },
   'MUNDO ESPIRITUAL': {
     label: 'Mundo Espiritual',
@@ -360,6 +439,7 @@ const SECTION_ORDER: SectionKey[] = [
   'APÓCRIFOS',
   'HISTÓRIA DA IGREJA',
   'TIPOLOGIA BÍBLICA',
+  'PARÁBOLAS DE JESUS',
   'MUNDO ESPIRITUAL',
   'ANTISISTEMA',
   'IA & APOCALIPSE',
@@ -376,13 +456,14 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Série — A Verdadeira História da Igreja':  'HISTÓRIA DA IGREJA',
   'TIPOLOGIA BÍBLICA':                        'TIPOLOGIA BÍBLICA',
   'SOMBRAS DO REINO DE DEUS':                 'MUNDO ESPIRITUAL',
+  'Série — Parábolas de Jesus':               'PARÁBOLAS DE JESUS',
   'Série — O Código do Jardim':               'IA & APOCALIPSE',
   'Série — A Queda do Mundo Espiritual':      'MUNDO ESPIRITUAL',
   'Série — A Queda do Querubim Ungido':       'MUNDO ESPIRITUAL',
   'Trilogia — O Mapa da Tempestade':          'ANTISISTEMA',
   'Trilogia — O Estrangeiro Próspero':        'ANTISISTEMA',
   'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
-  'Trilogia — A Marca':                       'FIM DOS TEMPOS',
+  'Trilogia — A Marca':                       'IA & APOCALIPSE',
   'Trilogia — O Véu Rasgado':                 'IA & APOCALIPSE',
   'Trilogia — A Coroa Roubada':               'MUNDO ESPIRITUAL',
   'Série — O Código das Eras':                'FIM DOS TEMPOS',
@@ -400,6 +481,8 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'ia-e-apocalipse':                          'IA & APOCALIPSE',
   'fim dos tempos':                           'FIM DOS TEMPOS',
   'fim-dos-tempos':                           'FIM DOS TEMPOS',
+  'parabolas de jesus':                       'PARÁBOLAS DE JESUS',
+  'parabolas-de-jesus':                       'PARÁBOLAS DE JESUS',
   'ferramentas de estudo':                    'FERRAMENTAS',
 };
 
@@ -420,6 +503,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — A Queda do Querubim Ungido':       'A Queda do Querubim Ungido',
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
   'Série — O Código das Eras':                'O Código das Eras',
+  'Série — Parábolas de Jesus':               'Parábolas de Jesus',
   'Série — A Revelação do Século':            'A Revelação do Século',
   'Série — A Onisciência como Atributo Exclusivo': 'A Onisciência como Atributo Exclusivo',
   'Série — O Relógio de Deus':               'O Relógio de Deus',
@@ -448,6 +532,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Trilogia — O Véu Rasgado': 'Uma investigação sobre Babel, CERN e conhecimento proibido na fronteira entre tecnologia, mundo invisível e profecia bíblica.',
   'Trilogia — A Coroa Roubada': 'Uma trilogia sobre conselho divino, queda dos príncipes e restauração da autoridade dos filhos em Cristo.',
   'Série — O Código das Eras': 'Uma leitura profética das eras bíblicas: sinais celestes, ciclos históricos e convergência escatológica até a consumação do Reino.',
+  'Série — Parábolas de Jesus': 'Uma série de estudos sobre as parábolas de Cristo, conectando contexto do Segundo Templo, linguagem simbólica e prática do Reino.',
   'Série — A Revelação do Século': 'Uma série escatológica com os marcos proféticos do juízo final: vigilantes, cronogramas, queda de Babilônia, além, guerra final e consumação do Reino.',
   'Série — A Onisciência como Atributo Exclusivo': 'Uma série sobre a diferença entre a onisciência absoluta de Deus e o conhecimento inferido do inimigo, conectando teologia bíblica, tecnologia e discernimento contemporâneo.',
   'Série — O Relógio de Deus': 'Uma série sobre o calendário divino, a guerra dos tempos e a restauração do relógio bíblico revelado em Jubileus, Enoque e Apocalipse.',

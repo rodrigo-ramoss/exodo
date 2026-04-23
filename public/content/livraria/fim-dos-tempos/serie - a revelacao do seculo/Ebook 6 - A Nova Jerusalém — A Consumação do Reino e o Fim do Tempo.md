@@ -2,8 +2,8 @@
 title: A Nova Jerusalém — A Consumação do Reino e o Fim do Tempo
 description: O fim de todas as coisas é o começo de tudo o que foi prometido. Este ebook final da série escatológica explora a Nova Jerusalém, a ressurreição dos mortos, o fim do tempo e o sábado eterno — a esperança que aguarda o remanescente.
 seção: livraria
-category: fim-dos-tempos
-image: https://images.unsplash.com/photo-1506703719100-f0b3c9c4e5f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80
+category: Série — A Revelação do Século
+image: /image/livraria/a nova jerusalem.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Revelação dos Séculos — Volume 6*
@@ -399,3 +399,4 @@ Conheça mais em www.rodrigoramosvd.com.
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
 
 *Maranata.*
+

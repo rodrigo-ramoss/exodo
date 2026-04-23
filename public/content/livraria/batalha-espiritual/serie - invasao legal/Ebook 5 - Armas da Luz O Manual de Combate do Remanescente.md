@@ -3,7 +3,7 @@ title: Invasão Legal — Volume 5 — Armas da Luz: O Manual de Combate do Rema
 description: Quais são as armas ofensivas e defensivas do guerreiro espiritual? Baseado em Efésios 6, Sabedoria de Salomão 5 e na tradição de Qumran, este volume abre o arsenal da luz: a Palavra, o louvor, o jejum, a oração no Espírito, o sangue do Cordeiro e o testemunho.
 seção: livraria
 category: Série — Invasão Legal
-image: https://placeholder-voz-do-deserto.com/capa-invasao-legal-vol5.jpg
+image: /image/livraria/invasao legal volume 5.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: Invasão Legal — Volume 5*
@@ -403,3 +403,4 @@ Prepare-se para testemunhar o **Veredito Final** e a **consumação da Justiça 
 *Fim do Volume 5 — Série: Invasão Legal*
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

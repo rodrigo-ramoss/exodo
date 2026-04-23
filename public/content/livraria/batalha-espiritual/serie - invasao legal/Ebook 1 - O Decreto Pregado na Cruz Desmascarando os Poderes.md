@@ -3,7 +3,7 @@ title: Invasão Legal — Volume 1 — O Decreto Pregado na Cruz: Desmascarando 
 description: A Cruz não foi um resgate pago a Satanás. Foi a execução pública de uma sentença judicial que desarmou principados e potestades. Baseado em Colossenses 2:14-15 e 11QMelch, este volume revela o fundamento legal da vitória cósmica.
 seção: livraria
 category: Série — Invasão Legal
-image: https://placeholder-voz-do-deserto.com/capa-invasao-legal-vol1.jpg
+image: /image/livraria/invasao legal volume 1.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: Invasão Legal — Volume 1*
@@ -341,3 +341,4 @@ Prepare-se para ver a Queda de Satanás sob uma nova luz: não como um evento pa
 *Fim do Volume 1 — Série: Invasão Legal*
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

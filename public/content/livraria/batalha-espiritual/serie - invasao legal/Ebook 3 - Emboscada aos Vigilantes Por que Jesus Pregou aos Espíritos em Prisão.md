@@ -3,7 +3,7 @@ title: Invasão Legal — Volume 3 — Emboscada aos Vigilantes: Por que Jesus P
 description: Para onde Jesus foi entre Sua morte e ressurreição? O que Ele proclamou aos "espíritos em prisão"? Baseado em 1 Pedro 3:19-20 e 1 Enoque 12-16, este volume revela a missão de Cristo ao Tártaro para notificar os Vigilantes de sua derrota final.
 seção: livraria
 category: Série — Invasão Legal
-image: https://placeholder-voz-do-deserto.com/capa-invasao-legal-vol3.jpg
+image: /image/livraria/invasao legal volume 3.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: Invasão Legal — Volume 3*
@@ -350,3 +350,4 @@ Prepare-se para aprender a exercer sua autoridade sobre o trono do ar.
 *Fim do Volume 3 — Série: Invasão Legal*
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+
