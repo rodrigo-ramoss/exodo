@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
-import { Search, Star, Clock, Check } from 'lucide-react';
+import { Search, Star, Clock, Check, ArrowRight } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 import { useFetch } from '../hooks/useFetch';
 import { AppImage } from './AppImage';
 import { pm } from '../lib/progressManager';
+
+type TendaId = 'vida-espiritual' | 'vida-interior' | 'vida-exterior';
 
 interface StudyItem {
   title: string;
@@ -13,6 +15,7 @@ interface StudyItem {
   category: string;
   time: string;
   image?: string;
+  tenda?: TendaId;
 }
 
 interface ManaTheme {
@@ -25,6 +28,82 @@ interface ManaTheme {
 interface ManaConfig {
   themes: ManaTheme[];
 }
+
+interface TendaCard {
+  id: TendaId;
+  title: string;
+  subtitle: string;
+  description: string;
+  cta: string;
+}
+
+const TENDA_CARDS: TendaCard[] = [
+  {
+    id: 'vida-espiritual',
+    title: 'Tenda 1 - Vida Espiritual',
+    subtitle: 'O núcleo da guerra',
+    description:
+      'Oração, guerra espiritual, discernimento, jejum, intimidade com Deus e armas espirituais para sustentar sua caminhada.',
+    cta: 'Entrar na tenda',
+  },
+  {
+    id: 'vida-interior',
+    title: 'Tenda 2 - Vida Interior',
+    subtitle: 'Mente, emoções e relacionamentos',
+    description:
+      'Estudos sobre ansiedade, depressão, cura interior, batalha da mente, casamento, sexualidade, perdão e vínculos espirituais.',
+    cta: 'Entrar na tenda',
+  },
+  {
+    id: 'vida-exterior',
+    title: 'Tenda 3 - Vida Exterior',
+    subtitle: 'Trabalho, missão e sociedade',
+    description:
+      'Conteúdos sobre vocação, finanças, missão, evangelismo, cultura, influência, igreja e vida pública diante do Reino.',
+    cta: 'Entrar na tenda',
+  },
+];
+
+const TENDA_LABEL: Record<TendaId, string> = {
+  'vida-espiritual': 'Vida Espiritual',
+  'vida-interior': 'Vida Interior',
+  'vida-exterior': 'Vida Exterior',
+};
+
+const TENDA_KEYWORDS: Record<TendaId, string[]> = {
+  'vida-espiritual': [
+    'oração',
+    'jejum',
+    'comunhão',
+    'intimidade',
+    'deus',
+    'guerra espiritual',
+    'discernimento',
+    'ensinos de jesus',
+  ],
+  'vida-interior': [
+    'ansiedade',
+    'depressão',
+    'cura interior',
+    'mente',
+    'emoções',
+    'perdão',
+    'provações',
+    'silêncio',
+    'espera',
+  ],
+  'vida-exterior': [
+    'vocação',
+    'finanças',
+    'missão',
+    'evangelismo',
+    'cultura',
+    'influência',
+    'igreja',
+    'reino',
+    'aplicação prática',
+  ],
+};
 
 const manaMarkdownModules = import.meta.glob('/public/content/mana/*.md', {
   eager: true,
@@ -58,15 +137,34 @@ function resolveManaMarkdown(study: StudyItem | null): string | null {
   return null;
 }
 
+function inferTenda(study: StudyItem): TendaId {
+  const normalized = normalizeKey(`${study.title} ${study.description} ${study.category} ${study.slug}`);
+  const scoreByTenda = Object.entries(TENDA_KEYWORDS).map(([id, keywords]) => {
+    const score = keywords.reduce((acc, keyword) => (normalized.includes(normalizeKey(keyword)) ? acc + 1 : acc), 0);
+    return { id: id as TendaId, score };
+  });
+
+  const winner = scoreByTenda.sort((a, b) => b.score - a.score)[0];
+  return winner.score > 0 ? winner.id : 'vida-espiritual';
+}
+
 export default function Studies() {
   const [selectedStudy, setSelectedStudy] = useState<StudyItem | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [selectedThemeId, setSelectedThemeId] = useState<string | null>(null);
+  const [selectedTendaId, setSelectedTendaId] = useState<TendaId | null>(null);
   const { data: manaConfig } = useFetch<ManaConfig>('/content/mana/mana.json');
   const { data: manaStudies, error } = useFetch<StudyItem[]>('/content/mana/index.json');
 
-  const allStudies = useMemo(() => manaStudies ?? [], [manaStudies]);
+  const allStudies = useMemo(
+    () =>
+      (manaStudies ?? []).map((study) => ({
+        ...study,
+        tenda: study.tenda ?? inferTenda(study),
+      })),
+    [manaStudies],
+  );
 
   const selectedTheme = useMemo(
     () => manaConfig?.themes?.find((theme) => theme.id === selectedThemeId) || null,
@@ -81,28 +179,26 @@ export default function Studies() {
 
   const studies = useMemo(() => {
     const lowerSearch = searchTerm.trim().toLowerCase();
-    return allStudies
-      .filter(study => {
-        if (!matchesTheme(study)) return false;
-        if (!lowerSearch) return true;
-        return (
-          study.title.toLowerCase().includes(lowerSearch) ||
-          study.description.toLowerCase().includes(lowerSearch) ||
-          study.category.toLowerCase().includes(lowerSearch)
-        );
-      });
-  }, [allStudies, searchTerm, selectedTheme]);
+    return allStudies.filter((study) => {
+      if (selectedTendaId && study.tenda !== selectedTendaId) return false;
+      if (!matchesTheme(study)) return false;
+      if (!lowerSearch) return true;
+      return (
+        study.title.toLowerCase().includes(lowerSearch) ||
+        study.description.toLowerCase().includes(lowerSearch) ||
+        study.category.toLowerCase().includes(lowerSearch)
+      );
+    });
+  }, [allStudies, searchTerm, selectedTheme, selectedTendaId]);
 
   const loading = !manaStudies;
 
-  // Featured and Recent logic with deduplication
   const featuredStudies = studies ? studies.slice(0, 4) : [];
   const recentStudies = studies ? studies.slice(4) : [];
 
-  // Group studies by category for Library section
-  const categories = studies ? Array.from(new Set(studies.map(s => s.category))) : [];
+  const categories = studies ? Array.from(new Set(studies.map((s) => s.category))) : [];
   const groupedStudies = categories.reduce((acc, cat) => {
-    acc[cat] = studies?.filter(s => s.category === cat) || [];
+    acc[cat] = studies?.filter((s) => s.category === cat) || [];
     return acc;
   }, {} as Record<string, StudyItem[]>);
 
@@ -121,16 +217,82 @@ export default function Studies() {
 
   return (
     <div className="pb-24 min-h-screen bg-surface-container-lowest">
-      {/* Editorial Header */}
-      <div className="pt-8 px-4 sm:px-6 mb-6 border-l-2 border-primary-container py-1 ml-4 sm:ml-6">
-        <h1 className="font-headline text-4xl font-bold text-primary mb-1 tracking-tighter">MANÁ</h1>
-        <p className="text-on-surface-variant/70 text-[11px] max-w-[280px] font-medium leading-relaxed">
-          <span className="italic">'Nem só de pão viverá o homem, mas de toda palavra que sai da boca de Deus.'</span> O alimento diário para a sua jornada no deserto. Estudos voltados para o preparo espiritual, batalhas da mente e a resiliência inabalável diante das provações.
-        </p>
+      <div className="pt-8 px-4 sm:px-6 mb-8">
+        <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-surface-container-high/90 via-surface-container/90 to-surface-container-low p-6 sm:p-8 shadow-[0_14px_40px_rgba(0,0,0,0.45)]">
+          <p className="text-[10px] font-black uppercase tracking-[0.28em] text-primary/80 mb-2">Seção Maná</p>
+          <h1 className="font-headline text-4xl sm:text-5xl font-bold text-primary mb-2 tracking-tighter">MANÁ</h1>
+          <p className="text-sm sm:text-base text-on-surface font-semibold mb-2">
+            O alimento sólido para a batalha de hoje.
+          </p>
+          <p className="text-xs sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
+            E-books e estudos profundos para fortalecer sua vida espiritual, curar sua vida interior e preparar você
+            para cumprir sua missão no mundo.
+          </p>
+        </div>
       </div>
 
-      {/* Investigative Search */}
-      <section className="px-4 sm:px-6 mt-4">
+      <section className="px-4 sm:px-6 mb-8">
+        <div className="flex items-end justify-between gap-3 mb-4">
+          <div>
+            <h2 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-on-surface">Escolha sua tenda</h2>
+            <p className="text-xs text-on-surface-variant mt-1">
+              O Maná é organizado em três tendas. Escolha uma porta de entrada para focar seus estudos.
+            </p>
+          </div>
+          {selectedTendaId && (
+            <button
+              type="button"
+              onClick={() => setSelectedTendaId(null)}
+              className="text-[10px] font-black uppercase tracking-widest text-primary border border-primary/40 rounded-full px-3 py-1 hover:bg-primary/15 transition-colors"
+            >
+              Ver todas as tendas
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {TENDA_CARDS.map((tenda) => {
+            const isActive = selectedTendaId === tenda.id;
+            return (
+              <button
+                key={tenda.id}
+                type="button"
+                onClick={() => setSelectedTendaId(tenda.id)}
+                className={`text-left rounded-2xl border p-5 transition-all duration-300 cursor-pointer active:scale-[0.99] ${
+                  isActive
+                    ? 'border-primary/70 bg-primary/12 shadow-[0_0_0_1px_rgba(212,175,55,0.25),0_15px_35px_rgba(0,0,0,0.35)]'
+                    : 'border-outline-variant/25 bg-surface-container hover:border-primary/45 hover:bg-surface-container-high hover:-translate-y-0.5'
+                }`}
+              >
+                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-primary/80 mb-2">{tenda.title}</p>
+                <h3 className="font-headline text-lg leading-tight text-on-surface mb-2">{tenda.subtitle}</h3>
+                <p className="text-xs leading-relaxed text-on-surface-variant min-h-[72px]">{tenda.description}</p>
+                <div className="mt-4 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary">
+                  {tenda.cta}
+                  <ArrowRight size={12} />
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="px-4 sm:px-6 mt-2">
+        {(selectedTendaId || selectedTheme) && (
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            {selectedTendaId && (
+              <span className="inline-flex items-center rounded-full border border-primary/45 bg-primary/12 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary">
+                Tenda ativa: {TENDA_LABEL[selectedTendaId]}
+              </span>
+            )}
+            {selectedTheme && (
+              <span className="inline-flex items-center rounded-full border border-primary/45 bg-primary/12 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary">
+                Tema ativo: {selectedTheme.title}
+              </span>
+            )}
+          </div>
+        )}
+
         <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-3 mb-3">
           <button
             className="gold-glow-hover flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full bg-primary text-on-primary border-primary"
@@ -180,18 +342,12 @@ export default function Studies() {
           </div>
         )}
 
-        {selectedTheme && (
-          <div className="mb-4 text-[10px] font-bold uppercase tracking-wider text-primary">
-            Tema ativo: {selectedTheme.title}
-          </div>
-        )}
-
         <div className="relative group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
-          <input 
-            className="w-full bg-surface-container-high border-b border-outline-variant focus:border-primary focus:ring-0 text-on-surface placeholder:text-on-surface-variant/50 transition-all px-11 py-3.5 font-sans text-sm tracking-wide outline-none" 
-            placeholder="Buscar estudo..." 
-            type="text" 
+          <input
+            className="w-full bg-surface-container-high border-b border-outline-variant focus:border-primary focus:ring-0 text-on-surface placeholder:text-on-surface-variant/50 transition-all px-11 py-3.5 font-sans text-sm tracking-wide outline-none"
+            placeholder="Buscar estudo..."
+            type="text"
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
           />
@@ -202,12 +358,11 @@ export default function Studies() {
       {!loading && studies.length === 0 && (
         <section className="px-4 sm:px-6 mt-8">
           <div className="py-16 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-60 border border-dashed border-outline-variant/20 rounded-3xl">
-            Nenhum estudo encontrado para este tema.
+            Nenhum estudo encontrado para este filtro.
           </div>
         </section>
       )}
 
-      {/* Featured Carousel */}
       <section className={`mt-8 ${studies.length === 0 ? 'hidden' : ''}`}>
         <div className="px-4 sm:px-6 flex justify-between items-baseline mb-3">
           <h2 className="font-headline font-bold text-[10px] tracking-[0.2em] uppercase text-on-surface opacity-60">
@@ -221,12 +376,12 @@ export default function Studies() {
           </div>
         </div>
         <div className="flex gap-4 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
-          <div className="w-4 sm:w-6 flex-shrink-0" /> {/* Left Spacer */}
+          <div className="w-4 sm:w-6 flex-shrink-0" />
           {loading ? (
             <div className="w-full py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
           ) : featuredStudies.map((item, i) => (
             <div key={i} className="flex-shrink-0 w-72 snap-center">
-              <div 
+              <div
                 onClick={() => setSelectedStudy(item)}
                 className="interactive-card gold-glow-hover relative aspect-[16/10] rounded-2xl overflow-hidden group cursor-pointer active:scale-95 transition-transform"
               >
@@ -240,11 +395,10 @@ export default function Studies() {
               </div>
             </div>
           ))}
-          <div className="w-4 sm:w-6 flex-shrink-0" /> {/* Right Spacer */}
+          <div className="w-4 sm:w-6 flex-shrink-0" />
         </div>
       </section>
 
-      {/* Spacing and Library Header */}
       <section className={`mt-12 mb-8 container-biblioteca ${studies.length === 0 ? 'hidden' : ''}`}>
         <div className="flex items-center gap-4">
           <h2 className="font-headline font-extrabold text-2xl tracking-tighter text-on-surface">Biblioteca</h2>
@@ -252,7 +406,6 @@ export default function Studies() {
         </div>
       </section>
 
-      {/* Library Rows (Horizontal Rows per Category) */}
       <section className={`space-y-10 ${studies.length === 0 ? 'hidden' : ''}`}>
         {loading ? null : categories.map((cat, i) => (
           <div key={i} className="flex flex-col gap-4">
@@ -260,9 +413,9 @@ export default function Studies() {
               <h3 className="text-[10px] font-black tracking-[0.25em] uppercase text-primary opacity-80">{cat}</h3>
               <div className="h-[1px] flex-1 ml-4 bg-outline-variant/10"></div>
             </div>
-            
+
             <div className="flex gap-4 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
-              <div className="w-4 sm:w-6 flex-shrink-0" /> {/* Left Spacer to align with px-4/sm:px-6 */}
+              <div className="w-4 sm:w-6 flex-shrink-0" />
               {groupedStudies[cat].map((item, j) => {
                 const progress = pm.getProgress('mana', item.slug);
                 const isCompleted = pm.isRead('mana', item.slug);
@@ -307,13 +460,12 @@ export default function Studies() {
                   </div>
                 );
               })}
-              <div className="w-4 sm:w-6 flex-shrink-0" /> {/* Right Spacer */}
+              <div className="w-4 sm:w-6 flex-shrink-0" />
             </div>
           </div>
         ))}
       </section>
 
-      {/* Recent Studies (2-Column Grid) */}
       <section className={`mt-16 pb-12 container-biblioteca ${studies.length === 0 ? 'hidden' : ''}`}>
         <div className="flex items-center gap-4 mb-8">
           <h2 className="font-headline font-extrabold text-xl tracking-tighter text-on-surface">Explorações Recentes</h2>
@@ -326,8 +478,8 @@ export default function Studies() {
               Atualizando arquivos...
             </div>
           ) : recentStudies.map((item, i) => (
-            <div 
-              key={i} 
+            <div
+              key={i}
               onClick={() => setSelectedStudy(item)}
               className="interactive-card gold-glow-hover flex flex-col group cursor-pointer active:scale-[0.98] transition-all"
             >
