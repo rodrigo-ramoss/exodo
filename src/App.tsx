@@ -38,7 +38,7 @@ export default function App() {
       case Screen.BOOKSTORE:
         return <Bookstore />;
       case Screen.TOOLS:
-        return <Bookstore mode="tools" />;
+        return <Bookstore mode="types" />;
       case Screen.REFUTACAO:
         return <Refutation />;
       case Screen.APOCRYPHA:

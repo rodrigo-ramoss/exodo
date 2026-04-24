@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, useEffect, type ReactNode } from 'react';
-import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Wrench, Hourglass } from 'lucide-react';
+import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Hourglass } from 'lucide-react';
 import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -445,6 +445,12 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
   ).replace(/^(o|a|os|as)\s+/, '');
   const shortTitleStem = normalizeTitlePreservingPunctuation(title).split('—')[0]?.split(':')[0]?.trim() || '';
   const seriesVolumeStem = inferSeriesVolumeCoverStem(title, slug, frontmatter.category);
+  const normalizedSeriesFolder = normalizeSlugLookupKey(seriesFolder).replace(/-/g, ' ');
+  const normalizedHaystack = normalizeTitlePreservingPunctuation(`${frontmatter.category || ''} ${title} ${slug}`);
+  const usesTabernacleCovers = normalizedHaystack.includes('tabernaculo')
+    || normalizedSeriesFolder === 'a terra e o tabernaculo'
+    || normalizedSeriesFolder === 'sombras do reino'
+    || normalizedSeriesFolder === 'tabernaculo';
 
   const variantStems = new Set<string>([
     normalizedTitle,
@@ -460,6 +466,7 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
     for (const extension of COVER_EXTENSIONS) {
       candidates.add(`/image/livraria/${stem}.${extension}`);
       if (seriesFolder) candidates.add(`/image/livraria/${seriesFolder}/${stem}.${extension}`);
+      if (usesTabernacleCovers) candidates.add(`/image/livraria/tabernaculo/${stem}.${extension}`);
     }
   }
 
@@ -504,8 +511,7 @@ type SectionKey =
   | 'ANTISISTEMA'
   | 'IA & APOCALIPSE'
   | 'FIM DOS TEMPOS'
-  | 'BATALHA ESPIRITUAL'
-  | 'FERRAMENTAS';
+  | 'BATALHA ESPIRITUAL';
 
 // ── Section metadata ──────────────────────────────────────────────────────────
 const SECTIONS: Record<SectionKey, {
@@ -574,12 +580,6 @@ const SECTIONS: Record<SectionKey, {
     Icon: Flame,
     accent: 'from-red-900/70 to-red-800/10',
   },
-  'FERRAMENTAS': {
-    label: 'Ferramentas',
-    description: 'Ferramentas para o seu estudo pessoal: sem teologia sistemática, dogmática ou institucional. Só você, a Bíblia e o conhecimento que estava na mente dos autores bíblicos.',
-    Icon: Wrench,
-    accent: 'from-slate-800/80 via-zinc-800/65 to-cyan-900/20',
-  },
 };
 
 const SECTION_ORDER: SectionKey[] = [
@@ -593,7 +593,6 @@ const SECTION_ORDER: SectionKey[] = [
   'IA & APOCALIPSE',
   'FIM DOS TEMPOS',
   'BATALHA ESPIRITUAL',
-  'FERRAMENTAS',
 ];
 
 // Maps existing category strings → top-level section
@@ -633,8 +632,6 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Série — A Armadura do Remanescente':       'BATALHA ESPIRITUAL',
   'Série — A Arquitetura da Guerra Invisível': 'BATALHA ESPIRITUAL',
   'FIM DOS TEMPOS':                           'FIM DOS TEMPOS',
-  'FERRAMENTAS':                              'FERRAMENTAS',
-  'FERRAMENTAS ESPIRITUAIS':                  'FERRAMENTAS',
   'batalha-espiritual':                       'BATALHA ESPIRITUAL',
   'apocrifos':                                'APÓCRIFOS',
   'ia-e-apocalipse':                          'IA & APOCALIPSE',
@@ -644,7 +641,6 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'antropologia-espiritual':                  'ANTROPOLOGIA ESPIRITUAL',
   'parabolas de jesus':                       'PARÁBOLAS DE JESUS',
   'parabolas-de-jesus':                       'PARÁBOLAS DE JESUS',
-  'ferramentas de estudo':                    'FERRAMENTAS',
 };
 
 // Short display labels per series
@@ -676,10 +672,8 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — Invasão Legal':                    'Invasão Legal',
   'Série — A Armadura do Remanescente':       'A Armadura do Remanescente',
   'Série — A Arquitetura da Guerra Invisível': 'A Arquitetura da Guerra Invisível',
-  'TIPOLOGIA BÍBLICA':                        'O Código dos Arquétipos',
+  'TIPOLOGIA BÍBLICA':                        'Tipologia Bíblica',
   'TABERNACULO':                              'TABERNACULO',
-  'FERRAMENTAS':                              'Ferramentas',
-  'FERRAMENTAS ESPIRITUAIS':                  'Ferramentas',
 };
 
 // Description shown below each series header
@@ -711,10 +705,8 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Série — Invasão Legal': 'Uma série sobre a ofensiva judicial do Reino contra os poderes das trevas: cruz, tribunal celestial, ocupação territorial e execução da sentença final.',
   'Série — A Armadura do Remanescente': 'Uma série prática sobre preparo espiritual do remanescente: verdade, justiça e permanência no dia mau.',
   'Série — A Arquitetura da Guerra Invisível': 'Uma série sobre a estrutura da guerra espiritual: hierarquia do adversário, atuação de Miguel, cartografia dos principados e estratégias de combate bíblico para o remanescente.',
-  'TIPOLOGIA BÍBLICA': 'Adão, o Sangue, a Arca, o Templo — cada narrativa do Antigo Testamento é uma sombra que aponta para Cristo. Uma série que decodifica a linguagem tipológica da Escritura e revela a unidade profunda de toda a Bíblia.',
+  'TIPOLOGIA BÍBLICA': 'Tipologia bíblica organizada por oito tipos de leitura para mapear pessoas, eventos, instituições, objetos, lugares, rituais, ciclos históricos e consumação escatológica.',
   'TABERNACULO': 'Como um Deus infinito usa uma tenda portátil para explicar o universo. As bases teológicas da tipologia bíblica — tavnit, hypodeigma e skia — e o que significa que o tabernáculo foi construído como réplica de uma realidade celestial.',
-  'FERRAMENTAS': 'Ferramentas para estudo pessoal direto na Escritura, sem filtros institucionais: você, a Bíblia e o horizonte mental dos autores bíblicos.',
-  'FERRAMENTAS ESPIRITUAIS': 'Ferramentas para estudo pessoal direto na Escritura, sem filtros institucionais: você, a Bíblia e o horizonte mental dos autores bíblicos.',
 };
 
 const FIREFLY_PARTICLES = [
@@ -780,15 +772,20 @@ const TYPOLOGY_DIVISIONS: TypologyDivision[] = [
 ];
 
 const TYPOLOGY_DIVISION_SERIES: Record<TypologyDivisionId, string[]> = {
-  'tipologia-pessoal': ['TIPOLOGIA BÍBLICA'],
-  'tipologia-eventual': ['TIPOLOGIA BÍBLICA'],
-  'tipologia-institucional': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo', 'TIPOLOGIA BÍBLICA'],
+  'tipologia-pessoal': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
+  'tipologia-eventual': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
+  'tipologia-institucional': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
   'tipologia-objetal': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
-  'tipologia-locativa': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo', 'TIPOLOGIA BÍBLICA'],
-  'tipologia-ritual': ['TIPOLOGIA BÍBLICA'],
+  'tipologia-locativa': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
+  'tipologia-ritual': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
   'tipologia-historica': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
-  'tipologia-escatologica': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo', 'TIPOLOGIA BÍBLICA'],
+  'tipologia-escatologica': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
 };
+
+const TYPOLOGY_SERIES_WHITELIST = new Set<string>([
+  'Série — Sombras do Reino',
+  'Série — A Terra e o Tabernáculo',
+]);
 
 function FireflyLayer() {
   return (
@@ -935,8 +932,7 @@ function sortBooksInSeries(category: string, items: BookItem[]): BookItem[] {
   });
 }
 
-function getSeriesBadgeLabel(section: SectionKey, category: string): 'FERRAMENTA' | 'SÉRIE' | 'TRILOGIA' {
-  if (section === 'FERRAMENTAS') return 'FERRAMENTA';
+function getSeriesBadgeLabel(_section: SectionKey, category: string): 'SÉRIE' | 'TRILOGIA' {
   const normalized = slugify(category).replace(/-/g, ' ');
   if (normalized.startsWith('trilogia ')) return 'TRILOGIA';
   return 'SÉRIE';
@@ -1062,16 +1058,11 @@ function SectionCard({ sectionKey, books, onSelect }: {
   const { label, description, Icon, accent } = SECTIONS[sectionKey];
   const cover = books[0]?.image;
   const totalRead = pm.countRead('livraria', books.map((b) => b.slug));
-  const isToolsSection = sectionKey === 'FERRAMENTAS';
 
   return (
     <div
       onClick={onSelect}
-      className={`interactive-card group relative w-full h-44 rounded-2xl overflow-hidden cursor-pointer active:scale-[0.98] transition-all duration-300 border ${
-        isToolsSection
-          ? 'border-cyan-300/25 hover:border-cyan-300/45 hover:shadow-[0_0_40px_rgba(34,211,238,0.12)]'
-          : 'gold-glow-hover border-white/5 hover:border-primary/30 hover:shadow-[0_0_40px_rgba(242,192,141,0.10)]'
-      }`}
+      className="interactive-card group relative w-full h-44 rounded-2xl overflow-hidden cursor-pointer active:scale-[0.98] transition-all duration-300 border gold-glow-hover border-white/5 hover:border-primary/30 hover:shadow-[0_0_40px_rgba(242,192,141,0.10)]"
     >
       {/* Cover image — blurred, zooms out on hover */}
       {cover && (
@@ -1084,9 +1075,6 @@ function SectionCard({ sectionKey, books, onSelect }: {
 
       {/* Coloured gradient overlay */}
       <div className={`absolute inset-0 bg-gradient-to-r ${accent} to-transparent`} />
-      {isToolsSection && (
-        <div className="absolute inset-0 opacity-30 bg-[repeating-linear-gradient(135deg,rgba(148,163,184,0.20)_0px,rgba(148,163,184,0.20)_1px,transparent_1px,transparent_9px)]" />
-      )}
       {/* Bottom dark vignette */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
@@ -1098,23 +1086,10 @@ function SectionCard({ sectionKey, books, onSelect }: {
         {/* Top row */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
-            <div
-              className={`rounded-lg p-1.5 transition-all ${
-                isToolsSection
-                  ? 'bg-zinc-950/75 border border-cyan-300/30 group-hover:border-cyan-300/50 group-hover:bg-cyan-900/20'
-                  : 'bg-black/40 border border-white/10 group-hover:border-primary/30 group-hover:bg-primary/10'
-              }`}
-            >
-              <Icon
-                size={14}
-                className={isToolsSection ? 'text-cyan-200/90 group-hover:text-cyan-100 transition-colors' : 'text-primary/80 group-hover:text-primary transition-colors'}
-              />
+            <div className="rounded-lg p-1.5 transition-all bg-black/40 border border-white/10 group-hover:border-primary/30 group-hover:bg-primary/10">
+              <Icon size={14} className="text-primary/80 group-hover:text-primary transition-colors" />
             </div>
-            <span
-              className={`text-[9px] font-black uppercase tracking-[0.2em] transition-colors ${
-                isToolsSection ? 'text-cyan-100/55 group-hover:text-cyan-100/85' : 'text-white/40 group-hover:text-primary/70'
-              }`}
-            >
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] transition-colors text-white/40 group-hover:text-primary/70">
               {books.length} volume{books.length !== 1 ? 's' : ''}
             </span>
           </div>
@@ -1141,12 +1116,12 @@ function SectionCard({ sectionKey, books, onSelect }: {
 
 // ── Root component ────────────────────────────────────────────────────────────
 interface BookstoreProps {
-  mode?: 'default' | 'tools';
+  mode?: 'default' | 'types';
 }
 
 export default function Bookstore({ mode = 'default' }: BookstoreProps) {
-  const isToolsMode = mode === 'tools';
-  const [selectedSection, setSelectedSection] = useState<SectionKey | null>(isToolsMode ? 'FERRAMENTAS' : null);
+  const isTypesMode = mode === 'types';
+  const [selectedSection, setSelectedSection] = useState<SectionKey | null>(isTypesMode ? 'TIPOLOGIA BÍBLICA' : null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const [activeTypologyDivisionId, setActiveTypologyDivisionId] = useState<TypologyDivisionId | null>(null);
@@ -1167,12 +1142,12 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
     return Array.from(map.values());
   }, [books, discoveredBooks]);
 
-  const visibleSectionOrder: SectionKey[] = isToolsMode
-    ? ['FERRAMENTAS']
-    : SECTION_ORDER.filter((section) => section !== 'FERRAMENTAS');
+  const visibleSectionOrder: SectionKey[] = isTypesMode
+    ? []
+    : SECTION_ORDER.filter((section) => section !== 'TIPOLOGIA BÍBLICA');
 
   // Group books by top-level section
-  const booksBySection = visibleSectionOrder.reduce((acc, sec) => {
+  const booksBySection = SECTION_ORDER.reduce((acc, sec) => {
     acc[sec] = mergedBooks.filter((b) => {
       const category = (b.category || '').trim();
       const mapped = CATEGORY_TO_SECTION[category] ?? CATEGORY_TO_SECTION[category.toLowerCase()];
@@ -1198,9 +1173,13 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
   }, [selectedSection, activeTypologyDivisionId]);
 
   const visibleSeriesInSection: [string, BookItem[]][] = useMemo(() => {
-    if (selectedSection !== 'TIPOLOGIA BÍBLICA' || !activeTypologyDivisionId) return seriesInSection;
+    if (selectedSection !== 'TIPOLOGIA BÍBLICA') return seriesInSection;
+
+    const filteredByTypologySeries = seriesInSection.filter(([category]) => TYPOLOGY_SERIES_WHITELIST.has(category));
+    if (!activeTypologyDivisionId) return filteredByTypologySeries;
+
     const allowedSeries = new Set(TYPOLOGY_DIVISION_SERIES[activeTypologyDivisionId] || []);
-    return seriesInSection.filter(([category]) => allowedSeries.has(category));
+    return filteredByTypologySeries.filter(([category]) => allowedSeries.has(category));
   }, [selectedSection, activeTypologyDivisionId, seriesInSection]);
 
   const handleSelectBook = async (slug: string) => {
@@ -1235,11 +1214,15 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
   // ── Section detail ─────────────────────────────────────────────────────────
   if (selectedSection) {
     const { label, description, Icon } = SECTIONS[selectedSection];
+    const headingLabel = isTypesMode && selectedSection === 'TIPOLOGIA BÍBLICA' ? 'Tipos' : label;
+    const headingDescription = isTypesMode && selectedSection === 'TIPOLOGIA BÍBLICA'
+      ? 'Tipologia da Livraria Espiritual organizada em 8 tipos de leitura, com as séries Sombras do Reino e A Terra e o Tabernáculo.'
+      : description;
     return (
       <div className="relative pt-6 pb-32 px-5 max-w-7xl mx-auto">
         <FireflyLayer />
         <div className="mb-8">
-          {!isToolsMode && (
+          {!isTypesMode && (
             <button
               onClick={() => setSelectedSection(null)}
               className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors mb-6 active:scale-95 text-[10px] font-black uppercase tracking-widest"
@@ -1253,11 +1236,11 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
               <Icon size={18} className="text-primary" />
             </div>
             <h2 className="font-headline font-black text-3xl text-primary tracking-tighter uppercase">
-              {label}
+              {headingLabel}
             </h2>
           </div>
           <p className="text-on-surface-variant/70 text-[11px] max-w-sm font-medium leading-relaxed">
-            {description}
+            {headingDescription}
           </p>
         </div>
 
@@ -1338,11 +1321,11 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
         <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px]" />
         <div className="relative z-10">
           <h2 className="font-headline font-extrabold text-3xl text-primary tracking-tighter mb-2">
-            {isToolsMode ? 'Ferramentas' : 'Livraria Espiritual'}
+            {isTypesMode ? 'Tipos' : 'Livraria Espiritual'}
           </h2>
           <p className="text-on-surface-variant/70 text-[11px] max-w-[300px] font-medium leading-relaxed">
-            {isToolsMode
-              ? 'Ferramentas para estudo pessoal direto na Escritura, sem filtros institucionais.'
+            {isTypesMode
+              ? 'Tipologia bíblica da Livraria Espiritual organizada em oito tipos de leitura.'
               : 'Biblioteca de estudos para discernimento bíblico, história da fé e guerra espiritual. Escolha sua frente de estudo e avance por séries, trilogias e investigações aprofundadas.'}
           </p>
         </div>

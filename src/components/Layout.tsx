@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Menu, Settings, GraduationCap, Library, BookOpen, ExternalLink, UserCircle2, BookMarked, Wrench } from 'lucide-react';
+import { Menu, Settings, GraduationCap, Library, BookOpen, ExternalLink, UserCircle2, BookMarked, Layers } from 'lucide-react';
 import { Screen } from '../types';
 import { cn } from '../lib/utils';
 import { useProfile } from '../state/ProfileContext';
@@ -19,7 +19,7 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
     { id: Screen.MANA, label: 'MANÁ', icon: GraduationCap },
     { id: Screen.REFUTACAO, label: 'Livraria da Matrix', icon: BookMarked },
     { id: Screen.BOOKSTORE, label: 'Livraria Espiritual', icon: Library },
-    { id: Screen.TOOLS, label: 'Ferramentas', icon: Wrench },
+    { id: Screen.TOOLS, label: 'Tipos', icon: Layers },
   ];
 
   return (
