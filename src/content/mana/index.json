@@ -28,6 +28,13 @@
     "tenda": "vida-interior"
   },
   {
+    "title": "Namoro e Solteirice - Princípios do Reino para Relacionamentos Santos",
+    "author": "Voz do Deserto",
+    "date": "2026-04-24",
+    "slug": "vida-interior/namoro-e-solteirice",
+    "tenda": "vida-interior"
+  },
+  {
     "title": "Trabalho como Adoração - Descobrindo o Chamado de Deus para Sua Profissão",
     "author": "Voz do Deserto",
     "date": "2026-04-24",
@@ -39,6 +46,13 @@
     "author": "Voz do Deserto",
     "date": "2026-04-24",
     "slug": "vida-exterior/embaixadores-do-reino",
+    "tenda": "vida-exterior"
+  },
+  {
+    "title": "Finanças do Reino - Mordomia, Dívidas e Generosidade",
+    "author": "Voz do Deserto",
+    "date": "2026-04-24",
+    "slug": "vida-exterior/financas-do-reino",
     "tenda": "vida-exterior"
   }
 ]

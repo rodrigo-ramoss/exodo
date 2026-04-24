@@ -20,37 +20,55 @@
   {
     "title": "O Vale da Sombra - A Bíblia e a Depressão",
     "slug": "vida-interior/o-vale-da-sombra",
-    "description": "Uma abordagem bíblica, profunda e sem respostas simplistas sobre depressão, lamento, esperança e cuidado.",
+    "description": "Tema em preparação dentro da Tenda Vida Interior.",
     "date": "2026-04-24",
     "category": "Vida Interior",
     "tenda": "vida-interior",
-    "time": "E-BOOK 01"
+    "time": "TEMA 01"
   },
   {
     "title": "Rejeição - Encontrando Identidade em Cristo",
     "slug": "vida-interior/rejeicao-identidade-em-cristo",
-    "description": "Um estudo sobre as raízes da rejeição, suas marcas na alma e a cura da identidade pela adoção em Cristo.",
+    "description": "Tema em preparação dentro da Tenda Vida Interior.",
     "date": "2026-04-24",
     "category": "Vida Interior",
     "tenda": "vida-interior",
-    "time": "E-BOOK 02"
+    "time": "TEMA 02"
+  },
+  {
+    "title": "Namoro e Solteirice - Princípios do Reino para Relacionamentos Santos",
+    "slug": "vida-interior/namoro-e-solteirice",
+    "description": "Tema em preparação dentro da Tenda Vida Interior.",
+    "date": "2026-04-24",
+    "category": "Vida Interior",
+    "tenda": "vida-interior",
+    "time": "TEMA 03"
   },
   {
     "title": "Trabalho como Adoração - Descobrindo o Chamado de Deus para Sua Profissão",
     "slug": "vida-exterior/trabalho-como-adoracao",
-    "description": "A profissão como campo de missão, altar de serviço e expressão prática da vocação diante de Deus.",
+    "description": "Tema em preparação dentro da Tenda Vida Exterior.",
     "date": "2026-04-24",
     "category": "Vida Exterior",
     "tenda": "vida-exterior",
-    "time": "E-BOOK 01"
+    "time": "TEMA 01"
   },
   {
     "title": "Embaixadores do Reino - Como Compartilhar Sua Fé no Dia a Dia",
     "slug": "vida-exterior/embaixadores-do-reino",
-    "description": "Evangelismo natural, relacional e poderoso para o contexto urbano e digital do século XXI.",
+    "description": "Tema em preparação dentro da Tenda Vida Exterior.",
     "date": "2026-04-24",
     "category": "Vida Exterior",
     "tenda": "vida-exterior",
-    "time": "E-BOOK 02"
+    "time": "TEMA 02"
+  },
+  {
+    "title": "Finanças do Reino - Mordomia, Dívidas e Generosidade",
+    "slug": "vida-exterior/financas-do-reino",
+    "description": "Tema em preparação dentro da Tenda Vida Exterior.",
+    "date": "2026-04-24",
+    "category": "Vida Exterior",
+    "tenda": "vida-exterior",
+    "time": "TEMA 03"
   }
 ]
