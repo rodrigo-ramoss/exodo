@@ -1,275 +1,321 @@
-import { useMemo, useState } from 'react';
-import { Search, Star, Clock, Check, ArrowRight } from 'lucide-react';
-import { MarkdownViewer } from './MarkdownViewer';
-import { useFetch } from '../hooks/useFetch';
-import { AppImage } from './AppImage';
+import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { ArrowRight, BookOpenText, BriefcaseBusiness, HeartPulse, Sparkles, Sword, Tent } from 'lucide-react';
 import { pm } from '../lib/progressManager';
 
 type TendaId = 'vida-espiritual' | 'vida-interior' | 'vida-exterior';
 
-interface StudyItem {
-  title: string;
-  slug: string;
-  description: string;
-  date: string;
-  category: string;
-  time: string;
-  image?: string;
-  tenda?: TendaId;
-}
-
-interface ManaTheme {
+interface ManaEbook {
   id: string;
+  slug: string;
+  badge: string;
   title: string;
-  subtitle: string;
-  keywords: string[];
-}
-
-interface ManaConfig {
-  themes: ManaTheme[];
-}
-
-interface TendaCard {
-  id: TendaId;
-  title: string;
-  subtitle: string;
   description: string;
-  cta: string;
 }
 
-const TENDA_CARDS: TendaCard[] = [
+interface ManaTenda {
+  id: TendaId;
+  label: string;
+  numero: string;
+  titulo: string;
+  subtitulo: string;
+  descricao: string;
+  temas: ManaEbook[];
+}
+
+const MANA_TENDAS: ManaTenda[] = [
   {
     id: 'vida-espiritual',
-    title: 'Tenda 1 - Vida Espiritual',
-    subtitle: 'O núcleo da guerra',
-    description:
+    label: 'TENDA 1 - VIDA ESPIRITUAL',
+    numero: '01',
+    titulo: 'Vida Espiritual',
+    subtitulo: 'O núcleo da guerra',
+    descricao:
       'Oração, guerra espiritual, discernimento, jejum, intimidade com Deus e armas espirituais para sustentar sua caminhada.',
-    cta: 'Entrar na tenda',
+    temas: [
+      {
+        id: 'quarto-secreto',
+        slug: 'vida-espiritual/o-quarto-secreto',
+        badge: 'E-BOOK 01',
+        title: 'O Quarto Secreto - Desenvolvendo uma Vida Devocional Poderosa',
+        description:
+          'A disciplina do encontro diário com Deus, a oração secreta e a vida devocional como fundamento da força espiritual.',
+      },
+      {
+        id: 'fortalezas-mentais',
+        slug: 'vida-espiritual/fortalezas-mentais',
+        badge: 'E-BOOK 02',
+        title: 'Fortalezas Mentais - Vencendo Pensamentos de Derrota',
+        description:
+          'Um estudo sobre pensamentos obsessivos, acusações, dúvidas e a renovação da mente pelas armas do Espírito.',
+      },
+    ],
   },
   {
     id: 'vida-interior',
-    title: 'Tenda 2 - Vida Interior',
-    subtitle: 'Mente, emoções e relacionamentos',
-    description:
+    label: 'TENDA 2 - VIDA INTERIOR',
+    numero: '02',
+    titulo: 'Vida Interior',
+    subtitulo: 'Emoções, mente e relacionamentos',
+    descricao:
       'Estudos sobre ansiedade, depressão, cura interior, batalha da mente, casamento, sexualidade, perdão e vínculos espirituais.',
-    cta: 'Entrar na tenda',
+    temas: [
+      {
+        id: 'vale-da-sombra',
+        slug: 'vida-interior/o-vale-da-sombra',
+        badge: 'E-BOOK 01',
+        title: 'O Vale da Sombra - A Bíblia e a Depressão',
+        description:
+          'Uma abordagem bíblica, profunda e sem respostas simplistas sobre depressão, lamento, esperança e cuidado.',
+      },
+      {
+        id: 'rejeicao-identidade',
+        slug: 'vida-interior/rejeicao-identidade-em-cristo',
+        badge: 'E-BOOK 02',
+        title: 'Rejeição - Encontrando Identidade em Cristo',
+        description:
+          'Um estudo sobre as raízes da rejeição, suas marcas na alma e a cura da identidade pela adoção em Cristo.',
+      },
+    ],
   },
   {
     id: 'vida-exterior',
-    title: 'Tenda 3 - Vida Exterior',
-    subtitle: 'Trabalho, missão e sociedade',
-    description:
+    label: 'TENDA 3 - VIDA EXTERIOR',
+    numero: '03',
+    titulo: 'Vida Exterior',
+    subtitulo: 'Trabalho, missão e sociedade',
+    descricao:
       'Conteúdos sobre vocação, finanças, missão, evangelismo, cultura, influência, igreja e vida pública diante do Reino.',
-    cta: 'Entrar na tenda',
+    temas: [
+      {
+        id: 'trabalho-adoracao',
+        slug: 'vida-exterior/trabalho-como-adoracao',
+        badge: 'E-BOOK 01',
+        title: 'Trabalho como Adoração - Descobrindo o Chamado de Deus para Sua Profissão',
+        description:
+          'A profissão como campo de missão, altar de serviço e expressão prática da vocação diante de Deus.',
+      },
+      {
+        id: 'embaixadores-reino',
+        slug: 'vida-exterior/embaixadores-do-reino',
+        badge: 'E-BOOK 02',
+        title: 'Embaixadores do Reino - Como Compartilhar Sua Fé no Dia a Dia',
+        description:
+          'Evangelismo natural, relacional e poderoso para o contexto urbano e digital do século XXI.',
+      },
+    ],
   },
 ];
 
-const TENDA_LABEL: Record<TendaId, string> = {
-  'vida-espiritual': 'Vida Espiritual',
-  'vida-interior': 'Vida Interior',
-  'vida-exterior': 'Vida Exterior',
+const TENDA_ICON: Record<TendaId, typeof Sparkles> = {
+  'vida-espiritual': Sword,
+  'vida-interior': HeartPulse,
+  'vida-exterior': BriefcaseBusiness,
 };
 
-const TENDA_KEYWORDS: Record<TendaId, string[]> = {
-  'vida-espiritual': [
-    'oração',
-    'jejum',
-    'comunhão',
-    'intimidade',
-    'deus',
-    'guerra espiritual',
-    'discernimento',
-    'ensinos de jesus',
-  ],
-  'vida-interior': [
-    'ansiedade',
-    'depressão',
-    'cura interior',
-    'mente',
-    'emoções',
-    'perdão',
-    'provações',
-    'silêncio',
-    'espera',
-  ],
-  'vida-exterior': [
-    'vocação',
-    'finanças',
-    'missão',
-    'evangelismo',
-    'cultura',
-    'influência',
-    'igreja',
-    'reino',
-    'aplicação prática',
-  ],
+const TENDA_TONE: Record<TendaId, string> = {
+  'vida-espiritual': 'from-[#2A1E13] via-[#1A1612] to-[#111111]',
+  'vida-interior': 'from-[#241A18] via-[#191414] to-[#101010]',
+  'vida-exterior': 'from-[#1F1A14] via-[#171412] to-[#0F0F0F]',
 };
 
-const manaMarkdownModules = import.meta.glob('/public/content/mana/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
+function DragScrollRow({ children }: { children: ReactNode }) {
+  const rowRef = useRef<HTMLDivElement>(null);
+  const drag = useRef({ isDown: false, startX: 0, scrollLeft: 0, didDrag: false });
 
-function normalizeKey(raw: string): string {
-  return raw
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
+  return (
+    <div
+      ref={rowRef}
+      className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      onClickCapture={(e) => {
+        if (drag.current.didDrag) {
+          e.preventDefault();
+          e.stopPropagation();
+          drag.current.didDrag = false;
+        }
+      }}
+      onPointerDown={(e) => {
+        if (e.pointerType !== 'mouse') return;
+        const el = rowRef.current;
+        if (!el) return;
+        drag.current = { isDown: true, startX: e.clientX, scrollLeft: el.scrollLeft, didDrag: false };
+      }}
+      onPointerMove={(e) => {
+        if (e.pointerType !== 'mouse' || !drag.current.isDown) return;
+        const el = rowRef.current;
+        if (!el) return;
+        const walk = e.clientX - drag.current.startX;
+        if (Math.abs(walk) > 10) drag.current.didDrag = true;
+        el.scrollLeft = drag.current.scrollLeft - walk;
+      }}
+      onPointerUp={() => {
+        drag.current.isDown = false;
+        setTimeout(() => {
+          drag.current.didDrag = false;
+        }, 0);
+      }}
+      onPointerLeave={() => {
+        drag.current.isDown = false;
+        drag.current.didDrag = false;
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
-function resolveManaMarkdown(study: StudyItem | null): string | null {
-  if (!study) return null;
-  const slugTail = study.slug.split('/').pop() || study.slug;
-  const slugKey = normalizeKey(slugTail);
-  const titleKey = normalizeKey(study.title);
+function ManaShelfCard({
+  tenda,
+  ebook,
+  isActive,
+  onClick,
+}: {
+  tenda: ManaTenda;
+  ebook: ManaEbook;
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const progress = pm.getProgress('mana', ebook.slug);
+  const isCompleted = pm.isRead('mana', ebook.slug);
 
-  for (const [path, markdown] of Object.entries(manaMarkdownModules)) {
-    const fileName = path.split('/').pop()?.replace(/\.md$/i, '') || '';
-    const fileKey = normalizeKey(fileName);
-    if (fileKey === slugKey || fileKey === titleKey || fileKey.includes(slugKey) || fileKey.includes(titleKey)) {
-      return markdown;
-    }
-  }
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`group shrink-0 w-[168px] sm:w-[196px] text-left snap-start rounded-2xl border p-2 transition-all duration-300 ${
+        isActive
+          ? 'border-primary/60 bg-primary/10 shadow-[0_0_0_1px_rgba(242,192,141,0.2),0_18px_34px_rgba(0,0,0,0.35)]'
+          : 'border-outline-variant/20 bg-surface-container-low hover:-translate-y-0.5 hover:border-primary/45 hover:bg-surface-container'
+      }`}
+    >
+      <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden border border-primary/20">
+        <div className={`absolute inset-0 bg-gradient-to-br ${TENDA_TONE[tenda.id]}`} />
+        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_18%_18%,rgba(242,192,141,0.22),transparent_45%)]" />
+        <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(242,192,141,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.1)_1px,transparent_1px)] [background-size:18px_18px]" />
 
-  return null;
-}
+        <div className="relative h-full p-3 flex flex-col justify-between">
+          <span className="inline-flex self-start rounded-md border border-primary/35 bg-black/45 px-2 py-1 text-[8px] font-black tracking-[0.16em] text-primary">
+            {ebook.badge}
+          </span>
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.15em] text-primary/80 mb-1">{tenda.titulo}</p>
+            <h4 className="text-[13px] font-extrabold leading-tight text-on-surface line-clamp-3">{ebook.title}</h4>
+          </div>
+        </div>
+      </div>
 
-function inferTenda(study: StudyItem): TendaId {
-  const normalized = normalizeKey(`${study.title} ${study.description} ${study.category} ${study.slug}`);
-  const scoreByTenda = Object.entries(TENDA_KEYWORDS).map(([id, keywords]) => {
-    const score = keywords.reduce((acc, keyword) => (normalized.includes(normalizeKey(keyword)) ? acc + 1 : acc), 0);
-    return { id: id as TendaId, score };
-  });
+      <p className="mt-2 px-1 text-[10px] text-on-surface-variant leading-relaxed line-clamp-3">{ebook.description}</p>
 
-  const winner = scoreByTenda.sort((a, b) => b.score - a.score)[0];
-  return winner.score > 0 ? winner.id : 'vida-espiritual';
+      <div className="mt-2 px-1">
+        <div className="h-1.5 w-full rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/15">
+          <div
+            className={isCompleted ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E]' : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400'}
+            style={{ width: `${isCompleted ? 100 : progress}%` }}
+          />
+        </div>
+      </div>
+    </button>
+  );
 }
 
 export default function Studies() {
-  const [selectedStudy, setSelectedStudy] = useState<StudyItem | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
-  const [selectedThemeId, setSelectedThemeId] = useState<string | null>(null);
-  const [selectedTendaId, setSelectedTendaId] = useState<TendaId | null>(null);
-  const { data: manaConfig } = useFetch<ManaConfig>('/content/mana/mana.json');
-  const { data: manaStudies, error } = useFetch<StudyItem[]>('/content/mana/index.json');
+  const [selectedTendaId, setSelectedTendaId] = useState<TendaId>('vida-espiritual');
+  const [activeEbookSlug, setActiveEbookSlug] = useState<string | null>(null);
+  const tendaSectionRef = useRef<HTMLElement | null>(null);
 
-  const allStudies = useMemo(
-    () =>
-      (manaStudies ?? []).map((study) => ({
-        ...study,
-        tenda: study.tenda ?? inferTenda(study),
-      })),
-    [manaStudies],
+  const selectedTenda = useMemo(
+    () => MANA_TENDAS.find((item) => item.id === selectedTendaId) ?? MANA_TENDAS[0],
+    [selectedTendaId],
   );
 
-  const selectedTheme = useMemo(
-    () => manaConfig?.themes?.find((theme) => theme.id === selectedThemeId) || null,
-    [manaConfig?.themes, selectedThemeId],
-  );
-
-  const matchesTheme = (study: StudyItem) => {
-    if (!selectedTheme) return true;
-    const haystack = `${study.title} ${study.description} ${study.category} ${study.slug}`.toLowerCase();
-    return selectedTheme.keywords.some((keyword) => haystack.includes(keyword.toLowerCase()));
+  const handleSelectTenda = (id: TendaId) => {
+    setSelectedTendaId(id);
+    setTimeout(() => {
+      tendaSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 60);
   };
-
-  const studies = useMemo(() => {
-    const lowerSearch = searchTerm.trim().toLowerCase();
-    return allStudies.filter((study) => {
-      if (selectedTendaId && study.tenda !== selectedTendaId) return false;
-      if (!matchesTheme(study)) return false;
-      if (!lowerSearch) return true;
-      return (
-        study.title.toLowerCase().includes(lowerSearch) ||
-        study.description.toLowerCase().includes(lowerSearch) ||
-        study.category.toLowerCase().includes(lowerSearch)
-      );
-    });
-  }, [allStudies, searchTerm, selectedTheme, selectedTendaId]);
-
-  const loading = !manaStudies;
-
-  const featuredStudies = studies ? studies.slice(0, 4) : [];
-  const recentStudies = studies ? studies.slice(4) : [];
-
-  const categories = studies ? Array.from(new Set(studies.map((s) => s.category))) : [];
-  const groupedStudies = categories.reduce((acc, cat) => {
-    acc[cat] = studies?.filter((s) => s.category === cat) || [];
-    return acc;
-  }, {} as Record<string, StudyItem[]>);
-
-  const markdownContent = resolveManaMarkdown(selectedStudy);
-
-  if (selectedStudy && markdownContent) {
-    return (
-      <MarkdownViewer
-        content={markdownContent}
-        slug={selectedStudy.slug}
-        category="mana"
-        onClose={() => setSelectedStudy(null)}
-      />
-    );
-  }
 
   return (
     <div className="pb-24 min-h-screen bg-surface-container-lowest">
       <div className="pt-8 px-4 sm:px-6 mb-8">
-        <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-surface-container-high/90 via-surface-container/90 to-surface-container-low p-6 sm:p-8 shadow-[0_14px_40px_rgba(0,0,0,0.45)]">
-          <p className="text-[10px] font-black uppercase tracking-[0.28em] text-primary/80 mb-2">Seção Maná</p>
-          <h1 className="font-headline text-4xl sm:text-5xl font-bold text-primary mb-2 tracking-tighter">MANÁ</h1>
-          <p className="text-sm sm:text-base text-on-surface font-semibold mb-2">
-            O alimento sólido para a batalha de hoje.
-          </p>
-          <p className="text-xs sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
-            E-books e estudos profundos para fortalecer sua vida espiritual, curar sua vida interior e preparar você
-            para cumprir sua missão no mundo.
-          </p>
-        </div>
+        <header className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-[#1f1a15] via-[#131110] to-[#0d0d0d] px-6 py-8 sm:px-8 sm:py-10 shadow-[0_24px_65px_rgba(0,0,0,0.58)]">
+          <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:radial-gradient(circle_at_18%_20%,rgba(242,192,141,0.26),transparent_42%),radial-gradient(circle_at_78%_88%,rgba(212,165,116,0.16),transparent_36%)]" />
+          <div className="pointer-events-none absolute inset-0 opacity-10 [background-image:linear-gradient(rgba(242,192,141,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.05)_1px,transparent_1px)] [background-size:20px_20px]" />
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-3 py-1 mb-3">
+              <Tent size={12} className="text-primary" />
+              <span className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">Seção Maná</span>
+            </div>
+            <h1 className="font-headline text-4xl sm:text-5xl font-black text-primary mb-2 tracking-tighter text-shadow-glow">
+              MANÁ
+            </h1>
+            <p className="text-sm sm:text-base text-on-surface font-semibold mb-2">
+              O alimento sólido para a batalha de hoje.
+            </p>
+            <p className="text-xs sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
+              E-books e estudos profundos para fortalecer sua vida espiritual, curar sua vida interior e preparar você
+              para cumprir sua missão no mundo.
+            </p>
+          </div>
+        </header>
       </div>
 
       <section className="px-4 sm:px-6 mb-8">
-        <div className="flex items-end justify-between gap-3 mb-4">
-          <div>
-            <h2 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-on-surface">Escolha sua tenda</h2>
-            <p className="text-xs text-on-surface-variant mt-1">
-              O Maná é organizado em três tendas. Escolha uma porta de entrada para focar seus estudos.
-            </p>
-          </div>
-          {selectedTendaId && (
-            <button
-              type="button"
-              onClick={() => setSelectedTendaId(null)}
-              className="text-[10px] font-black uppercase tracking-widest text-primary border border-primary/40 rounded-full px-3 py-1 hover:bg-primary/15 transition-colors"
-            >
-              Ver todas as tendas
-            </button>
-          )}
+        <div className="mb-4">
+          <h2 className="font-headline text-2xl sm:text-3xl font-black tracking-tight text-on-surface">Escolha sua tenda</h2>
+          <p className="text-xs text-on-surface-variant mt-1">
+            Cada tenda conduz uma área da sua jornada. Escolha por onde deseja ser alimentado hoje.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {TENDA_CARDS.map((tenda) => {
-            const isActive = selectedTendaId === tenda.id;
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+          {MANA_TENDAS.map((tenda) => {
+            const Icon = TENDA_ICON[tenda.id];
+            const isActive = selectedTenda.id === tenda.id;
+
             return (
               <button
                 key={tenda.id}
                 type="button"
-                onClick={() => setSelectedTendaId(tenda.id)}
-                className={`text-left rounded-2xl border p-5 transition-all duration-300 cursor-pointer active:scale-[0.99] ${
+                onClick={() => handleSelectTenda(tenda.id)}
+                className={`group relative overflow-hidden rounded-2xl border text-left px-5 py-5 cursor-pointer transition-all duration-300 ${
                   isActive
-                    ? 'border-primary/70 bg-primary/12 shadow-[0_0_0_1px_rgba(212,175,55,0.25),0_15px_35px_rgba(0,0,0,0.35)]'
-                    : 'border-outline-variant/25 bg-surface-container hover:border-primary/45 hover:bg-surface-container-high hover:-translate-y-0.5'
+                    ? 'border-primary/60 bg-gradient-to-br from-[#22180f] via-[#171310] to-[#111111] shadow-[0_0_0_1px_rgba(242,192,141,0.2),0_18px_40px_rgba(0,0,0,0.42)]'
+                    : 'border-outline-variant/20 bg-gradient-to-br from-[#1f1a17] via-[#151312] to-[#111111] hover:-translate-y-0.5 hover:border-primary/45 hover:shadow-[0_16px_36px_rgba(0,0,0,0.38)]'
                 }`}
               >
-                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-primary/80 mb-2">{tenda.title}</p>
-                <h3 className="font-headline text-lg leading-tight text-on-surface mb-2">{tenda.subtitle}</h3>
-                <p className="text-xs leading-relaxed text-on-surface-variant min-h-[72px]">{tenda.description}</p>
-                <div className="mt-4 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary">
-                  {tenda.cta}
-                  <ArrowRight size={12} />
+                <div className="absolute -right-3 -top-4 text-[72px] font-black tracking-tighter text-primary/12 select-none">
+                  {tenda.numero}
+                </div>
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-[radial-gradient(circle_at_90%_10%,rgba(242,192,141,0.14),transparent_45%)]" />
+
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-1 text-[9px] font-black uppercase tracking-[0.17em] text-primary">
+                      {tenda.label}
+                    </span>
+                    <Icon size={16} className="text-primary/85" />
+                  </div>
+
+                  <h3 className="font-headline text-[28px] leading-none font-black text-on-surface mb-2">{tenda.titulo}</h3>
+                  <p className="text-sm font-semibold text-primary/90 mb-2">{tenda.subtitulo}</p>
+                  <p className="text-xs text-on-surface-variant leading-relaxed mb-4">{tenda.descricao}</p>
+
+                  <div className="border-t border-primary/15 pt-3 mb-3">
+                    <p className="text-[9px] font-black uppercase tracking-[0.18em] text-primary/80 mb-2">Temas desta tenda</p>
+                    <div className="space-y-2">
+                      {tenda.temas.map((tema, index) => (
+                        <div key={tema.id} className="text-[10px] text-on-surface-variant leading-relaxed">
+                          <span className="text-primary/90 font-black">{index + 1}. </span>
+                          <span className="line-clamp-1">{tema.title}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary">
+                    Entrar na tenda
+                    <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-1" />
+                  </div>
                 </div>
               </button>
             );
@@ -277,235 +323,45 @@ export default function Studies() {
         </div>
       </section>
 
-      <section className="px-4 sm:px-6 mt-2">
-        {(selectedTendaId || selectedTheme) && (
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            {selectedTendaId && (
-              <span className="inline-flex items-center rounded-full border border-primary/45 bg-primary/12 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary">
-                Tenda ativa: {TENDA_LABEL[selectedTendaId]}
-              </span>
-            )}
-            {selectedTheme && (
-              <span className="inline-flex items-center rounded-full border border-primary/45 bg-primary/12 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary">
-                Tema ativo: {selectedTheme.title}
-              </span>
-            )}
-          </div>
-        )}
-
-        <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-3 mb-3">
+      <section ref={tendaSectionRef} className="px-4 sm:px-6 pb-8">
+        <div className="rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-5 sm:p-6">
           <button
-            className="gold-glow-hover flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full bg-primary text-on-primary border-primary"
             type="button"
+            onClick={() => setSelectedTendaId('vida-espiritual')}
+            className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
           >
+            <span aria-hidden>‹</span>
             MANÁ
           </button>
-          <button
-            className="gold-glow-hover flex-shrink-0 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full bg-surface-container-high text-on-surface border-outline-variant/40 hover:border-primary"
-            type="button"
-            onClick={() => setIsCategoriesOpen((prev) => !prev)}
-          >
-            Categorias
-          </button>
-        </div>
 
-        {isCategoriesOpen && (
-          <div className="mb-4 rounded-2xl border border-outline-variant/20 bg-surface-container-low p-2 max-h-72 overflow-y-auto">
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedThemeId(null);
-                setIsCategoriesOpen(false);
-              }}
-              className={`w-full text-left px-3 py-2 rounded-xl transition-colors ${
-                !selectedThemeId ? 'bg-primary/15 text-primary' : 'hover:bg-surface-container-high'
-              }`}
-            >
-              <p className="text-[10px] font-black uppercase tracking-wider">Todos os temas</p>
-            </button>
-            {(manaConfig?.themes || []).map((theme) => (
-              <button
-                key={theme.id}
-                type="button"
-                onClick={() => {
-                  setSelectedThemeId(theme.id);
-                  setIsCategoriesOpen(false);
-                }}
-                className={`w-full text-left px-3 py-2 rounded-xl transition-colors ${
-                  selectedThemeId === theme.id ? 'bg-primary/15 text-primary' : 'hover:bg-surface-container-high'
-                }`}
-              >
-                <p className="text-[10px] font-black uppercase tracking-wider">{theme.title}</p>
-                <p className="text-[10px] text-on-surface-variant">{theme.subtitle}</p>
-              </button>
-            ))}
+          <div className="mt-4 mb-5">
+            <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-2">
+              TENDA
+            </span>
+            <h3 className="font-headline text-3xl font-black tracking-tight text-on-surface uppercase">{selectedTenda.titulo}</h3>
+            <p className="text-sm text-primary/85 font-semibold mt-1">{selectedTenda.subtitulo}</p>
+            <p className="text-xs text-on-surface-variant leading-relaxed mt-2 max-w-3xl">{selectedTenda.descricao}</p>
           </div>
-        )}
 
-        <div className="relative group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
-          <input
-            className="w-full bg-surface-container-high border-b border-outline-variant focus:border-primary focus:ring-0 text-on-surface placeholder:text-on-surface-variant/50 transition-all px-11 py-3.5 font-sans text-sm tracking-wide outline-none"
-            placeholder="Buscar estudo..."
-            type="text"
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-          />
-          <Star className="absolute right-4 top-1/2 -translate-y-1/2 text-primary opacity-0 group-focus-within:opacity-100 transition-opacity" size={18} />
-        </div>
-      </section>
-
-      {!loading && studies.length === 0 && (
-        <section className="px-4 sm:px-6 mt-8">
-          <div className="py-16 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-60 border border-dashed border-outline-variant/20 rounded-3xl">
-            Nenhum estudo encontrado para este filtro.
-          </div>
-        </section>
-      )}
-
-      <section className={`mt-8 ${studies.length === 0 ? 'hidden' : ''}`}>
-        <div className="px-4 sm:px-6 flex justify-between items-baseline mb-3">
-          <h2 className="font-headline font-bold text-[10px] tracking-[0.2em] uppercase text-on-surface opacity-60">
-            MANÁ em Destaque
-          </h2>
-          <div className="flex gap-1">
-            <span className="w-1 h-1 bg-primary rounded-full"></span>
-            <span className="w-1 h-1 bg-surface-container-highest rounded-full"></span>
-            <span className="w-1 h-1 bg-surface-container-highest rounded-full"></span>
-            <span className="w-1 h-1 bg-surface-container-highest rounded-full"></span>
-          </div>
-        </div>
-        <div className="flex gap-4 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
-          <div className="w-4 sm:w-6 flex-shrink-0" />
-          {loading ? (
-            <div className="w-full py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">Carregando...</div>
-          ) : featuredStudies.map((item, i) => (
-            <div key={i} className="flex-shrink-0 w-72 snap-center">
-              <div
-                onClick={() => setSelectedStudy(item)}
-                className="interactive-card gold-glow-hover relative aspect-[16/10] rounded-2xl overflow-hidden group cursor-pointer active:scale-95 transition-transform"
-              >
-                <AppImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src={item.image} alt={item.title} />
-                <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
-                <div className="absolute bottom-4 left-4 right-4">
-                  <span className="text-[8px] font-black tracking-[0.3em] uppercase text-primary mb-1 block">✦ {item.category.toUpperCase()}</span>
-                  <h3 className="font-headline font-extrabold text-base leading-tight text-on-surface">{item.title}</h3>
-                  <p className="text-[9px] text-on-surface-variant mt-1 font-bold uppercase tracking-wider">{item.category} • {item.time}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-          <div className="w-4 sm:w-6 flex-shrink-0" />
-        </div>
-      </section>
-
-      <section className={`mt-12 mb-8 container-biblioteca ${studies.length === 0 ? 'hidden' : ''}`}>
-        <div className="flex items-center gap-4">
-          <h2 className="font-headline font-extrabold text-2xl tracking-tighter text-on-surface">Biblioteca</h2>
-          <div className="h-[1px] flex-1 bg-outline-variant/20"></div>
-        </div>
-      </section>
-
-      <section className={`space-y-10 ${studies.length === 0 ? 'hidden' : ''}`}>
-        {loading ? null : categories.map((cat, i) => (
-          <div key={i} className="flex flex-col gap-4">
-            <div className="flex items-center justify-between container-biblioteca">
-              <h3 className="text-[10px] font-black tracking-[0.25em] uppercase text-primary opacity-80">{cat}</h3>
-              <div className="h-[1px] flex-1 ml-4 bg-outline-variant/10"></div>
-            </div>
-
-            <div className="flex gap-4 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
-              <div className="w-4 sm:w-6 flex-shrink-0" />
-              {groupedStudies[cat].map((item, j) => {
-                const progress = pm.getProgress('mana', item.slug);
-                const isCompleted = pm.isRead('mana', item.slug);
-
-                return (
-                  <div
-                    key={j}
-                    onClick={() => setSelectedStudy(item)}
-                    className="interactive-card gold-glow-hover flex-shrink-0 w-40 sm:w-48 snap-start group cursor-pointer active:scale-[0.98] transition-all"
-                  >
-                    <div className="aspect-[4/3] rounded-xl overflow-hidden mb-2 border border-outline-variant/10 shadow-sm relative">
-                      <AppImage
-                        src={item.image}
-                        alt={item.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      />
-                      {isCompleted && (
-                        <div className="absolute top-1.5 right-1.5 flex items-center gap-1 rounded-full bg-black/70 border border-[#D4AF37]/60 px-1.5 py-0.5">
-                          <Check size={8} className="text-[#D4AF37]" />
-                          <span className="text-[7px] font-black uppercase tracking-widest text-[#D4AF37]">Lido</span>
-                        </div>
-                      )}
-                      {progress > 0 && (
-                        <div className="absolute bottom-0 left-0 w-full h-1 bg-black/40">
-                          <div
-                            className={isCompleted
-                              ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E]'
-                              : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400'
-                            }
-                            style={{ width: `${isCompleted ? 100 : progress}%` }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                    <h4 className="font-headline font-bold text-[11px] leading-tight text-on-surface mb-1 line-clamp-2 group-hover:text-primary transition-colors">
-                      {item.title}
-                    </h4>
-                    <div className="flex items-center gap-1.5 opacity-40">
-                      <Clock size={10} />
-                      <span className="text-[9px] font-bold uppercase tracking-widest">{item.time}</span>
-                    </div>
-                  </div>
-                );
-              })}
-              <div className="w-4 sm:w-6 flex-shrink-0" />
-            </div>
-          </div>
-        ))}
-      </section>
-
-      <section className={`mt-16 pb-12 container-biblioteca ${studies.length === 0 ? 'hidden' : ''}`}>
-        <div className="flex items-center gap-4 mb-8">
-          <h2 className="font-headline font-extrabold text-xl tracking-tighter text-on-surface">Explorações Recentes</h2>
-          <div className="h-[1px] flex-1 bg-outline-variant/20"></div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-x-4 gap-y-8">
-          {loading ? (
-            <div className="col-span-2 py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50 animate-pulse">
-              Atualizando arquivos...
-            </div>
-          ) : recentStudies.map((item, i) => (
-            <div
-              key={i}
-              onClick={() => setSelectedStudy(item)}
-              className="interactive-card gold-glow-hover flex flex-col group cursor-pointer active:scale-[0.98] transition-all"
-            >
-              <div className="aspect-[16/9] rounded-xl overflow-hidden mb-3 border border-outline-variant/10">
-                <AppImage
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+          <div className="relative -mx-5 px-5 sm:-mx-6 sm:px-6">
+            <div className="pointer-events-none absolute -bottom-1 left-5 right-5 sm:left-6 sm:right-6 h-1 bg-gradient-to-r from-primary/30 via-outline-variant/10 to-transparent opacity-20" />
+            <DragScrollRow>
+              {selectedTenda.temas.map((ebook) => (
+                <ManaShelfCard
+                  key={ebook.id}
+                  tenda={selectedTenda}
+                  ebook={ebook}
+                  isActive={activeEbookSlug === ebook.slug}
+                  onClick={() => setActiveEbookSlug(ebook.slug)}
                 />
-              </div>
-              <div className="flex flex-col flex-1">
-                <span className="text-[8px] font-black text-primary uppercase tracking-[0.2em] mb-1.5">
-                  ✦ {item.category.toUpperCase()}
-                </span>
-                <h4 className="font-headline font-bold text-xs text-on-surface leading-tight mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                  {item.title}
-                </h4>
-                <div className="mt-auto pt-2 border-t border-outline-variant/5 flex items-center justify-between opacity-40">
-                  <span className="text-[8px] font-bold uppercase tracking-widest">{item.date}</span>
-                  <span className="text-[8px] font-bold uppercase tracking-widest">{item.time}</span>
-                </div>
-              </div>
-            </div>
-          ))}
+              ))}
+            </DragScrollRow>
+          </div>
+
+          <p className="mt-2 text-[10px] text-on-surface-variant/65">
+            Estrutura preparada para abrir os detalhes completos de cada e-book assim que o conteúdo for publicado.
+          </p>
         </div>
-        {error && <div className="text-red-500 text-[10px] uppercase font-bold text-center py-4">{error}</div>}
       </section>
     </div>
   );

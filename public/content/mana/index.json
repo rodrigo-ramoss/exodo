@@ -1,82 +1,56 @@
 [
   {
-    "title": "A Espera que Renova",
-    "slug": "antigo testamento/A Espera que Renova — Uma Análise de Isaías 40,31",
-    "description": "Uma análise de Isaías 40:31 sobre a renovação das forças para quem espera em Deus.",
-    "date": "2024-05-01",
-    "category": "Antigo Testamento",
-    "tenda": "vida-interior",
-    "time": "12 MIN",
-    "image": "/image/estudos/A espera que renova.webp"
+    "title": "O Quarto Secreto - Desenvolvendo uma Vida Devocional Poderosa",
+    "slug": "vida-espiritual/o-quarto-secreto",
+    "description": "A disciplina do encontro diário com Deus, a oração secreta e a vida devocional como fundamento da força espiritual.",
+    "date": "2026-04-24",
+    "category": "Vida Espiritual",
+    "tenda": "vida-espiritual",
+    "time": "E-BOOK 01"
   },
   {
-    "title": "O Maná e o Suficiente para Hoje",
-    "slug": "antigo testamento/O Maná e o Suficiente para Hoje — Uma Análise de Êxodo 16",
-    "description": "Uma análise de Êxodo 16 sobre provisão diária e dependência de Deus.",
-    "date": "2024-05-02",
-    "category": "Antigo Testamento",
+    "title": "Fortalezas Mentais - Vencendo Pensamentos de Derrota",
+    "slug": "vida-espiritual/fortalezas-mentais",
+    "description": "Um estudo sobre pensamentos obsessivos, acusações, dúvidas e a renovação da mente pelas armas do Espírito.",
+    "date": "2026-04-24",
+    "category": "Vida Espiritual",
+    "tenda": "vida-espiritual",
+    "time": "E-BOOK 02"
+  },
+  {
+    "title": "O Vale da Sombra - A Bíblia e a Depressão",
+    "slug": "vida-interior/o-vale-da-sombra",
+    "description": "Uma abordagem bíblica, profunda e sem respostas simplistas sobre depressão, lamento, esperança e cuidado.",
+    "date": "2026-04-24",
+    "category": "Vida Interior",
+    "tenda": "vida-interior",
+    "time": "E-BOOK 01"
+  },
+  {
+    "title": "Rejeição - Encontrando Identidade em Cristo",
+    "slug": "vida-interior/rejeicao-identidade-em-cristo",
+    "description": "Um estudo sobre as raízes da rejeição, suas marcas na alma e a cura da identidade pela adoção em Cristo.",
+    "date": "2026-04-24",
+    "category": "Vida Interior",
+    "tenda": "vida-interior",
+    "time": "E-BOOK 02"
+  },
+  {
+    "title": "Trabalho como Adoração - Descobrindo o Chamado de Deus para Sua Profissão",
+    "slug": "vida-exterior/trabalho-como-adoracao",
+    "description": "A profissão como campo de missão, altar de serviço e expressão prática da vocação diante de Deus.",
+    "date": "2026-04-24",
+    "category": "Vida Exterior",
     "tenda": "vida-exterior",
-    "time": "14 MIN",
-    "image": "/image/estudos/O Maná e o Suficiente para Hoje.webp"
+    "time": "E-BOOK 01"
   },
   {
-    "title": "Oração — O Quarto Fechado",
-    "slug": "aplicacao pratica/Oração O Quarto Fechado — A Prática da Oração Secreta como Cura da Performance",
-    "description": "A prática da oração secreta como cura da performance religiosa.",
-    "date": "2024-05-03",
-    "category": "Aplicação Prática",
-    "tenda": "vida-espiritual",
-    "time": "10 MIN",
-    "image": "/image/estudos/O Quarto Fechado.webp"
-  },
-  {
-    "title": "Provações — A Alegria que Desafia a Lógica",
-    "slug": "aplicacao pratica/Provações A Alegria que Desafia a Lógica",
-    "description": "Como encontrar alegria genuína em meio às provações da vida.",
-    "date": "2024-05-04",
-    "category": "Aplicação Prática",
-    "tenda": "vida-interior",
-    "time": "11 MIN",
-    "image": "/image/estudos/A Alegria que Desafia a Lógica.webp"
-  },
-  {
-    "title": "O Encontro que Revela o Nome",
-    "slug": "comunao com deus/O Encontro que Revela o Nome — Uma Análise de Êxodo 33",
-    "description": "Uma análise de Êxodo 33 sobre o encontro íntimo de Moisés com Deus.",
-    "date": "2024-05-05",
-    "category": "Comunhão com Deus",
-    "tenda": "vida-espiritual",
-    "time": "15 MIN",
-    "image": "/image/estudos/O Encontro que Revela o Nome.webp"
-  },
-  {
-    "title": "O Silêncio que Fala",
-    "slug": "comunao com deus/O Silêncio que Fala — Uma Análise de 1 Reis 19",
-    "description": "Uma análise de 1 Reis 19 sobre como Deus fala na voz do silêncio suave.",
-    "date": "2024-05-06",
-    "category": "Comunhão com Deus",
-    "tenda": "vida-interior",
-    "time": "13 MIN",
-    "image": "/image/estudos/O Silêncio que Fala.webp"
-  },
-  {
-    "title": "A Oração que Nasce da Permanência",
-    "slug": "ensinos de jesus/Ensinos de Jesus A Oração que Nasce da Permanência",
-    "description": "Ensinos de Jesus sobre como a oração autêntica brota da permanência nEle.",
-    "date": "2024-05-07",
-    "category": "Ensinos de Jesus",
-    "tenda": "vida-espiritual",
-    "time": "12 MIN",
-    "image": "/image/estudos/A Oração que Nasce da Permanência.webp"
-  },
-  {
-    "title": "Receber o Reino como Criança",
-    "slug": "ensinos de jesus/Ensinos de Jesus Receber o Reino como Criança",
-    "description": "Ensinos de Jesus sobre a humildade infantil como chave do Reino.",
-    "date": "2024-05-08",
-    "category": "Ensinos de Jesus",
+    "title": "Embaixadores do Reino - Como Compartilhar Sua Fé no Dia a Dia",
+    "slug": "vida-exterior/embaixadores-do-reino",
+    "description": "Evangelismo natural, relacional e poderoso para o contexto urbano e digital do século XXI.",
+    "date": "2026-04-24",
+    "category": "Vida Exterior",
     "tenda": "vida-exterior",
-    "time": "10 MIN",
-    "image": "/image/estudos/Receber o Reino como Criança.webp"
+    "time": "E-BOOK 02"
   }
 ]
