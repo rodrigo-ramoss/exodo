@@ -54,27 +54,27 @@ const MANA_TENDAS_META: Omit<ManaTenda, 'temas'>[] = [
     label: 'TENDA 1 - VIDA ESPIRITUAL',
     numero: '01',
     titulo: 'Vida Espiritual',
-    subtitulo: 'O nucleo da guerra',
+    subtitulo: 'O núcleo da guerra',
     descricao:
-      'Oracao, guerra espiritual, discernimento, jejum, intimidade com Deus e armas espirituais para sustentar sua caminhada.',
+      'Oração, guerra espiritual, discernimento, jejum, intimidade com Deus e armas espirituais para sustentar sua caminhada.',
   },
   {
     id: 'vida-interior',
     label: 'TENDA 2 - VIDA INTERIOR',
     numero: '02',
     titulo: 'Vida Interior',
-    subtitulo: 'Emocoes, mente e relacionamentos',
+    subtitulo: 'Emoções, mente e relacionamentos',
     descricao:
-      'Estudos sobre ansiedade, depressao, cura interior, batalha da mente, casamento, sexualidade, perdao e vinculos espirituais.',
+      'Estudos sobre ansiedade, depressão, cura interior, batalha da mente, casamento, sexualidade, perdão e vínculos espirituais.',
   },
   {
     id: 'vida-exterior',
     label: 'TENDA 3 - VIDA EXTERIOR',
     numero: '03',
     titulo: 'Vida Exterior',
-    subtitulo: 'Trabalho, missao e sociedade',
+    subtitulo: 'Trabalho, missão e sociedade',
     descricao:
-      'Conteudos sobre vocacao, financas, missao, evangelismo, cultura, influencia, igreja e vida publica diante do Reino.',
+      'Conteúdos sobre vocação, finanças, missão, evangelismo, cultura, influência, igreja e vida pública diante do Reino.',
   },
 ];
 
@@ -85,7 +85,7 @@ const FALLBACK_TEMAS: ManaTema[] = [
     badge: 'E-BOOK 01',
     title: 'O Quarto Secreto - Desenvolvendo uma Vida Devocional Poderosa',
     description:
-      'A disciplina do encontro diario com Deus, a oracao secreta e a vida devocional como fundamento da forca espiritual.',
+      'A disciplina do encontro diário com Deus, a oração secreta e a vida devocional como fundamento da força espiritual.',
     status: 'published',
     image: '/image/mana/o quarto secreto.webp',
     file: 'tenda 1 vida espiritual/O Quarto Secreto — Desenvolvendo uma Vida Devocional Poderosa.md',
@@ -96,7 +96,7 @@ const FALLBACK_TEMAS: ManaTema[] = [
     badge: 'E-BOOK 02',
     title: 'Fortalezas Mentais - Vencendo Pensamentos de Derrota',
     description:
-      'Um estudo sobre pensamentos obsessivos, acusacoes, duvidas e a renovacao da mente pelas armas do Espirito.',
+      'Um estudo sobre pensamentos obsessivos, acusações, dúvidas e a renovação da mente pelas armas do Espírito.',
     status: 'published',
     image: '/image/mana/fortalezas mentais.webp',
     file: 'tenda 1 vida espiritual/Fortalezas Mentais — Vencendo Pensamentos de Derrota.md',
@@ -106,7 +106,7 @@ const FALLBACK_TEMAS: ManaTema[] = [
     slug: 'vida-espiritual/jejum-arma-esquecida',
     badge: 'E-BOOK 03',
     title: 'Jejum - A Arma Esquecida que Quebra Cadeias',
-    description: 'Praticas biblicas de jejum para quebrar cadeias espirituais e fortalecer a vida de santidade.',
+    description: 'Práticas bíblicas de jejum para quebrar cadeias espirituais e fortalecer a vida de santidade.',
     status: 'published',
     image: '/image/mana/jejum a arma esquecida que quebra cadeias.webp',
     file: 'tenda 1 vida espiritual/Jejum — A Arma Esquecida que Quebra Cadeias.md',
@@ -115,7 +115,7 @@ const FALLBACK_TEMAS: ManaTema[] = [
     id: 'o-vale-da-sombra',
     slug: 'vida-interior/o-vale-da-sombra',
     badge: 'E-BOOK 01',
-    title: 'O Vale da Sombra - A Biblia e a Depressao',
+    title: 'O Vale da Sombra - A Bíblia e a Depressão',
     status: 'published',
     image: '/image/mana/o vale da sombra biblia e depressao.webp',
     file: 'tenda 2 vida interior/O Vale da Sombra — A Bíblia e a Depressão.md',
@@ -124,7 +124,7 @@ const FALLBACK_TEMAS: ManaTema[] = [
     id: 'rejeicao-identidade-em-cristo',
     slug: 'vida-interior/rejeicao-identidade-em-cristo',
     badge: 'E-BOOK 02',
-    title: 'Rejeicao - Encontrando Identidade em Cristo',
+    title: 'Rejeição - Encontrando Identidade em Cristo',
     status: 'published',
     image: '/image/mana/rejeicao encontrando identidade em cristo.webp',
     file: 'tenda 2 vida interior/Rejeição — Encontrando Identidade em Cristo.md',
@@ -133,7 +133,7 @@ const FALLBACK_TEMAS: ManaTema[] = [
     id: 'namoro-e-solteirice',
     slug: 'vida-interior/namoro-e-solteirice',
     badge: 'E-BOOK 03',
-    title: 'Namoro e Solteirice - Principios do Reino para Relacionamentos Santos',
+    title: 'Namoro e Solteirice - Princípios do Reino para Relacionamentos Santos',
     status: 'published',
     image: '/image/mana/namoro e solterice.webp',
     file: 'tenda 2 vida interior/Namoro e Solteirice — Princípios do Reino para Relacionamentos Santos.md',
@@ -142,7 +142,7 @@ const FALLBACK_TEMAS: ManaTema[] = [
     id: 'trabalho-como-adoracao',
     slug: 'vida-exterior/trabalho-como-adoracao',
     badge: 'E-BOOK 01',
-    title: 'Trabalho como Adoracao - Descobrindo o Chamado de Deus para Sua Profissao',
+    title: 'Trabalho como Adoração - Descobrindo o Chamado de Deus para Sua Profissão',
     status: 'published',
     image: '/image/mana/trabalho como adoracao.webp',
     file: 'tenda 3 vida exterior/Trabalho como Adoração — Descobrindo o Chamado de Deus para Sua Profissão.md',
@@ -151,7 +151,7 @@ const FALLBACK_TEMAS: ManaTema[] = [
     id: 'embaixadores-do-reino',
     slug: 'vida-exterior/embaixadores-do-reino',
     badge: 'E-BOOK 02',
-    title: 'Embaixadores do Reino - Como Compartilhar Sua Fe no Dia a Dia',
+    title: 'Embaixadores do Reino - Como Compartilhar Sua Fé no Dia a Dia',
     status: 'published',
     image: '/image/mana/embaixadores do reino.webp',
     file: 'tenda 3 vida exterior/Embaixadores do Reino — Como Compartilhar Sua Fé no Dia a Dia.md',
@@ -160,7 +160,7 @@ const FALLBACK_TEMAS: ManaTema[] = [
     id: 'financas-do-reino',
     slug: 'vida-exterior/financas-do-reino',
     badge: 'E-BOOK 03',
-    title: 'Financas do Reino - Mordomia, Dividas e Generosidade',
+    title: 'Finanças do Reino - Mordomia, Dívidas e Generosidade',
     status: 'published',
     image: '/image/mana/financas do reino.webp',
     file: 'tenda 3 vida exterior/Finanças do Reino — Mordomia, Dívidas e Generosidade.md',
@@ -215,6 +215,31 @@ function toTemaId(slug: string): string {
 
 function formatBadge(order: number): string {
   return `E-BOOK ${String(order).padStart(2, '0')}`;
+}
+
+function TemaProgress({ slug }: { slug: string }) {
+  const progress = pm.getProgress('mana', slug);
+  const isCompleted = pm.isRead('mana', slug);
+  const readCount = pm.getReadCount('mana', slug);
+
+  let status = 'Não iniciado';
+  if (isCompleted) {
+    status = `Lido ${readCount} ${readCount === 1 ? 'vez' : 'vezes'}`;
+  } else if (progress > 0) {
+    status = `Em leitura: ${progress}%`;
+  }
+
+  return (
+    <div className="mt-2">
+      <div className="h-1.5 w-full rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/15">
+        <div
+          className={isCompleted ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E]' : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400'}
+          style={{ width: `${isCompleted ? 100 : progress}%` }}
+        />
+      </div>
+      <p className="mt-1 text-[10px] font-semibold text-on-surface-variant/80">{status}</p>
+    </div>
+  );
 }
 
 function DragScrollRow({ children }: { children: ReactNode }) {
@@ -277,22 +302,9 @@ function TemaPreviewCard({ tendaId, tema, onSelect }: { tendaId: TendaId; tema: 
         )}
         <div className="absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_22%_18%,rgba(242,192,141,0.25),transparent_45%)]" />
         <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(242,192,141,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.08)_1px,transparent_1px)] [background-size:17px_17px]" />
-
-        <div className="relative z-10 h-full p-3 flex flex-col justify-between bg-gradient-to-t from-black/80 via-black/30 to-black/25">
-          <div className="flex items-center justify-between gap-2">
-            <span className="rounded-md border border-primary/35 bg-black/45 px-2 py-1 text-[8px] font-black tracking-[0.16em] text-primary">
-              {tema.badge}
-            </span>
-            {tema.status === 'planned' && (
-              <span className="rounded-md border border-outline-variant/50 bg-black/40 px-2 py-1 text-[7px] font-black uppercase tracking-wider text-on-surface-variant/75">
-                Em preparo
-              </span>
-            )}
-          </div>
-          <h4 className="text-[13px] font-extrabold leading-tight text-on-surface line-clamp-4">{tema.title}</h4>
-        </div>
       </div>
       {tema.description && <p className="mt-2 text-[10px] text-on-surface-variant leading-relaxed line-clamp-3">{tema.description}</p>}
+      <TemaProgress slug={tema.slug} />
     </button>
   );
 }
@@ -340,7 +352,7 @@ function TendaCard({ tenda, onEnter, onSelectTema }: { tenda: ManaTenda; onEnter
                 type="button"
                 onClick={() => scrollByAmount(180)}
                 className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-outline-variant/40 bg-black/40 text-on-surface-variant hover:border-primary/50 hover:text-primary transition-colors"
-                aria-label="Avancar temas"
+                aria-label="Avançar temas"
               >
                 <ChevronRight size={12} />
               </button>
@@ -368,9 +380,6 @@ function TendaCard({ tenda, onEnter, onSelectTema }: { tenda: ManaTenda; onEnter
 }
 
 function TendaShelfCard({ tendaId, tema, onSelect }: { tendaId: TendaId; tema: ManaTema; onSelect: () => void }) {
-  const progress = pm.getProgress('mana', tema.slug);
-  const isCompleted = pm.isRead('mana', tema.slug);
-
   return (
     <button type="button" onClick={onSelect} className="group shrink-0 w-[172px] sm:w-[198px] flex flex-col snap-start text-left">
       <div className="relative aspect-[2/3] rounded-xl overflow-hidden border border-primary/25">
@@ -385,32 +394,12 @@ function TendaShelfCard({ tendaId, tema, onSelect }: { tendaId: TendaId; tema: M
         )}
         <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_15%_16%,rgba(242,192,141,0.22),transparent_46%)]" />
         <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(242,192,141,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.08)_1px,transparent_1px)] [background-size:18px_18px]" />
-
-        <div className="relative z-10 h-full p-3 flex flex-col justify-between bg-gradient-to-t from-black/80 via-black/30 to-black/25">
-          <div className="flex items-center justify-between">
-            <span className="rounded-md border border-primary/35 bg-black/45 px-2 py-1 text-[8px] font-black tracking-[0.16em] text-primary">
-              {tema.badge}
-            </span>
-            {tema.status === 'planned' && (
-              <span className="rounded-md border border-outline-variant/50 bg-black/40 px-2 py-1 text-[7px] font-black uppercase tracking-wider text-on-surface-variant/75">
-                Em preparo
-              </span>
-            )}
-          </div>
-          <h4 className="text-[13px] font-extrabold leading-tight text-on-surface line-clamp-4">{tema.title}</h4>
-        </div>
       </div>
 
       <p className="mt-2 text-[10px] text-on-surface-variant leading-relaxed line-clamp-3">
-        {tema.description || 'Tema preparado para receber conteudo completo nesta tenda.'}
+        {tema.description || 'Tema preparado para receber conteúdo completo nesta tenda.'}
       </p>
-
-      <div className="mt-2 h-1.5 w-full rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/15">
-        <div
-          className={isCompleted ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E]' : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400'}
-          style={{ width: `${isCompleted ? 100 : progress}%` }}
-        />
-      </div>
+      <TemaProgress slug={tema.slug} />
     </button>
   );
 }
@@ -544,7 +533,7 @@ export default function Studies() {
       }
     }
 
-    setMarkdownContent('# Conteudo ainda nao encontrado\n\nVerifique se o arquivo markdown deste tema esta na pasta de Maná.');
+    setMarkdownContent('# Conteúdo ainda não encontrado\n\nVerifique se o arquivo markdown deste tema está na pasta de Maná.');
   };
 
   if (selectedSlug && markdownContent) {
@@ -561,7 +550,7 @@ export default function Studies() {
             className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
           >
             <ArrowLeft size={12} />
-            Mana
+            Maná
           </button>
 
           <div className="mt-4 mb-5">
@@ -597,17 +586,17 @@ export default function Studies() {
           <div className="relative z-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-3 py-1 mb-3">
               <Tent size={12} className="text-primary" />
-              <span className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">Secao Mana</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">Seção Maná</span>
             </div>
             <h1 className="font-headline text-4xl sm:text-5xl font-black text-primary mb-2 tracking-tighter text-shadow-glow">
               MANA
             </h1>
             <p className="text-sm sm:text-base text-on-surface font-semibold mb-2">
-              O alimento solido para a batalha de hoje.
+              O alimento sólido para a batalha de hoje.
             </p>
             <p className="text-xs sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
-              E-books e estudos profundos para fortalecer sua vida espiritual, curar sua vida interior e preparar voce
-              para cumprir sua missao no mundo.
+              E-books e estudos profundos para fortalecer sua vida espiritual, curar sua vida interior e preparar você
+              para cumprir sua missão no mundo.
             </p>
           </div>
         </header>
@@ -617,7 +606,7 @@ export default function Studies() {
         <div className="mb-4">
           <h2 className="font-headline text-2xl sm:text-3xl font-black tracking-tight text-on-surface">Escolha sua tenda</h2>
           <p className="text-xs text-on-surface-variant mt-1">
-            Cada tenda conduz uma area da sua jornada. Escolha por onde deseja ser alimentado hoje.
+            Cada tenda conduz uma área da sua jornada. Escolha por onde deseja ser alimentado hoje.
           </p>
         </div>
 
