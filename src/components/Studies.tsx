@@ -429,7 +429,16 @@ export default function Studies() {
   }, []);
 
   const temasFromContent = useMemo(() => {
-    const items = fetchedStudies?.length ? fetchedStudies : FALLBACK_TEMAS;
+    const items: ManaStudyItem[] = fetchedStudies?.length
+      ? fetchedStudies
+      : FALLBACK_TEMAS.map((tema) => ({
+          title: tema.title,
+          slug: tema.slug,
+          description: tema.description,
+          time: tema.badge,
+          image: tema.image,
+          file: tema.file,
+        }));
 
     const grouped = new Map<TendaId, ManaTema[]>([
       ['vida-espiritual', []],

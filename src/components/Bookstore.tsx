@@ -1,5 +1,5 @@
-import { useState, useRef, useMemo, useEffect, type ReactNode } from 'react';
-import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Hourglass } from 'lucide-react';
+import { useState, useRef, useMemo, type ReactNode } from 'react';
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Hourglass, Tent } from 'lucide-react';
 import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -16,14 +16,17 @@ interface BookItem {
   image?: string;
 }
 
-interface TypologyDivision {
+interface TypologyTypeMeta {
   id: string;
-  title: string;
-  summary: string;
-  examples: string;
+  label: string;
+  numero: string;
+  titulo: string;
+  subtitulo: string;
+  descricao: string;
+  exemplos: string[];
 }
 
-type TypologyDivisionId = TypologyDivision['id'];
+type TypologyDivisionId = TypologyTypeMeta['id'];
 
 const livrariaMarkdownModules = import.meta.glob('/public/content/livraria/**/*.md', {
   eager: true,
@@ -720,54 +723,78 @@ const FIREFLY_PARTICLES = [
   { left: '88%', top: '16%', size: 4, delay: '1.4s', duration: '13s' },
 ];
 
-const TYPOLOGY_DIVISIONS: TypologyDivision[] = [
+const TYPOLOGY_TYPES: TypologyTypeMeta[] = [
   {
     id: 'tipologia-pessoal',
-    title: 'Tipologia Pessoal (Tipos Humanos)',
-    summary: 'Pessoas do AT cujo ofício, vida ou caráter prefiguram Cristo, a Igreja e realidades futuras.',
-    examples: 'Ex.: Adão, Melquisedeque, José, Moisés, Davi, Elias e Jonas.',
+    label: 'TIPO 1',
+    numero: '01',
+    titulo: 'Tipologia Pessoal',
+    subtitulo: 'Tipos Humanos',
+    descricao: 'Pessoas do Antigo Testamento cujo ofício, vida ou caráter prefiguram Cristo, a igreja e realidades futuras.',
+    exemplos: ['Adão', 'Melquisedeque', 'José', 'Moisés', 'Davi', 'Elias', 'Jonas'],
   },
   {
     id: 'tipologia-eventual',
-    title: 'Tipologia Eventual (Eventos)',
-    summary: 'Acontecimentos históricos que funcionam como protótipos da redenção e do juízo.',
-    examples: 'Ex.: Dilúvio, Êxodo, travessia do Mar Vermelho e queda de Jericó.',
+    label: 'TIPO 2',
+    numero: '02',
+    titulo: 'Tipologia Eventual',
+    subtitulo: 'Eventos',
+    descricao: 'Acontecimentos históricos que funcionam como protótipos da redenção e do juízo.',
+    exemplos: ['Dilúvio', 'Êxodo', 'Travessia do Mar Vermelho', 'Queda de Jericó'],
   },
   {
     id: 'tipologia-institucional',
-    title: 'Tipologia Institucional (Instituições)',
-    summary: 'Estruturas permanentes de Israel que apontam para realidades da Nova Aliança.',
-    examples: 'Ex.: sacerdócio levítico, sacrifícios, sábado e jubileu.',
+    label: 'TIPO 3',
+    numero: '03',
+    titulo: 'Tipologia Institucional',
+    subtitulo: 'Instituições',
+    descricao: 'Estruturas permanentes de Israel que apontam para realidades da Nova Aliança.',
+    exemplos: ['Sacerdócio levítico', 'Sacrifícios', 'Sábado', 'Jubileu'],
   },
   {
     id: 'tipologia-objetal',
-    title: 'Tipologia Objetal (Objetos)',
-    summary: 'Móveis e utensílios sagrados que revelam correspondências cristológicas e celestiais.',
-    examples: 'Ex.: véu, arca, menorá, pães da proposição e altar do incenso.',
+    label: 'TIPO 4',
+    numero: '04',
+    titulo: 'Tipologia Objetal',
+    subtitulo: 'Objetos',
+    descricao: 'Móveis e utensílios sagrados que revelam correspondências cristológicas e celestiais.',
+    exemplos: ['Véu', 'Arca', 'Menorá', 'Pães da proposição', 'Altar do incenso'],
   },
   {
     id: 'tipologia-locativa',
-    title: 'Tipologia Locativa (Lugares)',
-    summary: 'Espaços geográficos que antecipam realidades espirituais e escatológicas.',
-    examples: 'Ex.: Éden, Moriá, Sinai e deserto.',
+    label: 'TIPO 5',
+    numero: '05',
+    titulo: 'Tipologia Locativa',
+    subtitulo: 'Lugares',
+    descricao: 'Espaços geográficos que antecipam realidades espirituais e escatológicas.',
+    exemplos: ['Éden', 'Moriá', 'Sinai', 'Deserto'],
   },
   {
     id: 'tipologia-ritual',
-    title: 'Tipologia Ritual (Ações Litúrgicas)',
-    summary: 'Gestos litúrgicos de Israel que prefiguram a obra de Cristo e a vida no Espírito.',
-    examples: 'Ex.: aspersão de sangue, imposição de mãos, circuncisão e unção.',
+    label: 'TIPO 6',
+    numero: '06',
+    titulo: 'Tipologia Ritual',
+    subtitulo: 'Ações Litúrgicas',
+    descricao: 'Gestos litúrgicos de Israel que prefiguram a obra de Cristo e a vida no Espírito.',
+    exemplos: ['Aspersão de sangue', 'Imposição de mãos', 'Circuncisão', 'Unção'],
   },
   {
     id: 'tipologia-historica',
-    title: 'Tipologia Histórica (Padrões Cíclicos)',
-    summary: 'Padrões recorrentes na história da redenção que mostram a coerência do agir de Deus.',
-    examples: 'Ex.: cativeiros sucessivos, criação-queda-recriação e progressão templária.',
+    label: 'TIPO 7',
+    numero: '07',
+    titulo: 'Tipologia Histórica',
+    subtitulo: 'Padrões Cíclicos',
+    descricao: 'Padrões recorrentes na história da redenção que mostram a coerência do agir de Deus.',
+    exemplos: ['Cativeiros sucessivos', 'Aliança', 'Quebra', 'Restauração', 'Progressão templária'],
   },
   {
     id: 'tipologia-escatologica',
-    title: 'Tipologia Escatológica (Consumação)',
-    summary: 'Realidades já inauguradas que apontam para o cumprimento final em Cristo.',
-    examples: 'Ex.: Ceia, batismo, assembleia local e Reino já/ainda não.',
+    label: 'TIPO 8',
+    numero: '08',
+    titulo: 'Tipologia Escatológica',
+    subtitulo: 'Consumação',
+    descricao: 'Realidades já inauguradas que apontam para o cumprimento final em Cristo.',
+    exemplos: ['Ceia', 'Batismo', 'Assembleia local', 'Reino já / ainda não'],
   },
 ];
 
@@ -782,10 +809,23 @@ const TYPOLOGY_DIVISION_SERIES: Record<TypologyDivisionId, string[]> = {
   'tipologia-escatologica': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
 };
 
-const TYPOLOGY_SERIES_WHITELIST = new Set<string>([
+const TYPOLOGY_SERIES_ORDER = [
   'Série — Sombras do Reino',
   'Série — A Terra e o Tabernáculo',
-]);
+];
+
+const TYPOLOGY_SERIES_WHITELIST = new Set<string>(TYPOLOGY_SERIES_ORDER);
+
+const TYPOLOGY_BG_BY_TYPE: Record<TypologyDivisionId, string> = {
+  'tipologia-pessoal': 'from-[#251a12] via-[#171310] to-[#0f0f0f]',
+  'tipologia-eventual': 'from-[#241915] via-[#171312] to-[#101010]',
+  'tipologia-institucional': 'from-[#201a13] via-[#151312] to-[#0f0f0f]',
+  'tipologia-objetal': 'from-[#1f1a15] via-[#141210] to-[#0f0f0f]',
+  'tipologia-locativa': 'from-[#231c14] via-[#161310] to-[#0f0f0f]',
+  'tipologia-ritual': 'from-[#241a14] via-[#161210] to-[#0f0f0f]',
+  'tipologia-historica': 'from-[#211a13] via-[#151211] to-[#0f0f0f]',
+  'tipologia-escatologica': 'from-[#231a12] via-[#16120f] to-[#0f0f0f]',
+};
 
 function FireflyLayer() {
   return (
@@ -804,67 +844,6 @@ function FireflyLayer() {
         />
       ))}
     </div>
-  );
-}
-
-function TypologyDivisionsGrid({
-  activeDivisionId,
-  onSelectDivision,
-}: {
-  activeDivisionId: TypologyDivisionId | null;
-  onSelectDivision: (divisionId: TypologyDivisionId | null) => void;
-}) {
-  return (
-    <section className="mb-9">
-      <div className="mb-4">
-        <p className="text-[9px] font-black uppercase tracking-[0.22em] text-primary/85 mb-1">Mapa de Leitura</p>
-        <h3 className="font-headline font-black text-2xl text-on-surface tracking-tight leading-none">
-          Os 8 Tipos de Tipologia Bíblica
-        </h3>
-      </div>
-      <div className="mb-3">
-        <button
-          type="button"
-          onClick={() => onSelectDivision(null)}
-          className={`rounded-full border px-3 py-1 text-[9px] font-black uppercase tracking-[0.15em] transition-colors ${
-            activeDivisionId === null
-              ? 'border-primary/50 bg-primary/20 text-primary'
-              : 'border-outline-variant/30 text-on-surface-variant/80 hover:border-primary/40 hover:text-primary'
-          }`}
-        >
-          Mostrar Todos
-        </button>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-        {TYPOLOGY_DIVISIONS.map((division, index) => (
-          <button
-            type="button"
-            key={division.id}
-            onClick={() => onSelectDivision(division.id)}
-            className={`typology-card group rounded-2xl border bg-gradient-to-br from-zinc-950/70 via-zinc-900/60 to-zinc-900/35 p-4 text-left cursor-pointer ${
-              activeDivisionId === division.id
-                ? 'border-primary/55 shadow-[0_0_24px_rgba(242,192,141,0.25)]'
-                : 'border-primary/20 hover:border-primary/45'
-            }`}
-            style={{ animationDelay: `${index * 80}ms` }}
-            aria-pressed={activeDivisionId === division.id}
-          >
-            <span className="inline-flex mb-2 rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.2em] text-primary">
-              Tipo {index + 1}
-            </span>
-            <h4 className="font-headline font-extrabold text-[14px] leading-tight text-on-surface group-hover:text-primary transition-colors">
-              {division.title}
-            </h4>
-            <p className="mt-2 text-[10px] leading-snug text-on-surface-variant/75 font-medium">
-              {division.summary}
-            </p>
-            <p className="mt-2 text-[9px] leading-snug text-primary/80 font-bold">
-              {division.examples}
-            </p>
-          </button>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -1049,6 +1028,189 @@ function BookCard({ item, displayVolume, onSelect }: { item: BookItem; displayVo
   );
 }
 
+function TypePreviewBookCard({ item, onSelect }: { item: BookItem; onSelect: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className="group shrink-0 w-[132px] sm:w-[148px] snap-start text-left"
+    >
+      <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-primary/25 bg-black/30">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#201913] via-[#141210] to-[#0f0f0f]" />
+        {item.image && (
+          <AppImage
+            src={item.image}
+            alt={item.title}
+            className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+            fallbackClassName="opacity-80"
+          />
+        )}
+        <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(242,192,141,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.08)_1px,transparent_1px)] [background-size:16px_16px]" />
+      </div>
+      <p className="mt-2 text-[9px] text-on-surface-variant/85 leading-snug line-clamp-2 font-semibold">
+        {item.title}
+      </p>
+    </button>
+  );
+}
+
+function TypeExamplePlate({ label }: { label: string }) {
+  return (
+    <div className="shrink-0 w-[132px] sm:w-[148px] h-[108px] snap-start rounded-xl border border-primary/25 bg-gradient-to-br from-[#1f1a15] via-[#141210] to-[#101010] p-3 flex items-end">
+      <p className="text-[10px] font-semibold leading-snug text-on-surface-variant/90">{label}</p>
+    </div>
+  );
+}
+
+function TypologyTypeCard({
+  type,
+  previewBooks,
+  onEnter,
+  onSelectBook,
+}: {
+  type: TypologyTypeMeta;
+  previewBooks: BookItem[];
+  onEnter: () => void;
+  onSelectBook: (slug: string) => void;
+}) {
+  const rowRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollByAmount = (delta: number) => {
+    rowRef.current?.scrollBy({ left: delta, behavior: 'smooth' });
+  };
+
+  return (
+    <article className="group relative overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-br from-[#1f1a15] via-[#151312] to-[#101010] p-5 shadow-[0_18px_42px_rgba(0,0,0,0.38)] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_22px_50px_rgba(0,0,0,0.5)]">
+      <div className="pointer-events-none absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_90%_10%,rgba(242,192,141,0.2),transparent_45%)]" />
+      <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${TYPOLOGY_BG_BY_TYPE[type.id]} opacity-40`} />
+      <div className="pointer-events-none absolute right-2 top-0 text-[84px] font-black tracking-tighter text-primary/10 select-none">
+        {type.numero}
+      </div>
+
+      <div className="relative z-10">
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <span className="inline-flex rounded-full border border-primary/35 bg-primary/10 px-2 py-1 text-[9px] font-black uppercase tracking-[0.17em] text-primary">
+            {type.label}
+          </span>
+          <Layers size={16} className="text-primary/85" />
+        </div>
+
+        <h3 className="font-headline text-3xl leading-none font-black text-on-surface mb-2">{type.titulo}</h3>
+        <p className="text-sm font-semibold text-primary/90 mb-2">{type.subtitulo}</p>
+        <p className="text-xs text-on-surface-variant leading-relaxed mb-4">{type.descricao}</p>
+
+        <div className="border-t border-primary/15 pt-3">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-[9px] font-black uppercase tracking-[0.18em] text-primary/80">Exemplos deste tipo</p>
+            <div className="hidden sm:flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => scrollByAmount(-180)}
+                className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-outline-variant/40 bg-black/40 text-on-surface-variant hover:border-primary/50 hover:text-primary transition-colors"
+                aria-label={`Voltar exemplos de ${type.titulo}`}
+              >
+                <ChevronLeft size={12} />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollByAmount(180)}
+                className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-outline-variant/40 bg-black/40 text-on-surface-variant hover:border-primary/50 hover:text-primary transition-colors"
+                aria-label={`Avançar exemplos de ${type.titulo}`}
+              >
+                <ChevronRight size={12} />
+              </button>
+            </div>
+          </div>
+
+          <div ref={rowRef} className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {previewBooks.length > 0
+              ? previewBooks.map((item) => (
+                  <TypePreviewBookCard key={item.slug} item={item} onSelect={() => onSelectBook(item.slug)} />
+                ))
+              : type.exemplos.slice(0, 4).map((example) => <TypeExamplePlate key={example} label={example} />)}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={onEnter}
+          className="mt-4 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary"
+        >
+          Entrar no tipo
+          <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-1" />
+        </button>
+      </div>
+    </article>
+  );
+}
+
+function TypologySeriesShelf({
+  category,
+  items,
+  onSelectBook,
+}: {
+  category: string;
+  items: BookItem[];
+  onSelectBook: (slug: string) => void;
+}) {
+  const rowRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollByAmount = (delta: number) => {
+    rowRef.current?.scrollBy({ left: delta, behavior: 'smooth' });
+  };
+
+  const label = SERIES_LABEL[category] ?? category;
+  const description = buildAutoSeriesDescription(category, items);
+
+  return (
+    <section className="mb-6">
+      <div className="mb-2.5">
+        <div className="mb-1 flex items-center justify-between gap-2">
+          <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-primary">
+            SÉRIE
+          </span>
+          <div className="hidden sm:flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => scrollByAmount(-240)}
+              className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-outline-variant/40 bg-black/40 text-on-surface-variant hover:border-primary/50 hover:text-primary transition-colors"
+              aria-label={`Voltar ${label}`}
+            >
+              <ChevronLeft size={12} />
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollByAmount(240)}
+              className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-outline-variant/40 bg-black/40 text-on-surface-variant hover:border-primary/50 hover:text-primary transition-colors"
+              aria-label={`Avançar ${label}`}
+            >
+              <ChevronRight size={12} />
+            </button>
+          </div>
+        </div>
+        <h4 className="font-headline font-extrabold text-xl text-on-surface tracking-tighter uppercase leading-none">
+          {label}
+        </h4>
+        {description && (
+          <p className="mt-1.5 text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-2xl">
+            {description}
+          </p>
+        )}
+      </div>
+      <div ref={rowRef} className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {items.map((item, j) => (
+          <BookCard
+            key={item.slug}
+            item={item}
+            displayVolume={extractVolumeFromBook(item) ?? (j + 1)}
+            onSelect={() => onSelectBook(item.slug)}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 // ── Section Grid Card ─────────────────────────────────────────────────────────
 function SectionCard({ sectionKey, books, onSelect }: {
   sectionKey: SectionKey;
@@ -1121,10 +1283,10 @@ interface BookstoreProps {
 
 export default function Bookstore({ mode = 'default' }: BookstoreProps) {
   const isTypesMode = mode === 'types';
-  const [selectedSection, setSelectedSection] = useState<SectionKey | null>(isTypesMode ? 'TIPOLOGIA BÍBLICA' : null);
+  const [selectedSection, setSelectedSection] = useState<SectionKey | null>(null);
+  const [activeTypeId, setActiveTypeId] = useState<TypologyDivisionId | null>(null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
-  const [activeTypologyDivisionId, setActiveTypologyDivisionId] = useState<TypologyDivisionId | null>(null);
   const { data: books, loading, error } = useFetch<BookItem[]>('/content/livraria/index.json');
   const discoveredBooks = useMemo(() => discoverBooksFromMarkdown(), []);
   const markdownBySlug = useMemo(() => buildMarkdownBySlugIndex(), []);
@@ -1142,9 +1304,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
     return Array.from(map.values());
   }, [books, discoveredBooks]);
 
-  const visibleSectionOrder: SectionKey[] = isTypesMode
-    ? []
-    : SECTION_ORDER.filter((section) => section !== 'TIPOLOGIA BÍBLICA');
+  const visibleSectionOrder: SectionKey[] = SECTION_ORDER.filter((section) => section !== 'TIPOLOGIA BÍBLICA');
 
   // Group books by top-level section
   const booksBySection = SECTION_ORDER.reduce((acc, sec) => {
@@ -1166,21 +1326,58 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
       ).map(([category, items]) => [category, sortBooksInSeries(category, items)] as [string, BookItem[]])
     : [];
 
-  useEffect(() => {
-    if (selectedSection !== 'TIPOLOGIA BÍBLICA' && activeTypologyDivisionId !== null) {
-      setActiveTypologyDivisionId(null);
-    }
-  }, [selectedSection, activeTypologyDivisionId]);
+  const typologySeriesInSection: [string, BookItem[]][] = useMemo(() => {
+    const grouped = new Map<string, BookItem[]>();
+    mergedBooks.forEach((book) => {
+      const category = (book.category || '').trim();
+      if (!TYPOLOGY_SERIES_WHITELIST.has(category)) return;
+      const current = grouped.get(category) ?? [];
+      current.push(book);
+      grouped.set(category, current);
+    });
 
-  const visibleSeriesInSection: [string, BookItem[]][] = useMemo(() => {
-    if (selectedSection !== 'TIPOLOGIA BÍBLICA') return seriesInSection;
+    return TYPOLOGY_SERIES_ORDER
+      .map((category) => {
+        const items = grouped.get(category) ?? [];
+        return [category, sortBooksInSeries(category, items)] as [string, BookItem[]];
+      })
+      .filter(([, items]) => items.length > 0);
+  }, [mergedBooks]);
 
-    const filteredByTypologySeries = seriesInSection.filter(([category]) => TYPOLOGY_SERIES_WHITELIST.has(category));
-    if (!activeTypologyDivisionId) return filteredByTypologySeries;
+  const typologyPreviewByType = useMemo(() => {
+    const bySeries = new Map(typologySeriesInSection);
+    return TYPOLOGY_TYPES.reduce((acc, type) => {
+      const seen = new Set<string>();
+      const collected: BookItem[] = [];
+      for (const category of TYPOLOGY_DIVISION_SERIES[type.id]) {
+        const items = bySeries.get(category) ?? [];
+        for (const item of items) {
+          if (seen.has(item.slug)) continue;
+          seen.add(item.slug);
+          collected.push(item);
+          if (collected.length >= 6) break;
+        }
+        if (collected.length >= 6) break;
+      }
+      acc[type.id] = collected;
+      return acc;
+    }, {} as Record<TypologyDivisionId, BookItem[]>);
+  }, [typologySeriesInSection]);
 
-    const allowedSeries = new Set(TYPOLOGY_DIVISION_SERIES[activeTypologyDivisionId] || []);
-    return filteredByTypologySeries.filter(([category]) => allowedSeries.has(category));
-  }, [selectedSection, activeTypologyDivisionId, seriesInSection]);
+  const typologySeriesByType = useMemo(() => {
+    const bySeries = new Map(typologySeriesInSection);
+    return TYPOLOGY_TYPES.reduce((acc, type) => {
+      acc[type.id] = TYPOLOGY_DIVISION_SERIES[type.id]
+        .map((category) => [category, bySeries.get(category) ?? []] as [string, BookItem[]])
+        .filter(([, items]) => items.length > 0);
+      return acc;
+    }, {} as Record<TypologyDivisionId, [string, BookItem[]][]>);
+  }, [typologySeriesInSection]);
+
+  const activeType = useMemo(
+    () => TYPOLOGY_TYPES.find((type) => type.id === activeTypeId) ?? null,
+    [activeTypeId],
+  );
 
   const handleSelectBook = async (slug: string) => {
     setSelectedSlug(slug);
@@ -1211,47 +1408,162 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
     return <MarkdownViewer content={markdownContent} slug={selectedSlug} category="livraria" onClose={handleCloseReader} />;
   }
 
+  if (isTypesMode) {
+    if (activeType) {
+      const relatedSeries = typologySeriesByType[activeType.id] ?? [];
+
+      return (
+        <div className="pt-6 pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
+          <section className="rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-5 sm:p-6">
+            <button
+              type="button"
+              onClick={() => setActiveTypeId(null)}
+              className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
+            >
+              <ArrowLeft size={12} />
+              TIPOS
+            </button>
+
+            <div className="mt-4 mb-5">
+              <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-2">
+                {activeType.label}
+              </span>
+              <h2 className="font-headline text-3xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
+                {activeType.titulo}
+              </h2>
+              <p className="text-sm text-primary/85 font-semibold mt-1">{activeType.subtitulo}</p>
+              <p className="text-xs text-on-surface-variant leading-relaxed mt-2 max-w-3xl">{activeType.descricao}</p>
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-primary/20 bg-black/20 p-4 sm:p-5">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-3">Exemplos deste tipo</h3>
+              <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {activeType.exemplos.map((example) => (
+                  <TypeExamplePlate key={example} label={example} />
+                ))}
+              </div>
+            </div>
+
+            {relatedSeries.length > 0 && (
+              <div className="mt-7 border-t border-primary/15 pt-5">
+                <h3 className="font-headline text-2xl font-black tracking-tight text-on-surface mb-1 uppercase">
+                  Coleções Relacionadas
+                </h3>
+                <p className="text-xs text-on-surface-variant mb-4 max-w-3xl">
+                  Séries tipológicas conectadas a este tipo para aprofundar sua leitura.
+                </p>
+                {relatedSeries.map(([category, items]) => (
+                  <TypologySeriesShelf
+                    key={`${activeType.id}-${category}`}
+                    category={category}
+                    items={items}
+                    onSelectBook={handleSelectBook}
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
+      );
+    }
+
+    return (
+      <div className="pb-24 min-h-screen bg-surface-container-lowest">
+        <div className="pt-8 px-4 sm:px-6 mb-8">
+          <header className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-[#1f1a15] via-[#131110] to-[#0d0d0d] px-6 py-8 sm:px-8 sm:py-10 shadow-[0_24px_65px_rgba(0,0,0,0.58)]">
+            <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:radial-gradient(circle_at_18%_20%,rgba(242,192,141,0.26),transparent_42%),radial-gradient(circle_at_78%_88%,rgba(212,165,116,0.16),transparent_36%)]" />
+            <div className="pointer-events-none absolute inset-0 opacity-10 [background-image:linear-gradient(rgba(242,192,141,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.05)_1px,transparent_1px)] [background-size:20px_20px]" />
+            <div className="relative z-10">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-3 py-1 mb-3">
+                <Tent size={12} className="text-primary" />
+                <span className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">SEÇÃO TIPOS</span>
+              </div>
+              <h1 className="font-headline text-4xl sm:text-5xl font-black text-primary mb-2 tracking-tighter text-shadow-glow">
+                TIPOS
+              </h1>
+              <p className="text-sm sm:text-base text-on-surface font-semibold mb-2">
+                A leitura tipológica organizada para explorar a Escritura com ordem e profundidade.
+              </p>
+              <p className="text-xs sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
+                A tipologia da Livraria Espiritual está organizada em 8 tipos de leitura, para ajudar o leitor a reconhecer
+                como pessoas, eventos, instituições, objetos, lugares, rituais, padrões históricos e consumação apontam para Cristo
+                e para o Reino.
+              </p>
+            </div>
+          </header>
+        </div>
+
+        <section className="px-4 sm:px-6 pb-10">
+          <div className="mb-4">
+            <h2 className="font-headline text-2xl sm:text-3xl font-black tracking-tight text-on-surface">Escolha seu tipo</h2>
+            <p className="text-xs text-on-surface-variant mt-1">
+              Cada tipo organiza uma via de leitura. Escolha por onde deseja explorar a tipologia bíblica hoje.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+            {TYPOLOGY_TYPES.map((type) => (
+              <TypologyTypeCard
+                key={type.id}
+                type={type}
+                previewBooks={typologyPreviewByType[type.id] ?? []}
+                onEnter={() => setActiveTypeId(type.id)}
+                onSelectBook={handleSelectBook}
+              />
+            ))}
+          </div>
+        </section>
+
+        {typologySeriesInSection.length > 0 && (
+          <section className="px-4 sm:px-6 pb-14">
+            <div className="mb-4">
+              <h3 className="font-headline text-2xl sm:text-3xl font-black tracking-tight text-on-surface">Coleções Relacionadas</h3>
+              <p className="text-xs text-on-surface-variant mt-1">
+                Séries tipológicas da Livraria Espiritual para aprofundar o estudo em continuidade com os tipos.
+              </p>
+            </div>
+            {typologySeriesInSection.map(([category, items]) => (
+              <TypologySeriesShelf
+                key={`types-home-${category}`}
+                category={category}
+                items={items}
+                onSelectBook={handleSelectBook}
+              />
+            ))}
+          </section>
+        )}
+      </div>
+    );
+  }
+
   // ── Section detail ─────────────────────────────────────────────────────────
   if (selectedSection) {
     const { label, description, Icon } = SECTIONS[selectedSection];
-    const headingLabel = isTypesMode && selectedSection === 'TIPOLOGIA BÍBLICA' ? 'Tipos' : label;
-    const headingDescription = isTypesMode && selectedSection === 'TIPOLOGIA BÍBLICA'
-      ? 'Tipologia da Livraria Espiritual organizada em 8 tipos de leitura, com as séries Sombras do Reino e A Terra e o Tabernáculo.'
-      : description;
     return (
       <div className="relative pt-6 pb-32 px-5 max-w-7xl mx-auto">
         <FireflyLayer />
         <div className="mb-8">
-          {!isTypesMode && (
-            <button
-              onClick={() => setSelectedSection(null)}
-              className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors mb-6 active:scale-95 text-[10px] font-black uppercase tracking-widest"
-            >
-              <ChevronLeft size={15} />
-              Livraria Espiritual
-            </button>
-          )}
+          <button
+            onClick={() => setSelectedSection(null)}
+            className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors mb-6 active:scale-95 text-[10px] font-black uppercase tracking-widest"
+          >
+            <ChevronLeft size={15} />
+            Livraria Espiritual
+          </button>
           <div className="flex items-center gap-3 mb-2">
             <div className="bg-primary/15 border border-primary/25 rounded-xl p-2">
               <Icon size={18} className="text-primary" />
             </div>
             <h2 className="font-headline font-black text-3xl text-primary tracking-tighter uppercase">
-              {headingLabel}
+              {label}
             </h2>
           </div>
           <p className="text-on-surface-variant/70 text-[11px] max-w-sm font-medium leading-relaxed">
-            {headingDescription}
+            {description}
           </p>
         </div>
 
-        {selectedSection === 'TIPOLOGIA BÍBLICA' && (
-          <TypologyDivisionsGrid
-            activeDivisionId={activeTypologyDivisionId}
-            onSelectDivision={setActiveTypologyDivisionId}
-          />
-        )}
-
-        {visibleSeriesInSection.map(([cat, items], index) => {
+        {seriesInSection.map(([cat, items], index) => {
           const reads = items.map((b) => pm.getReadCount('livraria', b.slug));
           const minReads = reads.length ? Math.min(...reads) : 0;
           const label = SERIES_LABEL[cat] ?? cat;
@@ -1295,7 +1607,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
                 </DragScrollRow>
               </div>
 
-              {index < visibleSeriesInSection.length - 1 && (
+              {index < seriesInSection.length - 1 && (
                 <div className="mt-3 px-1">
                   <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/55 to-transparent animate-[pulse_4.5s_ease-in-out_infinite]" />
                 </div>
@@ -1304,7 +1616,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
           );
         })}
 
-        {visibleSeriesInSection.length === 0 && !loading && (
+        {seriesInSection.length === 0 && !loading && (
           <p className="text-center text-[10px] uppercase tracking-widest text-on-surface-variant/40 py-16 font-bold">
             Conteúdo em breve.
           </p>
@@ -1321,12 +1633,10 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
         <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px]" />
         <div className="relative z-10">
           <h2 className="font-headline font-extrabold text-3xl text-primary tracking-tighter mb-2">
-            {isTypesMode ? 'Tipos' : 'Livraria Espiritual'}
+            Livraria Espiritual
           </h2>
           <p className="text-on-surface-variant/70 text-[11px] max-w-[300px] font-medium leading-relaxed">
-            {isTypesMode
-              ? 'Tipologia bíblica da Livraria Espiritual organizada em oito tipos de leitura.'
-              : 'Biblioteca de estudos para discernimento bíblico, história da fé e guerra espiritual. Escolha sua frente de estudo e avance por séries, trilogias e investigações aprofundadas.'}
+            Biblioteca de estudos para discernimento bíblico, história da fé e guerra espiritual. Escolha sua frente de estudo e avance por séries, trilogias e investigações aprofundadas.
           </p>
         </div>
       </header>
