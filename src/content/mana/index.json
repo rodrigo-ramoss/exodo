@@ -4,55 +4,89 @@
     "author": "Voz do Deserto",
     "date": "2026-04-24",
     "slug": "vida-espiritual/o-quarto-secreto",
-    "tenda": "vida-espiritual"
+    "tenda": "vida-espiritual",
+    "time": "E-BOOK 01",
+    "image": "/image/mana/o quarto secreto.webp",
+    "file": "tenda 1 vida espiritual/O Quarto Secreto — Desenvolvendo uma Vida Devocional Poderosa.md"
   },
   {
     "title": "Fortalezas Mentais - Vencendo Pensamentos de Derrota",
     "author": "Voz do Deserto",
     "date": "2026-04-24",
     "slug": "vida-espiritual/fortalezas-mentais",
-    "tenda": "vida-espiritual"
+    "tenda": "vida-espiritual",
+    "time": "E-BOOK 02",
+    "image": "/image/mana/fortalezas mentais.webp",
+    "file": "tenda 1 vida espiritual/Fortalezas Mentais — Vencendo Pensamentos de Derrota.md"
   },
   {
-    "title": "O Vale da Sombra - A Bíblia e a Depressão",
+    "title": "Jejum - A Arma Esquecida que Quebra Cadeias",
+    "author": "Voz do Deserto",
+    "date": "2026-04-24",
+    "slug": "vida-espiritual/jejum-arma-esquecida",
+    "tenda": "vida-espiritual",
+    "time": "E-BOOK 03",
+    "image": "/image/mana/jejum a arma esquecida que quebra cadeias.webp",
+    "file": "tenda 1 vida espiritual/Jejum — A Arma Esquecida que Quebra Cadeias.md"
+  },
+  {
+    "title": "O Vale da Sombra - A Biblia e a Depressao",
     "author": "Voz do Deserto",
     "date": "2026-04-24",
     "slug": "vida-interior/o-vale-da-sombra",
-    "tenda": "vida-interior"
+    "tenda": "vida-interior",
+    "time": "E-BOOK 01",
+    "image": "/image/mana/o vale da sombra biblia e depressao.webp",
+    "file": "tenda 2 vida interior/O Vale da Sombra — A Bíblia e a Depressão.md"
   },
   {
-    "title": "Rejeição - Encontrando Identidade em Cristo",
+    "title": "Rejeicao - Encontrando Identidade em Cristo",
     "author": "Voz do Deserto",
     "date": "2026-04-24",
     "slug": "vida-interior/rejeicao-identidade-em-cristo",
-    "tenda": "vida-interior"
+    "tenda": "vida-interior",
+    "time": "E-BOOK 02",
+    "image": "/image/mana/rejeicao encontrando identidade em cristo.webp",
+    "file": "tenda 2 vida interior/Rejeição — Encontrando Identidade em Cristo.md"
   },
   {
-    "title": "Namoro e Solteirice - Princípios do Reino para Relacionamentos Santos",
+    "title": "Namoro e Solteirice - Principios do Reino para Relacionamentos Santos",
     "author": "Voz do Deserto",
     "date": "2026-04-24",
     "slug": "vida-interior/namoro-e-solteirice",
-    "tenda": "vida-interior"
+    "tenda": "vida-interior",
+    "time": "E-BOOK 03",
+    "image": "/image/mana/namoro e solterice.webp",
+    "file": "tenda 2 vida interior/Namoro e Solteirice — Princípios do Reino para Relacionamentos Santos.md"
   },
   {
-    "title": "Trabalho como Adoração - Descobrindo o Chamado de Deus para Sua Profissão",
+    "title": "Trabalho como Adoracao - Descobrindo o Chamado de Deus para Sua Profissao",
     "author": "Voz do Deserto",
     "date": "2026-04-24",
     "slug": "vida-exterior/trabalho-como-adoracao",
-    "tenda": "vida-exterior"
+    "tenda": "vida-exterior",
+    "time": "E-BOOK 01",
+    "image": "/image/mana/trabalho como adoracao.webp",
+    "file": "tenda 3 vida exterior/Trabalho como Adoração — Descobrindo o Chamado de Deus para Sua Profissão.md"
   },
   {
-    "title": "Embaixadores do Reino - Como Compartilhar Sua Fé no Dia a Dia",
+    "title": "Embaixadores do Reino - Como Compartilhar Sua Fe no Dia a Dia",
     "author": "Voz do Deserto",
     "date": "2026-04-24",
     "slug": "vida-exterior/embaixadores-do-reino",
-    "tenda": "vida-exterior"
+    "tenda": "vida-exterior",
+    "time": "E-BOOK 02",
+    "image": "/image/mana/embaixadores do reino.webp",
+    "file": "tenda 3 vida exterior/Embaixadores do Reino — Como Compartilhar Sua Fé no Dia a Dia.md"
   },
   {
-    "title": "Finanças do Reino - Mordomia, Dívidas e Generosidade",
+    "title": "Financas do Reino - Mordomia, Dividas e Generosidade",
     "author": "Voz do Deserto",
     "date": "2026-04-24",
     "slug": "vida-exterior/financas-do-reino",
-    "tenda": "vida-exterior"
+    "tenda": "vida-exterior",
+    "time": "E-BOOK 03",
+    "image": "/image/mana/financas do reino.webp",
+    "file": "tenda 3 vida exterior/Finanças do Reino — Mordomia, Dívidas e Generosidade.md"
   }
 ]

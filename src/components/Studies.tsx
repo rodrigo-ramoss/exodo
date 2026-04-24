@@ -11,6 +11,9 @@ import {
   Tent,
 } from 'lucide-react';
 import { pm } from '../lib/progressManager';
+import { useFetch } from '../hooks/useFetch';
+import { MarkdownViewer } from './MarkdownViewer';
+import { AppImage } from './AppImage';
 
 type TendaId = 'vida-espiritual' | 'vida-interior' | 'vida-exterior';
 
@@ -21,6 +24,8 @@ interface ManaTema {
   title: string;
   description?: string;
   status?: 'published' | 'planned';
+  image?: string;
+  file?: string;
 }
 
 interface ManaTenda {
@@ -33,101 +38,140 @@ interface ManaTenda {
   temas: ManaTema[];
 }
 
-const MANA_TENDAS: ManaTenda[] = [
+interface ManaStudyItem {
+  title: string;
+  slug: string;
+  description?: string;
+  tenda?: TendaId;
+  time?: string;
+  image?: string;
+  file?: string;
+}
+
+const MANA_TENDAS_META: Omit<ManaTenda, 'temas'>[] = [
   {
     id: 'vida-espiritual',
     label: 'TENDA 1 - VIDA ESPIRITUAL',
     numero: '01',
     titulo: 'Vida Espiritual',
-    subtitulo: 'O núcleo da guerra',
+    subtitulo: 'O nucleo da guerra',
     descricao:
-      'Oração, guerra espiritual, discernimento, jejum, intimidade com Deus e armas espirituais para sustentar sua caminhada.',
-    temas: [
-      {
-        id: 'quarto-secreto',
-        slug: 'vida-espiritual/o-quarto-secreto',
-        badge: 'E-BOOK 01',
-        title: 'O Quarto Secreto - Desenvolvendo uma Vida Devocional Poderosa',
-        description:
-          'A disciplina do encontro diário com Deus, a oração secreta e a vida devocional como fundamento da força espiritual.',
-        status: 'published',
-      },
-      {
-        id: 'fortalezas-mentais',
-        slug: 'vida-espiritual/fortalezas-mentais',
-        badge: 'E-BOOK 02',
-        title: 'Fortalezas Mentais - Vencendo Pensamentos de Derrota',
-        description:
-          'Um estudo sobre pensamentos obsessivos, acusações, dúvidas e a renovação da mente pelas armas do Espírito.',
-        status: 'published',
-      },
-    ],
+      'Oracao, guerra espiritual, discernimento, jejum, intimidade com Deus e armas espirituais para sustentar sua caminhada.',
   },
   {
     id: 'vida-interior',
     label: 'TENDA 2 - VIDA INTERIOR',
     numero: '02',
     titulo: 'Vida Interior',
-    subtitulo: 'Emoções, mente e relacionamentos',
+    subtitulo: 'Emocoes, mente e relacionamentos',
     descricao:
-      'Estudos sobre ansiedade, depressão, cura interior, batalha da mente, casamento, sexualidade, perdão e vínculos espirituais.',
-    temas: [
-      {
-        id: 'vale-da-sombra',
-        slug: 'vida-interior/o-vale-da-sombra',
-        badge: 'TEMA 01',
-        title: 'O Vale da Sombra - A Bíblia e a Depressão',
-        status: 'planned',
-      },
-      {
-        id: 'rejeicao-identidade',
-        slug: 'vida-interior/rejeicao-identidade-em-cristo',
-        badge: 'TEMA 02',
-        title: 'Rejeição - Encontrando Identidade em Cristo',
-        status: 'planned',
-      },
-      {
-        id: 'namoro-solteirice',
-        slug: 'vida-interior/namoro-e-solteirice',
-        badge: 'TEMA 03',
-        title: 'Namoro e Solteirice - Princípios do Reino para Relacionamentos Santos',
-        status: 'planned',
-      },
-    ],
+      'Estudos sobre ansiedade, depressao, cura interior, batalha da mente, casamento, sexualidade, perdao e vinculos espirituais.',
   },
   {
     id: 'vida-exterior',
     label: 'TENDA 3 - VIDA EXTERIOR',
     numero: '03',
     titulo: 'Vida Exterior',
-    subtitulo: 'Trabalho, missão e sociedade',
+    subtitulo: 'Trabalho, missao e sociedade',
     descricao:
-      'Conteúdos sobre vocação, finanças, missão, evangelismo, cultura, influência, igreja e vida pública diante do Reino.',
-    temas: [
-      {
-        id: 'trabalho-adoracao',
-        slug: 'vida-exterior/trabalho-como-adoracao',
-        badge: 'TEMA 01',
-        title: 'Trabalho como Adoração - Descobrindo o Chamado de Deus para Sua Profissão',
-        status: 'planned',
-      },
-      {
-        id: 'embaixadores-reino',
-        slug: 'vida-exterior/embaixadores-do-reino',
-        badge: 'TEMA 02',
-        title: 'Embaixadores do Reino - Como Compartilhar Sua Fé no Dia a Dia',
-        status: 'planned',
-      },
-      {
-        id: 'financas-reino',
-        slug: 'vida-exterior/financas-do-reino',
-        badge: 'TEMA 03',
-        title: 'Finanças do Reino - Mordomia, Dívidas e Generosidade',
-        status: 'planned',
-      },
-    ],
+      'Conteudos sobre vocacao, financas, missao, evangelismo, cultura, influencia, igreja e vida publica diante do Reino.',
   },
 ];
+
+const FALLBACK_TEMAS: ManaTema[] = [
+  {
+    id: 'o-quarto-secreto',
+    slug: 'vida-espiritual/o-quarto-secreto',
+    badge: 'E-BOOK 01',
+    title: 'O Quarto Secreto - Desenvolvendo uma Vida Devocional Poderosa',
+    description:
+      'A disciplina do encontro diario com Deus, a oracao secreta e a vida devocional como fundamento da forca espiritual.',
+    status: 'published',
+    image: '/image/mana/o quarto secreto.webp',
+    file: 'tenda 1 vida espiritual/O Quarto Secreto — Desenvolvendo uma Vida Devocional Poderosa.md',
+  },
+  {
+    id: 'fortalezas-mentais',
+    slug: 'vida-espiritual/fortalezas-mentais',
+    badge: 'E-BOOK 02',
+    title: 'Fortalezas Mentais - Vencendo Pensamentos de Derrota',
+    description:
+      'Um estudo sobre pensamentos obsessivos, acusacoes, duvidas e a renovacao da mente pelas armas do Espirito.',
+    status: 'published',
+    image: '/image/mana/fortalezas mentais.webp',
+    file: 'tenda 1 vida espiritual/Fortalezas Mentais — Vencendo Pensamentos de Derrota.md',
+  },
+  {
+    id: 'jejum-arma-esquecida',
+    slug: 'vida-espiritual/jejum-arma-esquecida',
+    badge: 'E-BOOK 03',
+    title: 'Jejum - A Arma Esquecida que Quebra Cadeias',
+    description: 'Praticas biblicas de jejum para quebrar cadeias espirituais e fortalecer a vida de santidade.',
+    status: 'published',
+    image: '/image/mana/jejum a arma esquecida que quebra cadeias.webp',
+    file: 'tenda 1 vida espiritual/Jejum — A Arma Esquecida que Quebra Cadeias.md',
+  },
+  {
+    id: 'o-vale-da-sombra',
+    slug: 'vida-interior/o-vale-da-sombra',
+    badge: 'E-BOOK 01',
+    title: 'O Vale da Sombra - A Biblia e a Depressao',
+    status: 'published',
+    image: '/image/mana/o vale da sombra biblia e depressao.webp',
+    file: 'tenda 2 vida interior/O Vale da Sombra — A Bíblia e a Depressão.md',
+  },
+  {
+    id: 'rejeicao-identidade-em-cristo',
+    slug: 'vida-interior/rejeicao-identidade-em-cristo',
+    badge: 'E-BOOK 02',
+    title: 'Rejeicao - Encontrando Identidade em Cristo',
+    status: 'published',
+    image: '/image/mana/rejeicao encontrando identidade em cristo.webp',
+    file: 'tenda 2 vida interior/Rejeição — Encontrando Identidade em Cristo.md',
+  },
+  {
+    id: 'namoro-e-solteirice',
+    slug: 'vida-interior/namoro-e-solteirice',
+    badge: 'E-BOOK 03',
+    title: 'Namoro e Solteirice - Principios do Reino para Relacionamentos Santos',
+    status: 'published',
+    image: '/image/mana/namoro e solterice.webp',
+    file: 'tenda 2 vida interior/Namoro e Solteirice — Princípios do Reino para Relacionamentos Santos.md',
+  },
+  {
+    id: 'trabalho-como-adoracao',
+    slug: 'vida-exterior/trabalho-como-adoracao',
+    badge: 'E-BOOK 01',
+    title: 'Trabalho como Adoracao - Descobrindo o Chamado de Deus para Sua Profissao',
+    status: 'published',
+    image: '/image/mana/trabalho como adoracao.webp',
+    file: 'tenda 3 vida exterior/Trabalho como Adoração — Descobrindo o Chamado de Deus para Sua Profissão.md',
+  },
+  {
+    id: 'embaixadores-do-reino',
+    slug: 'vida-exterior/embaixadores-do-reino',
+    badge: 'E-BOOK 02',
+    title: 'Embaixadores do Reino - Como Compartilhar Sua Fe no Dia a Dia',
+    status: 'published',
+    image: '/image/mana/embaixadores do reino.webp',
+    file: 'tenda 3 vida exterior/Embaixadores do Reino — Como Compartilhar Sua Fé no Dia a Dia.md',
+  },
+  {
+    id: 'financas-do-reino',
+    slug: 'vida-exterior/financas-do-reino',
+    badge: 'E-BOOK 03',
+    title: 'Financas do Reino - Mordomia, Dividas e Generosidade',
+    status: 'published',
+    image: '/image/mana/financas do reino.webp',
+    file: 'tenda 3 vida exterior/Finanças do Reino — Mordomia, Dívidas e Generosidade.md',
+  },
+];
+
+const manaMarkdownModules = import.meta.glob('/public/content/mana/**/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
 
 const TENDA_ICON: Record<TendaId, typeof Sparkles> = {
   'vida-espiritual': Sword,
@@ -140,6 +184,38 @@ const TENDA_BG: Record<TendaId, string> = {
   'vida-interior': 'from-[#241915] via-[#171312] to-[#101010]',
   'vida-exterior': 'from-[#201a13] via-[#151312] to-[#0f0f0f]',
 };
+
+function normalizeText(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function toRelativeManaPath(pathKey: string): string {
+  const normalized = pathKey.replace(/\\/g, '/');
+  const marker = '/public/content/mana/';
+  const idx = normalized.indexOf(marker);
+  if (idx < 0) return normalized;
+  return normalized.slice(idx + marker.length);
+}
+
+function resolveTendaFromSlugOrFolder(slug: string, file?: string): TendaId {
+  const combined = `${slug} ${file ?? ''}`.toLowerCase();
+  if (combined.includes('interior')) return 'vida-interior';
+  if (combined.includes('exterior')) return 'vida-exterior';
+  return 'vida-espiritual';
+}
+
+function toTemaId(slug: string): string {
+  return slug.split('/').pop() ?? slug;
+}
+
+function formatBadge(order: number): string {
+  return `E-BOOK ${String(order).padStart(2, '0')}`;
+}
 
 function DragScrollRow({ children }: { children: ReactNode }) {
   const rowRef = useRef<HTMLDivElement>(null);
@@ -186,15 +262,23 @@ function DragScrollRow({ children }: { children: ReactNode }) {
   );
 }
 
-function TemaPreviewCard({ tendaId, tema }: { tendaId: TendaId; tema: ManaTema }) {
+function TemaPreviewCard({ tendaId, tema, onSelect }: { tendaId: TendaId; tema: ManaTema; onSelect: () => void }) {
   return (
-    <div className="relative shrink-0 w-[156px] sm:w-[168px] snap-start">
+    <button type="button" onClick={onSelect} className="relative shrink-0 w-[156px] sm:w-[168px] snap-start text-left">
       <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-primary/20">
         <div className={`absolute inset-0 bg-gradient-to-br ${TENDA_BG[tendaId]}`} />
+        {tema.image && (
+          <AppImage
+            src={tema.image}
+            alt={tema.title}
+            className="absolute inset-0 h-full w-full object-cover"
+            fallbackClassName="opacity-80"
+          />
+        )}
         <div className="absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_22%_18%,rgba(242,192,141,0.25),transparent_45%)]" />
         <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(242,192,141,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.08)_1px,transparent_1px)] [background-size:17px_17px]" />
 
-        <div className="relative z-10 h-full p-3 flex flex-col justify-between">
+        <div className="relative z-10 h-full p-3 flex flex-col justify-between bg-gradient-to-t from-black/80 via-black/30 to-black/25">
           <div className="flex items-center justify-between gap-2">
             <span className="rounded-md border border-primary/35 bg-black/45 px-2 py-1 text-[8px] font-black tracking-[0.16em] text-primary">
               {tema.badge}
@@ -209,11 +293,11 @@ function TemaPreviewCard({ tendaId, tema }: { tendaId: TendaId; tema: ManaTema }
         </div>
       </div>
       {tema.description && <p className="mt-2 text-[10px] text-on-surface-variant leading-relaxed line-clamp-3">{tema.description}</p>}
-    </div>
+    </button>
   );
 }
 
-function TendaCard({ tenda, onEnter }: { tenda: ManaTenda; onEnter: () => void }) {
+function TendaCard({ tenda, onEnter, onSelectTema }: { tenda: ManaTenda; onEnter: () => void; onSelectTema: (tema: ManaTema) => void }) {
   const Icon = TENDA_ICON[tenda.id];
   const rowRef = useRef<HTMLDivElement | null>(null);
 
@@ -256,7 +340,7 @@ function TendaCard({ tenda, onEnter }: { tenda: ManaTenda; onEnter: () => void }
                 type="button"
                 onClick={() => scrollByAmount(180)}
                 className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-outline-variant/40 bg-black/40 text-on-surface-variant hover:border-primary/50 hover:text-primary transition-colors"
-                aria-label="Avançar temas"
+                aria-label="Avancar temas"
               >
                 <ChevronRight size={12} />
               </button>
@@ -265,7 +349,7 @@ function TendaCard({ tenda, onEnter }: { tenda: ManaTenda; onEnter: () => void }
 
           <div ref={rowRef} className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {tenda.temas.map((tema) => (
-              <TemaPreviewCard key={tema.id} tendaId={tenda.id} tema={tema} />
+              <TemaPreviewCard key={tema.id} tendaId={tenda.id} tema={tema} onSelect={() => onSelectTema(tema)} />
             ))}
           </div>
         </div>
@@ -283,18 +367,26 @@ function TendaCard({ tenda, onEnter }: { tenda: ManaTenda; onEnter: () => void }
   );
 }
 
-function TendaShelfCard({ tendaId, tema }: { tendaId: TendaId; tema: ManaTema }) {
+function TendaShelfCard({ tendaId, tema, onSelect }: { tendaId: TendaId; tema: ManaTema; onSelect: () => void }) {
   const progress = pm.getProgress('mana', tema.slug);
   const isCompleted = pm.isRead('mana', tema.slug);
 
   return (
-    <div className="group shrink-0 w-[172px] sm:w-[198px] flex flex-col snap-start">
+    <button type="button" onClick={onSelect} className="group shrink-0 w-[172px] sm:w-[198px] flex flex-col snap-start text-left">
       <div className="relative aspect-[2/3] rounded-xl overflow-hidden border border-primary/25">
         <div className={`absolute inset-0 bg-gradient-to-br ${TENDA_BG[tendaId]}`} />
+        {tema.image && (
+          <AppImage
+            src={tema.image}
+            alt={tema.title}
+            className="absolute inset-0 h-full w-full object-cover"
+            fallbackClassName="opacity-80"
+          />
+        )}
         <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_15%_16%,rgba(242,192,141,0.22),transparent_46%)]" />
         <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(242,192,141,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.08)_1px,transparent_1px)] [background-size:18px_18px]" />
 
-        <div className="relative z-10 h-full p-3 flex flex-col justify-between">
+        <div className="relative z-10 h-full p-3 flex flex-col justify-between bg-gradient-to-t from-black/80 via-black/30 to-black/25">
           <div className="flex items-center justify-between">
             <span className="rounded-md border border-primary/35 bg-black/45 px-2 py-1 text-[8px] font-black tracking-[0.16em] text-primary">
               {tema.badge}
@@ -310,7 +402,7 @@ function TendaShelfCard({ tendaId, tema }: { tendaId: TendaId; tema: ManaTema })
       </div>
 
       <p className="mt-2 text-[10px] text-on-surface-variant leading-relaxed line-clamp-3">
-        {tema.description || 'Tema preparado para receber conteúdo completo nesta tenda.'}
+        {tema.description || 'Tema preparado para receber conteudo completo nesta tenda.'}
       </p>
 
       <div className="mt-2 h-1.5 w-full rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/15">
@@ -319,17 +411,145 @@ function TendaShelfCard({ tendaId, tema }: { tendaId: TendaId; tema: ManaTema })
           style={{ width: `${isCompleted ? 100 : progress}%` }}
         />
       </div>
-    </div>
+    </button>
   );
 }
 
 export default function Studies() {
   const [activeTendaId, setActiveTendaId] = useState<TendaId | null>(null);
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const [markdownContent, setMarkdownContent] = useState<string | null>(null);
+
+  const { data: fetchedStudies } = useFetch<ManaStudyItem[]>('/content/mana/index.json');
+
+  const markdownByKey = useMemo(() => {
+    const map = new Map<string, string>();
+
+    Object.entries(manaMarkdownModules).forEach(([pathKey, content]) => {
+      const relativePath = toRelativeManaPath(pathKey);
+      const normalizedRelative = normalizeText(relativePath);
+      const fileName = relativePath.split('/').pop() ?? relativePath;
+      const fileStem = fileName.replace(/\.md$/i, '');
+
+      map.set(normalizedRelative, content);
+      map.set(normalizeText(fileName), content);
+      map.set(normalizeText(fileStem), content);
+    });
+
+    return map;
+  }, []);
+
+  const temasFromContent = useMemo(() => {
+    const items = fetchedStudies?.length ? fetchedStudies : FALLBACK_TEMAS;
+
+    const grouped = new Map<TendaId, ManaTema[]>([
+      ['vida-espiritual', []],
+      ['vida-interior', []],
+      ['vida-exterior', []],
+    ]);
+
+    const sortOrder: Record<TendaId, number> = {
+      'vida-espiritual': 1,
+      'vida-interior': 2,
+      'vida-exterior': 3,
+    };
+
+    const sorted = [...items].sort((a, b) => {
+      const tendaA = resolveTendaFromSlugOrFolder(a.slug, a.file);
+      const tendaB = resolveTendaFromSlugOrFolder(b.slug, b.file);
+      if (sortOrder[tendaA] !== sortOrder[tendaB]) return sortOrder[tendaA] - sortOrder[tendaB];
+      return a.slug.localeCompare(b.slug);
+    });
+
+    const tendaCounters: Record<TendaId, number> = {
+      'vida-espiritual': 0,
+      'vida-interior': 0,
+      'vida-exterior': 0,
+    };
+
+    sorted.forEach((item) => {
+      const tendaId = item.tenda ?? resolveTendaFromSlugOrFolder(item.slug, item.file);
+      tendaCounters[tendaId] += 1;
+      grouped.get(tendaId)?.push({
+        id: toTemaId(item.slug),
+        slug: item.slug,
+        badge: item.time || formatBadge(tendaCounters[tendaId]),
+        title: item.title,
+        description: item.description,
+        status: 'published',
+        image: item.image,
+        file: item.file,
+      });
+    });
+
+    return grouped;
+  }, [fetchedStudies]);
+
+  const tendas = useMemo<ManaTenda[]>(() => {
+    return MANA_TENDAS_META.map((meta) => ({
+      ...meta,
+      temas: temasFromContent.get(meta.id) ?? [],
+    }));
+  }, [temasFromContent]);
 
   const activeTenda = useMemo(
-    () => MANA_TENDAS.find((tenda) => tenda.id === activeTendaId) || null,
-    [activeTendaId],
+    () => tendas.find((tenda) => tenda.id === activeTendaId) || null,
+    [activeTendaId, tendas],
   );
+
+  const handleCloseReader = () => {
+    setSelectedSlug(null);
+    setMarkdownContent(null);
+  };
+
+  const handleOpenTema = async (tema: ManaTema) => {
+    setSelectedSlug(tema.slug);
+
+    const candidates = [
+      tema.file,
+      tema.file?.split('/').pop(),
+      tema.title,
+      tema.slug.split('/').pop()?.replace(/-/g, ' '),
+    ]
+      .filter(Boolean)
+      .map((value) => normalizeText(value ?? ''));
+
+    const localContent = candidates
+      .map((key) => markdownByKey.get(key))
+      .find((content): content is string => Boolean(content && content.trim()));
+
+    if (localContent) {
+      setMarkdownContent(localContent);
+      return;
+    }
+
+    if (tema.file) {
+      const encodedPath = tema.file
+        .split('/')
+        .map((segment) => encodeURIComponent(segment))
+        .join('/');
+      const fallbackUrl = `/content/mana/${encodedPath}`;
+
+      try {
+        const res = await fetch(fallbackUrl, { cache: 'no-store' });
+        if (res.ok) {
+          const text = await res.text();
+          if (text.trim()) {
+            setMarkdownContent(text);
+            return;
+          }
+        }
+      } catch {
+        // noop: fallback below
+      }
+    }
+
+    setMarkdownContent('# Conteudo ainda nao encontrado\n\nVerifique se o arquivo markdown deste tema esta na pasta de Maná.');
+  };
+
+  if (selectedSlug && markdownContent) {
+    return <MarkdownViewer content={markdownContent} slug={selectedSlug} category="mana" onClose={handleCloseReader} />;
+  }
 
   if (activeTenda) {
     return (
@@ -341,7 +561,7 @@ export default function Studies() {
             className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
           >
             <ArrowLeft size={12} />
-            Maná
+            Mana
           </button>
 
           <div className="mt-4 mb-5">
@@ -359,7 +579,7 @@ export default function Studies() {
             <div className="pointer-events-none absolute -bottom-1 left-5 right-5 sm:left-6 sm:right-6 h-1 bg-gradient-to-r from-primary/30 via-outline-variant/10 to-transparent opacity-20" />
             <DragScrollRow>
               {activeTenda.temas.map((tema) => (
-                <TendaShelfCard key={tema.id} tendaId={activeTenda.id} tema={tema} />
+                <TendaShelfCard key={tema.id} tendaId={activeTenda.id} tema={tema} onSelect={() => void handleOpenTema(tema)} />
               ))}
             </DragScrollRow>
           </div>
@@ -377,17 +597,17 @@ export default function Studies() {
           <div className="relative z-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-3 py-1 mb-3">
               <Tent size={12} className="text-primary" />
-              <span className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">Seção Maná</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">Secao Mana</span>
             </div>
             <h1 className="font-headline text-4xl sm:text-5xl font-black text-primary mb-2 tracking-tighter text-shadow-glow">
-              MANÁ
+              MANA
             </h1>
             <p className="text-sm sm:text-base text-on-surface font-semibold mb-2">
-              O alimento sólido para a batalha de hoje.
+              O alimento solido para a batalha de hoje.
             </p>
             <p className="text-xs sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
-              E-books e estudos profundos para fortalecer sua vida espiritual, curar sua vida interior e preparar você
-              para cumprir sua missão no mundo.
+              E-books e estudos profundos para fortalecer sua vida espiritual, curar sua vida interior e preparar voce
+              para cumprir sua missao no mundo.
             </p>
           </div>
         </header>
@@ -397,13 +617,13 @@ export default function Studies() {
         <div className="mb-4">
           <h2 className="font-headline text-2xl sm:text-3xl font-black tracking-tight text-on-surface">Escolha sua tenda</h2>
           <p className="text-xs text-on-surface-variant mt-1">
-            Cada tenda conduz uma área da sua jornada. Escolha por onde deseja ser alimentado hoje.
+            Cada tenda conduz uma area da sua jornada. Escolha por onde deseja ser alimentado hoje.
           </p>
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-          {MANA_TENDAS.map((tenda) => (
-            <TendaCard key={tenda.id} tenda={tenda} onEnter={() => setActiveTendaId(tenda.id)} />
+          {tendas.map((tenda) => (
+            <TendaCard key={tenda.id} tenda={tenda} onEnter={() => setActiveTendaId(tenda.id)} onSelectTema={handleOpenTema} />
           ))}
         </div>
       </section>
