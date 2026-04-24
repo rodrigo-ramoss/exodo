@@ -16,6 +16,13 @@ interface BookItem {
   image?: string;
 }
 
+interface TypologyDivision {
+  id: string;
+  title: string;
+  summary: string;
+  examples: string;
+}
+
 const livrariaMarkdownModules = import.meta.glob('/public/content/livraria/**/*.md', {
   eager: true,
   query: '?raw',
@@ -209,7 +216,18 @@ const SECTION_CATEGORY_ALIASES = new Set<string>([
 ]);
 
 function normalizeBookCategory(rawCategory: string | undefined, seriesFolder: string): string {
+  const normalizedSeriesFolder = normalizeSlugLookupKey(seriesFolder).replace(/-/g, ' ');
+  if (normalizedSeriesFolder === 'sombras do reino') return 'Série — Sombras do Reino';
+  if (normalizedSeriesFolder === 'a terra e o tabernaculo') return 'Série — A Terra e o Tabernáculo';
+
   const categoryFromFolder = pickCategoryByFolder(seriesFolder);
+  if (
+    categoryFromFolder === 'Série — Sombras do Reino'
+    || categoryFromFolder === 'Série — A Terra e o Tabernáculo'
+  ) {
+    return categoryFromFolder;
+  }
+
   const category = (rawCategory || '').trim();
   if (!category) return categoryFromFolder;
 
@@ -563,9 +581,9 @@ const SECTIONS: Record<SectionKey, {
 };
 
 const SECTION_ORDER: SectionKey[] = [
+  'TIPOLOGIA BÍBLICA',
   'APÓCRIFOS',
   'HISTÓRIA DA IGREJA',
-  'TIPOLOGIA BÍBLICA',
   'PARÁBOLAS DE JESUS',
   'MUNDO ESPIRITUAL',
   'ANTROPOLOGIA ESPIRITUAL',
@@ -583,10 +601,14 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Trilogia — O Cânon Oculto':                'HISTÓRIA DA IGREJA',
   'Série — A Verdadeira História da Igreja':  'HISTÓRIA DA IGREJA',
   'TIPOLOGIA BÍBLICA':                        'TIPOLOGIA BÍBLICA',
+  'Série — Sombras do Reino':                 'TIPOLOGIA BÍBLICA',
+  'Série — A Terra e o Tabernáculo':          'TIPOLOGIA BÍBLICA',
   'TABERNACULO':                              'TIPOLOGIA BÍBLICA',
   'tabernaculo':                              'TIPOLOGIA BÍBLICA',
   'tipologia/tabernaculo':                    'TIPOLOGIA BÍBLICA',
   'tipologia tabernaculo':                    'TIPOLOGIA BÍBLICA',
+  'sombras do reino':                         'TIPOLOGIA BÍBLICA',
+  'a terra e o tabernaculo':                  'TIPOLOGIA BÍBLICA',
   'SOMBRAS DO REINO DE DEUS':                 'MUNDO ESPIRITUAL',
   'Série — Parábolas de Jesus':               'PARÁBOLAS DE JESUS',
   'Série — O Código do Jardim':               'IA & APOCALIPSE',
@@ -635,6 +657,8 @@ const SERIES_LABEL: Record<string, string> = {
   'A REVELAÇÃO DE ENOQUE':                    'A Revelação de Enoque',
   'SÉRIE — JUBILEUS':                         'Série dos Jubileus',
   'SOMBRAS DO REINO DE DEUS':                 'Sombras do Reino de Deus',
+  'Série — Sombras do Reino':                 'Sombras do Reino',
+  'Série — A Terra e o Tabernáculo':          'A Terra e o Tabernáculo',
   'Série — O Código do Jardim':               'O Código do Jardim',
   'Série — A Queda do Mundo Espiritual':      'A Queda do Mundo Espiritual',
   'Série — A Queda do Querubim Ungido':       'A Queda do Querubim Ungido',
@@ -661,6 +685,8 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'A REVELAÇÃO DE ENOQUE': 'Uma jornada profunda pelas visões e revelações do profeta Enoque sobre o mundo espiritual, os vigilantes e o destino da humanidade.',
   'SÉRIE — JUBILEUS': 'O livro que Moisés recebeu dos anjos e que a tradição oficial silenciou. Uma jornada pelos segredos do calendário sagrado, dos patriarcas e da guerra invisível que moldou a história bíblica.',
   'SOMBRAS DO REINO DE DEUS': 'Uma leitura bíblica do mundo espiritual: Reino de Deus, conselho celeste e as realidades invisíveis que Hebreus 8:5 chama de sombra das coisas celestiais.',
+  'Série — Sombras do Reino': 'Uma série tipológica sobre o tabernáculo como sombra das realidades celestiais, com foco em Cristo, no Reino e na unidade da Escritura.',
+  'Série — A Terra e o Tabernáculo': 'Uma série sobre cosmografia bíblica e tabernáculo: pátio, firmamento, véu, fundamentos, mar de bronze e o trono, em leitura tipológica estruturada.',
   'Série — O Código do Jardim': 'Uma série sobre os arquétipos de Gênesis: conhecimento, nomeação, Babel e sabedoria para discernir o conflito espiritual no presente.',
   'Série — A Queda do Mundo Espiritual': 'Uma série sobre a rebelião no céu e a origem da guerra espiritual: Nachash, querubins caídos e as raízes invisíveis do conflito humano.',
   'Série — A Queda do Querubim Ungido': 'Uma investigação bíblica da trajetória de Satanás: da glória no conselho divino à consumação do juízo final, com aplicações práticas para discernimento espiritual.',
@@ -700,6 +726,57 @@ const FIREFLY_PARTICLES = [
   { left: '88%', top: '16%', size: 4, delay: '1.4s', duration: '13s' },
 ];
 
+const TYPOLOGY_DIVISIONS: TypologyDivision[] = [
+  {
+    id: 'tipologia-pessoal',
+    title: 'Tipologia Pessoal (Tipos Humanos)',
+    summary: 'Pessoas do AT cujo ofício, vida ou caráter prefiguram Cristo, a Igreja e realidades futuras.',
+    examples: 'Ex.: Adão, Melquisedeque, José, Moisés, Davi, Elias e Jonas.',
+  },
+  {
+    id: 'tipologia-eventual',
+    title: 'Tipologia Eventual (Eventos)',
+    summary: 'Acontecimentos históricos que funcionam como protótipos da redenção e do juízo.',
+    examples: 'Ex.: Dilúvio, Êxodo, travessia do Mar Vermelho e queda de Jericó.',
+  },
+  {
+    id: 'tipologia-institucional',
+    title: 'Tipologia Institucional (Instituições)',
+    summary: 'Estruturas permanentes de Israel que apontam para realidades da Nova Aliança.',
+    examples: 'Ex.: sacerdócio levítico, sacrifícios, sábado e jubileu.',
+  },
+  {
+    id: 'tipologia-objetal',
+    title: 'Tipologia Objetal (Objetos)',
+    summary: 'Móveis e utensílios sagrados que revelam correspondências cristológicas e celestiais.',
+    examples: 'Ex.: véu, arca, menorá, pães da proposição e altar do incenso.',
+  },
+  {
+    id: 'tipologia-locativa',
+    title: 'Tipologia Locativa (Lugares)',
+    summary: 'Espaços geográficos que antecipam realidades espirituais e escatológicas.',
+    examples: 'Ex.: Éden, Moriá, Sinai e deserto.',
+  },
+  {
+    id: 'tipologia-ritual',
+    title: 'Tipologia Ritual (Ações Litúrgicas)',
+    summary: 'Gestos litúrgicos de Israel que prefiguram a obra de Cristo e a vida no Espírito.',
+    examples: 'Ex.: aspersão de sangue, imposição de mãos, circuncisão e unção.',
+  },
+  {
+    id: 'tipologia-historica',
+    title: 'Tipologia Histórica (Padrões Cíclicos)',
+    summary: 'Padrões recorrentes na história da redenção que mostram a coerência do agir de Deus.',
+    examples: 'Ex.: cativeiros sucessivos, criação-queda-recriação e progressão templária.',
+  },
+  {
+    id: 'tipologia-escatologica',
+    title: 'Tipologia Escatológica (Consumação)',
+    summary: 'Realidades já inauguradas que apontam para o cumprimento final em Cristo.',
+    examples: 'Ex.: Ceia, batismo, assembleia local e Reino já/ainda não.',
+  },
+];
+
 function FireflyLayer() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -717,6 +794,41 @@ function FireflyLayer() {
         />
       ))}
     </div>
+  );
+}
+
+function TypologyDivisionsGrid() {
+  return (
+    <section className="mb-9">
+      <div className="mb-4">
+        <p className="text-[9px] font-black uppercase tracking-[0.22em] text-primary/85 mb-1">Mapa de Leitura</p>
+        <h3 className="font-headline font-black text-2xl text-on-surface tracking-tight leading-none">
+          Os 8 Tipos de Tipologia Bíblica
+        </h3>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+        {TYPOLOGY_DIVISIONS.map((division, index) => (
+          <article
+            key={division.id}
+            className="typology-card group rounded-2xl border border-primary/20 bg-gradient-to-br from-zinc-950/70 via-zinc-900/60 to-zinc-900/35 p-4"
+            style={{ animationDelay: `${index * 80}ms` }}
+          >
+            <span className="inline-flex mb-2 rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.2em] text-primary">
+              Tipo {index + 1}
+            </span>
+            <h4 className="font-headline font-extrabold text-[14px] leading-tight text-on-surface group-hover:text-primary transition-colors">
+              {division.title}
+            </h4>
+            <p className="mt-2 text-[10px] leading-snug text-on-surface-variant/75 font-medium">
+              {division.summary}
+            </p>
+            <p className="mt-2 text-[9px] leading-snug text-primary/80 font-bold">
+              {division.examples}
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -1106,6 +1218,10 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
             {description}
           </p>
         </div>
+
+        {selectedSection === 'TIPOLOGIA BÍBLICA' && (
+          <TypologyDivisionsGrid />
+        )}
 
         {seriesInSection.map(([cat, items], index) => {
           const reads = items.map((b) => pm.getReadCount('livraria', b.slug));
