@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, type ReactNode } from 'react';
+import { useState, useRef, useMemo, useEffect, type ReactNode } from 'react';
 import { ChevronLeft, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Wrench, Hourglass } from 'lucide-react';
 import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
@@ -22,6 +22,8 @@ interface TypologyDivision {
   summary: string;
   examples: string;
 }
+
+type TypologyDivisionId = TypologyDivision['id'];
 
 const livrariaMarkdownModules = import.meta.glob('/public/content/livraria/**/*.md', {
   eager: true,
@@ -777,6 +779,17 @@ const TYPOLOGY_DIVISIONS: TypologyDivision[] = [
   },
 ];
 
+const TYPOLOGY_DIVISION_SERIES: Record<TypologyDivisionId, string[]> = {
+  'tipologia-pessoal': ['TIPOLOGIA BÍBLICA'],
+  'tipologia-eventual': ['TIPOLOGIA BÍBLICA'],
+  'tipologia-institucional': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo', 'TIPOLOGIA BÍBLICA'],
+  'tipologia-objetal': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
+  'tipologia-locativa': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo', 'TIPOLOGIA BÍBLICA'],
+  'tipologia-ritual': ['TIPOLOGIA BÍBLICA'],
+  'tipologia-historica': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
+  'tipologia-escatologica': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo', 'TIPOLOGIA BÍBLICA'],
+};
+
 function FireflyLayer() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -797,7 +810,13 @@ function FireflyLayer() {
   );
 }
 
-function TypologyDivisionsGrid() {
+function TypologyDivisionsGrid({
+  activeDivisionId,
+  onSelectDivision,
+}: {
+  activeDivisionId: TypologyDivisionId | null;
+  onSelectDivision: (divisionId: TypologyDivisionId | null) => void;
+}) {
   return (
     <section className="mb-9">
       <div className="mb-4">
@@ -806,12 +825,32 @@ function TypologyDivisionsGrid() {
           Os 8 Tipos de Tipologia Bíblica
         </h3>
       </div>
+      <div className="mb-3">
+        <button
+          type="button"
+          onClick={() => onSelectDivision(null)}
+          className={`rounded-full border px-3 py-1 text-[9px] font-black uppercase tracking-[0.15em] transition-colors ${
+            activeDivisionId === null
+              ? 'border-primary/50 bg-primary/20 text-primary'
+              : 'border-outline-variant/30 text-on-surface-variant/80 hover:border-primary/40 hover:text-primary'
+          }`}
+        >
+          Mostrar Todos
+        </button>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
         {TYPOLOGY_DIVISIONS.map((division, index) => (
-          <article
+          <button
+            type="button"
             key={division.id}
-            className="typology-card group rounded-2xl border border-primary/20 bg-gradient-to-br from-zinc-950/70 via-zinc-900/60 to-zinc-900/35 p-4"
+            onClick={() => onSelectDivision(division.id)}
+            className={`typology-card group rounded-2xl border bg-gradient-to-br from-zinc-950/70 via-zinc-900/60 to-zinc-900/35 p-4 text-left cursor-pointer ${
+              activeDivisionId === division.id
+                ? 'border-primary/55 shadow-[0_0_24px_rgba(242,192,141,0.25)]'
+                : 'border-primary/20 hover:border-primary/45'
+            }`}
             style={{ animationDelay: `${index * 80}ms` }}
+            aria-pressed={activeDivisionId === division.id}
           >
             <span className="inline-flex mb-2 rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.2em] text-primary">
               Tipo {index + 1}
@@ -825,7 +864,7 @@ function TypologyDivisionsGrid() {
             <p className="mt-2 text-[9px] leading-snug text-primary/80 font-bold">
               {division.examples}
             </p>
-          </article>
+          </button>
         ))}
       </div>
     </section>
@@ -1120,6 +1159,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
   const [selectedSection, setSelectedSection] = useState<SectionKey | null>(isToolsMode ? 'FERRAMENTAS' : null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
+  const [activeTypologyDivisionId, setActiveTypologyDivisionId] = useState<TypologyDivisionId | null>(null);
   const { data: books, loading, error } = useFetch<BookItem[]>('/content/livraria/index.json');
   const discoveredBooks = useMemo(() => discoverBooksFromMarkdown(), []);
   const markdownBySlug = useMemo(() => buildMarkdownBySlugIndex(), []);
@@ -1160,6 +1200,18 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
         }, {} as Record<string, BookItem[]>)
       ).map(([category, items]) => [category, sortBooksInSeries(category, items)] as [string, BookItem[]])
     : [];
+
+  useEffect(() => {
+    if (selectedSection !== 'TIPOLOGIA BÍBLICA' && activeTypologyDivisionId !== null) {
+      setActiveTypologyDivisionId(null);
+    }
+  }, [selectedSection, activeTypologyDivisionId]);
+
+  const visibleSeriesInSection: [string, BookItem[]][] = useMemo(() => {
+    if (selectedSection !== 'TIPOLOGIA BÍBLICA' || !activeTypologyDivisionId) return seriesInSection;
+    const allowedSeries = new Set(TYPOLOGY_DIVISION_SERIES[activeTypologyDivisionId] || []);
+    return seriesInSection.filter(([category]) => allowedSeries.has(category));
+  }, [selectedSection, activeTypologyDivisionId, seriesInSection]);
 
   const handleSelectBook = async (slug: string) => {
     setSelectedSlug(slug);
@@ -1220,10 +1272,13 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
         </div>
 
         {selectedSection === 'TIPOLOGIA BÍBLICA' && (
-          <TypologyDivisionsGrid />
+          <TypologyDivisionsGrid
+            activeDivisionId={activeTypologyDivisionId}
+            onSelectDivision={setActiveTypologyDivisionId}
+          />
         )}
 
-        {seriesInSection.map(([cat, items], index) => {
+        {visibleSeriesInSection.map(([cat, items], index) => {
           const reads = items.map((b) => pm.getReadCount('livraria', b.slug));
           const minReads = reads.length ? Math.min(...reads) : 0;
           const label = SERIES_LABEL[cat] ?? cat;
@@ -1267,7 +1322,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
                 </DragScrollRow>
               </div>
 
-              {index < seriesInSection.length - 1 && (
+              {index < visibleSeriesInSection.length - 1 && (
                 <div className="mt-3 px-1">
                   <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/55 to-transparent animate-[pulse_4.5s_ease-in-out_infinite]" />
                 </div>
@@ -1276,7 +1331,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
           );
         })}
 
-        {seriesInSection.length === 0 && !loading && (
+        {visibleSeriesInSection.length === 0 && !loading && (
           <p className="text-center text-[10px] uppercase tracking-widest text-on-surface-variant/40 py-16 font-bold">
             Conteúdo em breve.
           </p>
