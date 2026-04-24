@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, type ReactNode } from 'react';
+import { useState, useRef, useMemo, useEffect, type ReactNode } from 'react';
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Hourglass, Tent } from 'lucide-react';
 import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
@@ -56,12 +56,12 @@ const contentMarkdownModules = {
   ...livrariaEspitirualMarkdownModules,
   ...ferramentasMarkdownModules,
 };
-const typologyMarkdownModulesRoot = import.meta.glob('/public/content/tipologia-biblica/divisoes/**/*.md', {
+const typologyMarkdownModulesRoot = import.meta.glob('/public/content/tipologia-biblica/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
 }) as Record<string, string>;
-const typologyMarkdownModulesLegacy = import.meta.glob('/public/content/livraria espitirual/tipologia-biblica/divisoes/**/*.md', {
+const typologyMarkdownModulesLegacy = import.meta.glob('/public/content/livraria espitirual/tipologia-biblica/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -363,8 +363,8 @@ const TYPOLOGY_COVER_LOOKUP = buildTypologyCoverLookup();
 function extractTypologyDivisionRelativePath(pathKey: string): string | null {
   const normalized = pathKey.replace(/\\/g, '/');
   const markers = [
-    '/public/content/tipologia-biblica/divisoes/',
-    '/public/content/livraria espitirual/tipologia-biblica/divisoes/',
+    '/public/content/tipologia-biblica/',
+    '/public/content/livraria espitirual/tipologia-biblica/',
   ];
   for (const marker of markers) {
     if (!normalized.includes(marker)) continue;
@@ -460,9 +460,16 @@ function buildTypologyMarkdownBySlugIndex(): Record<string, string> {
   for (const [pathKey, content] of Object.entries(typologyMarkdownModules)) {
     const relativePath = extractTypologyDivisionRelativePath(pathKey);
     if (!relativePath) continue;
-    const normalizedRelative = stripMarkdownExtension(`tipologia-biblica/divisoes/${relativePath}`);
+    const normalizedRelative = stripMarkdownExtension(`tipologia-biblica/${relativePath}`);
     bySlug[normalizedRelative] = content;
     bySlug[normalizeSlugLookupKey(normalizedRelative)] = content;
+
+    // Compatibilidade com slugs antigos que incluíam "divisoes".
+    if (!relativePath.startsWith('divisoes/')) {
+      const legacyRelative = stripMarkdownExtension(`tipologia-biblica/divisoes/${relativePath}`);
+      bySlug[legacyRelative] = content;
+      bySlug[normalizeSlugLookupKey(legacyRelative)] = content;
+    }
   }
 
   return bySlug;
@@ -477,18 +484,19 @@ function discoverTypologyContentEntries(): TypologyContentEntry[] {
 
     const normalizedRelative = stripMarkdownExtension(relativePath);
     const parts = normalizedRelative.split('/').filter(Boolean);
-    if (parts.length < 3) continue;
+    const normalizedParts = parts[0] === 'divisoes' ? parts.slice(1) : parts;
+    if (normalizedParts.length < 3) continue;
 
-    const divisionFolder = parts[0];
-    const seriesFolder = parts[1];
-    const fileStem = parts[parts.length - 1] ?? '';
+    const divisionFolder = normalizedParts[0];
+    const seriesFolder = normalizedParts[1];
+    const fileStem = normalizedParts[normalizedParts.length - 1] ?? '';
     const typeId = TYPOLOGY_DIVISION_FOLDER_TO_ID[normalizeSlugLookupKey(divisionFolder).replace(/ /g, '-')];
     if (!typeId) continue;
 
     const frontmatter = parseFrontmatter(content);
     const firstHeading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
     const title = frontmatter.title || firstHeading || fileStem;
-    const slug = `tipologia-biblica/divisoes/${normalizedRelative}`;
+    const slug = `tipologia-biblica/${normalizedRelative}`;
     const seriesCategory = resolveTypologySeriesCategory(seriesFolder);
     const cover = resolveTypologyCover(frontmatter, title, fileStem);
 
@@ -883,6 +891,7 @@ const SERIES_LABEL: Record<string, string> = {
   'SOMBRAS DO REINO DE DEUS':                 'Sombras do Reino de Deus',
   'Série — Sombras do Reino':                 'Sombras do Reino',
   'Série — A Terra e o Tabernáculo':          'A Terra e o Tabernáculo',
+  'Série — O Tetravéu':                       'O Tetravéu',
   'Série — O Código do Jardim':               'O Código do Jardim',
   'Série — A Queda do Mundo Espiritual':      'A Queda do Mundo Espiritual',
   'Série — A Queda do Querubim Ungido':       'A Queda do Querubim Ungido',
@@ -909,6 +918,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'SOMBRAS DO REINO DE DEUS': 'Uma leitura bíblica do mundo espiritual: Reino de Deus, conselho celeste e as realidades invisíveis que Hebreus 8:5 chama de sombra das coisas celestiais.',
   'Série — Sombras do Reino': 'Uma série tipológica sobre o tabernáculo como sombra das realidades celestiais, com foco em Cristo, no Reino e na unidade da Escritura.',
   'Série — A Terra e o Tabernáculo': 'Uma série sobre cosmografia bíblica e tabernáculo: pátio, firmamento, véu, fundamentos, mar de bronze e o trono, em leitura tipológica estruturada.',
+  'Série — O Tetravéu': 'Da camada visível ao limite do invisível: uma leitura progressiva do linho, do pelo de cabra e das peles que cobrem o tabernáculo para revelar separação, proteção, glória e acesso na cosmografia bíblica.',
   'Série — O Código do Jardim': 'Uma série sobre os arquétipos de Gênesis: conhecimento, nomeação, Babel e sabedoria para discernir o conflito espiritual no presente.',
   'Série — A Queda do Mundo Espiritual': 'Uma série sobre a rebelião no céu e a origem da guerra espiritual: Nachash, querubins caídos e as raízes invisíveis do conflito humano.',
   'Série — A Queda do Querubim Ungido': 'Uma investigação bíblica da trajetória de Satanás: da glória no conselho divino à consumação do juízo final, com aplicações práticas para discernimento espiritual.',
@@ -978,9 +988,9 @@ const TYPOLOGY_TYPES: TypologyTypeMeta[] = [
     id: 'tipologia-objetal',
     label: 'TIPO 4',
     numero: '04',
-    titulo: 'Tipologia Objetal',
-    subtitulo: 'Objetos',
-    descricao: 'Móveis e utensílios sagrados que revelam correspondências cristológicas e celestiais.',
+    titulo: 'Tipologia do Tabernáculo',
+    subtitulo: 'Cosmografia Bíblica',
+    descricao: 'Uma cartografia bíblica do cosmos: terra plana, fundações da terra, quatro cantos, céu sólido, sete céus, geografia do mundo invisível, relógio cósmico e os padrões do universo revelados no tabernáculo.',
     exemplos: ['Véu', 'Arca', 'Menorá', 'Pães da proposição', 'Altar do incenso'],
   },
   {
@@ -1595,6 +1605,12 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
     () => TYPOLOGY_TYPES.find((type) => type.id === activeTypeId) ?? null,
     [activeTypeId],
   );
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [selectedSection, activeTypeId, selectedSlug]);
 
   const handleSelectBook = async (slug: string) => {
     setSelectedSlug(slug);
