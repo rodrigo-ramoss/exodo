@@ -16,8 +16,18 @@ interface BookItem {
   image?: string;
 }
 
+type TypologyDivisionId =
+  | 'tipologia-pessoal'
+  | 'tipologia-eventual'
+  | 'tipologia-institucional'
+  | 'tipologia-objetal'
+  | 'tipologia-locativa'
+  | 'tipologia-ritual'
+  | 'tipologia-historica'
+  | 'tipologia-escatologica';
+
 interface TypologyTypeMeta {
-  id: string;
+  id: TypologyDivisionId;
   label: string;
   numero: string;
   titulo: string;
@@ -25,8 +35,6 @@ interface TypologyTypeMeta {
   descricao: string;
   exemplos: string[];
 }
-
-type TypologyDivisionId = TypologyTypeMeta['id'];
 
 const livrariaMarkdownModules = import.meta.glob('/public/content/livraria/**/*.md', {
   eager: true,
@@ -48,6 +56,20 @@ const contentMarkdownModules = {
   ...livrariaEspitirualMarkdownModules,
   ...ferramentasMarkdownModules,
 };
+const typologyMarkdownModulesRoot = import.meta.glob('/public/content/tipologia-biblica/divisoes/**/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
+const typologyMarkdownModulesLegacy = import.meta.glob('/public/content/livraria espitirual/tipologia-biblica/divisoes/**/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
+const typologyMarkdownModules = {
+  ...typologyMarkdownModulesRoot,
+  ...typologyMarkdownModulesLegacy,
+};
 const imageModules = {
   ...import.meta.glob('/public/image/**/*.webp'),
   ...import.meta.glob('/public/image/**/*.png'),
@@ -57,6 +79,21 @@ const imageModules = {
 
 const COVER_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg'] as const;
 const WEAK_REMOTE_IMAGE_HOSTS = ['placeholder-voz-do-deserto.com', 'images.unsplash.com'];
+const TYPOLOGY_DIVISION_FOLDER_TO_ID: Record<string, TypologyDivisionId> = {
+  '1-tipologia-pessoal': 'tipologia-pessoal',
+  '2-tipologia-eventual': 'tipologia-eventual',
+  '3-tipologia-institucional': 'tipologia-institucional',
+  '4-tipologia-objetal': 'tipologia-objetal',
+  '5-tipologia-locativa': 'tipologia-locativa',
+  '6-tipologia-ritual': 'tipologia-ritual',
+  '7-tipologia-historica': 'tipologia-historica',
+  '8-tipologia-escatologica': 'tipologia-escatologica',
+};
+const TYPOLOGY_SERIES_PRIORITY = [
+  'Série — Sombras do Reino',
+  'Série — A Terra e o Tabernáculo',
+  'Série — O Tetravéu',
+];
 
 const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
   'invasao legal': {
@@ -268,6 +305,136 @@ function normalizeSlugLookupKey(raw: string): string {
     .trim();
 }
 
+interface TypologyContentEntry {
+  typeId: TypologyDivisionId;
+  seriesCategory: string;
+  item: BookItem;
+}
+
+const TYPOLOGY_COVER_HINTS: Array<[string, string]> = [
+  ['sombra e o modelo', 'a sombra e o modelo'],
+  ['patio e a terra', 'o patio e a terra'],
+  ['lugar santo e o firmamento', 'o lugar santo e o firmamento'],
+  ['veu e a fronteira', 'o veu e a fronteira'],
+  ['santo dos santos', 'o santo dos santos'],
+  ['cosmos como templo', 'o cosmo e o templo'],
+  ['cosmo como templo', 'o cosmo e o templo'],
+  ['cosmos que o tabernaculo desenha', 'o cosmo que o tabernaculo desenha'],
+  ['cosmo que o tabernaculo desenha', 'o cosmo que o tabernaculo desenha'],
+  ['patio e as quatro esquinas da terra', 'o patio e as quatro esquinas da terra'],
+  ['firmamento como veu estendido', 'o fundamento com o veu escondido'],
+  ['colunas da terra', 'as colunas da terra'],
+  ['mar de bronze', 'o mar de broze e as aguas do caos'],
+  ['trono no extremo norte', 'o trono no exremo norte'],
+  ['linho bordado', 'o linho bordado'],
+  ['pelo de cabra', 'o pelo de cabra'],
+  ['peles de carneiro', 'as peles de carneiro'],
+  ['peles de tachash', 'as peles de tachash'],
+];
+
+function normalizeCoverStemForLookup(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/\.[a-z0-9]+$/i, '')
+    .replace(/[_-]+/g, ' ')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function buildTypologyCoverLookup(): Map<string, string> {
+  const lookup = new Map<string, string>();
+  for (const key of Object.keys(imageModules)) {
+    const normalized = key.replace(/\\/g, '/');
+    const isTipos = normalized.startsWith('/public/image/tipos/');
+    const isLegacyTabernaculo = normalized.startsWith('/public/image/livraria/tabernaculo/');
+    if (!isTipos && !isLegacyTabernaculo) continue;
+    const fileName = normalized.split('/').pop();
+    if (!fileName) continue;
+    lookup.set(normalizeCoverStemForLookup(fileName), normalized.slice('/public'.length));
+  }
+  return lookup;
+}
+
+const TYPOLOGY_COVER_LOOKUP = buildTypologyCoverLookup();
+
+function extractTypologyDivisionRelativePath(pathKey: string): string | null {
+  const normalized = pathKey.replace(/\\/g, '/');
+  const markers = [
+    '/public/content/tipologia-biblica/divisoes/',
+    '/public/content/livraria espitirual/tipologia-biblica/divisoes/',
+  ];
+  for (const marker of markers) {
+    if (!normalized.includes(marker)) continue;
+    return normalized.slice(normalized.indexOf(marker) + marker.length);
+  }
+  return null;
+}
+
+function toTitleCasePt(raw: string): string {
+  return raw
+    .split(' ')
+    .filter(Boolean)
+    .map((word) => {
+      const lower = word.toLowerCase();
+      if (['de', 'do', 'da', 'dos', 'das', 'e'].includes(lower)) return lower;
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join(' ');
+}
+
+function resolveTypologySeriesCategory(seriesFolder: string): string {
+  const normalized = normalizeSlugLookupKey(seriesFolder).replace(/-/g, ' ');
+  if (normalized.includes('sombras do reino')) return 'Série — Sombras do Reino';
+  if (normalized.includes('terra e o tabernaculo')) return 'Série — A Terra e o Tabernáculo';
+  if (normalized.includes('tetravel') || normalized.includes('tetraveu')) return 'Série — O Tetravéu';
+
+  const cleaned = normalized
+    .replace(/^serie\s*-\s*/i, '')
+    .replace(/^serie\s+/i, '')
+    .trim();
+  return `Série — ${toTitleCasePt(cleaned)}`;
+}
+
+function resolveTypologyCover(frontmatter: Record<string, string>, title: string, fileStem: string): string | undefined {
+  const imageStemFromFrontmatter = frontmatter.image
+    ? frontmatter.image.replace(/\\/g, '/').split('/').pop()?.replace(/\.[a-z0-9]+$/i, '') || ''
+    : '';
+  const cleanFileStem = fileStem
+    .replace(/^ebook\s*\d+\s*-\s*/i, '')
+    .replace(/^livro\s*\d+\s*-\s*/i, '')
+    .trim();
+  const shortTitle = title.split('—').pop()?.split(':').pop()?.trim() || title;
+  const normalizedSearch = normalizeCoverStemForLookup(`${imageStemFromFrontmatter} ${cleanFileStem} ${shortTitle} ${title}`);
+
+  for (const [hint, targetStem] of TYPOLOGY_COVER_HINTS) {
+    if (!normalizedSearch.includes(hint)) continue;
+    const exactFromHint = TYPOLOGY_COVER_LOOKUP.get(normalizeCoverStemForLookup(targetStem));
+    if (exactFromHint) return exactFromHint;
+  }
+
+  const fallbackStems = [imageStemFromFrontmatter, cleanFileStem, shortTitle, title];
+  for (const stem of fallbackStems) {
+    const normalizedStem = normalizeCoverStemForLookup(stem);
+    if (!normalizedStem) continue;
+
+    const exact = TYPOLOGY_COVER_LOOKUP.get(normalizedStem);
+    if (exact) return exact;
+
+    const bronzeVariant = normalizedStem.replace('bronze', 'broze');
+    const exactBronze = TYPOLOGY_COVER_LOOKUP.get(bronzeVariant);
+    if (exactBronze) return exactBronze;
+
+    const extremoVariant = normalizedStem.replace('extremo', 'exremo');
+    const exactExtremo = TYPOLOGY_COVER_LOOKUP.get(extremoVariant);
+    if (exactExtremo) return exactExtremo;
+  }
+
+  return undefined;
+}
+
 function buildMarkdownBySlugIndex(): Record<string, string> {
   const bySlug: Record<string, string> = {};
 
@@ -285,6 +452,62 @@ function buildMarkdownBySlugIndex(): Record<string, string> {
   }
 
   return bySlug;
+}
+
+function buildTypologyMarkdownBySlugIndex(): Record<string, string> {
+  const bySlug: Record<string, string> = {};
+
+  for (const [pathKey, content] of Object.entries(typologyMarkdownModules)) {
+    const relativePath = extractTypologyDivisionRelativePath(pathKey);
+    if (!relativePath) continue;
+    const normalizedRelative = stripMarkdownExtension(`tipologia-biblica/divisoes/${relativePath}`);
+    bySlug[normalizedRelative] = content;
+    bySlug[normalizeSlugLookupKey(normalizedRelative)] = content;
+  }
+
+  return bySlug;
+}
+
+function discoverTypologyContentEntries(): TypologyContentEntry[] {
+  const entries: TypologyContentEntry[] = [];
+
+  for (const [pathKey, content] of Object.entries(typologyMarkdownModules)) {
+    const relativePath = extractTypologyDivisionRelativePath(pathKey);
+    if (!relativePath) continue;
+
+    const normalizedRelative = stripMarkdownExtension(relativePath);
+    const parts = normalizedRelative.split('/').filter(Boolean);
+    if (parts.length < 3) continue;
+
+    const divisionFolder = parts[0];
+    const seriesFolder = parts[1];
+    const fileStem = parts[parts.length - 1] ?? '';
+    const typeId = TYPOLOGY_DIVISION_FOLDER_TO_ID[normalizeSlugLookupKey(divisionFolder).replace(/ /g, '-')];
+    if (!typeId) continue;
+
+    const frontmatter = parseFrontmatter(content);
+    const firstHeading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
+    const title = frontmatter.title || firstHeading || fileStem;
+    const slug = `tipologia-biblica/divisoes/${normalizedRelative}`;
+    const seriesCategory = resolveTypologySeriesCategory(seriesFolder);
+    const cover = resolveTypologyCover(frontmatter, title, fileStem);
+
+    entries.push({
+      typeId,
+      seriesCategory,
+      item: {
+        title,
+        slug,
+        description: frontmatter.description || '',
+        date: frontmatter.date || '2026-04-24',
+        category: seriesCategory,
+        time: frontmatter.time || 'LIVRO',
+        image: cover,
+      },
+    });
+  }
+
+  return entries;
 }
 
 function resolveContentUrlForDesktopAndWeb(slug: string): string {
@@ -798,24 +1021,6 @@ const TYPOLOGY_TYPES: TypologyTypeMeta[] = [
   },
 ];
 
-const TYPOLOGY_DIVISION_SERIES: Record<TypologyDivisionId, string[]> = {
-  'tipologia-pessoal': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
-  'tipologia-eventual': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
-  'tipologia-institucional': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
-  'tipologia-objetal': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
-  'tipologia-locativa': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
-  'tipologia-ritual': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
-  'tipologia-historica': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
-  'tipologia-escatologica': ['Série — Sombras do Reino', 'Série — A Terra e o Tabernáculo'],
-};
-
-const TYPOLOGY_SERIES_ORDER = [
-  'Série — Sombras do Reino',
-  'Série — A Terra e o Tabernáculo',
-];
-
-const TYPOLOGY_SERIES_WHITELIST = new Set<string>(TYPOLOGY_SERIES_ORDER);
-
 const TYPOLOGY_BG_BY_TYPE: Record<TypologyDivisionId, string> = {
   'tipologia-pessoal': 'from-[#251a12] via-[#171310] to-[#0f0f0f]',
   'tipologia-eventual': 'from-[#241915] via-[#171312] to-[#101010]',
@@ -1101,8 +1306,8 @@ function TypologyTypeCard({
 
         <div className="border-t border-primary/15 pt-3">
           <div className="mb-2 flex items-center justify-between">
-            <p className="text-[9px] font-black uppercase tracking-[0.18em] text-primary/80">Exemplos deste tipo</p>
-            <div className="hidden sm:flex items-center gap-1">
+            <p className="text-[9px] font-black uppercase tracking-[0.18em] text-primary/80">Conteúdo deste tipo</p>
+            <div className={`${previewBooks.length > 0 ? 'hidden sm:flex' : 'hidden'} items-center gap-1`}>
               <button
                 type="button"
                 onClick={() => scrollByAmount(-180)}
@@ -1122,13 +1327,20 @@ function TypologyTypeCard({
             </div>
           </div>
 
-          <div ref={rowRef} className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {previewBooks.length > 0
-              ? previewBooks.map((item) => (
-                  <TypePreviewBookCard key={item.slug} item={item} onSelect={() => onSelectBook(item.slug)} />
-                ))
-              : type.exemplos.slice(0, 4).map((example) => <TypeExamplePlate key={example} label={example} />)}
-          </div>
+          {previewBooks.length > 0 ? (
+            <div ref={rowRef} className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {previewBooks.map((item) => (
+                <TypePreviewBookCard key={item.slug} item={item} onSelect={() => onSelectBook(item.slug)} />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl border border-primary/20 bg-black/25 px-4 py-3">
+              <p className="text-[11px] font-semibold text-primary/95">Conteúdos em preparação</p>
+              <p className="mt-1 text-[10px] leading-snug text-on-surface-variant/75">
+                Esta área será preenchida quando os e-books deste tipo forem adicionados à biblioteca.
+              </p>
+            </div>
+          )}
         </div>
 
         <button
@@ -1289,7 +1501,9 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const { data: books, loading, error } = useFetch<BookItem[]>('/content/livraria/index.json');
   const discoveredBooks = useMemo(() => discoverBooksFromMarkdown(), []);
+  const typologyEntries = useMemo(() => discoverTypologyContentEntries(), []);
   const markdownBySlug = useMemo(() => buildMarkdownBySlugIndex(), []);
+  const typologyMarkdownBySlug = useMemo(() => buildTypologyMarkdownBySlugIndex(), []);
   const normalizeMergedBookCategory = (book: BookItem): BookItem => {
     const seriesFolder = book.slug.split('/')[0] ?? '';
     return {
@@ -1326,31 +1540,44 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
       ).map(([category, items]) => [category, sortBooksInSeries(category, items)] as [string, BookItem[]])
     : [];
 
-  const typologySeriesInSection: [string, BookItem[]][] = useMemo(() => {
-    const grouped = new Map<string, BookItem[]>();
-    mergedBooks.forEach((book) => {
-      const category = (book.category || '').trim();
-      if (!TYPOLOGY_SERIES_WHITELIST.has(category)) return;
-      const current = grouped.get(category) ?? [];
-      current.push(book);
-      grouped.set(category, current);
-    });
+  const typologySeriesByType = useMemo(() => {
+    const byType = new Map<TypologyDivisionId, Map<string, BookItem[]>>();
 
-    return TYPOLOGY_SERIES_ORDER
-      .map((category) => {
-        const items = grouped.get(category) ?? [];
-        return [category, sortBooksInSeries(category, items)] as [string, BookItem[]];
-      })
-      .filter(([, items]) => items.length > 0);
-  }, [mergedBooks]);
+    for (const entry of typologyEntries) {
+      const bySeries = byType.get(entry.typeId) ?? new Map<string, BookItem[]>();
+      const currentSeriesBooks = bySeries.get(entry.seriesCategory) ?? [];
+      currentSeriesBooks.push(entry.item);
+      bySeries.set(entry.seriesCategory, currentSeriesBooks);
+      byType.set(entry.typeId, bySeries);
+    }
+
+    return TYPOLOGY_TYPES.reduce((acc, type) => {
+      const bySeries = byType.get(type.id) ?? new Map<string, BookItem[]>();
+      const sortedCategories = Array.from(bySeries.keys()).sort((a, b) => {
+        const aPriority = TYPOLOGY_SERIES_PRIORITY.indexOf(a);
+        const bPriority = TYPOLOGY_SERIES_PRIORITY.indexOf(b);
+        if (aPriority !== -1 || bPriority !== -1) {
+          const safeA = aPriority === -1 ? Number.MAX_SAFE_INTEGER : aPriority;
+          const safeB = bPriority === -1 ? Number.MAX_SAFE_INTEGER : bPriority;
+          if (safeA !== safeB) return safeA - safeB;
+        }
+        return a.localeCompare(b, 'pt-BR');
+      });
+
+      acc[type.id] = sortedCategories
+        .map((category) => [category, sortBooksInSeries(category, bySeries.get(category) ?? [])] as [string, BookItem[]])
+        .filter(([, items]) => items.length > 0);
+
+      return acc;
+    }, {} as Record<TypologyDivisionId, [string, BookItem[]][]>);
+  }, [typologyEntries]);
 
   const typologyPreviewByType = useMemo(() => {
-    const bySeries = new Map(typologySeriesInSection);
     return TYPOLOGY_TYPES.reduce((acc, type) => {
       const seen = new Set<string>();
       const collected: BookItem[] = [];
-      for (const category of TYPOLOGY_DIVISION_SERIES[type.id]) {
-        const items = bySeries.get(category) ?? [];
+      const seriesList = typologySeriesByType[type.id] ?? [];
+      for (const [, items] of seriesList) {
         for (const item of items) {
           if (seen.has(item.slug)) continue;
           seen.add(item.slug);
@@ -1362,17 +1589,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
       acc[type.id] = collected;
       return acc;
     }, {} as Record<TypologyDivisionId, BookItem[]>);
-  }, [typologySeriesInSection]);
-
-  const typologySeriesByType = useMemo(() => {
-    const bySeries = new Map(typologySeriesInSection);
-    return TYPOLOGY_TYPES.reduce((acc, type) => {
-      acc[type.id] = TYPOLOGY_DIVISION_SERIES[type.id]
-        .map((category) => [category, bySeries.get(category) ?? []] as [string, BookItem[]])
-        .filter(([, items]) => items.length > 0);
-      return acc;
-    }, {} as Record<TypologyDivisionId, [string, BookItem[]][]>);
-  }, [typologySeriesInSection]);
+  }, [typologySeriesByType]);
 
   const activeType = useMemo(
     () => TYPOLOGY_TYPES.find((type) => type.id === activeTypeId) ?? null,
@@ -1381,7 +1598,10 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
 
   const handleSelectBook = async (slug: string) => {
     setSelectedSlug(slug);
-    const localContent = markdownBySlug[slug] || markdownBySlug[normalizeSlugLookupKey(slug)];
+    const localContent = typologyMarkdownBySlug[slug]
+      || typologyMarkdownBySlug[normalizeSlugLookupKey(slug)]
+      || markdownBySlug[slug]
+      || markdownBySlug[normalizeSlugLookupKey(slug)];
     if (localContent) {
       setMarkdownContent(localContent);
       return;
@@ -1444,7 +1664,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
               </div>
             </div>
 
-            {relatedSeries.length > 0 && (
+            {relatedSeries.length > 0 ? (
               <div className="mt-7 border-t border-primary/15 pt-5">
                 <h3 className="font-headline text-2xl font-black tracking-tight text-on-surface mb-1 uppercase">
                   Coleções Relacionadas
@@ -1460,6 +1680,13 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
                     onSelectBook={handleSelectBook}
                   />
                 ))}
+              </div>
+            ) : (
+              <div className="mt-7 rounded-2xl border border-primary/20 bg-black/20 px-4 py-4 sm:px-5">
+                <p className="text-sm font-semibold text-primary/95">Conteúdos em preparação</p>
+                <p className="mt-1.5 text-xs leading-relaxed text-on-surface-variant/80 max-w-2xl">
+                  Esta área será preenchida quando os e-books deste tipo forem adicionados à biblioteca.
+                </p>
               </div>
             )}
           </section>
@@ -1513,25 +1740,6 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
             ))}
           </div>
         </section>
-
-        {typologySeriesInSection.length > 0 && (
-          <section className="px-4 sm:px-6 pb-14">
-            <div className="mb-4">
-              <h3 className="font-headline text-2xl sm:text-3xl font-black tracking-tight text-on-surface">Coleções Relacionadas</h3>
-              <p className="text-xs text-on-surface-variant mt-1">
-                Séries tipológicas da Livraria Espiritual para aprofundar o estudo em continuidade com os tipos.
-              </p>
-            </div>
-            {typologySeriesInSection.map(([category, items]) => (
-              <TypologySeriesShelf
-                key={`types-home-${category}`}
-                category={category}
-                items={items}
-                onSelectBook={handleSelectBook}
-              />
-            ))}
-          </section>
-        )}
       </div>
     );
   }
