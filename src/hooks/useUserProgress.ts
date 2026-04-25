@@ -39,6 +39,9 @@ interface LivrariaEntry {
   slug: string;
   fallbackSeriesKey: string;
   fallbackSeriesLabel: string;
+  title: string;
+  category?: string;
+  image?: string;
 }
 
 export interface GoalProgress {
@@ -412,8 +415,8 @@ const matrixStudyEntries: MatrixStudyEntry[] = Object.entries(refutationModules)
 
 const matrixModuleSlugs = matrixStudyEntries.map((entry) => entry.slug);
 
-const livrariaModuleEntries: LivrariaEntry[] = Object.keys(allLivrariaModules)
-  .map((path) => {
+const livrariaModuleEntries: LivrariaEntry[] = Object.entries(allLivrariaModules)
+  .map(([path, markdown]) => {
     const normalizedPath = path.replace(/\\/g, '/');
     const markerLivraria = '/public/content/livraria/';
     const markerLivrariaEspitirual = '/public/content/selah/';
@@ -427,10 +430,16 @@ const livrariaModuleEntries: LivrariaEntry[] = Object.keys(allLivrariaModules)
     const fileStem = parts[parts.length - 1] ?? '';
     const seriesFolder = parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? '');
     if (!seriesFolder || !fileStem) return null;
+    const frontmatter = parseFrontmatter(markdown);
+    const firstHeading = markdown.match(/^#\s+(.+)$/m)?.[1]?.trim();
+    const title = frontmatter.title || firstHeading || fileStem;
     return {
       slug: `${seriesFolder}/${fileStem}`,
       fallbackSeriesKey: normalizeKey(seriesFolder),
       fallbackSeriesLabel: titleCase(seriesFolder),
+      title,
+      category: frontmatter.category || titleCase(seriesFolder),
+      image: frontmatter.image,
     };
   })
   .filter(Boolean) as LivrariaEntry[];
@@ -569,10 +578,35 @@ export function useUserProgress(): UserProgressSnapshot {
     });
   }, [weekStartMs]);
 
+  const mergedLibraryCards = useMemo(() => {
+    const bySlug = new Map<string, { title: string; slug: string; image?: string; category?: string }>();
+
+    for (const entry of livrariaModuleEntries) {
+      bySlug.set(entry.slug, {
+        title: entry.title || entry.slug,
+        slug: entry.slug,
+        image: entry.image,
+        category: entry.category,
+      });
+    }
+
+    for (const item of libBooks ?? []) {
+      const current = bySlug.get(item.slug);
+      bySlug.set(item.slug, {
+        title: item.title || current?.title || item.slug,
+        slug: item.slug,
+        image: item.image || current?.image,
+        category: item.category || current?.category,
+      });
+    }
+
+    return Array.from(bySlug.values());
+  }, [libBooks]);
+
   const spiritualGoal = useMemo(() => {
     const grouped = new Map<string, GoalGroup>();
 
-    for (const item of libBooks ?? []) {
+    for (const item of mergedLibraryCards) {
       const fallback = livrariaModuleEntries.find((entry) => entry.slug === item.slug);
       const label = (item.category || fallback?.fallbackSeriesLabel || titleCase(item.slug.split('/')[0] || 'Série')).trim();
       const key = normalizeKey(label);
@@ -598,7 +632,7 @@ export function useUserProgress(): UserProgressSnapshot {
       itemName: 'série',
       unitName: 'volumes',
     });
-  }, [libBooks, weekStartMs]);
+  }, [mergedLibraryCards, weekStartMs]);
 
   const goals = useMemo(
     () => [bibleGoal, manaGoal, matrixGoal, spiritualGoal],
@@ -611,17 +645,17 @@ export function useUserProgress(): UserProgressSnapshot {
   );
   const tiposCards = useMemo(
     () =>
-      (libBooks ?? [])
+      mergedLibraryCards
         .filter(isTypesBook)
         .map((item) => ({ title: item.title || item.slug, slug: item.slug, image: item.image })),
-    [libBooks],
+    [mergedLibraryCards],
   );
   const selahCards = useMemo(
     () =>
-      (libBooks ?? [])
+      mergedLibraryCards
         .filter((item) => !isTypesBook(item))
         .map((item) => ({ title: item.title || item.slug, slug: item.slug, image: item.image })),
-    [libBooks],
+    [mergedLibraryCards],
   );
   const babelCards = useMemo(
     () => matrixStudyEntries.map((item) => ({ title: item.title, slug: item.slug, image: item.image })),
