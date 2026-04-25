@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, useEffect, type ReactNode } from 'react';
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Hourglass, Tent } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Hourglass, Tent, Sparkles } from 'lucide-react';
 import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -84,6 +84,8 @@ const TYPOLOGY_DIVISION_FOLDER_TO_ID: Record<string, TypologyDivisionId> = {
   '2-tipologia-eventual': 'tipologia-eventual',
   '3-tipologia-institucional': 'tipologia-institucional',
   '4-tipologia-objetal': 'tipologia-objetal',
+  // Compatibilidade com estrutura editorial atual da pasta.
+  '4-tipologia-tabernaculo': 'tipologia-objetal',
   '5-tipologia-locativa': 'tipologia-locativa',
   '6-tipologia-ritual': 'tipologia-ritual',
   '7-tipologia-historica': 'tipologia-historica',
@@ -740,6 +742,7 @@ type SectionKey =
   | 'HISTÓRIA DA IGREJA'
   | 'COSMOLOGIA BÍBLICA'
   | 'TIPOLOGIA BÍBLICA'
+  | 'JESUS CRISTO'
   | 'PARÁBOLAS DE JESUS'
   | 'MUNDO ESPIRITUAL'
   | 'ANTROPOLOGIA ESPIRITUAL'
@@ -750,72 +753,91 @@ type SectionKey =
 
 // ── Section metadata ──────────────────────────────────────────────────────────
 const SECTIONS: Record<SectionKey, {
+  numero: string;
   label: string;
   description: string;
   Icon: React.ElementType;
   accent: string;
 }> = {
   'APÓCRIFOS': {
+    numero: '01',
     label: 'Apócrifos',
     description: 'Enoque, Jubileus e os textos banidos. A tradição que o cânon oficial não quis preservar.',
     Icon: Shield,
     accent: 'from-amber-900/70 to-amber-800/10',
   },
   'HISTÓRIA DA IGREJA': {
+    numero: '02',
     label: 'História da Igreja',
     description: 'A anatomia do dogma e os bastidores do poder. Uma análise sobre a verdadeira história da igreja, a formação de suas doutrinas e como a estrutura religiosa foi utilizada como ferramenta de manipulação e controle sistêmico.',
     Icon: BookOpen,
     accent: 'from-sky-900/70 to-sky-800/10',
   },
   'COSMOLOGIA BÍBLICA': {
+    numero: '03',
     label: 'Cosmologia Bíblica',
     description: 'Como a Bíblia usa tipologia para nos ensinar as verdades da terra, do universo e do Seu Reino.',
     Icon: Eye,
     accent: 'from-blue-900/70 to-cyan-800/10',
   },
   'TIPOLOGIA BÍBLICA': {
+    numero: '00',
     label: 'Tipologia',
     description: 'Como um Deus infinito usa uma tenda portátil para explicar o universo. As bases teológicas da tipologia bíblica — tavnit, hypodeigma e skia — e o que significa que o tabernáculo foi construído como réplica de uma realidade celestial.',
     Icon: Layers,
     accent: 'from-indigo-900/70 to-indigo-800/10',
   },
+  'JESUS CRISTO': {
+    numero: '04',
+    label: 'Jesus Cristo',
+    description: 'Estudos e séries centrados na pessoa, missão, autoridade e obra de Cristo.',
+    Icon: Sparkles,
+    accent: 'from-amber-900/70 to-yellow-800/10',
+  },
   'PARÁBOLAS DE JESUS': {
+    numero: '05',
     label: 'Parábolas de Jesus',
     description: 'Leituras exegéticas das parábolas de Cristo com contexto judaico, aplicação espiritual e profundidade do Reino.',
     Icon: BookOpen,
     accent: 'from-yellow-900/70 to-amber-800/10',
   },
   'MUNDO ESPIRITUAL': {
+    numero: '06',
     label: 'Mundo Espiritual',
     description: 'Uma jornada bíblica pelo Reino de Deus, conselho celeste e realidades invisíveis. Em Hebreus 8, o texto diz que servem como “exemplar e sombra das coisas celestiais”. Como é o mundo espiritual? A Bíblia responde.',
     Icon: Eye,
     accent: 'from-violet-900/70 to-violet-800/10',
   },
   'ANTROPOLOGIA ESPIRITUAL': {
+    numero: '07',
     label: 'Antropologia Espiritual',
     description: 'Centraliza os temas sobre a natureza humana: alma, espírito, corpo, estado intermediário, possessão, ressurreição e os impactos do transhumanismo.',
     Icon: BookOpen,
     accent: 'from-teal-900/70 to-cyan-800/10',
   },
   'ANTISISTEMA': {
+    numero: '08',
     label: 'Antissistema',
     description: 'Os protocolos de sobrevivência espiritual dentro de sistemas hostis. Daniel, José e os que atravessaram.',
     Icon: Zap,
     accent: 'from-emerald-900/70 to-emerald-800/10',
   },
   'IA & APOCALIPSE': {
+    numero: '09',
     label: 'IA & Apocalipse',
     description: 'Controle tecnológico, a Marca e os mecanismos proféticos que moldam o fim dos tempos.',
     Icon: Cpu,
     accent: 'from-rose-900/70 to-rose-800/10',
   },
   'FIM DOS TEMPOS': {
+    numero: '10',
     label: 'Fim dos Tempos',
     description: 'Escatologia bíblica, sinais proféticos e a reta final da história sob a perspectiva das Escrituras.',
     Icon: Hourglass,
     accent: 'from-orange-900/70 to-amber-800/10',
   },
   'BATALHA ESPIRITUAL': {
+    numero: '11',
     label: 'Batalha Espiritual',
     description: 'Discernimento, resistência e estratégias bíblicas para enfrentar as guerras invisíveis do nosso tempo.',
     Icon: Flame,
@@ -828,6 +850,7 @@ const SECTION_ORDER: SectionKey[] = [
   'COSMOLOGIA BÍBLICA',
   'APÓCRIFOS',
   'HISTÓRIA DA IGREJA',
+  'JESUS CRISTO',
   'PARÁBOLAS DE JESUS',
   'MUNDO ESPIRITUAL',
   'ANTROPOLOGIA ESPIRITUAL',
@@ -873,7 +896,8 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Série — A Revelação do Século':            'FIM DOS TEMPOS',
   'Série — A Onisciência como Atributo Exclusivo': 'IA & APOCALIPSE',
   'Série — O Relógio de Deus':              'APÓCRIFOS',
-  'Série — Invasão Legal':                    'BATALHA ESPIRITUAL',
+  'Série — Invasão Legal':                    'JESUS CRISTO',
+  'série — invasão legal':                    'JESUS CRISTO',
   'Série — A Armadura do Remanescente':       'BATALHA ESPIRITUAL',
   'Série — A Arquitetura da Guerra Invisível': 'BATALHA ESPIRITUAL',
   'FIM DOS TEMPOS':                           'FIM DOS TEMPOS',
@@ -1170,7 +1194,7 @@ function DragScrollRow({ children }: { children: ReactNode }) {
   return (
     <div
       ref={rowRef}
-      className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      className="flex gap-3 sm:gap-4 overflow-x-auto pb-3 sm:pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       onPointerDown={(e) => {
         if (e.pointerType !== 'mouse' || e.button !== 0) return;
         const el = rowRef.current;
@@ -1272,7 +1296,7 @@ function TypePreviewBookCard({ item, onSelect }: { item: BookItem; onSelect: () 
     <button
       type="button"
       onClick={onSelect}
-      className="group shrink-0 w-[132px] sm:w-[148px] snap-start text-left"
+      className="group shrink-0 w-[122px] sm:w-[148px] snap-start text-left"
     >
       <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-primary/25 bg-black/30">
         <div className="absolute inset-0 bg-gradient-to-br from-[#201913] via-[#141210] to-[#0f0f0f]" />
@@ -1286,7 +1310,7 @@ function TypePreviewBookCard({ item, onSelect }: { item: BookItem; onSelect: () 
         )}
         <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(242,192,141,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.08)_1px,transparent_1px)] [background-size:16px_16px]" />
       </div>
-      <p className="mt-2 text-[9px] text-on-surface-variant/85 leading-snug line-clamp-2 font-semibold">
+      <p className="mt-1.5 sm:mt-2 text-[8px] sm:text-[9px] text-on-surface-variant/85 leading-snug line-clamp-2 font-semibold">
         {item.title}
       </p>
     </button>
@@ -1295,8 +1319,8 @@ function TypePreviewBookCard({ item, onSelect }: { item: BookItem; onSelect: () 
 
 function TypeExamplePlate({ label }: { label: string }) {
   return (
-    <div className="shrink-0 w-[132px] sm:w-[148px] h-[108px] snap-start rounded-xl border border-primary/25 bg-gradient-to-br from-[#1f1a15] via-[#141210] to-[#101010] p-3 flex items-end">
-      <p className="text-[10px] font-semibold leading-snug text-on-surface-variant/90">{label}</p>
+    <div className="shrink-0 w-[122px] sm:w-[148px] h-[94px] sm:h-[108px] snap-start rounded-xl border border-primary/25 bg-gradient-to-br from-[#1f1a15] via-[#141210] to-[#101010] p-2.5 sm:p-3 flex items-end">
+      <p className="text-[9px] sm:text-[10px] font-semibold leading-snug text-on-surface-variant/90">{label}</p>
     </div>
   );
 }
@@ -1319,28 +1343,28 @@ function TypologyTypeCard({
   };
 
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-br from-[#1f1a15] via-[#151312] to-[#101010] p-5 shadow-[0_18px_42px_rgba(0,0,0,0.38)] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_22px_50px_rgba(0,0,0,0.5)]">
+    <article className="group relative overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-br from-[#1f1a15] via-[#151312] to-[#101010] p-4 sm:p-5 shadow-[0_18px_42px_rgba(0,0,0,0.38)] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_22px_50px_rgba(0,0,0,0.5)]">
       <div className="pointer-events-none absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_90%_10%,rgba(242,192,141,0.2),transparent_45%)]" />
       <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${TYPOLOGY_BG_BY_TYPE[type.id]} opacity-40`} />
-      <div className="pointer-events-none absolute right-2 top-0 text-[84px] font-black tracking-tighter text-primary/10 select-none">
+      <div className="pointer-events-none absolute right-2 top-0 text-[62px] sm:text-[84px] font-black tracking-tighter text-primary/10 select-none">
         {type.numero}
       </div>
 
       <div className="relative z-10">
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <span className="inline-flex rounded-full border border-primary/35 bg-primary/10 px-2 py-1 text-[9px] font-black uppercase tracking-[0.17em] text-primary">
+        <div className="mb-2.5 sm:mb-3 flex items-center justify-between gap-2">
+          <span className="inline-flex rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.17em] text-primary">
             {type.label}
           </span>
-          <Layers size={16} className="text-primary/85" />
+          <Layers className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary/85" />
         </div>
 
-        <h3 className="font-headline text-3xl leading-none font-black text-on-surface mb-2">{type.titulo}</h3>
-        <p className="text-sm font-semibold text-primary/90 mb-2">{type.subtitulo}</p>
-        <p className="text-xs text-on-surface-variant leading-relaxed mb-4">{type.descricao}</p>
+        <h3 className="font-headline text-2xl sm:text-3xl leading-none font-black text-on-surface mb-1.5 sm:mb-2">{type.titulo}</h3>
+        <p className="text-xs sm:text-sm font-semibold text-primary/90 mb-1.5 sm:mb-2">{type.subtitulo}</p>
+        <p className="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed mb-3 sm:mb-4">{type.descricao}</p>
 
-        <div className="border-t border-primary/15 pt-3">
-          <div className="mb-2 flex items-center justify-between">
-            <p className="text-[9px] font-black uppercase tracking-[0.18em] text-primary/80">Conteúdo deste tipo</p>
+        <div className="border-t border-primary/15 pt-2.5 sm:pt-3">
+          <div className="mb-1.5 sm:mb-2 flex items-center justify-between">
+            <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary/80">Conteúdo deste tipo</p>
             <div className={`${previewBooks.length > 0 ? 'hidden sm:flex' : 'hidden'} items-center gap-1`}>
               <button
                 type="button"
@@ -1362,15 +1386,15 @@ function TypologyTypeCard({
           </div>
 
           {previewBooks.length > 0 ? (
-            <div ref={rowRef} className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div ref={rowRef} className="flex gap-2.5 sm:gap-3 overflow-x-auto snap-x snap-mandatory pb-1.5 sm:pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {previewBooks.map((item) => (
                 <TypePreviewBookCard key={item.slug} item={item} onSelect={() => onSelectBook(item.slug)} />
               ))}
             </div>
           ) : (
-            <div className="rounded-xl border border-primary/20 bg-black/25 px-4 py-3">
-              <p className="text-[11px] font-semibold text-primary/95">Conteúdos em preparação</p>
-              <p className="mt-1 text-[10px] leading-snug text-on-surface-variant/75">
+            <div className="rounded-xl border border-primary/20 bg-black/25 px-3.5 sm:px-4 py-2.5 sm:py-3">
+              <p className="text-[10px] sm:text-[11px] font-semibold text-primary/95">Conteúdos em preparação</p>
+              <p className="mt-1 text-[9px] sm:text-[10px] leading-snug text-on-surface-variant/75">
                 Esta área será preenchida quando os e-books deste tipo forem adicionados à biblioteca.
               </p>
             </div>
@@ -1380,7 +1404,7 @@ function TypologyTypeCard({
         <button
           type="button"
           onClick={onEnter}
-          className="mt-4 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary"
+          className="mt-3 sm:mt-4 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-primary"
         >
           Entrar no tipo
           <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-1" />
@@ -1409,10 +1433,10 @@ function TypologySeriesShelf({
   const description = buildAutoSeriesDescription(category, items);
 
   return (
-    <section className="mb-6">
-      <div className="mb-2.5">
+    <section className="mb-5 sm:mb-6">
+      <div className="mb-2">
         <div className="mb-1 flex items-center justify-between gap-2">
-          <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-primary">
+          <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-primary">
             SÉRIE
           </span>
           <div className="hidden sm:flex items-center gap-1">
@@ -1434,16 +1458,16 @@ function TypologySeriesShelf({
             </button>
           </div>
         </div>
-        <h4 className="font-headline font-extrabold text-xl text-on-surface tracking-tighter uppercase leading-none">
+        <h4 className="font-headline font-extrabold text-lg sm:text-xl text-on-surface tracking-tighter uppercase leading-none">
           {label}
         </h4>
         {description && (
-          <p className="mt-1.5 text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-2xl">
+          <p className="mt-1 text-[9px] sm:text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-2xl">
             {description}
           </p>
         )}
       </div>
-      <div ref={rowRef} className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div ref={rowRef} className="flex gap-3 sm:gap-4 overflow-x-auto pb-3 sm:pb-4 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {items.map((item, j) => (
           <BookCard
             key={item.slug}
@@ -1463,14 +1487,14 @@ function SectionCard({ sectionKey, books, onSelect }: {
   books: BookItem[];
   onSelect: () => void;
 }) {
-  const { label, description, Icon, accent } = SECTIONS[sectionKey];
+  const { label, description, Icon, accent, numero } = SECTIONS[sectionKey];
   const cover = books[0]?.image;
   const totalRead = pm.countRead('livraria', books.map((b) => b.slug));
 
   return (
     <div
       onClick={onSelect}
-      className="interactive-card group relative w-full h-44 rounded-2xl overflow-hidden cursor-pointer active:scale-[0.98] transition-all duration-300 border gold-glow-hover border-white/5 hover:border-primary/30 hover:shadow-[0_0_40px_rgba(242,192,141,0.10)]"
+      className="interactive-card group relative w-full h-40 sm:h-44 rounded-2xl overflow-hidden cursor-pointer active:scale-[0.98] transition-all duration-300 border gold-glow-hover border-primary/25 hover:border-primary/40 hover:shadow-[0_0_40px_rgba(242,192,141,0.10)]"
     >
       {/* Cover image — blurred, zooms out on hover */}
       {cover && (
@@ -1488,21 +1512,24 @@ function SectionCard({ sectionKey, books, onSelect }: {
 
       {/* Subtle inner glow on hover */}
       <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[inset_0_0_40px_rgba(242,192,141,0.06)]" />
+      <div className="pointer-events-none absolute right-2 top-0 text-[58px] sm:text-[76px] font-black tracking-tighter text-primary/10 select-none">
+        {numero}
+      </div>
 
       {/* Content */}
-      <div className="relative h-full flex flex-col justify-between p-5">
+      <div className="relative h-full flex flex-col justify-between p-4 sm:p-5">
         {/* Top row */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
             <div className="rounded-lg p-1.5 transition-all bg-black/40 border border-white/10 group-hover:border-primary/30 group-hover:bg-primary/10">
               <Icon size={14} className="text-primary/80 group-hover:text-primary transition-colors" />
             </div>
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] transition-colors text-white/40 group-hover:text-primary/70">
+            <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] transition-colors text-white/40 group-hover:text-primary/70">
               {books.length} volume{books.length !== 1 ? 's' : ''}
             </span>
           </div>
           {totalRead > 0 && (
-            <span className="text-[8px] font-black uppercase tracking-widest text-white/40 bg-black/50 px-2 py-0.5 rounded-full border border-white/5">
+            <span className="text-[7px] sm:text-[8px] font-black uppercase tracking-widest text-white/40 bg-black/50 px-1.5 sm:px-2 py-0.5 rounded-full border border-white/5">
               {totalRead}/{books.length} lidos
             </span>
           )}
@@ -1510,10 +1537,13 @@ function SectionCard({ sectionKey, books, onSelect }: {
 
         {/* Bottom text */}
         <div>
-          <h3 className="font-headline font-black text-[22px] text-white tracking-tight leading-none mb-1.5 group-hover:text-primary transition-colors duration-300">
+          <span className="inline-flex rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.18em] text-primary mb-1">
+            Seção Selah
+          </span>
+          <h3 className="font-headline font-black text-[18px] sm:text-[22px] text-white tracking-tight leading-none mb-1 sm:mb-1.5 group-hover:text-primary transition-colors duration-300">
             {label.toUpperCase()}
           </h3>
-          <p className="text-[10px] text-white/45 leading-snug font-medium line-clamp-2 group-hover:text-white/65 transition-colors duration-300 max-w-[260px]">
+          <p className="text-[9px] sm:text-[10px] text-white/45 leading-snug font-medium line-clamp-2 group-hover:text-white/65 transition-colors duration-300 max-w-[260px]">
             {description}
           </p>
         </div>
@@ -1673,8 +1703,8 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
       const relatedSeries = typologySeriesByType[activeType.id] ?? [];
 
       return (
-        <div className="pt-6 pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
-          <section className="rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-5 sm:p-6">
+        <div className="pt-4 sm:pt-6 pb-24 sm:pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
+          <section className="rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-4 sm:p-6">
             <button
               type="button"
               onClick={() => setActiveTypeId(null)}
@@ -1684,20 +1714,20 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
               TIPOS
             </button>
 
-            <div className="mt-4 mb-5">
-              <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-2">
+            <div className="mt-3 sm:mt-4 mb-4 sm:mb-5">
+              <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
                 {activeType.label}
               </span>
-              <h2 className="font-headline text-3xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
+              <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
                 {activeType.titulo}
               </h2>
-              <p className="text-sm text-primary/85 font-semibold mt-1">{activeType.subtitulo}</p>
-              <p className="text-xs text-on-surface-variant leading-relaxed mt-2 max-w-3xl">{activeType.descricao}</p>
+              <p className="text-xs sm:text-sm text-primary/85 font-semibold mt-1">{activeType.subtitulo}</p>
+              <p className="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">{activeType.descricao}</p>
             </div>
 
-            <div className="mt-4 rounded-2xl border border-primary/20 bg-black/20 p-4 sm:p-5">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-3">Exemplos deste tipo</h3>
-              <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="mt-3 sm:mt-4 rounded-2xl border border-primary/20 bg-black/20 p-3.5 sm:p-5">
+              <h3 className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2.5 sm:mb-3">Exemplos deste tipo</h3>
+              <div className="flex gap-2.5 sm:gap-3 overflow-x-auto pb-1.5 sm:pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {activeType.exemplos.map((example) => (
                   <TypeExamplePlate key={example} label={example} />
                 ))}
@@ -1705,11 +1735,11 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
             </div>
 
             {relatedSeries.length > 0 ? (
-              <div className="mt-7 border-t border-primary/15 pt-5">
-                <h3 className="font-headline text-2xl font-black tracking-tight text-on-surface mb-1 uppercase">
+              <div className="mt-5 sm:mt-7 border-t border-primary/15 pt-4 sm:pt-5">
+                <h3 className="font-headline text-xl sm:text-2xl font-black tracking-tight text-on-surface mb-1 uppercase">
                   Coleções Relacionadas
                 </h3>
-                <p className="text-xs text-on-surface-variant mb-4 max-w-3xl">
+                <p className="text-[11px] sm:text-xs text-on-surface-variant mb-3 sm:mb-4 max-w-3xl">
                   Séries tipológicas conectadas a este tipo para aprofundar sua leitura.
                 </p>
                 {relatedSeries.map(([category, items]) => (
@@ -1722,9 +1752,9 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
                 ))}
               </div>
             ) : (
-              <div className="mt-7 rounded-2xl border border-primary/20 bg-black/20 px-4 py-4 sm:px-5">
-                <p className="text-sm font-semibold text-primary/95">Conteúdos em preparação</p>
-                <p className="mt-1.5 text-xs leading-relaxed text-on-surface-variant/80 max-w-2xl">
+              <div className="mt-5 sm:mt-7 rounded-2xl border border-primary/20 bg-black/20 px-3.5 sm:px-5 py-3.5 sm:py-4">
+                <p className="text-xs sm:text-sm font-semibold text-primary/95">Conteúdos em preparação</p>
+                <p className="mt-1 text-[11px] sm:text-xs leading-relaxed text-on-surface-variant/80 max-w-2xl">
                   Esta área será preenchida quando os e-books deste tipo forem adicionados à biblioteca.
                 </p>
               </div>
@@ -1735,23 +1765,23 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
     }
 
     return (
-      <div className="pb-24 min-h-screen bg-surface-container-lowest">
-        <div className="pt-8 px-4 sm:px-6 mb-8">
-          <header className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-[#1f1a15] via-[#131110] to-[#0d0d0d] px-6 py-8 sm:px-8 sm:py-10 shadow-[0_24px_65px_rgba(0,0,0,0.58)]">
+      <div className="pb-20 sm:pb-24 min-h-screen bg-surface-container-lowest">
+        <div className="pt-6 sm:pt-8 px-4 sm:px-6 mb-6 sm:mb-8">
+          <header className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-[#1f1a15] via-[#131110] to-[#0d0d0d] px-4 sm:px-8 py-6 sm:py-10 shadow-[0_24px_65px_rgba(0,0,0,0.58)]">
             <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:radial-gradient(circle_at_18%_20%,rgba(242,192,141,0.26),transparent_42%),radial-gradient(circle_at_78%_88%,rgba(212,165,116,0.16),transparent_36%)]" />
             <div className="pointer-events-none absolute inset-0 opacity-10 [background-image:linear-gradient(rgba(242,192,141,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.05)_1px,transparent_1px)] [background-size:20px_20px]" />
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-3 py-1 mb-3">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-2.5 sm:px-3 py-0.5 sm:py-1 mb-2.5 sm:mb-3">
                 <Tent size={12} className="text-primary" />
-                <span className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">SEÇÃO TIPOS</span>
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.22em] text-primary">SEÇÃO TIPOS</span>
               </div>
-              <h1 className="font-headline text-4xl sm:text-5xl font-black text-primary mb-2 tracking-tighter text-shadow-glow">
+              <h1 className="font-headline text-3xl sm:text-5xl font-black text-primary mb-1.5 sm:mb-2 tracking-tighter text-shadow-glow">
                 TIPOS
               </h1>
-              <p className="text-sm sm:text-base text-on-surface font-semibold mb-2">
+              <p className="text-xs sm:text-base text-on-surface font-semibold mb-1.5 sm:mb-2">
                 A leitura tipológica organizada para explorar a Escritura com ordem e profundidade.
               </p>
-              <p className="text-xs sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
+              <p className="text-[11px] sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
                 A tipologia da SELAH está organizada em 8 tipos de leitura, para ajudar o leitor a reconhecer
                 como pessoas, eventos, instituições, objetos, lugares, rituais, padrões históricos e consumação apontam para Cristo
                 e para o Reino.
@@ -1760,15 +1790,15 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
           </header>
         </div>
 
-        <section className="px-4 sm:px-6 pb-10">
-          <div className="mb-4">
-            <h2 className="font-headline text-2xl sm:text-3xl font-black tracking-tight text-on-surface">Escolha seu tipo</h2>
+        <section className="px-4 sm:px-6 pb-8 sm:pb-10">
+          <div className="mb-3 sm:mb-4">
+            <h2 className="font-headline text-xl sm:text-3xl font-black tracking-tight text-on-surface">Escolha seu tipo</h2>
             <p className="text-xs text-on-surface-variant mt-1">
               Cada tipo organiza uma via de leitura. Escolha por onde deseja explorar a tipologia bíblica hoje.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4">
             {TYPOLOGY_TYPES.map((type) => (
               <TypologyTypeCard
                 key={type.id}
@@ -1786,129 +1816,157 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
 
   // ── Section detail ─────────────────────────────────────────────────────────
   if (selectedSection) {
-    const { label, description, Icon } = SECTIONS[selectedSection];
+    const { label, description, Icon, numero } = SECTIONS[selectedSection];
     return (
-      <div className="relative pt-6 pb-32 px-5 max-w-7xl mx-auto">
-        <FireflyLayer />
-        <div className="mb-8">
+      <div className="pt-4 sm:pt-6 pb-24 sm:pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
+        <section className="relative overflow-hidden rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-4 sm:p-6">
+          <FireflyLayer />
+          <div className="pointer-events-none absolute right-3 top-1 text-[68px] sm:text-[90px] font-black tracking-tighter text-primary/10 select-none">
+            {numero}
+          </div>
+
           <button
             onClick={() => setSelectedSection(null)}
-            className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors mb-6 active:scale-95 text-[10px] font-black uppercase tracking-widest"
+            className="relative z-10 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
           >
-            <ChevronLeft size={15} />
-            SELAH
+            <ArrowLeft size={12} />
+            Selah
           </button>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="bg-primary/15 border border-primary/25 rounded-xl p-2">
-              <Icon size={18} className="text-primary" />
+
+          <div className="relative z-10 mt-3 sm:mt-4 mb-4 sm:mb-5">
+            <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
+              Seção Selah
+            </span>
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <div className="rounded-xl border border-primary/25 bg-primary/10 p-2">
+                <Icon size={16} className="text-primary" />
+              </div>
+              <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
+                {label}
+              </h2>
             </div>
-            <h2 className="font-headline font-black text-3xl text-primary tracking-tighter uppercase">
-              {label}
-            </h2>
+            <p className="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">{description}</p>
           </div>
-          <p className="text-on-surface-variant/70 text-[11px] max-w-sm font-medium leading-relaxed">
-            {description}
-          </p>
-        </div>
 
-        {seriesInSection.map(([cat, items], index) => {
-          const reads = items.map((b) => pm.getReadCount('livraria', b.slug));
-          const minReads = reads.length ? Math.min(...reads) : 0;
-          const label = SERIES_LABEL[cat] ?? cat;
-          const seriesDescription = buildAutoSeriesDescription(cat, items);
-          const badgeLabel = getSeriesBadgeLabel(selectedSection, cat);
+          <div className="relative z-10 border-t border-primary/15 pt-4 sm:pt-5">
+            {seriesInSection.map(([cat, items], index) => {
+              const reads = items.map((b) => pm.getReadCount('livraria', b.slug));
+              const minReads = reads.length ? Math.min(...reads) : 0;
+              const label = SERIES_LABEL[cat] ?? cat;
+              const seriesDescription = buildAutoSeriesDescription(cat, items);
+              const badgeLabel = getSeriesBadgeLabel(selectedSection, cat);
 
-          return (
-            <div key={cat} className="mb-6">
-              <div className="mb-2.5">
-                <div className="mb-1">
-                  <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-primary">
-                    {badgeLabel}
-                  </span>
-                </div>
-                <div className="flex items-baseline gap-2 flex-wrap">
-                  <h4 className="font-headline font-extrabold text-xl text-on-surface tracking-tighter uppercase leading-none">
-                    {label}
-                  </h4>
-                  {minReads > 0 && (
-                    <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">
-                      (Lido {minReads} vez{minReads > 1 ? 'es' : ''})
-                    </span>
+              return (
+                <div key={cat} className="mb-5 sm:mb-6">
+                  <div className="mb-2">
+                    <div className="mb-1">
+                      <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-primary">
+                        {badgeLabel}
+                      </span>
+                    </div>
+                    <div className="flex items-baseline gap-2 flex-wrap">
+                      <h4 className="font-headline font-extrabold text-lg sm:text-xl text-on-surface tracking-tighter uppercase leading-none">
+                        {label}
+                      </h4>
+                      {minReads > 0 && (
+                        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">
+                          (Lido {minReads} vez{minReads > 1 ? 'es' : ''})
+                        </span>
+                      )}
+                    </div>
+                    {seriesDescription && (
+                      <p className="mt-1 text-[9px] sm:text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm">
+                        {seriesDescription}
+                      </p>
+                    )}
+                  </div>
+                  <div className="relative -mx-4 px-4 sm:-mx-6 sm:px-6">
+                    <DragScrollRow>
+                      {items.map((item, j) => (
+                        <BookCard
+                          key={item.slug}
+                          item={item}
+                          displayVolume={extractVolumeFromBook(item) ?? (j + 1)}
+                          onSelect={() => handleSelectBook(item.slug)}
+                        />
+                      ))}
+                    </DragScrollRow>
+                  </div>
+
+                  {index < seriesInSection.length - 1 && (
+                    <div className="mt-2.5 sm:mt-3 px-1">
+                      <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/55 to-transparent animate-[pulse_4.5s_ease-in-out_infinite]" />
+                    </div>
                   )}
                 </div>
-                {seriesDescription && (
-                  <p className="mt-1.5 text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm">
-                    {seriesDescription}
-                  </p>
-                )}
-              </div>
-              <div className="relative -mx-5 px-5">
-                <DragScrollRow>
-                  {items.map((item, j) => (
-                    <BookCard
-                      key={item.slug}
-                      item={item}
-                      displayVolume={extractVolumeFromBook(item) ?? (j + 1)}
-                      onSelect={() => handleSelectBook(item.slug)}
-                    />
-                  ))}
-                </DragScrollRow>
-              </div>
+              );
+            })}
 
-              {index < seriesInSection.length - 1 && (
-                <div className="mt-3 px-1">
-                  <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/55 to-transparent animate-[pulse_4.5s_ease-in-out_infinite]" />
-                </div>
-              )}
-            </div>
-          );
-        })}
-
-        {seriesInSection.length === 0 && !loading && (
-          <p className="text-center text-[10px] uppercase tracking-widest text-on-surface-variant/40 py-16 font-bold">
-            Conteúdo em breve.
-          </p>
-        )}
+            {seriesInSection.length === 0 && !loading && (
+              <p className="text-center text-[10px] uppercase tracking-widest text-on-surface-variant/40 py-12 sm:py-16 font-bold">
+                Conteúdo em breve.
+              </p>
+            )}
+          </div>
+        </section>
       </div>
     );
   }
 
   // ── Main grid ──────────────────────────────────────────────────────────────
   return (
-    <div className="relative pt-6 pb-32 px-5 max-w-7xl mx-auto">
-      <FireflyLayer />
-      <header className="mb-10 relative">
-        <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px]" />
-        <div className="relative z-10">
-          <h2 className="font-headline font-extrabold text-3xl text-primary tracking-tighter mb-2">
-            SELAH
-          </h2>
-          <p className="text-on-surface-variant/70 text-[11px] max-w-[300px] font-medium leading-relaxed">
-            Biblioteca de estudos para discernimento bíblico, história da fé e guerra espiritual. Escolha sua frente de estudo e avance por séries, trilogias e investigações aprofundadas.
+    <div className="pb-20 sm:pb-24 min-h-screen bg-surface-container-lowest">
+      <div className="pt-6 sm:pt-8 px-4 sm:px-6 mb-6 sm:mb-8">
+        <header className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-[#1f1a15] via-[#131110] to-[#0d0d0d] px-4 sm:px-8 py-6 sm:py-10 shadow-[0_24px_65px_rgba(0,0,0,0.58)]">
+          <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:radial-gradient(circle_at_18%_20%,rgba(242,192,141,0.26),transparent_42%),radial-gradient(circle_at_78%_88%,rgba(212,165,116,0.16),transparent_36%)]" />
+          <div className="pointer-events-none absolute inset-0 opacity-10 [background-image:linear-gradient(rgba(242,192,141,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.05)_1px,transparent_1px)] [background-size:20px_20px]" />
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-2.5 sm:px-3 py-0.5 sm:py-1 mb-2.5 sm:mb-3">
+              <Tent size={12} className="text-primary" />
+              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.22em] text-primary">SEÇÃO SELAH</span>
+            </div>
+            <h1 className="font-headline text-3xl sm:text-5xl font-black text-primary mb-1.5 sm:mb-2 tracking-tighter text-shadow-glow">
+              SELAH
+            </h1>
+            <p className="text-xs sm:text-base text-on-surface font-semibold mb-1.5 sm:mb-2">
+              Biblioteca editorial para discernimento, formação doutrinária e leitura profética.
+            </p>
+            <p className="text-[11px] sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
+              Navegue por subseções temáticas com séries e trilogias aprofundadas. Cada frente organiza os conteúdos para facilitar progresso e leitura contínua.
+            </p>
+          </div>
+        </header>
+      </div>
+
+      <section className="px-4 sm:px-6 pb-8 sm:pb-10">
+        <div className="mb-3 sm:mb-4">
+          <h2 className="font-headline text-xl sm:text-3xl font-black tracking-tight text-on-surface">Escolha sua seção</h2>
+          <p className="text-xs text-on-surface-variant mt-1">
+            Selecione a frente editorial que deseja explorar dentro da biblioteca Selah.
           </p>
         </div>
-      </header>
 
-      {loading ? (
-        <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">
-          Carregando SELAH...
-        </div>
-      ) : (
-        <div className="flex flex-col gap-4">
-          {visibleSectionOrder.map((sec) => (
-            <SectionCard
-              key={sec}
-              sectionKey={sec}
-              books={booksBySection[sec]}
-              onSelect={() => setSelectedSection(sec)}
-            />
-          ))}
-        </div>
-      )}
+        {loading ? (
+          <div className="py-8 sm:py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">
+            Carregando SELAH...
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4">
+            {visibleSectionOrder.map((sec) => (
+              <SectionCard
+                key={sec}
+                sectionKey={sec}
+                books={booksBySection[sec]}
+                onSelect={() => setSelectedSection(sec)}
+              />
+            ))}
+          </div>
+        )}
 
-      {error && (
-        <p className="text-red-500 text-[10px] uppercase font-bold text-center py-4">{error}</p>
-      )}
+        {error && (
+          <p className="text-red-500 text-[10px] uppercase font-bold text-center py-4">{error}</p>
+        )}
+      </section>
     </div>
   );
 }

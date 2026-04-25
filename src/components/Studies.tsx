@@ -237,7 +237,7 @@ function TemaProgress({ slug }: { slug: string }) {
           style={{ width: `${isCompleted ? 100 : progress}%` }}
         />
       </div>
-      <p className="mt-1 text-[10px] font-semibold text-on-surface-variant/80">{status}</p>
+      <p className="mt-1 text-[9px] sm:text-[10px] font-semibold text-on-surface-variant/80">{status}</p>
     </div>
   );
 }
@@ -249,7 +249,7 @@ function DragScrollRow({ children }: { children: ReactNode }) {
   return (
     <div
       ref={rowRef}
-      className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      className="flex gap-3 sm:gap-4 overflow-x-auto pb-3 sm:pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       onClickCapture={(e) => {
         if (drag.current.didDrag) {
           e.preventDefault();
@@ -289,7 +289,7 @@ function DragScrollRow({ children }: { children: ReactNode }) {
 
 function TemaPreviewCard({ tendaId, tema, onSelect }: { tendaId: TendaId; tema: ManaTema; onSelect: () => void }) {
   return (
-    <button type="button" onClick={onSelect} className="relative shrink-0 w-[156px] sm:w-[168px] snap-start text-left">
+    <button type="button" onClick={onSelect} className="relative shrink-0 w-[146px] sm:w-[168px] snap-start text-left">
       <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-primary/20">
         <div className={`absolute inset-0 bg-gradient-to-br ${TENDA_BG[tendaId]}`} />
         {tema.image && (
@@ -303,7 +303,7 @@ function TemaPreviewCard({ tendaId, tema, onSelect }: { tendaId: TendaId; tema: 
         <div className="absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_22%_18%,rgba(242,192,141,0.25),transparent_45%)]" />
         <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(242,192,141,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.08)_1px,transparent_1px)] [background-size:17px_17px]" />
       </div>
-      {tema.description && <p className="mt-2 text-[10px] text-on-surface-variant leading-relaxed line-clamp-3">{tema.description}</p>}
+      {tema.description && <p className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-on-surface-variant leading-relaxed line-clamp-3">{tema.description}</p>}
       <TemaProgress slug={tema.slug} />
     </button>
   );
@@ -318,27 +318,27 @@ function TendaCard({ tenda, onEnter, onSelectTema }: { tenda: ManaTenda; onEnter
   };
 
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-br from-[#1f1a15] via-[#151312] to-[#101010] p-5 shadow-[0_18px_42px_rgba(0,0,0,0.38)] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_22px_50px_rgba(0,0,0,0.5)]">
+    <article className="group relative overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-br from-[#1f1a15] via-[#151312] to-[#101010] p-4 sm:p-5 shadow-[0_18px_42px_rgba(0,0,0,0.38)] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_22px_50px_rgba(0,0,0,0.5)]">
       <div className="pointer-events-none absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_90%_10%,rgba(242,192,141,0.2),transparent_45%)]" />
-      <div className="pointer-events-none absolute right-2 top-0 text-[84px] font-black tracking-tighter text-primary/10 select-none">
+      <div className="pointer-events-none absolute right-2 top-0 text-[62px] sm:text-[84px] font-black tracking-tighter text-primary/10 select-none">
         {tenda.numero}
       </div>
 
       <div className="relative z-10">
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <span className="inline-flex rounded-full border border-primary/35 bg-primary/10 px-2 py-1 text-[9px] font-black uppercase tracking-[0.17em] text-primary">
+        <div className="mb-2.5 sm:mb-3 flex items-center justify-between gap-2">
+          <span className="inline-flex rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.17em] text-primary">
             {tenda.label}
           </span>
-          <Icon size={16} className="text-primary/85" />
+          <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary/85" />
         </div>
 
-        <h3 className="font-headline text-3xl leading-none font-black text-on-surface mb-2">{tenda.titulo}</h3>
-        <p className="text-sm font-semibold text-primary/90 mb-2">{tenda.subtitulo}</p>
-        <p className="text-xs text-on-surface-variant leading-relaxed mb-4">{tenda.descricao}</p>
+        <h3 className="font-headline text-2xl sm:text-3xl leading-none font-black text-on-surface mb-1.5 sm:mb-2">{tenda.titulo}</h3>
+        <p className="text-xs sm:text-sm font-semibold text-primary/90 mb-1.5 sm:mb-2">{tenda.subtitulo}</p>
+        <p className="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed mb-3 sm:mb-4">{tenda.descricao}</p>
 
-        <div className="border-t border-primary/15 pt-3">
-          <div className="mb-2 flex items-center justify-between">
-            <p className="text-[9px] font-black uppercase tracking-[0.18em] text-primary/80">Temas desta tenda</p>
+        <div className="border-t border-primary/15 pt-2.5 sm:pt-3">
+          <div className="mb-1.5 sm:mb-2 flex items-center justify-between">
+            <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary/80">Temas desta tenda</p>
             <div className="hidden sm:flex items-center gap-1">
               <button
                 type="button"
@@ -359,7 +359,7 @@ function TendaCard({ tenda, onEnter, onSelectTema }: { tenda: ManaTenda; onEnter
             </div>
           </div>
 
-          <div ref={rowRef} className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div ref={rowRef} className="flex gap-2.5 sm:gap-3 overflow-x-auto snap-x snap-mandatory pb-1.5 sm:pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {tenda.temas.map((tema) => (
               <TemaPreviewCard key={tema.id} tendaId={tenda.id} tema={tema} onSelect={() => onSelectTema(tema)} />
             ))}
@@ -369,7 +369,7 @@ function TendaCard({ tenda, onEnter, onSelectTema }: { tenda: ManaTenda; onEnter
         <button
           type="button"
           onClick={onEnter}
-          className="mt-4 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary"
+          className="mt-3 sm:mt-4 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-primary"
         >
           Entrar na tenda
           <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-1" />
@@ -381,7 +381,7 @@ function TendaCard({ tenda, onEnter, onSelectTema }: { tenda: ManaTenda; onEnter
 
 function TendaShelfCard({ tendaId, tema, onSelect }: { tendaId: TendaId; tema: ManaTema; onSelect: () => void }) {
   return (
-    <button type="button" onClick={onSelect} className="group shrink-0 w-[172px] sm:w-[198px] flex flex-col snap-start text-left">
+    <button type="button" onClick={onSelect} className="group shrink-0 w-[156px] sm:w-[198px] flex flex-col snap-start text-left">
       <div className="relative aspect-[2/3] rounded-xl overflow-hidden border border-primary/25">
         <div className={`absolute inset-0 bg-gradient-to-br ${TENDA_BG[tendaId]}`} />
         {tema.image && (
@@ -396,7 +396,7 @@ function TendaShelfCard({ tendaId, tema, onSelect }: { tendaId: TendaId; tema: M
         <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(242,192,141,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.08)_1px,transparent_1px)] [background-size:18px_18px]" />
       </div>
 
-      <p className="mt-2 text-[10px] text-on-surface-variant leading-relaxed line-clamp-3">
+      <p className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-on-surface-variant leading-relaxed line-clamp-3">
         {tema.description || 'Tema preparado para receber conteúdo completo nesta tenda.'}
       </p>
       <TemaProgress slug={tema.slug} />
@@ -551,8 +551,8 @@ export default function Studies() {
 
   if (activeTenda) {
     return (
-      <div className="pt-6 pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
-        <section className="rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-5 sm:p-6">
+      <div className="pt-4 sm:pt-6 pb-24 sm:pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
+        <section className="rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-4 sm:p-6">
           <button
             type="button"
             onClick={() => setActiveTendaId(null)}
@@ -562,18 +562,18 @@ export default function Studies() {
             Maná
           </button>
 
-          <div className="mt-4 mb-5">
-            <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-2">
+          <div className="mt-3 sm:mt-4 mb-4 sm:mb-5">
+            <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
               {activeTenda.label}
             </span>
-            <h2 className="font-headline text-3xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
+            <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
               {activeTenda.titulo}
             </h2>
-            <p className="text-sm text-primary/85 font-semibold mt-1">{activeTenda.subtitulo}</p>
-            <p className="text-xs text-on-surface-variant leading-relaxed mt-2 max-w-3xl">{activeTenda.descricao}</p>
+            <p className="text-xs sm:text-sm text-primary/85 font-semibold mt-1">{activeTenda.subtitulo}</p>
+            <p className="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">{activeTenda.descricao}</p>
           </div>
 
-          <div className="relative -mx-5 px-5 sm:-mx-6 sm:px-6 mt-6">
+          <div className="relative -mx-4 px-4 sm:-mx-6 sm:px-6 mt-4 sm:mt-6">
             <div className="pointer-events-none absolute -bottom-1 left-5 right-5 sm:left-6 sm:right-6 h-1 bg-gradient-to-r from-primary/30 via-outline-variant/10 to-transparent opacity-20" />
             <DragScrollRow>
               {activeTenda.temas.map((tema) => (
@@ -587,23 +587,23 @@ export default function Studies() {
   }
 
   return (
-    <div className="pb-24 min-h-screen bg-surface-container-lowest">
-      <div className="pt-8 px-4 sm:px-6 mb-8">
-        <header className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-[#1f1a15] via-[#131110] to-[#0d0d0d] px-6 py-8 sm:px-8 sm:py-10 shadow-[0_24px_65px_rgba(0,0,0,0.58)]">
+    <div className="pb-20 sm:pb-24 min-h-screen bg-surface-container-lowest">
+      <div className="pt-6 sm:pt-8 px-4 sm:px-6 mb-6 sm:mb-8">
+        <header className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-[#1f1a15] via-[#131110] to-[#0d0d0d] px-4 sm:px-8 py-6 sm:py-10 shadow-[0_24px_65px_rgba(0,0,0,0.58)]">
           <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:radial-gradient(circle_at_18%_20%,rgba(242,192,141,0.26),transparent_42%),radial-gradient(circle_at_78%_88%,rgba(212,165,116,0.16),transparent_36%)]" />
           <div className="pointer-events-none absolute inset-0 opacity-10 [background-image:linear-gradient(rgba(242,192,141,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.05)_1px,transparent_1px)] [background-size:20px_20px]" />
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-3 py-1 mb-3">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-2.5 sm:px-3 py-0.5 sm:py-1 mb-2.5 sm:mb-3">
               <Tent size={12} className="text-primary" />
-              <span className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">Seção Maná</span>
+              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.22em] text-primary">Seção Maná</span>
             </div>
-            <h1 className="font-headline text-4xl sm:text-5xl font-black text-primary mb-2 tracking-tighter text-shadow-glow">
+            <h1 className="font-headline text-3xl sm:text-5xl font-black text-primary mb-1.5 sm:mb-2 tracking-tighter text-shadow-glow">
               MANA
             </h1>
-            <p className="text-sm sm:text-base text-on-surface font-semibold mb-2">
+            <p className="text-xs sm:text-base text-on-surface font-semibold mb-1.5 sm:mb-2">
               O alimento sólido para a batalha de hoje.
             </p>
-            <p className="text-xs sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
+            <p className="text-[11px] sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
               E-books e estudos profundos para fortalecer sua vida espiritual, curar sua vida interior e preparar você
               para cumprir sua missão no mundo.
             </p>
@@ -611,15 +611,15 @@ export default function Studies() {
         </header>
       </div>
 
-      <section className="px-4 sm:px-6 pb-10">
-        <div className="mb-4">
-          <h2 className="font-headline text-2xl sm:text-3xl font-black tracking-tight text-on-surface">Escolha sua tenda</h2>
+      <section className="px-4 sm:px-6 pb-8 sm:pb-10">
+        <div className="mb-3 sm:mb-4">
+          <h2 className="font-headline text-xl sm:text-3xl font-black tracking-tight text-on-surface">Escolha sua tenda</h2>
           <p className="text-xs text-on-surface-variant mt-1">
             Cada tenda conduz uma área da sua jornada. Escolha por onde deseja ser alimentado hoje.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 sm:gap-4">
           {tendas.map((tenda) => (
             <TendaCard key={tenda.id} tenda={tenda} onEnter={() => setActiveTendaId(tenda.id)} onSelectTema={handleOpenTema} />
           ))}
