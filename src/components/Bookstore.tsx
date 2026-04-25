@@ -36,6 +36,13 @@ interface TypologyTypeMeta {
   exemplos: string[];
 }
 
+interface TypologyObjectalTopicMeta {
+  id: string;
+  label: string;
+  imageStem: string;
+  seriesMatchers?: string[];
+}
+
 const livrariaMarkdownModules = import.meta.glob('/public/content/livraria/**/*.md', {
   eager: true,
   query: '?raw',
@@ -79,6 +86,7 @@ const imageModules = {
 
 const COVER_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg'] as const;
 const WEAK_REMOTE_IMAGE_HOSTS = ['placeholder-voz-do-deserto.com', 'images.unsplash.com'];
+const TYPOLOGY_OBJECTAL_TOPIC_IMAGE_BASE_PATH = '/image/tipos/topicos';
 const TYPOLOGY_DIVISION_FOLDER_TO_ID: Record<string, TypologyDivisionId> = {
   '1-tipologia-pessoal': 'tipologia-pessoal',
   '2-tipologia-eventual': 'tipologia-eventual',
@@ -96,6 +104,45 @@ const TYPOLOGY_SERIES_PRIORITY = [
   'Série — A Terra e o Tabernáculo',
   'Série — O Tetravéu',
   'Série — O Relógio do Santuário',
+];
+const TYPOLOGY_OBJECTAL_TOPICS: TypologyObjectalTopicMeta[] = [
+  {
+    id: 'tabernaculo',
+    label: 'Tabernáculo',
+    imageStem: 'tabernaculo',
+    seriesMatchers: ['sombras do reino', 'terra e o tabernaculo', 'relogio do santuario'],
+  },
+  {
+    id: 'arca-propiciatorio',
+    label: 'Arca / Propiciatório',
+    imageStem: 'arca-propiciatorio',
+  },
+  {
+    id: 'menora',
+    label: 'Menorá',
+    imageStem: 'menora',
+  },
+  {
+    id: 'paes',
+    label: 'Pães',
+    imageStem: 'paes',
+  },
+  {
+    id: 'altar-do-incenso',
+    label: 'Altar do Incenso',
+    imageStem: 'altar-incenso',
+  },
+  {
+    id: 'veu-tetraveu',
+    label: 'Véu / Tetravéu',
+    imageStem: 'veu-tetraveu',
+    seriesMatchers: ['tetraveu', 'tetravel'],
+  },
+  {
+    id: 'peles-do-tabernaculo',
+    label: 'Peles do Tabernáculo',
+    imageStem: 'peles-tabernaculo',
+  },
 ];
 
 const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
@@ -312,6 +359,14 @@ function normalizeSlugLookupKey(raw: string): string {
     .trim();
 }
 
+function normalizeSearchToken(raw: string): string {
+  return normalizeSlugLookupKey(raw)
+    .replace(/[^a-z0-9/\s-]/g, ' ')
+    .replace(/[-_/]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 interface TypologyContentEntry {
   typeId: TypologyDivisionId;
   seriesCategory: string;
@@ -377,6 +432,48 @@ function buildTypologyCoverLookup(): Map<string, string> {
 }
 
 const TYPOLOGY_COVER_LOOKUP = buildTypologyCoverLookup();
+
+function buildTypologyObjectalTopicImageLookup(): Map<string, string> {
+  const lookup = new Map<string, string>();
+  const normalizedBasePath = `/public${TYPOLOGY_OBJECTAL_TOPIC_IMAGE_BASE_PATH}`.replace(/\\/g, '/');
+
+  for (const key of Object.keys(imageModules)) {
+    const normalized = key.replace(/\\/g, '/');
+    if (!normalized.startsWith(`${normalizedBasePath}/`)) continue;
+    const fileName = normalized.split('/').pop();
+    if (!fileName) continue;
+    lookup.set(normalizeCoverStemForLookup(fileName), normalized.slice('/public'.length));
+  }
+
+  return lookup;
+}
+
+const TYPOLOGY_OBJECTAL_TOPIC_IMAGE_LOOKUP = buildTypologyObjectalTopicImageLookup();
+
+function resolveTypologyObjectalTopicImage(topic: TypologyObjectalTopicMeta): string | undefined {
+  const candidateStems = [topic.imageStem, topic.id, topic.label]
+    .map((value) => normalizeCoverStemForLookup(value));
+
+  for (const stem of candidateStems) {
+    const exact = TYPOLOGY_OBJECTAL_TOPIC_IMAGE_LOOKUP.get(stem);
+    if (exact) return exact;
+  }
+
+  return undefined;
+}
+
+function resolveTypologyObjectalTopicSeries(
+  topic: TypologyObjectalTopicMeta,
+  relatedSeries: [string, BookItem[]][],
+): [string, BookItem[]][] {
+  if (!topic.seriesMatchers || topic.seriesMatchers.length === 0) return [];
+
+  const normalizedMatchers = topic.seriesMatchers.map((item) => normalizeSearchToken(item));
+  return relatedSeries.filter(([category]) => {
+    const normalizedCategory = normalizeSearchToken(category);
+    return normalizedMatchers.some((matcher) => normalizedCategory.includes(matcher));
+  });
+}
 
 function extractTypologyDivisionRelativePath(pathKey: string): string | null {
   const normalized = pathKey.replace(/\\/g, '/');
@@ -1069,15 +1166,12 @@ const TYPOLOGY_TYPES: TypologyTypeMeta[] = [
     descricao: 'Como os objetos na Bíblia representam realidades espirituais: tabernáculo, arca e utensílios como sombra do que existe no Reino de Deus.',
     exemplos: [
       'Tabernáculo',
-      'Arca/Propiciatório',
+      'Arca / Propiciatório',
       'Menorá',
       'Pães',
       'Altar do Incenso',
-      'Altar do Holocausto',
-      'Bacia',
-      'Maná',
-      'Vara de Arão',
-      'Serpente de Bronze',
+      'Véu / Tetravéu',
+      'Peles do Tabernáculo',
     ],
   },
   {
@@ -1369,6 +1463,137 @@ function TypeExamplePlate({ label }: { label: string }) {
   );
 }
 
+function TypologyObjectalTopicCard({
+  id,
+  label,
+  imageSrc,
+  onClick,
+  isActive,
+}: {
+  id: string;
+  label: string;
+  imageSrc?: string;
+  onClick: () => void;
+  isActive?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`group relative w-full overflow-hidden rounded-xl border bg-gradient-to-br from-[#1e1915] via-[#131110] to-[#0c0c0c] text-left shadow-[0_12px_28px_rgba(0,0,0,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_20px_36px_rgba(0,0,0,0.48)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${isActive ? 'border-primary/65 ring-1 ring-primary/45' : 'border-primary/30'}`}
+      aria-pressed={isActive}
+      aria-controls={`typology-objectal-topic-${id}`}
+    >
+      <div className="relative aspect-[16/9] w-full">
+        {imageSrc ? (
+          <AppImage
+            src={imageSrc}
+            alt={label}
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fallbackClassName="opacity-95"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_24%,rgba(242,192,141,0.28),transparent_42%),radial-gradient(circle_at_85%_20%,rgba(212,165,116,0.14),transparent_44%),linear-gradient(130deg,#181411_0%,#10100f_58%,#0b0b0b_100%)]" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/35 to-transparent" />
+        <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(242,192,141,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.07)_1px,transparent_1px)] [background-size:18px_18px]" />
+        <div className="relative flex h-full flex-col justify-end p-2.5 sm:p-3">
+          <span className="inline-flex w-fit rounded-full border border-primary/35 bg-black/45 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.14em] text-primary">
+            Abrir tópico
+          </span>
+          <p className="mt-1 text-[10px] sm:text-[11px] font-semibold leading-snug text-on-surface">{label}</p>
+        </div>
+      </div>
+    </button>
+  );
+}
+
+function TypologyObjectalStudyDeck({
+  topics,
+  onOpenTopic,
+  activeTopicId,
+}: {
+  topics: {
+    id: string;
+    label: string;
+    imageSrc?: string;
+  }[];
+  onOpenTopic: (topicId: string) => void;
+  activeTopicId: string | null;
+}) {
+  const [desktopPage, setDesktopPage] = useState(0);
+  const pageSize = 6;
+  const totalPages = Math.max(1, Math.ceil(topics.length / pageSize));
+  const canPaginate = totalPages > 1;
+  const desktopTopics = topics.slice(desktopPage * pageSize, (desktopPage + 1) * pageSize);
+
+  useEffect(() => {
+    setDesktopPage(0);
+  }, [topics.length]);
+
+  return (
+    <div>
+      <div className="mb-2 hidden sm:flex items-center justify-between gap-3">
+        <p className="text-[9px] font-black uppercase tracking-[0.18em] text-primary/80">
+          Tópicos Objetais
+        </p>
+        {canPaginate && (
+          <div className="inline-flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setDesktopPage((current) => Math.max(0, current - 1))}
+              disabled={desktopPage === 0}
+              className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant/45 bg-black/35 text-on-surface-variant transition-colors hover:border-primary/55 hover:text-primary disabled:cursor-not-allowed disabled:opacity-45"
+              aria-label="Página anterior dos tópicos"
+            >
+              <ChevronLeft size={13} />
+            </button>
+            <span className="text-[9px] font-black uppercase tracking-[0.14em] text-on-surface-variant/70">
+              {desktopPage + 1}/{totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={() => setDesktopPage((current) => Math.min(totalPages - 1, current + 1))}
+              disabled={desktopPage >= totalPages - 1}
+              className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant/45 bg-black/35 text-on-surface-variant transition-colors hover:border-primary/55 hover:text-primary disabled:cursor-not-allowed disabled:opacity-45"
+              aria-label="Próxima página dos tópicos"
+            >
+              <ChevronRight size={13} />
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="hidden sm:grid sm:grid-cols-3 gap-3">
+        {desktopTopics.map((topic) => (
+          <TypologyObjectalTopicCard
+            id={topic.id}
+            key={topic.label}
+            label={topic.label}
+            imageSrc={topic.imageSrc}
+            isActive={activeTopicId === topic.id}
+            onClick={() => onOpenTopic(topic.id)}
+          />
+        ))}
+      </div>
+
+      <div className="sm:hidden flex gap-2.5 overflow-x-auto snap-x snap-mandatory pb-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {topics.map((topic) => (
+          <div key={topic.label} className="w-[77vw] max-w-[300px] shrink-0 snap-start">
+            <TypologyObjectalTopicCard
+              id={topic.id}
+              label={topic.label}
+              imageSrc={topic.imageSrc}
+              isActive={activeTopicId === topic.id}
+              onClick={() => onOpenTopic(topic.id)}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function TypologyTypeCard({
   type,
   previewBooks,
@@ -1607,6 +1832,8 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
   const [activeTypeId, setActiveTypeId] = useState<TypologyDivisionId | null>(null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
+  const [activeObjectalTopicId, setActiveObjectalTopicId] = useState<string | null>(null);
+  const objectalTopicPanelRef = useRef<HTMLDivElement | null>(null);
   const { data: books, loading, error } = useFetch<BookItem[]>('/content/livraria/index.json');
   const discoveredBooks = useMemo(() => discoverBooksFromMarkdown(), []);
   const typologyEntries = useMemo(() => discoverTypologyContentEntries(), []);
@@ -1704,6 +1931,34 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
     [activeTypeId],
   );
 
+  const typologyObjectalCards = useMemo(() => {
+    if (!activeType || activeType.id !== 'tipologia-objetal') return [];
+    return TYPOLOGY_OBJECTAL_TOPICS.map((topic) => ({
+      id: topic.id,
+      label: topic.label,
+      imageSrc: resolveTypologyObjectalTopicImage(topic),
+    }));
+  }, [activeType]);
+
+  const activeObjectalTopic = useMemo(
+    () => TYPOLOGY_OBJECTAL_TOPICS.find((topic) => topic.id === activeObjectalTopicId) ?? null,
+    [activeObjectalTopicId],
+  );
+
+  const activeObjectalTopicSeries = useMemo(() => {
+    if (!activeType || activeType.id !== 'tipologia-objetal' || !activeObjectalTopic) return [];
+    const relatedSeries = typologySeriesByType[activeType.id] ?? [];
+    return resolveTypologyObjectalTopicSeries(activeObjectalTopic, relatedSeries);
+  }, [activeObjectalTopic, activeType, typologySeriesByType]);
+
+  useEffect(() => {
+    if (!activeType || activeType.id !== 'tipologia-objetal') {
+      setActiveObjectalTopicId(null);
+      return;
+    }
+    setActiveObjectalTopicId((current) => current ?? TYPOLOGY_OBJECTAL_TOPICS[0]?.id ?? null);
+  }, [activeType]);
+
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     document.documentElement.scrollTop = 0;
@@ -1736,6 +1991,13 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
   };
 
   const handleCloseReader = () => { setSelectedSlug(null); setMarkdownContent(null); };
+
+  const handleOpenTypologyObjectalTopic = (topicId: string) => {
+    setActiveObjectalTopicId(topicId);
+    requestAnimationFrame(() => {
+      objectalTopicPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
 
   // ── Reader ─────────────────────────────────────────────────────────────────
   if (selectedSlug && markdownContent) {
@@ -1770,38 +2032,67 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
             </div>
 
             <div className="mt-3 sm:mt-4 rounded-2xl border border-primary/20 bg-black/20 p-3.5 sm:p-5">
-              <h3 className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2.5 sm:mb-3">Exemplos deste tipo</h3>
-              <div className="flex gap-2.5 sm:gap-3 overflow-x-auto pb-1.5 sm:pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                {activeType.exemplos.map((example) => (
-                  <TypeExamplePlate key={example} label={example} />
-                ))}
-              </div>
+              <h3 className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2.5 sm:mb-3">Clique e estude</h3>
+              {activeType.id === 'tipologia-objetal' ? (
+                <TypologyObjectalStudyDeck
+                  topics={typologyObjectalCards}
+                  onOpenTopic={handleOpenTypologyObjectalTopic}
+                  activeTopicId={activeObjectalTopicId}
+                />
+              ) : (
+                <div className="flex gap-2.5 sm:gap-3 overflow-x-auto pb-1.5 sm:pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  {activeType.exemplos.map((example) => (
+                    <TypeExamplePlate key={example} label={example} />
+                  ))}
+                </div>
+              )}
             </div>
 
-            {relatedSeries.length > 0 ? (
-              <div className="mt-5 sm:mt-7 border-t border-primary/15 pt-4 sm:pt-5">
-                {activeType.id === 'tipologia-objetal' ? (
+            {activeType.id === 'tipologia-objetal' ? (
+              <div ref={objectalTopicPanelRef} className="mt-5 sm:mt-7 border-t border-primary/15 pt-4 sm:pt-5">
+                {activeObjectalTopic ? (
                   <>
-                    <h3 className="font-headline text-xl sm:text-2xl font-black tracking-tight text-on-surface mb-1 uppercase">
-                      Tipologia do Tabernáculo
+                    <h3
+                      id={`typology-objectal-topic-${activeObjectalTopic.id}`}
+                      className="font-headline text-xl sm:text-2xl font-black tracking-tight text-on-surface mb-1 uppercase"
+                    >
+                      {activeObjectalTopic.label}
                     </h3>
-                    <p className="text-[10px] sm:text-[11px] font-semibold text-primary/90 mb-1">
-                      Cosmografia Bíblica
-                    </p>
-                    <p className="text-[11px] sm:text-xs text-on-surface-variant mb-3 sm:mb-4 max-w-3xl">
-                      Cosmografia bíblica com as séries: As Sombras do Reino, A Terra e o Tabernáculo, O Tetravéu e O Relógio do Santuário.
-                    </p>
+                    {activeObjectalTopicSeries.length > 0 ? (
+                      activeObjectalTopicSeries.map(([category, items]) => (
+                        <TypologySeriesShelf
+                          key={`${activeObjectalTopic.id}-${category}`}
+                          category={category}
+                          items={items}
+                          onSelectBook={handleSelectBook}
+                        />
+                      ))
+                    ) : (
+                      <div className="mt-3 rounded-2xl border border-primary/20 bg-black/20 px-3.5 sm:px-5 py-3.5 sm:py-4">
+                        <p className="text-xs sm:text-sm font-semibold text-primary/95">Conteúdos em preparação</p>
+                        <p className="mt-1 text-[11px] sm:text-xs leading-relaxed text-on-surface-variant/80 max-w-2xl">
+                          Esta área será preenchida quando os estudos deste tópico forem adicionados.
+                        </p>
+                      </div>
+                    )}
                   </>
                 ) : (
-                  <>
-                    <h3 className="font-headline text-xl sm:text-2xl font-black tracking-tight text-on-surface mb-1 uppercase">
-                      Coleções Relacionadas
-                    </h3>
-                    <p className="text-[11px] sm:text-xs text-on-surface-variant mb-3 sm:mb-4 max-w-3xl">
-                      Séries tipológicas conectadas a este tipo para aprofundar sua leitura.
+                  <div className="rounded-2xl border border-primary/20 bg-black/20 px-3.5 sm:px-5 py-3.5 sm:py-4">
+                    <p className="text-xs sm:text-sm font-semibold text-primary/95">Selecione um tópico</p>
+                    <p className="mt-1 text-[11px] sm:text-xs leading-relaxed text-on-surface-variant/80 max-w-2xl">
+                      Clique em um card para abrir os estudos correspondentes.
                     </p>
-                  </>
+                  </div>
                 )}
+              </div>
+            ) : relatedSeries.length > 0 ? (
+              <div className="mt-5 sm:mt-7 border-t border-primary/15 pt-4 sm:pt-5">
+                <h3 className="font-headline text-xl sm:text-2xl font-black tracking-tight text-on-surface mb-1 uppercase">
+                  Coleções Relacionadas
+                </h3>
+                <p className="text-[11px] sm:text-xs text-on-surface-variant mb-3 sm:mb-4 max-w-3xl">
+                  Séries tipológicas conectadas a este tipo para aprofundar sua leitura.
+                </p>
                 {relatedSeries.map(([category, items]) => (
                   <TypologySeriesShelf
                     key={`${activeType.id}-${category}`}
@@ -1810,17 +2101,6 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
                     onSelectBook={handleSelectBook}
                   />
                 ))}
-                {activeType.id === 'tipologia-objetal' && (
-                  <div className="mt-4 sm:mt-5 rounded-2xl border border-primary/20 bg-black/20 px-3.5 sm:px-5 py-3.5 sm:py-4">
-                    <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.18em] text-primary/90">Em preparação</p>
-                    <h4 className="mt-1 font-headline text-lg sm:text-xl font-black tracking-tight text-on-surface uppercase">
-                      Tipologia da Arca
-                    </h4>
-                    <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80 max-w-2xl">
-                      Série reservada para os próximos estudos objetais.
-                    </p>
-                  </div>
-                )}
               </div>
             ) : (
               <div className="mt-5 sm:mt-7 rounded-2xl border border-primary/20 bg-black/20 px-3.5 sm:px-5 py-3.5 sm:py-4">
