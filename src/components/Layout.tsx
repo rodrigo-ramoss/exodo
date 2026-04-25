@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Menu, Settings, GraduationCap, Library, BookOpen, UserCircle2, BookMarked, Layers } from 'lucide-react';
+import { Menu, Settings, GraduationCap, Library, House, UserCircle2, BookMarked, Layers } from 'lucide-react';
 import { Screen } from '../types';
 import { cn } from '../lib/utils';
 import { useProfile } from '../state/ProfileContext';
@@ -14,7 +14,7 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
   const { photo } = useProfile();
 
   const navItems = [
-    { id: Screen.BIBLE, label: 'BÍBLIA', icon: BookOpen },
+    { id: Screen.HOME, label: 'INÍCIO', icon: House },
     { id: Screen.MANA, label: 'MANÁ', icon: GraduationCap },
     { id: Screen.TOOLS, label: 'TIPO', icon: Layers },
     { id: Screen.BOOKSTORE, label: 'SELAH', icon: Library },
@@ -35,7 +35,7 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
           </button>
           <h1 
             className="text-xl font-black text-primary tracking-tighter font-headline uppercase cursor-pointer"
-            onClick={() => setScreen(Screen.BIBLE)}
+            onClick={() => setScreen(Screen.HOME)}
           >
             ÊXODO
           </h1>
