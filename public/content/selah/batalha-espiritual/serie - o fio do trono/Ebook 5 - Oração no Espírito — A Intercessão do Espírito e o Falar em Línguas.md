@@ -3,7 +3,7 @@ title: Oração no Espírito — A Intercessão do Espírito e o Falar em Língu
 description: Volume 5 da série O Fio do Trono. O papel do Espírito Santo na oração. Romanos 8:26-27, o dom de línguas em 1 Coríntios 14, a edificação espiritual e a oração carismática na igreja primitiva.
 seção: livraria
 category: ferramentas-espirituais
-image: https://placeholder-voz-do-deserto.com/capa-fio-do-trono-vol5.jpg
+image: /image/selah/a oracao do espirito.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: O Fio do Trono — Volume 5*

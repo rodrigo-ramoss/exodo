@@ -3,7 +3,7 @@ title: "O Relógio do Santuário — Volume 3: O Incenso e as Portas do Tempo"
 description: "O Altar do Incenso como o marcador das horas litúrgicas. A oração que sobe como fumaça, o silêncio da intercessão e o Jubileu escatológico de 11QMelch como o fim do tempo."
 seção: tipos
 category: cosmografia-biblica
-image: /image/livraria/o-relogio-do-santuario-vol-3-incenso-e-as-portas-do-tempo.webp
+image: /image/tipos/o fundamento com o veu escondido.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

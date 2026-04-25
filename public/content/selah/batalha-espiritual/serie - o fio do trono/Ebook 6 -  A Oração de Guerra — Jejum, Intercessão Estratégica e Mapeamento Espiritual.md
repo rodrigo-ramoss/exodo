@@ -3,7 +3,7 @@ title: A Oração de Guerra — Jejum, Intercessão Estratégica e Mapeamento Es
 description: Volume 6 da série O Fio do Trono. A oração como ato de batalha. O jejum que quebra fortalezas. Intercessão territorial e estratégica. O modelo de Daniel 9 e 10. A oração que move os exércitos angelicais.
 seção: livraria
 category: ferramentas-espirituais
-image: https://placeholder-voz-do-deserto.com/capa-fio-do-trono-vol6.jpg
+image: /image/selah/a oracao de guerra.webp
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: O Fio do Trono — Volume 6*

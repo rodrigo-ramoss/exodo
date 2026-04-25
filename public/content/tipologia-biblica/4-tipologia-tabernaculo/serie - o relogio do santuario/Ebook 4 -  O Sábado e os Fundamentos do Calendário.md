@@ -3,7 +3,7 @@ title: "O Relógio do Santuário — Volume 4: O Sábado e os Fundamentos do Cal
 description: "O sétimo dia como o trono do tempo e a base do calendário cósmico. A polêmica entre o calendário solar e o lunar, o sábado como aliança perpétua e o descanso escatológico que encerra o relógio do santuário."
 seção: tipos
 category: cosmografia-biblica
-image: /image/livraria/o-relogio-do-santuario-vol-4-sabado-e-os-fundamentos-do-calendario.webp
+image: /image/tipos/o sabado e o fundamentos do calendario.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

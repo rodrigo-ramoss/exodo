@@ -95,6 +95,7 @@ const TYPOLOGY_SERIES_PRIORITY = [
   'Série — Sombras do Reino',
   'Série — A Terra e o Tabernáculo',
   'Série — O Tetravéu',
+  'Série — O Relógio do Santuário',
 ];
 
 const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
@@ -213,6 +214,7 @@ function pickCategoryByFolder(folder: string): string {
     ['serie - a queda do querubim ungido', 'Série — A Queda do Querubim Ungido'],
     ['serie - a onisciencia como atributo exclusivo', 'Série — A Onisciência como Atributo Exclusivo'],
     ['serie - o relogio de deus', 'Série — O Relógio de Deus'],
+    ['serie - terra plana', 'Série — Terra Plana na Bíblia'],
     ['serie - a arquitetura da guerra invisivel', 'Série — A Arquitetura da Guerra Invisível'],
     ['serie - o terceiro ceu de paulo', 'Série — O Terceiro Céu de Paulo'],
     ['serie - o fio do trono', 'Série — O Fio do Trono'],
@@ -246,7 +248,9 @@ const SECTION_CATEGORY_ALIASES = new Set<string>([
   'apocrifos',
   'historia da igreja',
   'tipologia biblica',
+  'cosmologia biblica',
   'mundo espiritual',
+  'satanas e demonios',
   'antissistema',
   'ia apocalipse',
   'ia e apocalipse',
@@ -403,6 +407,7 @@ function resolveTypologySeriesCategory(seriesFolder: string): string {
   if (normalized.includes('sombras do reino')) return 'Série — Sombras do Reino';
   if (normalized.includes('terra e o tabernaculo')) return 'Série — A Terra e o Tabernáculo';
   if (normalized.includes('tetravel') || normalized.includes('tetraveu')) return 'Série — O Tetravéu';
+  if (normalized.includes('relogio do santuario')) return 'Série — O Relógio do Santuário';
 
   const cleaned = normalized
     .replace(/^serie\s*-\s*/i, '')
@@ -557,6 +562,7 @@ function buildFallbackContentUrls(slug: string): string[] {
     'historia-da-igreja',
     'tipologia-biblica',
     'mundo-espiritual',
+    'satanas-e-demonios',
     'antissistema',
     'ia-e-apocalipse',
     'parabolas-de-jesus',
@@ -752,6 +758,7 @@ type SectionKey =
   | 'APÓCRIFOS'
   | 'HISTÓRIA DA IGREJA'
   | 'COSMOLOGIA BÍBLICA'
+  | 'SATANÁS E DEMÔNIOS'
   | 'TIPOLOGIA BÍBLICA'
   | 'JESUS CRISTO'
   | 'PARÁBOLAS DE JESUS'
@@ -787,9 +794,16 @@ const SECTIONS: Record<SectionKey, {
   'COSMOLOGIA BÍBLICA': {
     numero: '03',
     label: 'Cosmologia Bíblica',
-    description: 'Como a Bíblia usa tipologia para nos ensinar as verdades da terra, do universo e do Seu Reino.',
+    description: 'Uma leitura bíblica da criação: firmamento, pilares, quatro cantos, montes e trono. Exegese e contexto do Segundo Templo para reconstruir o mapa cosmológico das Escrituras.',
     Icon: Eye,
     accent: 'from-blue-900/70 to-cyan-800/10',
+  },
+  'SATANÁS E DEMÔNIOS': {
+    numero: '04',
+    label: 'Satanás e Demônios',
+    description: 'A queda do querubim, a rebelião dos seres espirituais e a disputa pela autoridade das nações. Estudos bíblicos sobre origem, atuação e destino do império das trevas.',
+    Icon: Flame,
+    accent: 'from-rose-950/70 to-red-900/20',
   },
   'TIPOLOGIA BÍBLICA': {
     numero: '00',
@@ -799,56 +813,56 @@ const SECTIONS: Record<SectionKey, {
     accent: 'from-indigo-900/70 to-indigo-800/10',
   },
   'JESUS CRISTO': {
-    numero: '04',
+    numero: '05',
     label: 'Jesus Cristo',
     description: 'Estudos e séries centrados na pessoa, missão, autoridade e obra de Cristo.',
     Icon: Sparkles,
     accent: 'from-amber-900/70 to-yellow-800/10',
   },
   'PARÁBOLAS DE JESUS': {
-    numero: '05',
+    numero: '06',
     label: 'Parábolas de Jesus',
     description: 'Leituras exegéticas das parábolas de Cristo com contexto judaico, aplicação espiritual e profundidade do Reino.',
     Icon: BookOpen,
     accent: 'from-yellow-900/70 to-amber-800/10',
   },
   'MUNDO ESPIRITUAL': {
-    numero: '06',
+    numero: '07',
     label: 'Mundo Espiritual',
     description: 'Uma jornada bíblica pelo Reino de Deus, conselho celeste e realidades invisíveis. Em Hebreus 8, o texto diz que servem como “exemplar e sombra das coisas celestiais”. Como é o mundo espiritual? A Bíblia responde.',
     Icon: Eye,
     accent: 'from-violet-900/70 to-violet-800/10',
   },
   'ANTROPOLOGIA ESPIRITUAL': {
-    numero: '07',
+    numero: '08',
     label: 'Antropologia Espiritual',
     description: 'Centraliza os temas sobre a natureza humana: alma, espírito, corpo, estado intermediário, possessão, ressurreição e os impactos do transhumanismo.',
     Icon: BookOpen,
     accent: 'from-teal-900/70 to-cyan-800/10',
   },
   'ANTISISTEMA': {
-    numero: '08',
+    numero: '09',
     label: 'Antissistema',
     description: 'Os protocolos de sobrevivência espiritual dentro de sistemas hostis. Daniel, José e os que atravessaram.',
     Icon: Zap,
     accent: 'from-emerald-900/70 to-emerald-800/10',
   },
   'IA & APOCALIPSE': {
-    numero: '09',
+    numero: '10',
     label: 'IA & Apocalipse',
     description: 'Controle tecnológico, a Marca e os mecanismos proféticos que moldam o fim dos tempos.',
     Icon: Cpu,
     accent: 'from-rose-900/70 to-rose-800/10',
   },
   'FIM DOS TEMPOS': {
-    numero: '10',
+    numero: '11',
     label: 'Fim dos Tempos',
     description: 'Escatologia bíblica, sinais proféticos e a reta final da história sob a perspectiva das Escrituras.',
     Icon: Hourglass,
     accent: 'from-orange-900/70 to-amber-800/10',
   },
   'BATALHA ESPIRITUAL': {
-    numero: '11',
+    numero: '12',
     label: 'Batalha Espiritual',
     description: 'Discernimento, resistência e estratégias bíblicas para enfrentar as guerras invisíveis do nosso tempo.',
     Icon: Flame,
@@ -859,6 +873,7 @@ const SECTIONS: Record<SectionKey, {
 const SECTION_ORDER: SectionKey[] = [
   'TIPOLOGIA BÍBLICA',
   'COSMOLOGIA BÍBLICA',
+  'SATANÁS E DEMÔNIOS',
   'APÓCRIFOS',
   'HISTÓRIA DA IGREJA',
   'JESUS CRISTO',
@@ -880,6 +895,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'COSMOLOGIA BÍBLICA':                       'COSMOLOGIA BÍBLICA',
   'cosmologia biblica':                       'COSMOLOGIA BÍBLICA',
   'cosmologia-biblica':                       'COSMOLOGIA BÍBLICA',
+  'Série — Terra Plana na Bíblia':            'COSMOLOGIA BÍBLICA',
   'TIPOLOGIA BÍBLICA':                        'TIPOLOGIA BÍBLICA',
   'Série — Sombras do Reino':                 'TIPOLOGIA BÍBLICA',
   'Série — A Terra e o Tabernáculo':          'TIPOLOGIA BÍBLICA',
@@ -892,8 +908,8 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'SOMBRAS DO REINO DE DEUS':                 'MUNDO ESPIRITUAL',
   'Série — Parábolas de Jesus':               'PARÁBOLAS DE JESUS',
   'Série — O Código do Jardim':               'IA & APOCALIPSE',
-  'Série — A Queda do Mundo Espiritual':      'MUNDO ESPIRITUAL',
-  'Série — A Queda do Querubim Ungido':       'MUNDO ESPIRITUAL',
+  'Série — A Queda do Mundo Espiritual':      'SATANÁS E DEMÔNIOS',
+  'Série — A Queda do Querubim Ungido':       'SATANÁS E DEMÔNIOS',
   'Série — O Terceiro Céu de Paulo':          'MUNDO ESPIRITUAL',
   'Série — O Fio do Trono':                   'BATALHA ESPIRITUAL',
   'Série — Como nos Dias de Noé':             'ANTROPOLOGIA ESPIRITUAL',
@@ -902,7 +918,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
   'Trilogia — A Marca':                       'IA & APOCALIPSE',
   'Trilogia — O Véu Rasgado':                 'IA & APOCALIPSE',
-  'Trilogia — A Coroa Roubada':               'MUNDO ESPIRITUAL',
+  'Trilogia — A Coroa Roubada':               'SATANÁS E DEMÔNIOS',
   'Série — O Código das Eras':                'FIM DOS TEMPOS',
   'Série — A Revelação do Século':            'FIM DOS TEMPOS',
   'Série — A Onisciência como Atributo Exclusivo': 'IA & APOCALIPSE',
@@ -913,6 +929,8 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Série — A Arquitetura da Guerra Invisível': 'BATALHA ESPIRITUAL',
   'FIM DOS TEMPOS':                           'FIM DOS TEMPOS',
   'batalha-espiritual':                       'BATALHA ESPIRITUAL',
+  'satanas e demonios':                       'SATANÁS E DEMÔNIOS',
+  'satanas-e-demonios':                       'SATANÁS E DEMÔNIOS',
   'apocrifos':                                'APÓCRIFOS',
   'ia-e-apocalipse':                          'IA & APOCALIPSE',
   'fim dos tempos':                           'FIM DOS TEMPOS',
@@ -926,6 +944,8 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
 // Short display labels per series
 const SERIES_LABEL: Record<string, string> = {
   'COSMOLOGIA BÍBLICA':                       'Cosmologia Bíblica',
+  'cosmologia-biblica':                       'Terra Plana na Bíblia',
+  'Série — Terra Plana na Bíblia':            'Terra Plana na Bíblia',
   'Trilogia — O Mapa da Tempestade':          'O Mapa da Tempestade',
   'Trilogia — A Marca':                       'A Marca',
   'Trilogia — O Estrangeiro Próspero':        'O Estrangeiro Próspero',
@@ -939,6 +959,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — Sombras do Reino':                 'Sombras do Reino',
   'Série — A Terra e o Tabernáculo':          'A Terra e o Tabernáculo',
   'Série — O Tetravéu':                       'O Tetravéu',
+  'Série — O Relógio do Santuário':           'O Relógio do Santuário',
   'Série — O Código do Jardim':               'O Código do Jardim',
   'Série — A Queda do Mundo Espiritual':      'A Queda do Mundo Espiritual',
   'Série — A Queda do Querubim Ungido':       'A Queda do Querubim Ungido',
@@ -961,12 +982,15 @@ const SERIES_LABEL: Record<string, string> = {
 // Description shown below each series header
 const SERIES_DESCRIPTION: Record<string, string> = {
   'COSMOLOGIA BÍBLICA': 'Como a Bíblia usa tipologia para nos ensinar as verdades da terra, do universo e do Seu Reino.',
+  'cosmologia-biblica': 'Uma série exegética sobre terra plana na Bíblia: tabernáculo, firmamento, montes sagrados, fronteiras das nações e geografia espiritual como linguagem do governo de Deus.',
+  'Série — Terra Plana na Bíblia': 'Uma série exegética sobre terra plana na Bíblia: tabernáculo, firmamento, montes sagrados, fronteiras das nações e geografia espiritual como linguagem do governo de Deus.',
   'A REVELAÇÃO DE ENOQUE': 'Uma jornada profunda pelas visões e revelações do profeta Enoque sobre o mundo espiritual, os vigilantes e o destino da humanidade.',
   'SÉRIE — JUBILEUS': 'O livro que Moisés recebeu dos anjos e que a tradição oficial silenciou. Uma jornada pelos segredos do calendário sagrado, dos patriarcas e da guerra invisível que moldou a história bíblica.',
   'SOMBRAS DO REINO DE DEUS': 'Uma leitura bíblica do mundo espiritual: Reino de Deus, conselho celeste e as realidades invisíveis que Hebreus 8:5 chama de sombra das coisas celestiais.',
   'Série — Sombras do Reino': 'Uma série tipológica sobre o tabernáculo como sombra das realidades celestiais, com foco em Cristo, no Reino e na unidade da Escritura.',
   'Série — A Terra e o Tabernáculo': 'Uma série sobre cosmografia bíblica e tabernáculo: pátio, firmamento, véu, fundamentos, mar de bronze e o trono, em leitura tipológica estruturada.',
   'Série — O Tetravéu': 'Da camada visível ao limite do invisível: uma leitura progressiva do linho, do pelo de cabra e das peles que cobrem o tabernáculo para revelar separação, proteção, glória e acesso na cosmografia bíblica.',
+  'Série — O Relógio do Santuário': 'Uma série sobre o relógio do santuário: menorá, mesa dos pães, incenso e sábado como linguagem temporal do Reino.',
   'Série — O Código do Jardim': 'Uma série sobre os arquétipos de Gênesis: conhecimento, nomeação, Babel e sabedoria para discernir o conflito espiritual no presente.',
   'Série — A Queda do Mundo Espiritual': 'Uma série sobre a rebelião no céu e a origem da guerra espiritual: Nachash, querubins caídos e as raízes invisíveis do conflito humano.',
   'Série — A Queda do Querubim Ungido': 'Uma investigação bíblica da trajetória de Satanás: da glória no conselho divino à consumação do juízo final, com aplicações práticas para discernimento espiritual.',
@@ -1034,13 +1058,13 @@ const TYPOLOGY_TYPES: TypologyTypeMeta[] = [
   },
   {
     id: 'tipologia-objetal',
-    label: 'TIPO 4',
+    label: 'Tipologia 4',
     numero: '04',
-    titulo: 'Tipologia do Tabernáculo',
-    subtitulo: 'Cosmografia Bíblica',
-    descricao: 'Uma cartografia bíblica do cosmos: terra plana, fundações da terra, quatro cantos, céu sólido, sete céus, geografia do mundo invisível, relógio cósmico e os padrões do universo revelados no tabernáculo.',
+    titulo: 'Tipologia Objetal',
+    subtitulo: 'Tipos Objetos',
+    descricao: 'Como os objetos na Bíblia representam realidades espirituais: tabernáculo, arca e utensílios como sombra do que existe no Reino de Deus.',
     exemplos: [
-      'Véu',
+      'Tabernáculo',
       'Arca/Propiciatório',
       'Menorá',
       'Pães',
@@ -1752,12 +1776,28 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
 
             {relatedSeries.length > 0 ? (
               <div className="mt-5 sm:mt-7 border-t border-primary/15 pt-4 sm:pt-5">
-                <h3 className="font-headline text-xl sm:text-2xl font-black tracking-tight text-on-surface mb-1 uppercase">
-                  Coleções Relacionadas
-                </h3>
-                <p className="text-[11px] sm:text-xs text-on-surface-variant mb-3 sm:mb-4 max-w-3xl">
-                  Séries tipológicas conectadas a este tipo para aprofundar sua leitura.
-                </p>
+                {activeType.id === 'tipologia-objetal' ? (
+                  <>
+                    <h3 className="font-headline text-xl sm:text-2xl font-black tracking-tight text-on-surface mb-1 uppercase">
+                      Tipologia do Tabernáculo
+                    </h3>
+                    <p className="text-[10px] sm:text-[11px] font-semibold text-primary/90 mb-1">
+                      Cosmografia Bíblica
+                    </p>
+                    <p className="text-[11px] sm:text-xs text-on-surface-variant mb-3 sm:mb-4 max-w-3xl">
+                      Cosmografia bíblica com as séries: As Sombras do Reino, A Terra e o Tabernáculo, O Tetravéu e O Relógio do Santuário.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="font-headline text-xl sm:text-2xl font-black tracking-tight text-on-surface mb-1 uppercase">
+                      Coleções Relacionadas
+                    </h3>
+                    <p className="text-[11px] sm:text-xs text-on-surface-variant mb-3 sm:mb-4 max-w-3xl">
+                      Séries tipológicas conectadas a este tipo para aprofundar sua leitura.
+                    </p>
+                  </>
+                )}
                 {relatedSeries.map(([category, items]) => (
                   <TypologySeriesShelf
                     key={`${activeType.id}-${category}`}
@@ -1766,6 +1806,17 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
                     onSelectBook={handleSelectBook}
                   />
                 ))}
+                {activeType.id === 'tipologia-objetal' && (
+                  <div className="mt-4 sm:mt-5 rounded-2xl border border-primary/20 bg-black/20 px-3.5 sm:px-5 py-3.5 sm:py-4">
+                    <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.18em] text-primary/90">Em preparação</p>
+                    <h4 className="mt-1 font-headline text-lg sm:text-xl font-black tracking-tight text-on-surface uppercase">
+                      Tipologia da Arca
+                    </h4>
+                    <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80 max-w-2xl">
+                      Série reservada para os próximos estudos objetais.
+                    </p>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="mt-5 sm:mt-7 rounded-2xl border border-primary/20 bg-black/20 px-3.5 sm:px-5 py-3.5 sm:py-4">
