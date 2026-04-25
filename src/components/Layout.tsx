@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Menu, Settings, GraduationCap, Library, BookOpen, ExternalLink, UserCircle2, BookMarked, Layers } from 'lucide-react';
+import { Menu, Settings, GraduationCap, Library, BookOpen, UserCircle2, BookMarked, Layers } from 'lucide-react';
 import { Screen } from '../types';
 import { cn } from '../lib/utils';
 import { useProfile } from '../state/ProfileContext';
@@ -12,14 +12,13 @@ interface LayoutProps {
 
 export default function Layout({ children, currentScreen, setScreen }: LayoutProps) {
   const { photo } = useProfile();
-  const BLOG_URL = 'https://www.rodrigoramosvd.com/';
 
   const navItems = [
     { id: Screen.BIBLE, label: 'BÍBLIA', icon: BookOpen },
     { id: Screen.MANA, label: 'MANÁ', icon: GraduationCap },
-    { id: Screen.REFUTACAO, label: 'Livraria da Matrix', icon: BookMarked },
-    { id: Screen.BOOKSTORE, label: 'Livraria Espiritual', icon: Library },
-    { id: Screen.TOOLS, label: 'Tipos', icon: Layers },
+    { id: Screen.TOOLS, label: 'TIPO', icon: Layers },
+    { id: Screen.BOOKSTORE, label: 'SELAH', icon: Library },
+    { id: Screen.REFUTACAO, label: 'BABEL', icon: BookMarked },
   ];
 
   return (
@@ -94,20 +93,6 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
             </button>
           );
         })}
-
-        <a
-          href={BLOG_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex flex-col items-center justify-center py-1 px-0.5 transition-all active:scale-90 flex-1 min-w-0 text-on-surface-variant hover:text-on-surface"
-        >
-          <div className="flex items-center justify-center w-10 h-6 rounded-full transition-all">
-            <ExternalLink size={18} strokeWidth={1.8} />
-          </div>
-          <span className="font-sans text-[8px] uppercase font-bold tracking-tight mt-0.5 truncate max-w-full leading-none">
-            Blog
-          </span>
-        </a>
       </nav>
     </div>
   );

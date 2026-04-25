@@ -17,8 +17,7 @@ export function useFetch<T>(url: string): FetchResult<T> {
       try {
         const candidateUrls = [url];
         if (url === '/content/livraria/index.json') {
-          candidateUrls.push('/content/livraria%20espitirual/index.json');
-          candidateUrls.push('/content/livraria espitirual/index.json');
+          candidateUrls.push('/content/selah/index.json');
         }
 
         let lastError: Error | null = null;

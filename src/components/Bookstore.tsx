@@ -41,7 +41,7 @@ const livrariaMarkdownModules = import.meta.glob('/public/content/livraria/**/*.
   query: '?raw',
   import: 'default',
 }) as Record<string, string>;
-const livrariaEspitirualMarkdownModules = import.meta.glob('/public/content/livraria espitirual/**/*.md', {
+const livrariaEspitirualMarkdownModules = import.meta.glob('/public/content/selah/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -61,7 +61,7 @@ const typologyMarkdownModulesRoot = import.meta.glob('/public/content/tipologia-
   query: '?raw',
   import: 'default',
 }) as Record<string, string>;
-const typologyMarkdownModulesLegacy = import.meta.glob('/public/content/livraria espitirual/tipologia-biblica/**/*.md', {
+const typologyMarkdownModulesLegacy = import.meta.glob('/public/content/selah/tipologia-biblica/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -286,7 +286,7 @@ function toContentRelativePath(pathKey: string): string {
   if (!normalized.includes(marker)) return normalized;
   const relativeFromContent = normalized.slice(normalized.indexOf(marker) + marker.length);
   if (relativeFromContent.startsWith('livraria/')) return relativeFromContent.slice('livraria/'.length);
-  if (relativeFromContent.startsWith('livraria espitirual/')) return relativeFromContent.slice('livraria espitirual/'.length);
+  if (relativeFromContent.startsWith('selah/')) return relativeFromContent.slice('selah/'.length);
   if (relativeFromContent.startsWith('ferramentas-espirituais/')) return relativeFromContent.slice('ferramentas-espirituais/'.length);
   return relativeFromContent;
 }
@@ -349,7 +349,7 @@ function buildTypologyCoverLookup(): Map<string, string> {
   for (const key of Object.keys(imageModules)) {
     const normalized = key.replace(/\\/g, '/');
     const isTipos = normalized.startsWith('/public/image/tipos/');
-    const isLegacyTabernaculo = normalized.startsWith('/public/image/livraria/tabernaculo/');
+    const isLegacyTabernaculo = normalized.startsWith('/public/image/tipos/');
     if (!isTipos && !isLegacyTabernaculo) continue;
     const fileName = normalized.split('/').pop();
     if (!fileName) continue;
@@ -364,7 +364,7 @@ function extractTypologyDivisionRelativePath(pathKey: string): string | null {
   const normalized = pathKey.replace(/\\/g, '/');
   const markers = [
     '/public/content/tipologia-biblica/',
-    '/public/content/livraria espitirual/tipologia-biblica/',
+    '/public/content/selah/tipologia-biblica/',
   ];
   for (const marker of markers) {
     if (!normalized.includes(marker)) continue;
@@ -636,7 +636,7 @@ function inferSeriesFallbackCover(title: string, slug: string, category?: string
     const byVolume = SERIES_VOLUME_COVER_STEMS['a armadura do remanescente'][volume];
     if (byVolume) {
       for (const extension of COVER_EXTENSIONS) {
-        const path = `/image/livraria/${byVolume}.${extension}`;
+        const path = `/image/selah/${byVolume}.${extension}`;
         if (isAvailableCoverCandidate(path)) return path;
       }
     }
@@ -644,7 +644,7 @@ function inferSeriesFallbackCover(title: string, slug: string, category?: string
 
   for (const stem of ['o cinto da verdade', 'couraca da justica', 'o capacete da salvacao', 'a espada do espirito', 'a oracao do espirito']) {
     for (const extension of COVER_EXTENSIONS) {
-      const path = `/image/livraria/${stem}.${extension}`;
+      const path = `/image/selah/${stem}.${extension}`;
       if (isAvailableCoverCandidate(path)) return path;
     }
   }
@@ -661,11 +661,11 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
     if (fromMeta.startsWith('/')) {
       candidates.add(fromMeta);
       const metaFileName = fromMeta.split('/').pop();
-      if (metaFileName && seriesFolder) candidates.add(`/image/livraria/${seriesFolder}/${metaFileName}`);
+      if (metaFileName && seriesFolder) candidates.add(`/image/selah/${seriesFolder}/${metaFileName}`);
     } else if (/^https?:\/\//i.test(fromMeta)) {
       if (!isWeakRemoteImage(fromMeta)) candidates.add(fromMeta);
     } else {
-      candidates.add(`/image/livraria/${fromMeta.replace(/^.*[\\/]/, '')}`);
+      candidates.add(`/image/selah/${fromMeta.replace(/^.*[\\/]/, '')}`);
     }
   }
 
@@ -698,9 +698,9 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
   for (const stem of variantStems) {
     if (!stem) continue;
     for (const extension of COVER_EXTENSIONS) {
-      candidates.add(`/image/livraria/${stem}.${extension}`);
-      if (seriesFolder) candidates.add(`/image/livraria/${seriesFolder}/${stem}.${extension}`);
-      if (usesTabernacleCovers) candidates.add(`/image/livraria/tabernaculo/${stem}.${extension}`);
+      candidates.add(`/image/selah/${stem}.${extension}`);
+      if (seriesFolder) candidates.add(`/image/selah/${seriesFolder}/${stem}.${extension}`);
+      if (usesTabernacleCovers) candidates.add(`/image/tipos/${stem}.${extension}`);
     }
   }
 
@@ -738,6 +738,7 @@ function discoverBooksFromMarkdown(): BookItem[] {
 type SectionKey =
   | 'APÓCRIFOS'
   | 'HISTÓRIA DA IGREJA'
+  | 'COSMOLOGIA BÍBLICA'
   | 'TIPOLOGIA BÍBLICA'
   | 'PARÁBOLAS DE JESUS'
   | 'MUNDO ESPIRITUAL'
@@ -765,6 +766,12 @@ const SECTIONS: Record<SectionKey, {
     description: 'A anatomia do dogma e os bastidores do poder. Uma análise sobre a verdadeira história da igreja, a formação de suas doutrinas e como a estrutura religiosa foi utilizada como ferramenta de manipulação e controle sistêmico.',
     Icon: BookOpen,
     accent: 'from-sky-900/70 to-sky-800/10',
+  },
+  'COSMOLOGIA BÍBLICA': {
+    label: 'Cosmologia Bíblica',
+    description: 'Como a Bíblia usa tipologia para nos ensinar as verdades da terra, do universo e do Seu Reino.',
+    Icon: Eye,
+    accent: 'from-blue-900/70 to-cyan-800/10',
   },
   'TIPOLOGIA BÍBLICA': {
     label: 'Tipologia',
@@ -818,6 +825,7 @@ const SECTIONS: Record<SectionKey, {
 
 const SECTION_ORDER: SectionKey[] = [
   'TIPOLOGIA BÍBLICA',
+  'COSMOLOGIA BÍBLICA',
   'APÓCRIFOS',
   'HISTÓRIA DA IGREJA',
   'PARÁBOLAS DE JESUS',
@@ -835,6 +843,9 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'SÉRIE — JUBILEUS':                        'APÓCRIFOS',
   'Trilogia — O Cânon Oculto':                'HISTÓRIA DA IGREJA',
   'Série — A Verdadeira História da Igreja':  'HISTÓRIA DA IGREJA',
+  'COSMOLOGIA BÍBLICA':                       'COSMOLOGIA BÍBLICA',
+  'cosmologia biblica':                       'COSMOLOGIA BÍBLICA',
+  'cosmologia-biblica':                       'COSMOLOGIA BÍBLICA',
   'TIPOLOGIA BÍBLICA':                        'TIPOLOGIA BÍBLICA',
   'Série — Sombras do Reino':                 'TIPOLOGIA BÍBLICA',
   'Série — A Terra e o Tabernáculo':          'TIPOLOGIA BÍBLICA',
@@ -879,6 +890,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
 
 // Short display labels per series
 const SERIES_LABEL: Record<string, string> = {
+  'COSMOLOGIA BÍBLICA':                       'Cosmologia Bíblica',
   'Trilogia — O Mapa da Tempestade':          'O Mapa da Tempestade',
   'Trilogia — A Marca':                       'A Marca',
   'Trilogia — O Estrangeiro Próspero':        'O Estrangeiro Próspero',
@@ -913,6 +925,7 @@ const SERIES_LABEL: Record<string, string> = {
 
 // Description shown below each series header
 const SERIES_DESCRIPTION: Record<string, string> = {
+  'COSMOLOGIA BÍBLICA': 'Como a Bíblia usa tipologia para nos ensinar as verdades da terra, do universo e do Seu Reino.',
   'A REVELAÇÃO DE ENOQUE': 'Uma jornada profunda pelas visões e revelações do profeta Enoque sobre o mundo espiritual, os vigilantes e o destino da humanidade.',
   'SÉRIE — JUBILEUS': 'O livro que Moisés recebeu dos anjos e que a tradição oficial silenciou. Uma jornada pelos segredos do calendário sagrado, dos patriarcas e da guerra invisível que moldou a história bíblica.',
   'SOMBRAS DO REINO DE DEUS': 'Uma leitura bíblica do mundo espiritual: Reino de Deus, conselho celeste e as realidades invisíveis que Hebreus 8:5 chama de sombra das coisas celestiais.',
@@ -991,7 +1004,18 @@ const TYPOLOGY_TYPES: TypologyTypeMeta[] = [
     titulo: 'Tipologia do Tabernáculo',
     subtitulo: 'Cosmografia Bíblica',
     descricao: 'Uma cartografia bíblica do cosmos: terra plana, fundações da terra, quatro cantos, céu sólido, sete céus, geografia do mundo invisível, relógio cósmico e os padrões do universo revelados no tabernáculo.',
-    exemplos: ['Véu', 'Arca', 'Menorá', 'Pães da proposição', 'Altar do incenso'],
+    exemplos: [
+      'Véu',
+      'Arca/Propiciatório',
+      'Menorá',
+      'Pães',
+      'Altar do Incenso',
+      'Altar do Holocausto',
+      'Bacia',
+      'Maná',
+      'Vara de Arão',
+      'Serpente de Bronze',
+    ],
   },
   {
     id: 'tipologia-locativa',
@@ -1728,7 +1752,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
                 A leitura tipológica organizada para explorar a Escritura com ordem e profundidade.
               </p>
               <p className="text-xs sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
-                A tipologia da Livraria Espiritual está organizada em 8 tipos de leitura, para ajudar o leitor a reconhecer
+                A tipologia da SELAH está organizada em 8 tipos de leitura, para ajudar o leitor a reconhecer
                 como pessoas, eventos, instituições, objetos, lugares, rituais, padrões históricos e consumação apontam para Cristo
                 e para o Reino.
               </p>
@@ -1772,7 +1796,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
             className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors mb-6 active:scale-95 text-[10px] font-black uppercase tracking-widest"
           >
             <ChevronLeft size={15} />
-            Livraria Espiritual
+            SELAH
           </button>
           <div className="flex items-center gap-3 mb-2">
             <div className="bg-primary/15 border border-primary/25 rounded-xl p-2">
@@ -1857,7 +1881,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
         <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px]" />
         <div className="relative z-10">
           <h2 className="font-headline font-extrabold text-3xl text-primary tracking-tighter mb-2">
-            Livraria Espiritual
+            SELAH
           </h2>
           <p className="text-on-surface-variant/70 text-[11px] max-w-[300px] font-medium leading-relaxed">
             Biblioteca de estudos para discernimento bíblico, história da fé e guerra espiritual. Escolha sua frente de estudo e avance por séries, trilogias e investigações aprofundadas.
@@ -1867,7 +1891,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
 
       {loading ? (
         <div className="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">
-          Carregando Livraria...
+          Carregando SELAH...
         </div>
       ) : (
         <div className="flex flex-col gap-4">

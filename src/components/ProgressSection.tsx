@@ -10,7 +10,7 @@ import {
 import { useFetch } from '../hooks/useFetch';
 import { pm, type Category } from '../lib/progressManager';
 
-const refutationModules = import.meta.glob('/public/content/livraria da matrix/**/*.md', {
+const refutationModules = import.meta.glob('/public/content/babel/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -21,7 +21,7 @@ const livrariaModules = import.meta.glob('/public/content/livraria/**/*.md', {
   query: '?raw',
   import: 'default',
 }) as Record<string, string>;
-const livrariaEspitirualModules = import.meta.glob('/public/content/livraria espitirual/**/*.md', {
+const livrariaEspitirualModules = import.meta.glob('/public/content/selah/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -306,7 +306,7 @@ const bibleStudySlugs = bibleStudyEntries.map((entry) => entry.slug);
 const matrixStudyEntries: MatrixStudyEntry[] = Object.entries(refutationModules).map(([path, markdown]) => {
   const normalizedPath = path.replace(/\\/g, '/');
   const parts = normalizedPath.split('/');
-  const contentIndex = parts.findIndex((part) => part === 'livraria da matrix');
+  const contentIndex = parts.findIndex((part) => part === 'babel');
   const seriesFolder = parts[contentIndex + 2] ?? 'colecao';
   const fileName = parts[parts.length - 1] ?? '';
   const fileStem = fileName.replace(/\.md$/i, '');
@@ -326,7 +326,7 @@ const livrariaModuleEntries: LivrariaEntry[] = Object.keys(allLivrariaModules)
   .map((path) => {
     const normalizedPath = path.replace(/\\/g, '/');
     const markerLivraria = '/public/content/livraria/';
-    const markerLivrariaEspitirual = '/public/content/livraria espitirual/';
+    const markerLivrariaEspitirual = '/public/content/selah/';
     const relative = normalizedPath.includes(markerLivraria)
       ? normalizedPath.slice(normalizedPath.indexOf(markerLivraria) + markerLivraria.length)
       : normalizedPath.includes(markerLivrariaEspitirual)
@@ -355,10 +355,10 @@ export default function ProgressSection() {
   // ── 1. Bíblia ─────────────────────────────────────────────────────────────
   const bibleStats = useMemo(() => buildStats('biblica', bibleStudySlugs), []);
 
-  // ── 2. Livraria da Matrix ────────────────────────────────────────────────
+  // ── 2. BABEL ────────────────────────────────────────────────
   const docStats = useMemo(() => buildStats('refutacao', matrixModuleSlugs), []);
 
-  // ── 3. Livraria Espiritual ───────────────────────────────────────────────
+  // ── 3. SELAH ───────────────────────────────────────────────
   const { data: libBooks } = useFetch<LibraryItem[]>('/content/livraria/index.json');
   const libStats = useMemo(() => {
     const fromIndex = libBooks?.map((b) => b.slug) ?? [];
@@ -382,8 +382,8 @@ export default function ProgressSection() {
 
   const pillars = [
     { label: 'Bíblia', pct: bibleStats.pct },
-    { label: 'Matrix', pct: docStats.pct },
-    { label: 'Liv. Espiritual', pct: libStats.pct },
+    { label: 'BABEL', pct: docStats.pct },
+    { label: 'SELAH', pct: libStats.pct },
     { label: 'MANÁ', pct: studyStats.pct },
   ];
 
@@ -478,7 +478,7 @@ export default function ProgressSection() {
     }, {});
     return computeWeeklyGoal('refutacao', Object.values(grouped), weekStartMs, {
       key: 'matrix',
-      label: 'Livraria da Matrix',
+      label: 'BABEL',
       target: '1 série por semana',
       itemName: 'série',
       unitName: 'volumes',
@@ -509,7 +509,7 @@ export default function ProgressSection() {
 
     return computeWeeklyGoal('livraria', Array.from(grouped.values()), weekStartMs, {
       key: 'livraria',
-      label: 'Livraria Espiritual',
+      label: 'SELAH',
       target: '1 série por semana',
       itemName: 'série',
       unitName: 'volumes',
@@ -539,7 +539,7 @@ export default function ProgressSection() {
           <div>
             <p className="text-xs font-bold text-on-surface">Progresso Geral</p>
             <p className="text-[10px] text-on-surface-variant/60 mt-0.5">
-              Acompanhe o que você mais lê: Bíblia, Livraria da Matrix, Livraria Espiritual e MANÁ.
+              Acompanhe o que você mais lê: Bíblia, BABEL, SELAH e MANÁ.
             </p>
           </div>
           <span className="font-headline text-2xl font-black text-primary tracking-tighter">
@@ -583,7 +583,7 @@ export default function ProgressSection() {
           </span>
         </div>
         <p className="text-[10px] text-on-surface-variant/65 mb-4 leading-relaxed">
-          Progresso com foco: 1 estudo bíblico por semana, 1 MANÁ por dia e 1 série por semana em cada livraria.
+          Progresso com foco: 1 estudo bíblico por semana, 1 MANÁ por dia e 1 série por semana em SELAH e BABEL.
         </p>
 
         <div className="space-y-3">

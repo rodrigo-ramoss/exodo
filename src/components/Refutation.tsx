@@ -77,7 +77,7 @@ const MATRIX_SERIES_DESCRIPTIONS: Record<string, string> = {
     'Mapeamento documental da camada humana do sistema: nós de poder, dinastias, ordens iniciáticas e ideologias que estruturam a governança global no plano visível.',
 };
 
-const refutationModules = import.meta.glob('/public/content/livraria da matrix/**/*.md', {
+const refutationModules = import.meta.glob('/public/content/babel/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -188,18 +188,18 @@ function resolveMatrixCover(frontmatter: Record<string, string>, title: string, 
     if (/^https?:\/\//i.test(fromMeta) || fromMeta.startsWith('/')) return fromMeta;
     const stem = slugify(fromMeta.replace(/\.[^.]+$/g, ''));
     const mapped = MATRIX_IMAGE_ALIASES[stem];
-    if (mapped) return `/image/livraria da matrix/${mapped}`;
+    if (mapped) return `/image/babel/${mapped}`;
   }
 
   const titleStem = slugify(title);
   const mappedByTitle = MATRIX_IMAGE_ALIASES[titleStem];
-  if (mappedByTitle) return `/image/livraria da matrix/${mappedByTitle}`;
+  if (mappedByTitle) return `/image/babel/${mappedByTitle}`;
 
   const fileStemSlug = slugify(fileStem.replace(/^ebook\s*\d+\s*-\s*/i, ''));
   const mappedByFile = MATRIX_IMAGE_ALIASES[fileStemSlug];
-  if (mappedByFile) return `/image/livraria da matrix/${mappedByFile}`;
+  if (mappedByFile) return `/image/babel/${mappedByFile}`;
 
-  return '/image/livraria da matrix/a paisagem da crise.webp';
+  return '/image/babel/a paisagem da crise.webp';
 }
 
 function sortByNewest(a: RefutationStudy, b: RefutationStudy): number {
@@ -221,7 +221,7 @@ function loadRefutations(): RefutationStudy[] {
     .map(([pathKey, content]) => {
       const normalizedPath = pathKey.replace(/\\/g, '/');
       const parts = normalizedPath.split('/');
-      const contentIndex = parts.findIndex((part) => part === 'livraria da matrix');
+      const contentIndex = parts.findIndex((part) => part === 'babel');
       const themeId = parts[contentIndex + 1] ?? 'quem-controla-a-matrix';
       const seriesFolder = parts[contentIndex + 2] ?? 'colecao';
       const fileName = parts[parts.length - 1] ?? '';
@@ -411,7 +411,7 @@ export default function Refutation() {
 
   if (selectedTheme && selectedThemeId) {
     const themeStudies = studiesByTheme.get(selectedThemeId) ?? [];
-    const cover = themeStudies[0]?.image || '/image/livraria da matrix/a paisagem da crise.webp';
+    const cover = themeStudies[0]?.image || '/image/babel/a paisagem da crise.webp';
 
     return (
       <div className="relative pt-6 pb-32 px-5 max-w-7xl mx-auto">
@@ -421,7 +421,7 @@ export default function Refutation() {
           className="relative flex items-center gap-1.5 text-[#8ceab5]/80 hover:text-[#79ffad] transition-colors mb-5 active:scale-95 text-[10px] font-black uppercase tracking-widest"
         >
           <ChevronLeft size={15} />
-          Livraria da Matrix
+          BABEL
         </button>
 
         <article className="relative w-full h-44 rounded-2xl overflow-hidden border border-[#1ee07a]/30 mb-6 shadow-[0_0_45px_rgba(34,197,94,0.15)]">
@@ -483,9 +483,9 @@ export default function Refutation() {
         <div className="absolute -top-20 -left-12 h-48 w-48 rounded-full bg-[#1ee07a]/10 blur-[90px]" />
         <div className="inline-flex items-center gap-2 rounded-full border border-[#1ee07a]/40 bg-[#07130d]/80 px-3 py-1 mb-3">
           <BookMarked size={12} className="text-[#8cffba]" />
-          <span className="text-[9px] font-black uppercase tracking-[0.16em] text-[#8cffba]">Livraria da Matrix</span>
+          <span className="text-[9px] font-black uppercase tracking-[0.16em] text-[#8cffba]">BABEL</span>
         </div>
-        <h2 className="font-headline font-extrabold text-3xl text-[#d6ffe9] tracking-tighter mb-2 uppercase">LIVRARIA DA MATRIX</h2>
+        <h2 className="font-headline font-extrabold text-3xl text-[#d6ffe9] tracking-tighter mb-2 uppercase">BABEL</h2>
         <p className="text-[#b4f2cd]/75 text-[11px] max-w-2xl font-medium leading-relaxed">
           Arquiteturas de poder, narrativas de controle e discernimento estratégico para ler os sinais do sistema com método, sobriedade e base documental.
         </p>
@@ -494,7 +494,7 @@ export default function Refutation() {
       <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {REFUTATION_THEMES.map((theme) => {
           const themeStudies = studiesByTheme.get(theme.id) ?? [];
-          const cover = themeStudies[0]?.image || '/image/livraria da matrix/a paisagem da crise.webp';
+          const cover = themeStudies[0]?.image || '/image/babel/a paisagem da crise.webp';
           return (
             <button
               key={theme.id}

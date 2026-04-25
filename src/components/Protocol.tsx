@@ -168,10 +168,8 @@ export default function Protocol() {
     const candidates = [
       `/content/livraria/${encodedSlug}.md`,
       `/content/livraria/apocrifos/${encodedSlug}.md`,
-      `/content/livraria%20espitirual/${encodedSlug}.md`,
-      `/content/livraria%20espitirual/apocrifos/${encodedSlug}.md`,
-      `/content/livraria espitirual/${encodedSlug}.md`,
-      `/content/livraria espitirual/apocrifos/${encodedSlug}.md`,
+      `/content/selah/${encodedSlug}.md`,
+      `/content/selah/apocrifos/${encodedSlug}.md`,
     ];
 
     for (const url of candidates) {
