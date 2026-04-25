@@ -348,15 +348,26 @@ function normalizeCoverStemForLookup(raw: string): string {
 
 function buildTypologyCoverLookup(): Map<string, string> {
   const lookup = new Map<string, string>();
+
+  // Prioridade 1: capas específicas de Tipos.
   for (const key of Object.keys(imageModules)) {
     const normalized = key.replace(/\\/g, '/');
-    const isTipos = normalized.startsWith('/public/image/tipos/');
-    const isLegacyTabernaculo = normalized.startsWith('/public/image/tipos/');
-    if (!isTipos && !isLegacyTabernaculo) continue;
+    if (!normalized.startsWith('/public/image/tipos/')) continue;
     const fileName = normalized.split('/').pop();
     if (!fileName) continue;
     lookup.set(normalizeCoverStemForLookup(fileName), normalized.slice('/public'.length));
   }
+
+  // Prioridade 2 (fallback): capas editoriais em selah quando não existir equivalente em Tipos.
+  for (const key of Object.keys(imageModules)) {
+    const normalized = key.replace(/\\/g, '/');
+    if (!normalized.startsWith('/public/image/selah/')) continue;
+    const fileName = normalized.split('/').pop();
+    if (!fileName) continue;
+    const stem = normalizeCoverStemForLookup(fileName);
+    if (!lookup.has(stem)) lookup.set(stem, normalized.slice('/public'.length));
+  }
+
   return lookup;
 }
 
@@ -1123,8 +1134,13 @@ function buildAutoSeriesDescription(category: string, items: BookItem[]): string
 
   if (fromBooks.length > 0) return fromBooks.join(' ');
 
-  const seriesLabel = SERIES_LABEL[category] ?? category;
+  const seriesLabel = toSeriesDisplayLabel(category);
   return `${seriesLabel}: coleção de estudos e livros com análise bíblica, histórica e aplicação prática.`;
+}
+
+function toSeriesDisplayLabel(category: string): string {
+  const mapped = SERIES_LABEL[category] ?? category;
+  return mapped.replace(/^s[ée]rie\s*[—-]\s*/i, '').trim();
 }
 
 function extractVolumeFromBook(item: BookItem): number | null {
@@ -1429,7 +1445,7 @@ function TypologySeriesShelf({
     rowRef.current?.scrollBy({ left: delta, behavior: 'smooth' });
   };
 
-  const label = SERIES_LABEL[category] ?? category;
+  const label = toSeriesDisplayLabel(category);
   const description = buildAutoSeriesDescription(category, items);
 
   return (
@@ -1852,7 +1868,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
             {seriesInSection.map(([cat, items], index) => {
               const reads = items.map((b) => pm.getReadCount('livraria', b.slug));
               const minReads = reads.length ? Math.min(...reads) : 0;
-              const label = SERIES_LABEL[cat] ?? cat;
+              const label = toSeriesDisplayLabel(cat);
               const seriesDescription = buildAutoSeriesDescription(cat, items);
               const badgeLabel = getSeriesBadgeLabel(selectedSection, cat);
 
