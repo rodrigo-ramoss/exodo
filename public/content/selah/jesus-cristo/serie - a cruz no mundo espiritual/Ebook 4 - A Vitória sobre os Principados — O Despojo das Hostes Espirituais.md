@@ -2,8 +2,8 @@
 title: "A Vitória sobre os Principados — O Despojo das Hostes Espirituais"
 description: "Como a cruz desarmou as hierarquias espirituais da maldade, expôs sua derrota e transferiu a autoridade cósmica para o Cordeiro. Uma investigação sobre Colossenses 2:15 e a batalha invisível."
 seção: livraria
-category: mundo-espiritual
-image: https://via.placeholder.com/1600x2400?text=Capa+Volume+4
+category: "Série — A Cruz no Mundo Espiritual"
+image: /image/selah/a vitoria sobre os principados.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

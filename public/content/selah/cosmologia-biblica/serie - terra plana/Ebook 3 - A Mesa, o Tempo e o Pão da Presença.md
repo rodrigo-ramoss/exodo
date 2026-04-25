@@ -3,7 +3,7 @@ title: "O Relógio do Rei: A Mesa, o Tempo e o Pão da Presença"
 description: "Terceiro volume da série TERRA PLANA: O Tabernáculo, o Trono e a Mesa do Rei. Investiga como o calendário bíblico, os ciclos das festas e a Mesa da Proposição revelam uma cronologia cósmica para uma terra plana governada pelo trono de Deus."
 seção: livraria
 category: cosmologia-biblica
-image: https://vozdodeserto.com/wp-content/uploads/2026/04/relogio-do-rei-capa.jpg
+image: /image/selah/a mesa dos paes e os doze meses.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

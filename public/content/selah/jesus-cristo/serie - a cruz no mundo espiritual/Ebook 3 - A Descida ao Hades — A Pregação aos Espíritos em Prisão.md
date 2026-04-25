@@ -2,8 +2,8 @@
 title: "A Descida ao Hades — A Pregação aos Espíritos em Prisão"
 description: "O que Jesus fez nas profundezas entre sua morte e ressurreição? Uma investigação sobre a descida ao Hades, a proclamação aos Vigilantes aprisionados e o triunfo sobre o reino dos mortos."
 seção: livraria
-category: mundo-espiritual
-image: https://via.placeholder.com/1600x2400?text=Capa+Volume+3
+category: "Série — A Cruz no Mundo Espiritual"
+image: /image/selah/a descida ao hades.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

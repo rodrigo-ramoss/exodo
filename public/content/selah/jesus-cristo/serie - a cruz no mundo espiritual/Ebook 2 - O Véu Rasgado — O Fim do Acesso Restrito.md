@@ -2,8 +2,8 @@
 title: "O Véu Rasgado — O Fim do Acesso Restrito"
 description: "O rasgar do véu do templo no momento da morte de Cristo não foi um detalhe arquitetônico. Foi o fim de uma era cósmica e a abertura definitiva do caminho para a presença de Deus."
 seção: livraria
-category: mundo-espiritual
-image: https://via.placeholder.com/1600x2400?text=Capa+Volume+2
+category: "Série — A Cruz no Mundo Espiritual"
+image: /image/selah/o veu rasgado.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

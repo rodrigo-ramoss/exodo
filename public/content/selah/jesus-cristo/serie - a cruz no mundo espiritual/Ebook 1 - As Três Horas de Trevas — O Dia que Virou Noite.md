@@ -2,8 +2,8 @@
 title: "As Três Horas de Trevas — O Dia que Virou Noite"
 description: "O que as três horas de escuridão sobre o Calvário revelam sobre o mundo espiritual, o julgamento cósmico e a resposta da criação à morte do seu Criador."
 seção: livraria
-category: mundo-espiritual
-image: https://via.placeholder.com/1600x2400?text=Capa+Volume+1
+category: "Série — A Cruz no Mundo Espiritual"
+image: /image/selah/as tres horas de trevas.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*
