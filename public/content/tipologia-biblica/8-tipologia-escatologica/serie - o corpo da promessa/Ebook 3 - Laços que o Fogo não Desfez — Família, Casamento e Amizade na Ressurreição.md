@@ -3,7 +3,7 @@ title: "Laços que o Fogo não Desfez — Família, Casamento e Amizade na Ressu
 description: "Estarei com minha família na eternidade? O casamento continua? Que tipo de relacionamentos nos aguardam? Este volume enfrenta as perguntas mais angustiantes sobre a vida após a morte, revelando o que a Bíblia realmente ensina sobre os laços humanos na nova criação."
 seção: livraria
 category: ressurreicao
-image: 
+image: "/image/tipos/lacos que o fogo nao destroi.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

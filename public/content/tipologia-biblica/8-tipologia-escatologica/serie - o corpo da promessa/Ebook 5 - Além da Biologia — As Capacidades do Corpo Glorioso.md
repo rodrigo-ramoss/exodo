@@ -3,7 +3,7 @@ title: "Além da Biologia — As Capacidades do Corpo Glorioso"
 description: "O corpo espiritual não é imaterial — é mais real do que qualquer corpo que já tivemos. Este volume explora as capacidades do corpo glorioso à luz da Escritura e da tipologia do tabernáculo: movimento sem limitação, sentidos expandidos, comunicação transfigurada e a luz que seremos."
 seção: livraria
 category: ressurreicao
-image: 
+image: "/image/tipos/alem da biologia.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*
