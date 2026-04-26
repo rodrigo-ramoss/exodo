@@ -40,6 +40,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     lastReadings,
     totals,
     overallPct,
+    goals,
     weeklyGoal,
     hasAnyReadingStarted,
   } = useUserProgress();
