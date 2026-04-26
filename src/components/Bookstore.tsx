@@ -40,6 +40,7 @@ interface TypologyObjectalTopicMeta {
   id: string;
   label: string;
   imageStem: string;
+  imageAliases?: string[];
   seriesMatchers?: string[];
 }
 
@@ -116,6 +117,7 @@ const TYPOLOGY_OBJECTAL_TOPICS: TypologyObjectalTopicMeta[] = [
     id: 'arca-propiciatorio',
     label: 'Arca / Propiciatório',
     imageStem: 'arca-propiciatorio',
+    imageAliases: ['propiciatorio', 'arca'],
   },
   {
     id: 'menora',
@@ -131,17 +133,35 @@ const TYPOLOGY_OBJECTAL_TOPICS: TypologyObjectalTopicMeta[] = [
     id: 'altar-do-incenso',
     label: 'Altar do Incenso',
     imageStem: 'altar-incenso',
+    imageAliases: ['altar de incenso', 'incenso'],
   },
   {
     id: 'veu-tetraveu',
     label: 'Véu / Tetravéu',
     imageStem: 'veu-tetraveu',
+    imageAliases: ['veu', 'tetraveu', 'tetravel', 'o veu e a fronteira'],
     seriesMatchers: ['tetraveu', 'tetravel'],
   },
   {
     id: 'peles-do-tabernaculo',
     label: 'Peles do Tabernáculo',
     imageStem: 'peles-tabernaculo',
+    imageAliases: ['peles'],
+  },
+];
+
+const TYPOLOGY_ESCATOLOGICAL_TOPICS: TypologyObjectalTopicMeta[] = [
+  {
+    id: 'morte',
+    label: 'Morte',
+    imageStem: 'o que e a morte',
+    imageAliases: ['morte', 'a intrusa', 'o dia do juizo', 'a descida silenciosa'],
+  },
+  {
+    id: 'ressurreicao',
+    label: 'Ressurreição',
+    imageStem: 'o corpo que venceu',
+    imageAliases: ['ressurreicao', 'eu reconhecido', 'ultimo inimigo derrotado'],
   },
 ];
 
@@ -370,6 +390,7 @@ function normalizeSearchToken(raw: string): string {
 interface TypologyContentEntry {
   typeId: TypologyDivisionId;
   seriesCategory: string;
+  topicHint?: string;
   item: BookItem;
 }
 
@@ -450,14 +471,58 @@ function buildTypologyObjectalTopicImageLookup(): Map<string, string> {
 
 const TYPOLOGY_OBJECTAL_TOPIC_IMAGE_LOOKUP = buildTypologyObjectalTopicImageLookup();
 
-function resolveTypologyObjectalTopicImage(topic: TypologyObjectalTopicMeta): string | undefined {
-  const candidateStems = [topic.imageStem, topic.id, topic.label]
-    .map((value) => normalizeCoverStemForLookup(value));
-
-  for (const stem of candidateStems) {
-    const exact = TYPOLOGY_OBJECTAL_TOPIC_IMAGE_LOOKUP.get(stem);
-    if (exact) return exact;
+function scoreStemMatch(candidate: string, key: string): number {
+  if (!candidate || !key) return -1;
+  if (candidate === key) return 100;
+  if (key.includes(candidate) || candidate.includes(key)) {
+    return 80 - Math.min(40, Math.abs(candidate.length - key.length));
   }
+
+  const candidateTokens = new Set(candidate.split(' ').filter((token) => token.length > 2));
+  const keyTokens = new Set(key.split(' ').filter((token) => token.length > 2));
+  if (candidateTokens.size === 0 || keyTokens.size === 0) return -1;
+
+  let overlap = 0;
+  for (const token of candidateTokens) {
+    if (keyTokens.has(token)) overlap += 1;
+  }
+
+  if (overlap === 0) return -1;
+  return 40 + overlap * 8;
+}
+
+function findBestImageMatch(
+  lookup: Map<string, string>,
+  candidates: string[],
+): string | undefined {
+  let bestScore = -1;
+  let bestImage: string | undefined;
+
+  const normalizedCandidates = candidates
+    .map((value) => normalizeCoverStemForLookup(value))
+    .filter(Boolean);
+
+  for (const [key, imagePath] of lookup.entries()) {
+    for (const candidate of normalizedCandidates) {
+      const score = scoreStemMatch(candidate, key);
+      if (score > bestScore) {
+        bestScore = score;
+        bestImage = imagePath;
+      }
+    }
+  }
+
+  return bestScore >= 40 ? bestImage : undefined;
+}
+
+function resolveTypologyObjectalTopicImage(topic: TypologyObjectalTopicMeta): string | undefined {
+  const candidateStems = [topic.imageStem, topic.id, topic.label, ...(topic.imageAliases ?? [])];
+
+  const fromTopicFolder = findBestImageMatch(TYPOLOGY_OBJECTAL_TOPIC_IMAGE_LOOKUP, candidateStems);
+  if (fromTopicFolder) return fromTopicFolder;
+
+  const fromGeneralCovers = findBestImageMatch(TYPOLOGY_COVER_LOOKUP, candidateStems);
+  if (fromGeneralCovers) return fromGeneralCovers;
 
   return undefined;
 }
@@ -619,6 +684,7 @@ function discoverTypologyContentEntries(): TypologyContentEntry[] {
     entries.push({
       typeId,
       seriesCategory,
+      topicHint: normalizeSearchToken(frontmatter.category || ''),
       item: {
         title,
         slug,
@@ -1208,7 +1274,7 @@ const TYPOLOGY_TYPES: TypologyTypeMeta[] = [
     titulo: 'Tipologia Escatológica',
     subtitulo: 'Consumação',
     descricao: 'Realidades já inauguradas que apontam para o cumprimento final em Cristo.',
-    exemplos: ['Ceia', 'Batismo', 'Assembleia local', 'Reino já / ainda não'],
+    exemplos: ['Morte', 'Ressurreição'],
   },
 ];
 
@@ -1512,6 +1578,7 @@ function TypologyObjectalStudyDeck({
   topics,
   onOpenTopic,
   activeTopicId,
+  badgeTitle = 'Tópicos Objetais',
 }: {
   topics: {
     id: string;
@@ -1520,6 +1587,7 @@ function TypologyObjectalStudyDeck({
   }[];
   onOpenTopic: (topicId: string) => void;
   activeTopicId: string | null;
+  badgeTitle?: string;
 }) {
   const [desktopPage, setDesktopPage] = useState(0);
   const pageSize = 6;
@@ -1535,7 +1603,7 @@ function TypologyObjectalStudyDeck({
     <div>
       <div className="mb-2 hidden sm:flex items-center justify-between gap-3">
         <p className="text-[9px] font-black uppercase tracking-[0.18em] text-primary/80">
-          Tópicos Objetais
+          {badgeTitle}
         </p>
         {canPaginate && (
           <div className="inline-flex items-center gap-1.5">
@@ -1833,7 +1901,8 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const [activeObjectalTopicId, setActiveObjectalTopicId] = useState<string | null>(null);
-  const objectalTopicPanelRef = useRef<HTMLDivElement | null>(null);
+  const [activeEscatologicalTopicId, setActiveEscatologicalTopicId] = useState<string | null>(null);
+  const typologyTopicPanelRef = useRef<HTMLDivElement | null>(null);
   const { data: books, loading, error } = useFetch<BookItem[]>('/content/livraria/index.json');
   const discoveredBooks = useMemo(() => discoverBooksFromMarkdown(), []);
   const typologyEntries = useMemo(() => discoverTypologyContentEntries(), []);
@@ -1951,12 +2020,64 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
     return resolveTypologyObjectalTopicSeries(activeObjectalTopic, relatedSeries);
   }, [activeObjectalTopic, activeType, typologySeriesByType]);
 
+  const typologyEscatologicalCards = useMemo(() => {
+    if (!activeType || activeType.id !== 'tipologia-escatologica') return [];
+    return TYPOLOGY_ESCATOLOGICAL_TOPICS.map((topic) => ({
+      id: topic.id,
+      label: topic.label,
+      imageSrc: resolveTypologyObjectalTopicImage(topic),
+    }));
+  }, [activeType]);
+
+  const escatologicalSeriesThemeByCategory = useMemo(() => {
+    const byCategory = new Map<string, Set<string>>();
+    for (const entry of typologyEntries) {
+      if (entry.typeId !== 'tipologia-escatologica') continue;
+      const hints = byCategory.get(entry.seriesCategory) ?? new Set<string>();
+      if (entry.topicHint) hints.add(entry.topicHint);
+      byCategory.set(entry.seriesCategory, hints);
+    }
+
+    const resolved = new Map<string, string>();
+    for (const [seriesCategory, hints] of byCategory.entries()) {
+      const normalizedSeries = normalizeSearchToken(seriesCategory);
+      if (normalizedSeries.includes('ressurreicao') || hints.has('ressurreicao')) {
+        resolved.set(seriesCategory, 'ressurreicao');
+        continue;
+      }
+      if (normalizedSeries.includes('morte') || hints.has('morte')) {
+        resolved.set(seriesCategory, 'morte');
+      }
+    }
+
+    return resolved;
+  }, [typologyEntries]);
+
+  const activeEscatologicalTopic = useMemo(
+    () => TYPOLOGY_ESCATOLOGICAL_TOPICS.find((topic) => topic.id === activeEscatologicalTopicId) ?? null,
+    [activeEscatologicalTopicId],
+  );
+
+  const activeEscatologicalTopicSeries = useMemo(() => {
+    if (!activeType || activeType.id !== 'tipologia-escatologica' || !activeEscatologicalTopic) return [];
+    const relatedSeries = typologySeriesByType[activeType.id] ?? [];
+    return relatedSeries.filter(([category]) => escatologicalSeriesThemeByCategory.get(category) === activeEscatologicalTopic.id);
+  }, [activeEscatologicalTopic, activeType, escatologicalSeriesThemeByCategory, typologySeriesByType]);
+
   useEffect(() => {
     if (!activeType || activeType.id !== 'tipologia-objetal') {
       setActiveObjectalTopicId(null);
       return;
     }
     setActiveObjectalTopicId((current) => current ?? TYPOLOGY_OBJECTAL_TOPICS[0]?.id ?? null);
+  }, [activeType]);
+
+  useEffect(() => {
+    if (!activeType || activeType.id !== 'tipologia-escatologica') {
+      setActiveEscatologicalTopicId(null);
+      return;
+    }
+    setActiveEscatologicalTopicId((current) => current ?? TYPOLOGY_ESCATOLOGICAL_TOPICS[0]?.id ?? null);
   }, [activeType]);
 
   useEffect(() => {
@@ -1995,7 +2116,14 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
   const handleOpenTypologyObjectalTopic = (topicId: string) => {
     setActiveObjectalTopicId(topicId);
     requestAnimationFrame(() => {
-      objectalTopicPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      typologyTopicPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
+  const handleOpenTypologyEscatologicalTopic = (topicId: string) => {
+    setActiveEscatologicalTopicId(topicId);
+    requestAnimationFrame(() => {
+      typologyTopicPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   };
 
@@ -2038,6 +2166,14 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
                   topics={typologyObjectalCards}
                   onOpenTopic={handleOpenTypologyObjectalTopic}
                   activeTopicId={activeObjectalTopicId}
+                  badgeTitle="Tópicos Objetais"
+                />
+              ) : activeType.id === 'tipologia-escatologica' ? (
+                <TypologyObjectalStudyDeck
+                  topics={typologyEscatologicalCards}
+                  onOpenTopic={handleOpenTypologyEscatologicalTopic}
+                  activeTopicId={activeEscatologicalTopicId}
+                  badgeTitle="Temas Escatológicos"
                 />
               ) : (
                 <div className="flex gap-2.5 sm:gap-3 overflow-x-auto pb-1.5 sm:pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -2049,7 +2185,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
             </div>
 
             {activeType.id === 'tipologia-objetal' ? (
-              <div ref={objectalTopicPanelRef} className="mt-5 sm:mt-7 border-t border-primary/15 pt-4 sm:pt-5">
+              <div ref={typologyTopicPanelRef} className="mt-5 sm:mt-7 border-t border-primary/15 pt-4 sm:pt-5">
                 {activeObjectalTopic ? (
                   <>
                     <h3
@@ -2062,6 +2198,43 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
                       activeObjectalTopicSeries.map(([category, items]) => (
                         <TypologySeriesShelf
                           key={`${activeObjectalTopic.id}-${category}`}
+                          category={category}
+                          items={items}
+                          onSelectBook={handleSelectBook}
+                        />
+                      ))
+                    ) : (
+                      <div className="mt-3 rounded-2xl border border-primary/20 bg-black/20 px-3.5 sm:px-5 py-3.5 sm:py-4">
+                        <p className="text-xs sm:text-sm font-semibold text-primary/95">Conteúdos em preparação</p>
+                        <p className="mt-1 text-[11px] sm:text-xs leading-relaxed text-on-surface-variant/80 max-w-2xl">
+                          Esta área será preenchida quando os estudos deste tópico forem adicionados.
+                        </p>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="rounded-2xl border border-primary/20 bg-black/20 px-3.5 sm:px-5 py-3.5 sm:py-4">
+                    <p className="text-xs sm:text-sm font-semibold text-primary/95">Selecione um tópico</p>
+                    <p className="mt-1 text-[11px] sm:text-xs leading-relaxed text-on-surface-variant/80 max-w-2xl">
+                      Clique em um card para abrir os estudos correspondentes.
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : activeType.id === 'tipologia-escatologica' ? (
+              <div ref={typologyTopicPanelRef} className="mt-5 sm:mt-7 border-t border-primary/15 pt-4 sm:pt-5">
+                {activeEscatologicalTopic ? (
+                  <>
+                    <h3
+                      id={`typology-objectal-topic-${activeEscatologicalTopic.id}`}
+                      className="font-headline text-xl sm:text-2xl font-black tracking-tight text-on-surface mb-1 uppercase"
+                    >
+                      {activeEscatologicalTopic.label}
+                    </h3>
+                    {activeEscatologicalTopicSeries.length > 0 ? (
+                      activeEscatologicalTopicSeries.map(([category, items]) => (
+                        <TypologySeriesShelf
+                          key={`${activeEscatologicalTopic.id}-${category}`}
                           category={category}
                           items={items}
                           onSelectBook={handleSelectBook}
