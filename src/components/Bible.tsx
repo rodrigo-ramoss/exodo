@@ -132,11 +132,13 @@ const AXIS_METADATA: AxisMeta[] = [
 
 const AXIS_BY_ID = Object.fromEntries(AXIS_METADATA.map((axis) => [axis.id, axis])) as Record<string, AxisMeta>;
 
-const studyMarkdownModules = import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
+const studyMarkdownModules = {
+  ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+const CONTENT_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml)$/i;
 
 function parseFrontmatter(markdown: string): Record<string, string> {
   const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
@@ -244,8 +246,8 @@ function loadInterpretationStudies(): InterpretationStudy[] {
       const fileName = parts[parts.length - 1] ?? '';
       const frontmatter = parseFrontmatter(content);
       const axis = AXIS_BY_ID[axisId] ?? AXIS_METADATA[6];
-      const title = frontmatter.title || fileName.replace(/\.md$/i, '');
-      const subthemeSource = normalizeSubtheme(frontmatter.subtema || title || fileName.replace(/\.md$/i, ''));
+      const title = frontmatter.title || fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
+      const subthemeSource = normalizeSubtheme(frontmatter.subtema || title || fileName.replace(CONTENT_FILE_EXTENSION_REGEX, ''));
       const subthemeId = slugify(subthemeSource);
       const volume = extractVolume(title, fileName);
 

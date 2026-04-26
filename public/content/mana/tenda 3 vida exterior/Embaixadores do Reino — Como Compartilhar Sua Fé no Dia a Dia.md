@@ -5,7 +5,7 @@ seção: maná
 tema: evangelismo
 sub: missão
 tenda: vida exterior
-image: https://placeholder-voz-do-deserto.com/capa-mana-embaixadores.jpg
+image: "/image/mana/embaixadores do reino.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Maná — Tenda Vida Exterior | Missão*

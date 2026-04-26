@@ -3,7 +3,7 @@ title: A Fábrica de Almas — O Que a Bíblia Diz Sobre o Ser Humano
 description: O que é o ser humano? Alma, espírito e corpo. A imagem de Deus como identidade fundamental. Este primeiro volume da série Antropologia Espiritual estabelece a base bíblica e do Segundo Templo para entender a crise do transhumanismo e o ataque à humanidade.
 seção: livraria
 category: antropologia-espiritual
-image: https://via.placeholder.com/1200x630?text=A+Fábrica+de+Almas
+image: "/image/selah/a fabrica de almas.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: Antropologia Espiritual — Volume 1*

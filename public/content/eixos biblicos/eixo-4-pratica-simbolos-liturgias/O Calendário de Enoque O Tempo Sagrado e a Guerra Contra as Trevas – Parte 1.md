@@ -5,7 +5,7 @@ versiculos: "Gênesis 1:14-19; 7:11–8:14; Êxodo 12:1-2; Levítico 23; Salmo 1
 book: "Gênesis / 1 Enoque"
 eixo: "Eixo 4 – Práticas e Símbolos Litúrgicos (A Tecnologia da Aliança)"
 description: "Investigação filológica e exegética do calendário solar implícito nas Escrituras, revelando as luminárias como marcadores do tempo sagrado, o arquétipo do sol como Cristo e a lua como a Igreja, e a batalha espiritual pela guarda dos tempos designados por Deus."
-image: "O Calendário de Enoque.webp"
+image: "/image/eixos biblicos/O Calendário de Enoque.webp"
 ---
 
 # PARTE 1 – PESHAT & REMEZ: AS LUMINÁRIAS E OS TEMPOS DESIGNADOS

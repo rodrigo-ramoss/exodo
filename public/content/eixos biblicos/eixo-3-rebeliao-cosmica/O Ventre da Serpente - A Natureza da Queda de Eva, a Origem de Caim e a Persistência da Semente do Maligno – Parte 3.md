@@ -5,7 +5,7 @@ versiculos: "João 8:39-47; 1 João 3:7-15; Mateus 13:24-30, 36-43; Romanos 16:2
 book: "Gênesis"
 eixo: "Eixo 3 – Rebelião e Guerra Cósmica / Eixo 5 – A Linhagem da Semente e a Corrupção da Carne"
 description: "A revelação do Sod: a 'semente da serpente' como categoria espiritual definida por obras e fé, a purificação da 'zuhama' em Cristo, o discernimento dos coerdeiros e a vitória escatológica da Semente da Mulher sobre o Maligno."
-image: "O Ventre da Serpente.webp"
+image: "/image/eixos biblicos/O Ventre da Serpente.webp"
 ---
 
 # PARTE 3 – SOD: A SEMENTE HOJE E A VITÓRIA DOS COERDEIROS

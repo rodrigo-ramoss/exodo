@@ -3,7 +3,7 @@ title: "A Escada de Jacó — Volume 2: O Primeiro Céu"
 description: "A jornada começa no mundo físico. O primeiro céu como o Pátio do Tabernáculo, a superação do 'homem natural', e o chamado à subida através do altar do sacrifício."
 seção: tipos
 category: cosmografia-biblica
-image: /image/livraria/a-escada-de-jaco-vol-2-o-primeiro-ceu.webp
+image: "/image/tipos/o primeiro ceu - tabernaculo  os 7 ceus.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

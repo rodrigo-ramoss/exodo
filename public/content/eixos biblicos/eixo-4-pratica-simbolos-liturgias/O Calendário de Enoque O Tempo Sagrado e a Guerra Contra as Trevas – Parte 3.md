@@ -5,7 +5,7 @@ versiculos: "Mateus 12:8; Marcos 2:27-28; Lucas 4:19; Gálatas 4:10; Colossenses
 book: "Gênesis / 1 Enoque"
 eixo: "Eixo 4 – Práticas e Símbolos Litúrgicos (A Tecnologia da Aliança)"
 description: "A revelação do Sod: Cristo como o Senhor do Sábado e a substância de todas as festas, o cumprimento do Jubileu escatológico, o fim da guerra dos calendários na Nova Aliança, e a consumação do tempo na eternidade iluminada pelo Cordeiro."
-image: "O Calendário de Enoque.webp"
+image: "/image/eixos biblicos/O Calendário de Enoque.webp"
 ---
 
 # PARTE 3 – SOD: CRISTO, O SENHOR DO TEMPO E A ETERNIDADE

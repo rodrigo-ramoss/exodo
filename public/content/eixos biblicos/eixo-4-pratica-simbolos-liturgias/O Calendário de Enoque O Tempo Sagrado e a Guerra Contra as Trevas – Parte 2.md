@@ -5,7 +5,7 @@ versiculos: "1 Enoque 72–82; Jubileus 4:17-21; 6:23-38; Rolo do Templo (11QT);
 book: "Gênesis / 1 Enoque"
 eixo: "Eixo 4 – Práticas e Símbolos Litúrgicos (A Tecnologia da Aliança)"
 description: "Expansão do tema do calendário sagrado pela literatura do Segundo Templo e Manuscritos do Mar Morto, revelando a revelação do calendário solar de 364 dias a Enoque, os anjos das luminárias, e a guerra litúrgica contra o calendário lunar como corrupção de Belial."
-image: "O Calendário de Enoque.webp"
+image: "/image/eixos biblicos/O Calendário de Enoque.webp"
 ---
 
 # PARTE 2 – DERASH: O CALENDÁRIO SOLAR NA LITERATURA DO SEGUNDO TEMPLO E EM QUMRAN

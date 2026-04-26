@@ -3,7 +3,7 @@ title: "O Último Inimigo — A Destruição Final da Morte e a Consumação do 
 description: "A cruz venceu a morte, mas ainda não a destruiu. O que a Bíblia revela sobre o fim da Morte, a ressurreição final, o lago de fogo e a entrega do reino ao Pai?"
 seção: livraria
 category: mundo-espiritual
-image: https://via.placeholder.com/1600x2400?text=Capa+Volume+12
+image: "/image/selah/o ultimo inimigo.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

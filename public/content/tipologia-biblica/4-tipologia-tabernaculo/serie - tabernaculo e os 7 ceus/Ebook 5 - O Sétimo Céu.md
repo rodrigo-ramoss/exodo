@@ -3,7 +3,7 @@ title: "A Escada de Jacó — Volume 5: O Sétimo Céu"
 description: "O ápice da ascensão. O Santo dos Santos celestial como o sétimo céu, o trono de Deus, a visão da glória e a adoração perpétua diante do Cordeiro."
 seção: tipos
 category: cosmografia-biblica
-image: /image/livraria/a-escada-de-jaco-vol-5-o-setimo-ceu.webp
+image: "/image/tipos/o setimo ceu.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

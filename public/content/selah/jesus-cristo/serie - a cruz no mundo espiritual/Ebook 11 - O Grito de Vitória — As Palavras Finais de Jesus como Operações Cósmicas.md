@@ -3,7 +3,7 @@ title: "O Grito de Vitória — As Palavras Finais de Jesus como Operações Có
 description: "As sete frases de Jesus na cruz não foram apenas palavras de um moribundo. Foram decretos que abalaram o cosmos, transformaram o mundo espiritual e consumaram a redenção."
 seção: livraria
 category: mundo-espiritual
-image: https://via.placeholder.com/1600x2400?text=Capa+Volume+11
+image: "/image/selah/o grito de vitoria.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

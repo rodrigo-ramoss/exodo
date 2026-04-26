@@ -4,7 +4,7 @@ description: O jejum bíblico como arma de guerra espiritual. Fundamentos, prát
 seção: maná
 tema: jejum
 tenda: vida espiritual
-image: https://placeholder-voz-do-deserto.com/capa-mana-jejum.jpg
+image: "/image/mana/jejum a arma esquecida que quebra cadeias.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Maná — Tenda Vida Espiritual*

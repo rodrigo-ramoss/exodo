@@ -5,7 +5,7 @@ seção: maná
 tema: trabalho e profissão
 sub: trabalho e carreira
 tenda: vida exterior
-image: https://placeholder-voz-do-deserto.com/capa-mana-trabalho-adoracao.jpg
+image: "/image/mana/trabalho como adoracao.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Maná — Tenda Vida Exterior | Trabalho e Carreira*

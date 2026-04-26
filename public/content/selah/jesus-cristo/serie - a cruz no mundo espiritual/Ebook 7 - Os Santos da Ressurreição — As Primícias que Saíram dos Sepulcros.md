@@ -3,7 +3,7 @@ title: "Os Santos da Ressurreição — As Primícias que Saíram dos Sepulcros"
 description: "Quem eram os santos que ressuscitaram quando Jesus morreu e apareceram em Jerusalém? Uma investigação sobre Mateus 27:52-53 e o primeiro fruto visível da vitória de Cristo sobre a morte."
 seção: livraria
 category: mundo-espiritual
-image: https://via.placeholder.com/1600x2400?text=Capa+Volume+7
+image: "/image/selah/os santos e a ressurreicao.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

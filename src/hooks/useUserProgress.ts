@@ -112,38 +112,44 @@ export interface UserProgressSnapshot {
   isLoadingSources: boolean;
 }
 
-const refutationModules = import.meta.glob('/public/content/babel/**/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
+const refutationModules = {
+  ...import.meta.glob('/public/content/babel/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/babel/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/babel/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/babel/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
 
-const livrariaModules = import.meta.glob('/public/content/livraria/**/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
-const livrariaEspitirualModules = import.meta.glob('/public/content/selah/**/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
+const livrariaModules = {
+  ...import.meta.glob('/public/content/livraria/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/livraria/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/livraria/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/livraria/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+const livrariaEspitirualModules = {
+  ...import.meta.glob('/public/content/selah/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
 const allLivrariaModules = {
   ...livrariaModules,
   ...livrariaEspitirualModules,
 };
 
-const ensinosModules = import.meta.glob('/public/content/ensinos/**/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
+const ensinosModules = {
+  ...import.meta.glob('/public/content/ensinos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/ensinos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/ensinos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/ensinos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
 
-const bibleStudyModules = import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
+const bibleStudyModules = {
+  ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+const CONTENT_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml)$/i;
 
 const MATRIX_IMAGE_ALIASES: Record<string, string> = {
   'capa-nos-do-poder': 'os nos do poder.webp',
@@ -390,7 +396,7 @@ const bibleStudyEntries: BibleStudyEntry[] = Object.entries(bibleStudyModules).m
   const normalizedPath = path.replace(/\\/g, '/');
   const slug = normalizedPath.replace('/eixo-4-pratica-simbolos-liturgias/', '/eixo-4-tecnologia-alianca/');
   const frontmatter = parseFrontmatter(markdown);
-  const fileName = normalizedPath.split('/').pop()?.replace(/\.md$/i, '') || 'Estudo';
+  const fileName = normalizedPath.split('/').pop()?.replace(CONTENT_FILE_EXTENSION_REGEX, '') || 'Estudo';
   const title = frontmatter.title || fileName;
   const subtheme = normalizeBibleSubtheme(frontmatter.subtema || title || fileName);
   return {
@@ -408,7 +414,7 @@ const matrixStudyEntries: MatrixStudyEntry[] = Object.entries(refutationModules)
   const contentIndex = parts.findIndex((part) => part === 'babel');
   const seriesFolder = parts[contentIndex + 2] ?? 'colecao';
   const fileName = parts[parts.length - 1] ?? '';
-  const fileStem = fileName.replace(/\.md$/i, '');
+  const fileStem = fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
   const slug = `${seriesFolder}/${fileStem}`;
   const frontmatter = parseFrontmatter(markdown);
   const title = frontmatter.title || fileStem;
@@ -434,7 +440,7 @@ const livrariaModuleEntries: LivrariaEntry[] = Object.entries(allLivrariaModules
       : normalizedPath.includes(markerLivrariaEspitirual)
       ? normalizedPath.slice(normalizedPath.indexOf(markerLivrariaEspitirual) + markerLivrariaEspitirual.length)
       : normalizedPath;
-    const withoutExt = relative.replace(/\.md$/i, '');
+    const withoutExt = relative.replace(CONTENT_FILE_EXTENSION_REGEX, '');
     const parts = withoutExt.split('/').filter(Boolean);
     const fileStem = parts[parts.length - 1] ?? '';
     const seriesFolder = parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? '');
@@ -461,7 +467,7 @@ const ensinosEntries: EnsinosEntry[] = Object.entries(ensinosModules).map(([path
   const relative = normalizedPath.includes(marker)
     ? normalizedPath.slice(normalizedPath.indexOf(marker) + marker.length)
     : normalizedPath;
-  const withoutExt = relative.replace(/\.md$/i, '');
+  const withoutExt = relative.replace(CONTENT_FILE_EXTENSION_REGEX, '');
   const parts = withoutExt.split('/').filter(Boolean);
   const fileStem = parts[parts.length - 1] ?? '';
   const seriesFolder = parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? 'ensinos');

@@ -5,7 +5,7 @@ versiculos: "Levítico 16; Hebreus 9–10; 13:11-13; Colossenses 2:15; Apocalips
 book: "Levítico"
 eixo: "Eixo 3 – Rebelião e Guerra Cósmica / Eixo 4 – Práticas e Símbolos Litúrgicos"
 description: "A revelação do Sod: Cristo como o verdadeiro Sumo Sacerdote segundo Melquisedeque, o cumprimento do duplo bode, a vitória sobre Azazel na cruz e a certeza da expiação plena e final para os coerdeiros."
-image: "azazel e o bode expiatório.webp"
+image: "/image/eixos biblicos/azazel e o bode expiatório.webp"
 ---
 
 # PARTE 3 – SOD: O CUMPRIMENTO EM CRISTO E A DERROTA FINAL DE AZAZEL

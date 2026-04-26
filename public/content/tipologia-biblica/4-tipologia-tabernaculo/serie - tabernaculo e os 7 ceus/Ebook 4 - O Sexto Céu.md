@@ -3,7 +3,7 @@ title: "A Escada de Jacó — Volume 4: O Sexto Céu"
 description: "O portal do véu. O sexto céu como a morada das hierarquias angélicas superiores e o último limiar antes do trono de Deus. O véu do tabernáculo, os querubins e o caminho aberto por Cristo."
 seção: tipos
 category: cosmografia-biblica
-image: /image/livraria/a-escada-de-jaco-vol-4-o-sexto-ceu.webp
+image: "/image/tipos/o sexto ceu.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

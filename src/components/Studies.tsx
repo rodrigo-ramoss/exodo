@@ -167,11 +167,13 @@ const FALLBACK_TEMAS: ManaTema[] = [
   },
 ];
 
-const manaMarkdownModules = import.meta.glob('/public/content/mana/**/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
+const manaMarkdownModules = {
+  ...import.meta.glob('/public/content/mana/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/mana/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/mana/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/mana/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+const CONTENT_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml)$/i;
 
 const TENDA_ICON: Record<TendaId, typeof Sparkles> = {
   'vida-espiritual': Sword,
@@ -430,7 +432,7 @@ export default function Studies({ openSlug }: StudiesProps) {
       const relativePath = toRelativeManaPath(pathKey);
       const normalizedRelative = normalizeText(relativePath);
       const fileName = relativePath.split('/').pop() ?? relativePath;
-      const fileStem = fileName.replace(/\.md$/i, '');
+      const fileStem = fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
 
       map.set(normalizedRelative, content);
       map.set(normalizeText(fileName), content);

@@ -3,7 +3,7 @@ title: "O Terremoto e as Rochas Partidas — A Criação Responde ao seu Criador
 description: "Quando Jesus morreu, a terra tremeu, as rochas se partiram e os sepulcros se abriram. O que esses fenômenos revelam sobre a resposta do cosmos à crucificação do seu Criador?"
 seção: livraria
 category: mundo-espiritual
-image: https://via.placeholder.com/1600x2400?text=Capa+Volume+10
+image: "/image/selah/o terremoto e a partida.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

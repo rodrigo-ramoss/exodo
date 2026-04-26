@@ -3,7 +3,7 @@ title: "O Sangue no Trono da Graça — A Purificação do Santuário Celestial"
 description: "O que aconteceu no céu quando o sangue de Cristo foi apresentado no propiciatório celestial? Como o tabernáculo eterno foi purificado e o trono de juízo tornou-se trono de graça."
 seção: livraria
 category: mundo-espiritual
-image: https://via.placeholder.com/1600x2400?text=Capa+Volume+6
+image: "/image/selah/o sangue no trono da graca.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

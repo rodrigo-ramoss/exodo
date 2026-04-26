@@ -4,7 +4,7 @@ description: A batalha que acontece dentro da mente do crente. Como identificar 
 seção: maná
 tema: mente e pensamentos
 tenda: vida espiritual
-image: https://placeholder-voz-do-deserto.com/capa-mana-fortalezas-mentais.jpg
+image: "/image/mana/fortalezas mentais.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Maná — Tenda Vida Espiritual*

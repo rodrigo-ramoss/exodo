@@ -3,7 +3,7 @@ title: O Corpo Glorificado — Ressurreição e a Nova Criação
 description: A esperança cristã não é a imortalidade da alma, mas a ressurreição do corpo. Este ebook explora a natureza do corpo ressurreto, a nova criação, e o contraste com as falsas promessas do transhumanismo.
 seção: livraria
 category: antropologia-espiritual
-image: https://via.placeholder.com/1200x630?text=O+Corpo+Glorificado
+image: "/image/selah/o corpo glorificado.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: Antropologia Espiritual — Volume 4*

@@ -3,7 +3,7 @@ title: "A Intercessão que Não Cessa — Cristo como Sumo Sacerdote em Operaç�
 description: "O que Jesus está fazendo agora, neste exato momento, no trono da graça? Uma investigação sobre a intercessão contínua do Sumo Sacerdote celestial e como ela sustenta a Igreja."
 seção: livraria
 category: mundo-espiritual
-image: https://via.placeholder.com/1600x2400?text=Capa+Volume+8
+image: "/image/selah/a intercessao que nao cessa.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

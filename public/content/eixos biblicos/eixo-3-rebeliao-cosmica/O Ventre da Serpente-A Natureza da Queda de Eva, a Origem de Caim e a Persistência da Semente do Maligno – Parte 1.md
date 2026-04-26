@@ -5,7 +5,7 @@ versiculos: "Gênesis 3:1-24; 4:1-16; Romanos 5:12-14; 1 Coríntios 15:21-22; 1 
 book: "Gênesis"
 eixo: "Eixo 3 – Rebelião e Guerra Cósmica / Eixo 5 – A Linhagem da Semente e a Corrupção da Carne"
 description: "Investigação exegética e simbólica do relato da Queda e do nascimento de Caim, examinando se o texto bíblico, em seu sentido literal e alusivo, sustenta a ideia de um pecado sexual entre Eva e a Serpente e uma consequente linhagem híbrida."
-image: "O Ventre da Serpente.webp"
+image: "/image/eixos biblicos/O Ventre da Serpente.webp"
 ---
 
 # PARTE 1 – PESHAT & REMEZ: O SILÊNCIO DO TEXTO E OS GRITOS DA ALUSÃO

@@ -3,7 +3,7 @@ title: A Casa do Espírito — Possessão, Libertação e a Integridade Humana
 description: O que é possessão demoníaca? Como distinguir entre influência, opressão e possessão? Este ebook revela a interação entre espíritos malignos e o ser humano, e oferece discernimento para a guerra espiritual no corpo e na alma.
 seção: livraria
 category: antropologia-espiritual
-image: https://via.placeholder.com/1200x630?text=A+Casa+do+Espírito
+image: "/image/selah/a casa do espirito.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: Antropologia Espiritual — Volume 3*

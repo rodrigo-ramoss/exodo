@@ -44,36 +44,41 @@ interface TypologyObjectalTopicMeta {
   seriesMatchers?: string[];
 }
 
-const livrariaMarkdownModules = import.meta.glob('/public/content/livraria/**/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
-const livrariaEspitirualMarkdownModules = import.meta.glob('/public/content/selah/**/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
-const ferramentasMarkdownModules = import.meta.glob('/public/content/ferramentas-espirituais/**/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
+const livrariaMarkdownModules = {
+  ...import.meta.glob('/public/content/livraria/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/livraria/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/livraria/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/livraria/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+const livrariaEspitirualMarkdownModules = {
+  ...import.meta.glob('/public/content/selah/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+const ferramentasMarkdownModules = {
+  ...import.meta.glob('/public/content/ferramentas-espirituais/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/ferramentas-espirituais/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/ferramentas-espirituais/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/ferramentas-espirituais/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
 const contentMarkdownModules = {
   ...livrariaMarkdownModules,
   ...livrariaEspitirualMarkdownModules,
   ...ferramentasMarkdownModules,
 };
-const typologyMarkdownModulesRoot = import.meta.glob('/public/content/tipologia-biblica/**/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
-const typologyMarkdownModulesLegacy = import.meta.glob('/public/content/selah/tipologia-biblica/**/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
+const typologyMarkdownModulesRoot = {
+  ...import.meta.glob('/public/content/tipologia-biblica/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/tipologia-biblica/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/tipologia-biblica/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/tipologia-biblica/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+const typologyMarkdownModulesLegacy = {
+  ...import.meta.glob('/public/content/selah/tipologia-biblica/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/tipologia-biblica/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/tipologia-biblica/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/tipologia-biblica/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
 const typologyMarkdownModules = {
   ...typologyMarkdownModulesRoot,
   ...typologyMarkdownModulesLegacy,
@@ -87,6 +92,7 @@ const imageModules = {
 
 const COVER_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg'] as const;
 const WEAK_REMOTE_IMAGE_HOSTS = ['placeholder-voz-do-deserto.com', 'images.unsplash.com'];
+const CONTENT_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml)$/i;
 const TYPOLOGY_OBJECTAL_TOPIC_IMAGE_BASE_PATH = '/image/tipos/topicos';
 const TYPOLOGY_DIVISION_FOLDER_TO_ID: Record<string, TypologyDivisionId> = {
   '1-tipologia-pessoal': 'tipologia-pessoal',
@@ -366,7 +372,7 @@ function toContentRelativePath(pathKey: string): string {
 }
 
 function stripMarkdownExtension(path: string): string {
-  return path.replace(/\.md$/i, '');
+  return path.replace(CONTENT_FILE_EXTENSION_REGEX, '');
 }
 
 function normalizeSlugLookupKey(raw: string): string {
@@ -858,7 +864,7 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
   const normalizedSlug = slugify(slugFileName.replace(/^ebook\s*\d+\s*-\s*/i, '').replace(/^livro\s*\d+\s*-\s*/i, '')).replace(/-/g, ' ');
   const rawStemFromTitle = normalizeTitlePreservingPunctuation(title).replace(/^(o|a|os|as)\s+/, '');
   const rawStemFromFile = normalizeTitlePreservingPunctuation(
-    slugFileName.replace(/\.md$/i, '').replace(/^ebook\s*\d+\s*-\s*/i, '').replace(/^livro\s*\d+\s*-\s*/i, ''),
+    slugFileName.replace(CONTENT_FILE_EXTENSION_REGEX, '').replace(/^ebook\s*\d+\s*-\s*/i, '').replace(/^livro\s*\d+\s*-\s*/i, ''),
   ).replace(/^(o|a|os|as)\s+/, '');
   const shortTitleStem = normalizeTitlePreservingPunctuation(title).split('—')[0]?.split(':')[0]?.trim() || '';
   const seriesVolumeStem = inferSeriesVolumeCoverStem(title, slug, frontmatter.category);
@@ -897,11 +903,11 @@ function discoverBooksFromMarkdown(): BookItem[] {
     const parts = relative.split('/').filter(Boolean);
     const fileName = parts[parts.length - 1] ?? '';
     const seriesFolder = parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? 'livraria');
-    const fileStem = fileName.replace(/\.md$/i, '');
+    const fileStem = fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
     const slug = `${seriesFolder}/${fileStem}`;
     const frontmatter = parseFrontmatter(content);
     const firstHeading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
-    const title = frontmatter.title || firstHeading || fileName.replace(/\.md$/i, '');
+    const title = frontmatter.title || firstHeading || fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
     const cover =
       inferBookCoverCandidates(frontmatter, title, slug).find((candidate) => isAvailableCoverCandidate(candidate))
       || inferSeriesFallbackCover(title, slug, frontmatter.category);

@@ -3,7 +3,7 @@ title: "A Escada de Jacó — Volume 1: O Mapa e a Jornada"
 description: "O tabernáculo como o mapa arquitetônico do cosmos e sua relação com os sete céus do misticismo judaico. As três zonas de santidade como a estrutura fundamental do universo, e a jornada da alma como a peregrinação ao trono de Deus."
 seção: tipos
 category: cosmografia-biblica
-image: /image/livraria/a-escada-de-jaco-vol-1-o-mapa-e-a-jornada.webp
+image: "/image/tipos/o mapa e a jornada.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

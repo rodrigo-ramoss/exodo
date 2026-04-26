@@ -3,7 +3,7 @@ title: Onde Estão os Mortos? — Hades, Paraíso e o Estado Intermediário
 description: O que acontece imediatamente após a morte? Este ebook explora a geografia do além no Antigo Testamento, no Judaísmo do Segundo Templo e no Novo Testamento: Sheol, Hades, Seio de Abraão, Paraíso e o destino das almas.
 seção: livraria
 category: antropologia-espiritual
-image: https://via.placeholder.com/1200x630?text=Onde+Estão+os+Mortos
+image: "/image/selah/onde estao os mortos.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: Antropologia Espiritual — Volume 2*

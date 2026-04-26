@@ -5,7 +5,7 @@ seção: maná
 tema: depressão
 sub: emoções
 tenda: vida interior
-image: https://placeholder-voz-do-deserto.com/capa-mana-vale-da-sombra.jpg
+image: "/image/mana/o vale da sombra biblia e depressao.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Maná — Tenda Vida Interior | Emoções*

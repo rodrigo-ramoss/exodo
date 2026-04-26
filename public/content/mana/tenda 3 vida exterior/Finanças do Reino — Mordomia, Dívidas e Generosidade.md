@@ -5,7 +5,7 @@ seção: maná
 tema: finanças
 sub: mordomia
 tenda: vida exterior
-image: https://placeholder-voz-do-deserto.com/capa-mana-financas.jpg
+image: "/image/mana/financas do reino.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Maná — Tenda Vida Exterior | Mordomia*

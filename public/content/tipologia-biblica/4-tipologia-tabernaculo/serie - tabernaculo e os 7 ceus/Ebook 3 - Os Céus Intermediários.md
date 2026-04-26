@@ -3,7 +3,7 @@ title: "A Escada de Jacó — Volume 3: Os Céus Intermediários"
 description: "A jornada pelos céus do segundo ao quinto. As hierarquias angelicais, a liturgia do incenso e a transformação da alma no Lugar Santo do tabernáculo celestial."
 seção: tipos
 category: cosmografia-biblica
-image: /image/livraria/a-escada-de-jaco-vol-3-os-ceus-intermediarios.webp
+image: "/image/tipos/os ceus intermediarios.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

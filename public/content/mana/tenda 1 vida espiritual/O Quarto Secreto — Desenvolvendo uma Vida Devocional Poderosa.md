@@ -4,7 +4,7 @@ description: A vida devocional do remanescente não pode ser um ritual vazio. Es
 seção: maná
 tema: vida devocional
 tenda: vida espiritual
-image: https://placeholder-voz-do-deserto.com/capa-mana-quarto-secreto.jpg
+image: "/image/mana/o quarto secreto.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Maná — Tenda Vida Espiritual*

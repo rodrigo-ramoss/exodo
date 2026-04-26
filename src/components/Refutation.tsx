@@ -77,11 +77,13 @@ const MATRIX_SERIES_DESCRIPTIONS: Record<string, string> = {
     'Mapeamento documental da camada humana do sistema: nós de poder, dinastias, ordens iniciáticas e ideologias que estruturam a governança global no plano visível.',
 };
 
-const refutationModules = import.meta.glob('/public/content/babel/**/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>;
+const refutationModules = {
+  ...import.meta.glob('/public/content/babel/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/babel/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/babel/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/babel/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+const CONTENT_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml)$/i;
 
 function parseFrontmatter(markdown: string): Record<string, string> {
   const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
@@ -226,7 +228,7 @@ function loadRefutations(): RefutationStudy[] {
       const seriesFolder = parts[contentIndex + 2] ?? 'colecao';
       const fileName = parts[parts.length - 1] ?? '';
       const frontmatter = parseFrontmatter(content);
-      const fileStem = fileName.replace(/\.md$/i, '');
+      const fileStem = fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
       const title = frontmatter.title || fileStem;
 
       return {

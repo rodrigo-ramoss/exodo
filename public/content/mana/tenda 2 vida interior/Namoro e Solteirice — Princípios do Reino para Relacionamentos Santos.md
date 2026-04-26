@@ -5,7 +5,7 @@ seção: maná
 tema: namoro e solteirice
 sub: relacionamentos
 tenda: vida interior
-image: https://placeholder-voz-do-deserto.com/capa-mana-namoro-solteirice.jpg
+image: "/image/mana/namoro e solterice.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Maná — Tenda Vida Interior | Relacionamentos*

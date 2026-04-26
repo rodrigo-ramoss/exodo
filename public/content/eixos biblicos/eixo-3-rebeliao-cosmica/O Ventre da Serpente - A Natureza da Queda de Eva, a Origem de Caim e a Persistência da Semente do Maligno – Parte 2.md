@@ -5,7 +5,7 @@ versiculos: "1 Enoque 69:6; Targum Pseudo-Jonathan Gênesis 4:1; Pirkei de-Rabbi
 book: "Gênesis"
 eixo: "Eixo 3 – Rebelião e Guerra Cósmica / Eixo 5 – A Linhagem da Semente e a Corrupção da Carne"
 description: "Investigação das tradições místicas judaicas e da literatura do Segundo Templo sobre a sedução de Eva por Samael/Gadreel, a 'zuhama' da serpente e a origem de Caim como 'filho da impureza'."
-image: "O Ventre da Serpente.webp"
+image: "/image/eixos biblicos/O Ventre da Serpente.webp"
 ---
 
 # PARTE 2 – DERASH: AS VOZES DO SEGUNDO TEMPLO E DA CABALA

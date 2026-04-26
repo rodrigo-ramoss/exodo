@@ -5,7 +5,7 @@ versiculos: "Gênesis 3:24; Êxodo 25:18-22; 26:1, 31; Números 7:89; 1 Samuel 4
 book: "Ezequiel / Isaías / Êxodo"
 eixo: "Eixo 2 – Seres Celestiais e Seus Ofícios"
 description: "Investigação filológica e exegética dos Querubins e Serafins no Antigo Testamento, revelando-os como os guardiões ígneos do Trono divino, portadores da glória de Yahweh e agentes da purificação pelo fogo."
-image: "os querubins e serafins.webp"
+image: "/image/eixos biblicos/os querubins e serafins.webp"
 ---
 
 # PARTE 1 – PESHAT & REMEZ: AS CRIATURAS DO TRONO NO CÂNON HEBRAICO

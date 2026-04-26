@@ -5,7 +5,7 @@ seção: maná
 tema: rejeição
 sub: emoções
 tenda: vida interior
-image: https://placeholder-voz-do-deserto.com/capa-mana-rejeicao.jpg
+image: "/image/mana/rejeicao encontrando identidade em cristo.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Maná — Tenda Vida Interior | Emoções*
