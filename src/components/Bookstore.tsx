@@ -300,7 +300,6 @@ function pickCategoryByFolder(folder: string): string {
     ['serie - parabolas de jesus', 'Série — Parábolas de Jesus'],
     ['serie - ruah - a pessoa esquecida da divindade', 'Série — Ruah — A Pessoa Esquecida da Divindade'],
     ['serie - a blasfemia contra o ruah', 'Série — A Blasfêmia contra o Ruah'],
-    ['serie - antropologia espiritual', 'Série — Antropologia Espiritual'],
     ['serie - jubileus', 'SÉRIE — JUBILEUS'],
     ['serie - 1 enoque', 'A REVELAÇÃO DE ENOQUE'],
     ['trilogia - o mapa da tempestade', 'Trilogia — O Mapa da Tempestade'],
@@ -338,7 +337,6 @@ const SECTION_CATEGORY_ALIASES = new Set<string>([
   'jesus cristo',
   'parabolas de jesus',
   'batalha espiritual',
-  'antropologia espiritual',
   'ferramentas',
   'ferramentas espirituais',
   'livraria',
@@ -746,8 +744,6 @@ function buildFallbackContentUrls(slug: string): string[] {
     'batalha-espiritual',
     'ferramentas-espirituais',
     'fim-dos-tempos',
-    'antropologia-espiritual',
-    'antropologia espiritual',
   ];
 
   const candidates = [
@@ -817,6 +813,9 @@ function inferSeriesVolumeCoverStem(title: string, slug: string, category?: stri
   if (haystack.includes('relogio de deus')) return SERIES_VOLUME_COVER_STEMS['o relogio de deus'][volume] ?? null;
   if (haystack.includes('terceiro ceu de paulo')) return SERIES_VOLUME_COVER_STEMS['o terceiro ceu de paulo'][volume] ?? null;
   if (haystack.includes('fio do trono')) return SERIES_VOLUME_COVER_STEMS['o fio do trono'][volume] ?? null;
+  if (haystack.includes('ruah') || haystack.includes('ruach')) {
+    if (volume === 5) return 'ruach o sopro nos ossos secos a nova criacao';
+  }
   if (haystack.includes('como nos dias de noe')) return SERIES_VOLUME_COVER_STEMS['como nos dias de noe'][volume] ?? null;
   if (haystack.includes('tabernaculo')) return SERIES_VOLUME_COVER_STEMS['tabernaculo'][volume] ?? null;
 
@@ -901,6 +900,11 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
   }
 
   return Array.from(candidates);
+}
+
+function isRemovedAnthropologySeriesBook(book: BookItem): boolean {
+  const haystack = normalizeTitlePreservingPunctuation(`${book.category || ''} ${book.slug || ''} ${book.title || ''}`);
+  return haystack.includes('antropologia espiritual') || haystack.includes('como nos dias de noe');
 }
 
 function discoverBooksFromMarkdown(): BookItem[] {
@@ -1091,7 +1095,6 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Série — Como nos Dias de Noé':             'ESPÍRITO SANTO',
   'Série — Ruah — A Pessoa Esquecida da Divindade': 'ESPÍRITO SANTO',
   'Série — A Blasfêmia contra o Ruah':        'ESPÍRITO SANTO',
-  'Série — Antropologia Espiritual':          'ESPÍRITO SANTO',
   'Trilogia — O Mapa da Tempestade':          'ANTISISTEMA',
   'Trilogia — O Estrangeiro Próspero':        'ANTISISTEMA',
   'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
@@ -1121,8 +1124,6 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'ia-e-apocalipse':                          'IA & APOCALIPSE',
   'fim dos tempos':                           'FIM DOS TEMPOS',
   'fim-dos-tempos':                           'FIM DOS TEMPOS',
-  'antropologia espiritual':                  'ESPÍRITO SANTO',
-  'antropologia-espiritual':                  'ESPÍRITO SANTO',
   'parabolas de jesus':                       'JESUS CRISTO',
   'parabolas-de-jesus':                       'JESUS CRISTO',
 };
@@ -1154,7 +1155,6 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — Como nos Dias de Noé':             'Como nos Dias de Noé',
   'Série — Ruah — A Pessoa Esquecida da Divindade': 'Ruah',
   'Série — A Blasfêmia contra o Ruah':        'A Blasfêmia contra o Ruah',
-  'Série — Antropologia Espiritual':          'Antropologia Espiritual',
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
   'Série — O Código das Eras':                'O Código das Eras',
   'Série — Parábolas de Jesus':               'Parábolas de Jesus',
@@ -1189,7 +1189,6 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Série — Como nos Dias de Noé': 'Uma série sobre antropologia espiritual e os limites da natureza humana: alma, espírito, corpo, corrupção, juízo, ressurreição e discernimento diante do transhumanismo.',
   'Série — Ruah — A Pessoa Esquecida da Divindade': 'Uma série sobre a pessoa e a obra do Espírito Santo: criação, selo, guia, santificação e nova criação em Cristo.',
   'Série — A Blasfêmia contra o Ruah': 'Estudos sobre o ensino de Jesus a respeito da blasfêmia contra o Espírito e o discernimento bíblico desse tema.',
-  'Série — Antropologia Espiritual': 'Uma série sobre natureza humana, alma e espírito, estado intermediário, ressurreição e os desafios contemporâneos da identidade humana.',
   'Série — A Verdadeira História da Igreja': 'Uma arqueologia da fé cristã primitiva, revelando o caminho entre a ekklesia viva e a institucionalização religiosa ao longo dos séculos.',
   'Trilogia — O Cânon Oculto': 'Uma imersão nos bastidores da formação bíblica, nos textos suprimidos e nas leituras que ficaram fora da narrativa oficial.',
   'Trilogia — O Mapa da Tempestade': 'Um diagnóstico de ruptura civilizacional e um mapa prático para atravessar colapsos sistêmicos com lucidez, preparo e fé.',
@@ -1425,6 +1424,7 @@ function DragScrollRow({ children }: { children: ReactNode }) {
   return (
     <div
       ref={rowRef}
+      data-scroll-row="true"
       className="flex gap-3 sm:gap-4 overflow-x-auto pb-3 sm:pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       onPointerDown={(e) => {
         if (e.pointerType !== 'mouse' || e.button !== 0) return;
@@ -1944,6 +1944,7 @@ export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps
   const [activeObjectalTopicId, setActiveObjectalTopicId] = useState<string | null>(null);
   const [activeEscatologicalTopicId, setActiveEscatologicalTopicId] = useState<string | null>(null);
   const typologyTopicPanelRef = useRef<HTMLDivElement | null>(null);
+  const sectionSeriesRowRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const { data: books, loading, error } = useFetch<BookItem[]>('/content/livraria/index.json');
   const discoveredBooks = useMemo(() => discoverBooksFromMarkdown(), []);
   const typologyEntries = useMemo(() => discoverTypologyContentEntries(), []);
@@ -1958,8 +1959,16 @@ export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps
   };
   const mergedBooks = useMemo(() => {
     const map = new Map<string, BookItem>();
-    for (const discovered of discoveredBooks) map.set(discovered.slug, normalizeMergedBookCategory(discovered));
-    for (const indexed of books ?? []) map.set(indexed.slug, normalizeMergedBookCategory(indexed));
+    for (const discovered of discoveredBooks) {
+      const normalized = normalizeMergedBookCategory(discovered);
+      if (isRemovedAnthropologySeriesBook(normalized)) continue;
+      map.set(normalized.slug, normalized);
+    }
+    for (const indexed of books ?? []) {
+      const normalized = normalizeMergedBookCategory(indexed);
+      if (isRemovedAnthropologySeriesBook(normalized)) continue;
+      map.set(normalized.slug, normalized);
+    }
     return Array.from(map.values());
   }, [books, discoveredBooks]);
 
@@ -1984,6 +1993,12 @@ export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps
         }, {} as Record<string, BookItem[]>)
       ).map(([category, items]) => [category, sortBooksInSeries(category, items)] as [string, BookItem[]])
     : [];
+
+  const scrollSectionSeries = (seriesKey: string, delta: number) => {
+    const wrapper = sectionSeriesRowRefs.current[seriesKey];
+    const row = wrapper?.querySelector<HTMLElement>('[data-scroll-row="true"]');
+    row?.scrollBy({ left: delta, behavior: 'smooth' });
+  };
 
   const typologySeriesByType = useMemo(() => {
     const byType = new Map<TypologyDivisionId, Map<string, BookItem[]>>();
@@ -2429,14 +2444,33 @@ export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps
               const label = toSeriesDisplayLabel(cat);
               const seriesDescription = buildAutoSeriesDescription(cat, items);
               const badgeLabel = getSeriesBadgeLabel(selectedSection, cat);
+              const seriesKey = `${selectedSection}-${slugify(cat)}`;
 
               return (
                 <div key={cat} className="mb-5 sm:mb-6">
                   <div className="mb-2">
-                    <div className="mb-1">
+                    <div className="mb-1 flex items-center justify-between gap-2">
                       <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-primary">
                         {badgeLabel}
                       </span>
+                      <div className="hidden sm:flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => scrollSectionSeries(seriesKey, -240)}
+                          className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant/45 bg-black/35 text-on-surface-variant transition-colors hover:border-primary/55 hover:text-primary"
+                          aria-label={`Voltar ${label}`}
+                        >
+                          <ChevronLeft size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => scrollSectionSeries(seriesKey, 240)}
+                          className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant/45 bg-black/35 text-on-surface-variant transition-colors hover:border-primary/55 hover:text-primary"
+                          aria-label={`Avançar ${label}`}
+                        >
+                          <ChevronRight size={13} />
+                        </button>
+                      </div>
                     </div>
                     <div className="flex items-baseline gap-2 flex-wrap">
                       <h4 className="font-headline font-extrabold text-lg sm:text-xl text-on-surface tracking-tighter uppercase leading-none">
@@ -2454,7 +2488,12 @@ export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps
                       </p>
                     )}
                   </div>
-                  <div className="relative -mx-4 px-4 sm:-mx-6 sm:px-6">
+                  <div
+                    ref={(element) => {
+                      sectionSeriesRowRefs.current[seriesKey] = element;
+                    }}
+                    className="relative -mx-4 px-4 sm:-mx-6 sm:px-6"
+                  >
                     <DragScrollRow>
                       {items.map((item, j) => (
                         <BookCard

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { BookMarked, Check, ChevronLeft, Cpu, Sparkles } from 'lucide-react';
+import { BookMarked, Check, ChevronLeft, ChevronRight, Cpu, Sparkles } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 import { AppImage } from './AppImage';
 import { pm } from '../lib/progressManager';
@@ -254,6 +254,7 @@ function DragScrollRow({ children }: { children: ReactNode }) {
   return (
     <div
       ref={rowRef}
+      data-scroll-row="true"
       className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       onClickCapture={(e) => {
         if (drag.current.didDrag) {
@@ -394,6 +395,7 @@ function clearOpenSlugFromUrl() {
 export default function Refutation({ openSlug }: RefutationProps) {
   const [selectedStudy, setSelectedStudy] = useState<RefutationStudy | null>(null);
   const [selectedThemeId, setSelectedThemeId] = useState<string | null>(null);
+  const themeSeriesRowRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const studies = useMemo(() => loadRefutations(), []);
 
   const studiesByTheme = useMemo(() => {
@@ -418,6 +420,12 @@ export default function Refutation({ openSlug }: RefutationProps) {
     }, {});
     return Object.entries(grouped).map(([series, items]) => [series, [...items].sort(sortByVolume)]);
   }, [selectedThemeId, studiesByTheme]);
+
+  const scrollThemeSeries = (seriesKey: string, delta: number) => {
+    const wrapper = themeSeriesRowRefs.current[seriesKey];
+    const row = wrapper?.querySelector<HTMLElement>('[data-scroll-row="true"]');
+    row?.scrollBy({ left: delta, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     if (!openSlug || selectedStudy) return;
@@ -464,13 +472,32 @@ export default function Refutation({ openSlug }: RefutationProps) {
         {seriesInTheme.map(([series, items], index) => {
           const isSeries = items.length > 3;
           const seriesDescription = MATRIX_SERIES_DESCRIPTIONS[series] || selectedTheme.subtitle;
+          const seriesKey = `${selectedThemeId}-${slugify(series)}`;
           return (
             <section key={series} className="relative mb-6">
               <div className="mb-2.5">
-                <div className="mb-1">
+                <div className="mb-1 flex items-center justify-between gap-2">
                   <span className="inline-flex items-center rounded-full border border-[#1ee07a]/45 bg-[#07130d] px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-[#93ffbf]">
                     {isSeries ? 'SÉRIE' : 'COLEÇÃO'}
                   </span>
+                  <div className="hidden sm:flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => scrollThemeSeries(seriesKey, -240)}
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#1ee07a]/45 bg-[#07130d] text-[#baf4d2]/80 transition-colors hover:border-[#8cffba] hover:text-[#8cffba]"
+                      aria-label={`Voltar ${series}`}
+                    >
+                      <ChevronLeft size={13} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollThemeSeries(seriesKey, 240)}
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#1ee07a]/45 bg-[#07130d] text-[#baf4d2]/80 transition-colors hover:border-[#8cffba] hover:text-[#8cffba]"
+                      aria-label={`Avançar ${series}`}
+                    >
+                      <ChevronRight size={13} />
+                    </button>
+                  </div>
                 </div>
                 <h4 className="font-headline font-extrabold text-xl text-[#deffed] tracking-tighter uppercase leading-none">{series}</h4>
                 {seriesDescription && (
@@ -478,7 +505,12 @@ export default function Refutation({ openSlug }: RefutationProps) {
                 )}
               </div>
 
-              <div className="relative -mx-5 px-5">
+              <div
+                ref={(element) => {
+                  themeSeriesRowRefs.current[seriesKey] = element;
+                }}
+                className="relative -mx-5 px-5"
+              >
                 <DragScrollRow>
                   {items.map((study, volIndex) => (
                     <MatrixBookCard key={study.pathKey} study={study} volIndex={volIndex} onSelect={() => setSelectedStudy(study)} />

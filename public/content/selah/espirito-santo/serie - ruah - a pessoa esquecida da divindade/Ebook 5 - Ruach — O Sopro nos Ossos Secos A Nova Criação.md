@@ -3,7 +3,7 @@ title: "Ruach — O Sopro nos Ossos Secos: A Nova Criação"
 description: "Quinto e último volume da série que recupera a Pessoa esquecida do Espírito Santo através das tipologias do Antigo Testamento. Do vale de ossos secos de Ezequiel à Nova Jerusalém, o Espírito se revela como o poder da ressurreição e o agente da nova criação."
 seção: selah
 category: espirito santo
-image: /image/livraria/ruach-vol5.webp
+image: "/image/selah/ruach o sopro nos ossos secos a nova criacao.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*
