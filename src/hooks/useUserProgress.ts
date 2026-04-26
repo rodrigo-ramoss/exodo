@@ -44,6 +44,14 @@ interface LivrariaEntry {
   image?: string;
 }
 
+interface EnsinosEntry {
+  slug: string;
+  title: string;
+  image?: string;
+  seriesKey: string;
+  seriesLabel: string;
+}
+
 export interface GoalProgress {
   key: string;
   label: string;
@@ -68,8 +76,8 @@ interface GroupActivity {
 }
 
 export interface LastReadingCard {
-  section: 'mana' | 'tipos' | 'selah' | 'babel';
-  label: 'MANÁ' | 'TIPOS' | 'SELAH' | 'BABEL';
+  section: 'mana' | 'tipos' | 'selah' | 'babel' | 'ensinos';
+  label: 'MANÁ' | 'TIPOS' | 'SELAH' | 'BABEL' | 'ENSINOS';
   category: Category;
   title: string;
   slug: string;
@@ -89,6 +97,7 @@ export interface UserProgressSnapshot {
     tipos: LastReadingCard;
     selah: LastReadingCard;
     babel: LastReadingCard;
+    ensinos: LastReadingCard;
   };
   totals: {
     completed: number;
@@ -123,6 +132,12 @@ const allLivrariaModules = {
   ...livrariaModules,
   ...livrariaEspitirualModules,
 };
+
+const ensinosModules = import.meta.glob('/public/content/ensinos/**/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
 
 const bibleStudyModules = import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.md', {
   eager: true,
@@ -232,12 +247,6 @@ function getWeekStartMs(date = new Date()): number {
   current.setHours(0, 0, 0, 0);
   const day = (current.getDay() + 6) % 7;
   current.setDate(current.getDate() - day);
-  return current.getTime();
-}
-
-function getDayStartMs(date = new Date()): number {
-  const current = new Date(date);
-  current.setHours(0, 0, 0, 0);
   return current.getTime();
 }
 
@@ -446,9 +455,33 @@ const livrariaModuleEntries: LivrariaEntry[] = Object.entries(allLivrariaModules
 
 const livrariaModuleSlugs = livrariaModuleEntries.map((entry) => entry.slug);
 
+const ensinosEntries: EnsinosEntry[] = Object.entries(ensinosModules).map(([path, markdown]) => {
+  const normalizedPath = path.replace(/\\/g, '/');
+  const marker = '/public/content/ensinos/';
+  const relative = normalizedPath.includes(marker)
+    ? normalizedPath.slice(normalizedPath.indexOf(marker) + marker.length)
+    : normalizedPath;
+  const withoutExt = relative.replace(/\.md$/i, '');
+  const parts = withoutExt.split('/').filter(Boolean);
+  const fileStem = parts[parts.length - 1] ?? '';
+  const seriesFolder = parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? 'ensinos');
+  const frontmatter = parseFrontmatter(markdown);
+  const firstHeading = markdown.match(/^#\s+(.+)$/m)?.[1]?.trim();
+  const title = frontmatter.title || firstHeading || fileStem || 'Estudo';
+  const seriesLabel = frontmatter.category || titleCase(seriesFolder);
+  return {
+    slug: `${seriesFolder}/${fileStem}`,
+    title,
+    image: frontmatter.image,
+    seriesKey: normalizeKey(seriesLabel),
+    seriesLabel,
+  };
+});
+
+const ensinosSlugs = ensinosEntries.map((entry) => entry.slug);
+
 export function useUserProgress(): UserProgressSnapshot {
   const weekStartMs = useMemo(() => getWeekStartMs(), []);
-  const dayStartMs = useMemo(() => getDayStartMs(), []);
 
   const { data: libBooks, loading: libLoading } = useFetch<LibraryItem[]>('/content/livraria/index.json');
   const { data: studies, loading: studiesLoading } = useFetch<StudyItem[]>('/content/mana/index.json');
@@ -465,11 +498,12 @@ export function useUserProgress(): UserProgressSnapshot {
     if (!studies) return { pct: 0, read: 0, total: 0 };
     return buildStats('mana', studies.map((s) => s.slug));
   }, [studies]);
+  const ensinosStats = useMemo(() => buildStats('ensinos', ensinosSlugs), []);
 
   const overallPct = useMemo(() => {
-    const scores = [bibleStats.pct, docStats.pct, libStats.pct, studyStats.pct];
+    const scores = [bibleStats.pct, docStats.pct, libStats.pct, studyStats.pct, ensinosStats.pct];
     return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
-  }, [bibleStats.pct, docStats.pct, libStats.pct, studyStats.pct]);
+  }, [bibleStats.pct, docStats.pct, libStats.pct, studyStats.pct, ensinosStats.pct]);
 
   const pillars = useMemo(
     () => [
@@ -477,106 +511,10 @@ export function useUserProgress(): UserProgressSnapshot {
       { label: 'BABEL', pct: docStats.pct },
       { label: 'SELAH', pct: libStats.pct },
       { label: 'MANÁ', pct: studyStats.pct },
+      { label: 'ENSINOS', pct: ensinosStats.pct },
     ],
-    [bibleStats.pct, docStats.pct, libStats.pct, studyStats.pct],
+    [bibleStats.pct, docStats.pct, libStats.pct, studyStats.pct, ensinosStats.pct],
   );
-
-  const bibleGoal = useMemo(() => {
-    const grouped = bibleStudyEntries.reduce<Record<string, GoalGroup>>((acc, entry) => {
-      if (!acc[entry.subthemeKey]) {
-        acc[entry.subthemeKey] = { label: entry.subthemeLabel, slugs: [] };
-      }
-      acc[entry.subthemeKey].slugs.push(entry.slug);
-      return acc;
-    }, {});
-    return computeWeeklyGoal('biblica', Object.values(grouped), weekStartMs, {
-      key: 'biblia',
-      label: 'Bíblia',
-      target: '1 estudo por semana',
-      itemName: 'estudo',
-      unitName: 'sessões',
-    });
-  }, [weekStartMs]);
-
-  const manaGoal = useMemo<GoalProgress>(() => {
-    const slugs = studies?.map((item) => item.slug) ?? [];
-    const titleBySlug = new Map((studies ?? []).map((item) => [item.slug, item.title || item.slug]));
-
-    if (slugs.length === 0) {
-      return {
-        key: 'mana',
-        label: 'MANÁ',
-        target: '1 por dia',
-        status: 'idle',
-        progressPct: 0,
-        summary: 'Nenhum estudo carregado.',
-        hint: 'Assim que os estudos aparecerem, a meta diária será acompanhada aqui.',
-      };
-    }
-
-    const readToday = slugs.find((slug) => toMs(pm.getLastReadAt('mana', slug)) >= dayStartMs);
-    if (readToday) {
-      const title = titleBySlug.get(readToday) || readToday;
-      return {
-        key: 'mana',
-        label: 'MANÁ',
-        target: '1 por dia',
-        status: 'done',
-        progressPct: 100,
-        summary: `Meta diária concluída com "${title}".`,
-        hint: 'Hoje já está fechado. Amanhã a meta reinicia automaticamente.',
-      };
-    }
-
-    const active = slugs
-      .map((slug) => ({
-        slug,
-        title: titleBySlug.get(slug) || slug,
-        activityMs: toMs(pm.getLastActivity('mana', slug)),
-        progress: resolveItemPct('mana', slug),
-      }))
-      .filter((item) => item.activityMs >= dayStartMs && item.progress > 0)
-      .sort((a, b) => b.activityMs - a.activityMs)[0];
-
-    if (active) {
-      return {
-        key: 'mana',
-        label: 'MANÁ',
-        target: '1 por dia',
-        status: 'active',
-        progressPct: Math.max(18, active.progress),
-        summary: `Você está lendo "${active.title}".`,
-        hint: 'Finalize a leitura de hoje para concluir a meta diária.',
-      };
-    }
-
-    return {
-      key: 'mana',
-      label: 'MANÁ',
-      target: '1 por dia',
-      status: 'idle',
-      progressPct: 0,
-      summary: 'Nenhuma leitura registrada hoje.',
-      hint: 'Meta diária: concluir 1 estudo de MANÁ.',
-    };
-  }, [dayStartMs, studies]);
-
-  const matrixGoal = useMemo(() => {
-    const grouped = matrixStudyEntries.reduce<Record<string, GoalGroup>>((acc, entry) => {
-      if (!acc[entry.seriesKey]) {
-        acc[entry.seriesKey] = { label: entry.seriesLabel, slugs: [] };
-      }
-      acc[entry.seriesKey].slugs.push(entry.slug);
-      return acc;
-    }, {});
-    return computeWeeklyGoal('refutacao', Object.values(grouped), weekStartMs, {
-      key: 'matrix',
-      label: 'BABEL',
-      target: '1 série por semana',
-      itemName: 'série',
-      unitName: 'volumes',
-    });
-  }, [weekStartMs]);
 
   const mergedLibraryCards = useMemo(() => {
     const bySlug = new Map<string, { title: string; slug: string; image?: string; category?: string }>();
@@ -603,42 +541,6 @@ export function useUserProgress(): UserProgressSnapshot {
     return Array.from(bySlug.values());
   }, [libBooks]);
 
-  const spiritualGoal = useMemo(() => {
-    const grouped = new Map<string, GoalGroup>();
-
-    for (const item of mergedLibraryCards) {
-      const fallback = livrariaModuleEntries.find((entry) => entry.slug === item.slug);
-      const label = (item.category || fallback?.fallbackSeriesLabel || titleCase(item.slug.split('/')[0] || 'Série')).trim();
-      const key = normalizeKey(label);
-      const current = grouped.get(key) ?? { label, slugs: [] };
-      current.slugs.push(item.slug);
-      grouped.set(key, current);
-    }
-
-    for (const entry of livrariaModuleEntries) {
-      if (Array.from(grouped.values()).some((group) => group.slugs.includes(entry.slug))) continue;
-      const current = grouped.get(entry.fallbackSeriesKey) ?? {
-        label: entry.fallbackSeriesLabel,
-        slugs: [],
-      };
-      current.slugs.push(entry.slug);
-      grouped.set(entry.fallbackSeriesKey, current);
-    }
-
-    return computeWeeklyGoal('livraria', Array.from(grouped.values()), weekStartMs, {
-      key: 'livraria',
-      label: 'SELAH',
-      target: '1 série por semana',
-      itemName: 'série',
-      unitName: 'volumes',
-    });
-  }, [mergedLibraryCards, weekStartMs]);
-
-  const goals = useMemo(
-    () => [bibleGoal, manaGoal, matrixGoal, spiritualGoal],
-    [bibleGoal, manaGoal, matrixGoal, spiritualGoal],
-  );
-
   const manaCards = useMemo(
     () => (studies ?? []).map((item) => ({ title: item.title || item.slug, slug: item.slug, image: item.image })),
     [studies],
@@ -660,6 +562,113 @@ export function useUserProgress(): UserProgressSnapshot {
   const babelCards = useMemo(
     () => matrixStudyEntries.map((item) => ({ title: item.title, slug: item.slug, image: item.image })),
     [],
+  );
+  const ensinosCards = useMemo(
+    () => ensinosEntries.map((item) => ({ title: item.title, slug: item.slug, image: item.image })),
+    [],
+  );
+
+  const groupedTiposSeries = useMemo(() => {
+    const grouped = new Map<string, GoalGroup>();
+    for (const item of mergedLibraryCards.filter(isTypesBook)) {
+      const fallback = livrariaModuleEntries.find((entry) => entry.slug === item.slug);
+      const label = (item.category || fallback?.fallbackSeriesLabel || titleCase(item.slug.split('/')[0] || 'Série')).trim();
+      const key = normalizeKey(label);
+      const current = grouped.get(key) ?? { label, slugs: [] };
+      current.slugs.push(item.slug);
+      grouped.set(key, current);
+    }
+    return Array.from(grouped.values());
+  }, [mergedLibraryCards]);
+
+  const groupedSelahSeries = useMemo(() => {
+    const grouped = new Map<string, GoalGroup>();
+    for (const item of mergedLibraryCards.filter((entry) => !isTypesBook(entry))) {
+      const fallback = livrariaModuleEntries.find((entry) => entry.slug === item.slug);
+      const label = (item.category || fallback?.fallbackSeriesLabel || titleCase(item.slug.split('/')[0] || 'Série')).trim();
+      const key = normalizeKey(label);
+      const current = grouped.get(key) ?? { label, slugs: [] };
+      current.slugs.push(item.slug);
+      grouped.set(key, current);
+    }
+    return Array.from(grouped.values());
+  }, [mergedLibraryCards]);
+
+  const groupedBabelSeries = useMemo(
+    () =>
+      Object.values(
+        matrixStudyEntries.reduce<Record<string, GoalGroup>>((acc, entry) => {
+          if (!acc[entry.seriesKey]) acc[entry.seriesKey] = { label: entry.seriesLabel, slugs: [] };
+          acc[entry.seriesKey].slugs.push(entry.slug);
+          return acc;
+        }, {}),
+      ),
+    [],
+  );
+
+  const groupedEnsinosSeries = useMemo(
+    () =>
+      Object.values(
+        ensinosEntries.reduce<Record<string, GoalGroup>>((acc, entry) => {
+          if (!acc[entry.seriesKey]) acc[entry.seriesKey] = { label: entry.seriesLabel, slugs: [] };
+          acc[entry.seriesKey].slugs.push(entry.slug);
+          return acc;
+        }, {}),
+      ),
+    [],
+  );
+
+  const groupedManaEbooks = useMemo(
+    () => manaCards.map((item) => ({ label: item.title, slugs: [item.slug] })),
+    [manaCards],
+  );
+
+  const goals = useMemo(
+    () => [
+      computeWeeklyGoal('livraria', groupedSelahSeries, weekStartMs, {
+        key: 'meta-selah',
+        label: '1 série em Selah',
+        target: '1 série em Selah',
+        itemName: 'série',
+        unitName: 'volumes',
+      }),
+      computeWeeklyGoal('refutacao', groupedBabelSeries, weekStartMs, {
+        key: 'meta-babel',
+        label: '1 série em Babel',
+        target: '1 série em Babel',
+        itemName: 'série',
+        unitName: 'volumes',
+      }),
+      computeWeeklyGoal('livraria', groupedTiposSeries, weekStartMs, {
+        key: 'meta-tipos',
+        label: '1 série em Tipos',
+        target: '1 série em Tipos',
+        itemName: 'série',
+        unitName: 'volumes',
+      }),
+      computeWeeklyGoal('mana', groupedManaEbooks, weekStartMs, {
+        key: 'meta-mana',
+        label: '1 e-book em Maná',
+        target: '1 e-book em Maná',
+        itemName: 'e-book',
+        unitName: 'e-books',
+      }),
+      computeWeeklyGoal('ensinos', groupedEnsinosSeries, weekStartMs, {
+        key: 'meta-ensinos',
+        label: '1 série em Ensinos',
+        target: '1 série em Ensinos',
+        itemName: 'série',
+        unitName: 'volumes',
+      }),
+    ],
+    [
+      groupedBabelSeries,
+      groupedEnsinosSeries,
+      groupedManaEbooks,
+      groupedSelahSeries,
+      groupedTiposSeries,
+      weekStartMs,
+    ],
   );
 
   const pickLastReading = (
@@ -700,6 +709,20 @@ export function useUserProgress(): UserProgressSnapshot {
       };
     }
 
+    if (best.progress.status === 'Aguardando') {
+      return {
+        section,
+        label,
+        category,
+        title: `Sem leituras em ${label}`,
+        slug: '',
+        status: 'Aguardando',
+        progressPct: 0,
+        whereStopped: 'Inicie uma leitura para aparecer aqui',
+        isEmpty: true,
+      };
+    }
+
     return {
       section,
       label,
@@ -720,8 +743,9 @@ export function useUserProgress(): UserProgressSnapshot {
       tipos: pickLastReading('tipos', 'TIPOS', 'livraria', tiposCards),
       selah: pickLastReading('selah', 'SELAH', 'livraria', selahCards),
       babel: pickLastReading('babel', 'BABEL', 'refutacao', babelCards),
+      ensinos: pickLastReading('ensinos', 'ENSINOS', 'ensinos', ensinosCards),
     }),
-    [babelCards, manaCards, selahCards, tiposCards],
+    [babelCards, ensinosCards, manaCards, selahCards, tiposCards],
   );
 
   const countsByCategory = (category: Category, slugs: string[]) => {
@@ -742,11 +766,12 @@ export function useUserProgress(): UserProgressSnapshot {
     const mana = countsByCategory('mana', manaCards.map((item) => item.slug));
     const livraria = countsByCategory('livraria', [...tiposCards, ...selahCards].map((item) => item.slug));
     const babel = countsByCategory('refutacao', babelCards.map((item) => item.slug));
-    const completed = mana.completed + livraria.completed + babel.completed;
-    const inProgress = mana.inProgress + livraria.inProgress + babel.inProgress;
+    const ensinos = countsByCategory('ensinos', ensinosCards.map((item) => item.slug));
+    const completed = mana.completed + livraria.completed + babel.completed + ensinos.completed;
+    const inProgress = mana.inProgress + livraria.inProgress + babel.inProgress + ensinos.inProgress;
     const startedSeries = Object.values(lastReadings).filter((item) => item.status !== 'Aguardando').length;
     return { completed, inProgress, startedSeries };
-  }, [babelCards, lastReadings, manaCards, selahCards, tiposCards]);
+  }, [babelCards, ensinosCards, lastReadings, manaCards, selahCards, tiposCards]);
 
   const hasAnyReadingStarted = totals.completed > 0 || totals.inProgress > 0;
 

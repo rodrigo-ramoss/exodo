@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { BookMarked, Check, ChevronLeft, Cpu, Sparkles } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 import { AppImage } from './AppImage';
@@ -377,7 +377,19 @@ function MatrixBookCard({
   );
 }
 
-export default function Refutation() {
+interface RefutationProps {
+  openSlug?: string;
+}
+
+function clearOpenSlugFromUrl() {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.has('open')) return;
+  url.searchParams.delete('open');
+  const nextUrl = `${url.pathname}${url.search ? url.search : ''}`;
+  window.history.replaceState(null, '', nextUrl);
+}
+
+export default function Refutation({ openSlug }: RefutationProps) {
   const [selectedStudy, setSelectedStudy] = useState<RefutationStudy | null>(null);
   const [selectedThemeId, setSelectedThemeId] = useState<string | null>(null);
   const studies = useMemo(() => loadRefutations(), []);
@@ -404,6 +416,14 @@ export default function Refutation() {
     }, {});
     return Object.entries(grouped).map(([series, items]) => [series, [...items].sort(sortByVolume)]);
   }, [selectedThemeId, studiesByTheme]);
+
+  useEffect(() => {
+    if (!openSlug || selectedStudy) return;
+    const matched = studies.find((study) => study.slug === openSlug);
+    if (!matched) return;
+    setSelectedStudy(matched);
+    clearOpenSlugFromUrl();
+  }, [openSlug, selectedStudy, studies]);
 
   if (selectedStudy) {
     return <MarkdownViewer content={selectedStudy.content} slug={selectedStudy.slug} category="refutacao" onClose={() => setSelectedStudy(null)} />;

@@ -5,11 +5,16 @@ import { AppImage } from './AppImage';
 import { useUserProgress } from '../hooks/useUserProgress';
 
 interface HomeDashboardProps {
-  onNavigate: (screen: Screen, transition?: 'push' | 'none') => void;
+  onNavigate: (
+    screen: Screen,
+    transition?: 'push' | 'none',
+    options?: { openSlug?: string }
+  ) => void;
 }
 
 const SECTION_NAVIGATION = {
   MANÁ: Screen.MANA,
+  ENSINOS: Screen.ENSINOS,
   TIPOS: Screen.TOOLS,
   SELAH: Screen.BOOKSTORE,
   BABEL: Screen.REFUTACAO,
@@ -17,6 +22,7 @@ const SECTION_NAVIGATION = {
 
 const SECTION_ICON = {
   MANÁ: GraduationCap,
+  ENSINOS: BookOpen,
   TIPOS: Layers,
   SELAH: Library,
   BABEL: BookMarked,
@@ -40,17 +46,10 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
 
   const continueCards = [
     lastReadings.mana,
+    lastReadings.ensinos,
     lastReadings.tipos,
     lastReadings.selah,
     lastReadings.babel,
-  ];
-
-  const shortcuts = [
-    { label: 'Maná', icon: GraduationCap, target: Screen.MANA },
-    { label: 'Tipos', icon: Layers, target: Screen.TOOLS },
-    { label: 'Selah', icon: Library, target: Screen.BOOKSTORE },
-    { label: 'Babel', icon: BookMarked, target: Screen.REFUTACAO },
-    { label: 'Meu Progresso', icon: TrendingUp, target: Screen.SETTINGS },
   ];
 
   const totalTrackedReadings = totals.completed + totals.inProgress;
@@ -146,7 +145,11 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
                       <div className="mt-1.5 flex items-center justify-between">
                         <span className="text-[8px] text-on-surface-variant/75">{card.whereStopped}</span>
                         <button
-                          onClick={() => onNavigate(target, 'push')}
+                          onClick={() => (
+                            card.slug
+                              ? onNavigate(target, 'push', { openSlug: card.slug })
+                              : onNavigate(target, 'push')
+                          )}
                           className="text-[8px] font-black uppercase tracking-widest border rounded-full px-2 py-0.5 transition-colors bg-primary/15 hover:bg-primary/22 text-primary border-primary/30"
                         >
                           Continuar
@@ -170,11 +173,34 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
             <span className="text-sm font-black text-primary">{overallPct}%</span>
           </div>
           <p className="mt-1 text-[11px] text-on-surface-variant leading-snug">{weeklyGoal.text}</p>
-          <div className="mt-2 h-1.5 rounded-full bg-surface-container overflow-hidden">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-orange-500 to-yellow-400 transition-all duration-700"
-              style={{ width: `${overallPct}%` }}
-            />
+          <div className="mt-3 space-y-2.5">
+            {goals.map((goal) => {
+              const statusLabel = goal.status === 'done' ? 'Concluído' : goal.status === 'active' ? 'Em andamento' : 'Aguardando';
+              const statusClass =
+                goal.status === 'done'
+                  ? 'text-[#D4AF37] bg-[#D4AF37]/10 border-[#D4AF37]/35'
+                  : goal.status === 'active'
+                  ? 'text-primary bg-primary/10 border-primary/35'
+                  : 'text-on-surface-variant/70 bg-surface-container-high border-outline-variant/25';
+
+              return (
+                <div key={goal.key} className="rounded-lg border border-outline-variant/20 bg-surface-container-high/50 px-2.5 py-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-[10px] font-black uppercase tracking-[0.08em] text-on-surface">{goal.label}</p>
+                    <span className={`shrink-0 px-1.5 py-0.5 rounded-full border text-[7px] font-black uppercase tracking-widest ${statusClass}`}>
+                      {statusLabel}
+                    </span>
+                  </div>
+                  <p className="mt-0.5 text-[9px] text-on-surface-variant/80 leading-snug">{goal.summary}</p>
+                  <div className="mt-1.5 h-1.5 rounded-full bg-surface-container overflow-hidden border border-outline-variant/20">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-orange-500 to-yellow-400 transition-all duration-700"
+                      style={{ width: `${goal.progressPct}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -201,30 +227,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
         </div>
       </section>
 
-      <section className="px-4 sm:px-6">
-        <h3 className="mb-2 font-headline text-[13px] sm:text-sm font-black uppercase tracking-[0.08em] text-on-surface">
-          Atalhos
-        </h3>
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-          {shortcuts.map((shortcut) => {
-            const Icon = shortcut.icon;
-            return (
-              <button
-                key={shortcut.label}
-                onClick={() => onNavigate(shortcut.target, 'push')}
-                className="rounded-lg border border-outline-variant/25 bg-surface-container-low p-2 text-left hover:bg-surface-container-high transition-colors active:scale-[0.98]"
-              >
-                <Icon size={12} className="text-primary mb-1" />
-                <p className="text-[9px] font-black uppercase tracking-[0.05em] text-on-surface leading-snug">
-                  {shortcut.label}
-                </p>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="px-4 sm:px-6 pt-3">
+      <section className="px-4 sm:px-6 pt-1">
         <div className="rounded-lg border border-outline-variant/20 bg-surface-container-low px-2.5 py-2 flex items-center justify-between">
           <span className="text-[9px] text-on-surface-variant inline-flex items-center gap-1.5">
             <Flag size={11} className="text-primary" />

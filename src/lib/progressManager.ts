@@ -12,7 +12,7 @@
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-export type Category = 'mana' | 'apocrifos' | 'refutacao' | 'livraria' | 'biblica' | 'ebd';
+export type Category = 'mana' | 'apocrifos' | 'refutacao' | 'livraria' | 'biblica' | 'ebd' | 'ensinos';
 
 export interface ContentEntry {
   readCount: number;
@@ -32,6 +32,7 @@ interface ProgressDB {
   livraria: CategoryStore;
   biblica: CategoryStore;
   ebd: CategoryStore;
+  ensinos: CategoryStore;
 }
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -49,6 +50,7 @@ function emptyDB(): ProgressDB {
     livraria: {},
     biblica: {},
     ebd: {},
+    ensinos: {},
   };
 }
 
@@ -66,6 +68,7 @@ function load(): ProgressDB {
       livraria: parsed.livraria ?? {},
       biblica: parsed.biblica ?? {},
       ebd: parsed.ebd ?? {},
+      ensinos: parsed.ensinos ?? {},
     };
   } catch {
     return emptyDB();

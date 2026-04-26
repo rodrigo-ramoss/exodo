@@ -16,11 +16,13 @@ import Bookstore from './components/Bookstore';
 import Refutation from './components/Refutation';
 import Protocol from './components/Protocol';
 import Settings from './components/Settings';
+import Ensinos from './components/Ensinos';
 
 const PATH_BY_SCREEN: Record<Screen, string> = {
   [Screen.HOME]: '/inicio',
   [Screen.BIBLE]: '/biblia',
   [Screen.MANA]: '/mana',
+  [Screen.ENSINOS]: '/ensinos',
   [Screen.EBD]: '/ebd',
   [Screen.BOOKSTORE]: '/selah',
   [Screen.TOOLS]: '/tipos',
@@ -36,6 +38,7 @@ const SCREEN_BY_PATH: Record<string, Screen> = {
   '/home': Screen.HOME,
   '/biblia': Screen.BIBLE,
   '/mana': Screen.MANA,
+  '/ensinos': Screen.ENSINOS,
   '/ebd': Screen.EBD,
   '/selah': Screen.BOOKSTORE,
   '/tipos': Screen.TOOLS,
@@ -59,15 +62,19 @@ export default function App() {
   const handleNavigate = (
     screen: Screen,
     transition: 'push' | 'none' = 'none',
-    options?: { syncHistory?: boolean; replace?: boolean }
+    options?: { syncHistory?: boolean; replace?: boolean; openSlug?: string }
   ) => {
     setTransitionType(transition);
     setCurrentScreen(screen);
     const shouldSyncHistory = options?.syncHistory ?? true;
     if (shouldSyncHistory) {
-      const targetPath = PATH_BY_SCREEN[screen] ?? PATH_BY_SCREEN[Screen.HOME];
+      const basePath = PATH_BY_SCREEN[screen] ?? PATH_BY_SCREEN[Screen.HOME];
+      const targetPath = options?.openSlug
+        ? `${basePath}?open=${encodeURIComponent(options.openSlug)}`
+        : basePath;
       const currentPath = normalizePath(window.location.pathname);
-      if (currentPath !== targetPath) {
+      const currentTarget = `${currentPath}${window.location.search}`;
+      if (currentTarget !== targetPath) {
         if (options?.replace) {
           window.history.replaceState(null, '', targetPath);
         } else {
@@ -103,21 +110,24 @@ export default function App() {
   }, []);
 
   const renderScreen = () => {
+    const openSlug = new URLSearchParams(window.location.search).get('open') || undefined;
     switch (currentScreen) {
       case Screen.HOME:
         return <HomeDashboard onNavigate={handleNavigate} />;
       case Screen.BIBLE:
         return <Bible />;
       case Screen.MANA:
-        return <Studies />;
+        return <Studies openSlug={openSlug} />;
+      case Screen.ENSINOS:
+        return <Ensinos openSlug={openSlug} />;
       case Screen.EBD:
         return <EBD onNavigate={handleNavigate} />;
       case Screen.BOOKSTORE:
-        return <Bookstore />;
+        return <Bookstore openSlug={openSlug} />;
       case Screen.TOOLS:
-        return <Bookstore mode="types" />;
+        return <Bookstore mode="types" openSlug={openSlug} />;
       case Screen.REFUTACAO:
-        return <Refutation />;
+        return <Refutation openSlug={openSlug} />;
       case Screen.APOCRYPHA:
         return <Protocol />;
       case Screen.SETTINGS:

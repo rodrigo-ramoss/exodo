@@ -1,14 +1,18 @@
 import React, { useRef, useState } from 'react';
-import { User, Bell, Camera } from 'lucide-react';
+import { User, Bell, Camera, Info, ArrowLeft } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useProfile } from '../state/ProfileContext';
-import ProgressSection from './ProgressSection';
 
 export default function Settings() {
   const { name, photo, notifications, setName, setPhoto, setNotifications } = useProfile();
   const [nameSaved, setNameSaved] = useState(false);
   const [localName, setLocalName] = useState(name);
+  const [showAbout, setShowAbout] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // TODO: Substituir pelo texto institucional definitivo do app.
+  const aboutExodoText =
+    'O Êxodo é uma plataforma de estudos, séries e e-books criada para organizar uma jornada de leitura espiritual profunda, conectando temas bíblicos, interpretação, formação interior e discernimento dos tempos.';
 
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -22,6 +26,47 @@ export default function Settings() {
     setName(localName);
     setNameSaved(true);
     setTimeout(() => setNameSaved(false), 2000);
+  }
+
+  if (showAbout) {
+    return (
+      <div className="flex flex-col min-h-screen pb-24">
+        <div className="px-6 pt-8 pb-4">
+          <button
+            type="button"
+            onClick={() => setShowAbout(false)}
+            className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
+          >
+            <ArrowLeft size={12} />
+            Configurações
+          </button>
+        </div>
+
+        <section className="px-6 mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Info size={14} className="text-primary" />
+            <span className="font-headline text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant">
+              Sobre o Êxodo
+            </span>
+          </div>
+
+          <div className="bg-surface-container-low rounded-2xl border border-outline-variant/10 p-5">
+            <h3 className="font-headline text-base font-black tracking-tight text-on-surface uppercase">
+              Sobre o Êxodo
+            </h3>
+            <p className="mt-2 text-xs text-on-surface-variant leading-relaxed">
+              {aboutExodoText}
+            </p>
+          </div>
+        </section>
+
+        <div className="px-6 mt-auto">
+          <p className="text-center text-[9px] uppercase tracking-widest text-on-surface-variant/30 font-bold">
+            Êxodo · v1.0 · Investigação Especial
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -156,8 +201,26 @@ export default function Settings() {
         </div>
       </section>
 
-      {/* Progress Section */}
-      <ProgressSection />
+      {/* About Section */}
+      <section className="px-6 mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <Info size={14} className="text-primary" />
+          <span className="font-headline text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant">
+            Institucional
+          </span>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setShowAbout(true)}
+          className="w-full text-left bg-surface-container-low rounded-2xl border border-outline-variant/10 p-5 hover:border-primary/35 transition-colors active:scale-[0.99]"
+        >
+          <p className="text-sm font-bold text-on-surface">SOBRE O ÊXODO</p>
+          <p className="text-[10px] text-on-surface-variant mt-0.5">
+            Conheça o propósito da plataforma e sua proposta editorial.
+          </p>
+        </button>
+      </section>
 
       {/* App info */}
       <div className="px-6 mt-auto">

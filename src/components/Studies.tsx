@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -404,7 +404,19 @@ function TendaShelfCard({ tendaId, tema, onSelect }: { tendaId: TendaId; tema: M
   );
 }
 
-export default function Studies() {
+interface StudiesProps {
+  openSlug?: string;
+}
+
+function clearOpenSlugFromUrl() {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.has('open')) return;
+  url.searchParams.delete('open');
+  const nextUrl = `${url.pathname}${url.search ? url.search : ''}`;
+  window.history.replaceState(null, '', nextUrl);
+}
+
+export default function Studies({ openSlug }: StudiesProps) {
   const [activeTendaId, setActiveTendaId] = useState<TendaId | null>(null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
@@ -494,6 +506,15 @@ export default function Studies() {
     () => tendas.find((tenda) => tenda.id === activeTendaId) || null,
     [activeTendaId, tendas],
   );
+
+  useEffect(() => {
+    if (!openSlug || selectedSlug) return;
+    const matchedTema = tendas.flatMap((tenda) => tenda.temas).find((tema) => tema.slug === openSlug);
+    if (!matchedTema) return;
+    void handleOpenTema(matchedTema);
+    clearOpenSlugFromUrl();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openSlug, selectedSlug, tendas]);
 
   const handleCloseReader = () => {
     setSelectedSlug(null);

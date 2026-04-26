@@ -923,15 +923,15 @@ type SectionKey =
   | 'HISTÓRIA DA IGREJA'
   | 'COSMOLOGIA BÍBLICA'
   | 'SATANÁS E DEMÔNIOS'
-  | 'TIPOLOGIA BÍBLICA'
   | 'JESUS CRISTO'
-  | 'PARÁBOLAS DE JESUS'
-  | 'MUNDO ESPIRITUAL'
-  | 'ANTROPOLOGIA ESPIRITUAL'
+  | 'DEUS PAI'
+  | 'ESPÍRITO SANTO'
+  | 'REINO DE DEUS'
   | 'ANTISISTEMA'
   | 'IA & APOCALIPSE'
   | 'FIM DOS TEMPOS'
-  | 'BATALHA ESPIRITUAL';
+  | 'BATALHA ESPIRITUAL'
+  | 'TIPOLOGIA BÍBLICA';
 
 // ── Section metadata ──────────────────────────────────────────────────────────
 const SECTIONS: Record<SectionKey, {
@@ -942,28 +942,28 @@ const SECTIONS: Record<SectionKey, {
   accent: string;
 }> = {
   'APÓCRIFOS': {
-    numero: '01',
+    numero: '08',
     label: 'Apócrifos',
     description: 'Enoque, Jubileus e os textos banidos. A tradição que o cânon oficial não quis preservar.',
     Icon: Shield,
     accent: 'from-amber-900/70 to-amber-800/10',
   },
   'HISTÓRIA DA IGREJA': {
-    numero: '02',
+    numero: '09',
     label: 'História da Igreja',
     description: 'A anatomia do dogma e os bastidores do poder. Uma análise sobre a verdadeira história da igreja, a formação de suas doutrinas e como a estrutura religiosa foi utilizada como ferramenta de manipulação e controle sistêmico.',
     Icon: BookOpen,
     accent: 'from-sky-900/70 to-sky-800/10',
   },
   'COSMOLOGIA BÍBLICA': {
-    numero: '03',
+    numero: '06',
     label: 'Cosmologia Bíblica',
     description: 'Uma leitura bíblica da criação: firmamento, pilares, quatro cantos, montes e trono. Exegese e contexto do Segundo Templo para reconstruir o mapa cosmológico das Escrituras.',
     Icon: Eye,
     accent: 'from-blue-900/70 to-cyan-800/10',
   },
   'SATANÁS E DEMÔNIOS': {
-    numero: '04',
+    numero: '10',
     label: 'Satanás e Demônios',
     description: 'A queda do querubim, a rebelião dos seres espirituais e a disputa pela autoridade das nações. Estudos bíblicos sobre origem, atuação e destino do império das trevas.',
     Icon: Flame,
@@ -977,56 +977,56 @@ const SECTIONS: Record<SectionKey, {
     accent: 'from-indigo-900/70 to-indigo-800/10',
   },
   'JESUS CRISTO': {
-    numero: '05',
+    numero: '01',
     label: 'Jesus Cristo',
     description: 'Estudos e séries centrados na pessoa, missão, autoridade e obra de Cristo.',
     Icon: Sparkles,
     accent: 'from-amber-900/70 to-yellow-800/10',
   },
-  'PARÁBOLAS DE JESUS': {
-    numero: '06',
-    label: 'Parábolas de Jesus',
-    description: 'Leituras exegéticas das parábolas de Cristo com contexto judaico, aplicação espiritual e profundidade do Reino.',
-    Icon: BookOpen,
-    accent: 'from-yellow-900/70 to-amber-800/10',
+  'DEUS PAI': {
+    numero: '02',
+    label: 'Deus Pai',
+    description: 'Estudos sobre o Pai: paternidade divina, governo, aliança, justiça e revelação nas Escrituras.',
+    Icon: Shield,
+    accent: 'from-sky-900/70 to-cyan-800/10',
   },
-  'MUNDO ESPIRITUAL': {
-    numero: '07',
-    label: 'Mundo Espiritual',
+  'ESPÍRITO SANTO': {
+    numero: '03',
+    label: 'Espírito Santo',
+    description: 'Conteúdos sobre a pessoa e a obra do Espírito: santificação, direção, dons e discernimento espiritual.',
+    Icon: BookOpen,
+    accent: 'from-teal-900/70 to-cyan-800/10',
+  },
+  'REINO DE DEUS': {
+    numero: '05',
+    label: 'Reino de Deus',
     description: 'Uma jornada bíblica pelo Reino de Deus, conselho celeste e realidades invisíveis. Em Hebreus 8, o texto diz que servem como “exemplar e sombra das coisas celestiais”. Como é o mundo espiritual? A Bíblia responde.',
     Icon: Eye,
     accent: 'from-violet-900/70 to-violet-800/10',
   },
-  'ANTROPOLOGIA ESPIRITUAL': {
-    numero: '08',
-    label: 'Antropologia Espiritual',
-    description: 'Centraliza os temas sobre a natureza humana: alma, espírito, corpo, estado intermediário, possessão, ressurreição e os impactos do transhumanismo.',
-    Icon: BookOpen,
-    accent: 'from-teal-900/70 to-cyan-800/10',
-  },
   'ANTISISTEMA': {
-    numero: '09',
+    numero: '12',
     label: 'Antissistema',
     description: 'Os protocolos de sobrevivência espiritual dentro de sistemas hostis. Daniel, José e os que atravessaram.',
     Icon: Zap,
     accent: 'from-emerald-900/70 to-emerald-800/10',
   },
   'IA & APOCALIPSE': {
-    numero: '10',
+    numero: '11',
     label: 'IA & Apocalipse',
     description: 'Controle tecnológico, a Marca e os mecanismos proféticos que moldam o fim dos tempos.',
     Icon: Cpu,
     accent: 'from-rose-900/70 to-rose-800/10',
   },
   'FIM DOS TEMPOS': {
-    numero: '11',
+    numero: '07',
     label: 'Fim dos Tempos',
     description: 'Escatologia bíblica, sinais proféticos e a reta final da história sob a perspectiva das Escrituras.',
     Icon: Hourglass,
     accent: 'from-orange-900/70 to-amber-800/10',
   },
   'BATALHA ESPIRITUAL': {
-    numero: '12',
+    numero: '04',
     label: 'Batalha Espiritual',
     description: 'Discernimento, resistência e estratégias bíblicas para enfrentar as guerras invisíveis do nosso tempo.',
     Icon: Flame,
@@ -1035,19 +1035,18 @@ const SECTIONS: Record<SectionKey, {
 };
 
 const SECTION_ORDER: SectionKey[] = [
-  'TIPOLOGIA BÍBLICA',
+  'JESUS CRISTO',
+  'DEUS PAI',
+  'ESPÍRITO SANTO',
+  'BATALHA ESPIRITUAL',
+  'REINO DE DEUS',
   'COSMOLOGIA BÍBLICA',
-  'SATANÁS E DEMÔNIOS',
+  'FIM DOS TEMPOS',
   'APÓCRIFOS',
   'HISTÓRIA DA IGREJA',
-  'JESUS CRISTO',
-  'PARÁBOLAS DE JESUS',
-  'MUNDO ESPIRITUAL',
-  'ANTROPOLOGIA ESPIRITUAL',
-  'ANTISISTEMA',
+  'SATANÁS E DEMÔNIOS',
   'IA & APOCALIPSE',
-  'FIM DOS TEMPOS',
-  'BATALHA ESPIRITUAL',
+  'ANTISISTEMA',
 ];
 
 // Maps existing category strings → top-level section
@@ -1069,14 +1068,14 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'tipologia tabernaculo':                    'TIPOLOGIA BÍBLICA',
   'sombras do reino':                         'TIPOLOGIA BÍBLICA',
   'a terra e o tabernaculo':                  'TIPOLOGIA BÍBLICA',
-  'SOMBRAS DO REINO DE DEUS':                 'MUNDO ESPIRITUAL',
-  'Série — Parábolas de Jesus':               'PARÁBOLAS DE JESUS',
+  'SOMBRAS DO REINO DE DEUS':                 'REINO DE DEUS',
+  'Série — Parábolas de Jesus':               'JESUS CRISTO',
   'Série — O Código do Jardim':               'IA & APOCALIPSE',
   'Série — A Queda do Mundo Espiritual':      'SATANÁS E DEMÔNIOS',
   'Série — A Queda do Querubim Ungido':       'SATANÁS E DEMÔNIOS',
-  'Série — O Terceiro Céu de Paulo':          'MUNDO ESPIRITUAL',
+  'Série — O Terceiro Céu de Paulo':          'REINO DE DEUS',
   'Série — O Fio do Trono':                   'BATALHA ESPIRITUAL',
-  'Série — Como nos Dias de Noé':             'ANTROPOLOGIA ESPIRITUAL',
+  'Série — Como nos Dias de Noé':             'ESPÍRITO SANTO',
   'Trilogia — O Mapa da Tempestade':          'ANTISISTEMA',
   'Trilogia — O Estrangeiro Próspero':        'ANTISISTEMA',
   'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
@@ -1094,16 +1093,22 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Série — A Arquitetura da Guerra Invisível': 'BATALHA ESPIRITUAL',
   'FIM DOS TEMPOS':                           'FIM DOS TEMPOS',
   'batalha-espiritual':                       'BATALHA ESPIRITUAL',
+  'deus-pai':                                 'DEUS PAI',
+  'espirito-santo':                           'ESPÍRITO SANTO',
+  'reino-de-deus':                            'REINO DE DEUS',
+  'reino de deus':                            'REINO DE DEUS',
+  'mundo espiritual':                         'REINO DE DEUS',
+  'mundo-espiritual':                         'REINO DE DEUS',
   'satanas e demonios':                       'SATANÁS E DEMÔNIOS',
   'satanas-e-demonios':                       'SATANÁS E DEMÔNIOS',
   'apocrifos':                                'APÓCRIFOS',
   'ia-e-apocalipse':                          'IA & APOCALIPSE',
   'fim dos tempos':                           'FIM DOS TEMPOS',
   'fim-dos-tempos':                           'FIM DOS TEMPOS',
-  'antropologia espiritual':                  'ANTROPOLOGIA ESPIRITUAL',
-  'antropologia-espiritual':                  'ANTROPOLOGIA ESPIRITUAL',
-  'parabolas de jesus':                       'PARÁBOLAS DE JESUS',
-  'parabolas-de-jesus':                       'PARÁBOLAS DE JESUS',
+  'antropologia espiritual':                  'ESPÍRITO SANTO',
+  'antropologia-espiritual':                  'ESPÍRITO SANTO',
+  'parabolas de jesus':                       'JESUS CRISTO',
+  'parabolas-de-jesus':                       'JESUS CRISTO',
 };
 
 // Short display labels per series
@@ -1870,6 +1875,11 @@ function SectionCard({ sectionKey, books, onSelect }: {
               {totalRead}/{books.length} lidos
             </span>
           )}
+          {books.length === 0 && (
+            <span className="text-[7px] sm:text-[8px] font-black uppercase tracking-widest text-primary/90 bg-black/55 px-1.5 sm:px-2 py-0.5 rounded-full border border-primary/35">
+              Em preparação
+            </span>
+          )}
         </div>
 
         {/* Bottom text */}
@@ -1892,9 +1902,18 @@ function SectionCard({ sectionKey, books, onSelect }: {
 // ── Root component ────────────────────────────────────────────────────────────
 interface BookstoreProps {
   mode?: 'default' | 'types';
+  openSlug?: string;
 }
 
-export default function Bookstore({ mode = 'default' }: BookstoreProps) {
+function clearOpenSlugFromUrl() {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.has('open')) return;
+  url.searchParams.delete('open');
+  const nextUrl = `${url.pathname}${url.search ? url.search : ''}`;
+  window.history.replaceState(null, '', nextUrl);
+}
+
+export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps) {
   const isTypesMode = mode === 'types';
   const [selectedSection, setSelectedSection] = useState<SectionKey | null>(null);
   const [activeTypeId, setActiveTypeId] = useState<TypologyDivisionId | null>(null);
@@ -1922,7 +1941,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
     return Array.from(map.values());
   }, [books, discoveredBooks]);
 
-  const visibleSectionOrder: SectionKey[] = SECTION_ORDER.filter((section) => section !== 'TIPOLOGIA BÍBLICA');
+  const visibleSectionOrder: SectionKey[] = SECTION_ORDER;
 
   // Group books by top-level section
   const booksBySection = SECTION_ORDER.reduce((acc, sec) => {
@@ -2110,6 +2129,15 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
       }
     }
   };
+
+  useEffect(() => {
+    if (!openSlug || selectedSlug) return;
+    const hasMatch = mergedBooks.some((book) => book.slug === openSlug) || Boolean(typologyMarkdownBySlug[openSlug]);
+    if (!hasMatch) return;
+    void handleSelectBook(openSlug);
+    clearOpenSlugFromUrl();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mergedBooks, openSlug, selectedSlug, typologyMarkdownBySlug]);
 
   const handleCloseReader = () => { setSelectedSlug(null); setMarkdownContent(null); };
 
@@ -2428,7 +2456,7 @@ export default function Bookstore({ mode = 'default' }: BookstoreProps) {
 
             {seriesInSection.length === 0 && !loading && (
               <p className="text-center text-[10px] uppercase tracking-widest text-on-surface-variant/40 py-12 sm:py-16 font-bold">
-                Conteúdo em breve.
+                Em preparação.
               </p>
             )}
           </div>

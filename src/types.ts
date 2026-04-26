@@ -2,6 +2,7 @@ export enum Screen {
   HOME = 'HOME',
   BIBLE = 'BIBLE',
   MANA = 'MANA',
+  ENSINOS = 'ENSINOS',
   EBD = 'EBD',
   BOOKSTORE = 'BOOKSTORE',
   TOOLS = 'TOOLS',
