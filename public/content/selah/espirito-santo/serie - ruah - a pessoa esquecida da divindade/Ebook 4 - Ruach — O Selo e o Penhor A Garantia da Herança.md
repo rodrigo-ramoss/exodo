@@ -4,8 +4,12 @@ description: "Quarto volume da série que recupera a Pessoa esquecida do Espíri
 seção: selah
 category: espirito santo
 image: "/image/selah/o selo e o penhor a garantia da heranca.webp"
+theme: espirito-santo
+tema: espirito-santo
+subsecao: revelacao
+subsection: revelacao
+seriesSlug: ruah-a-pessoa-esquecida-da-divindade
 ---
-
 *Rodrigo Ramos — Voz do Deserto*
 
 *Série: Ruach — A Pessoa Esquecida da Divindade Recuperada pela Tipologia — Volume 4*

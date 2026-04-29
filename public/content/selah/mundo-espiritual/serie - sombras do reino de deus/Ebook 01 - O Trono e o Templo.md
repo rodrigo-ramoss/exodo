@@ -1,3 +1,11 @@
+---
+title: "O Trono e o Templo"
+theme: mundo-espiritual
+tema: mundo-espiritual
+subsecao: ceus-mundos
+subsection: ceus-mundos
+seriesSlug: sombras-do-reino-de-deus
+---
 # O Trono e o Templo
 ## A Morada de Deus como Modelo do Reino
 *Rodrigo Ramos — Voz do Deserto*

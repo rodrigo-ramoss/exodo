@@ -4,8 +4,12 @@ description: "Segundo volume da série que recupera a Pessoa esquecida do Espír
 seção: selah
 category: espirito santo
 image: "/image/selah/o olho que desce da cabeca de arao.webp"
+theme: espirito-santo
+tema: espirito-santo
+subsecao: revelacao
+subsection: revelacao
+seriesSlug: ruah-a-pessoa-esquecida-da-divindade
 ---
-
 *Rodrigo Ramos — Voz do Deserto*
 
 *Série: Ruach — A Pessoa Esquecida da Divindade Recuperada pela Tipologia — Volume 2*

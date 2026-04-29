@@ -1,3 +1,17 @@
+---
+title: "Ekklesia"
+secao: selah
+section: selah
+theme: historia-da-igreja
+tema: historia-da-igreja
+seriesSlug: a-verdadeira-historia-da-igreja
+description: "Como eram as comunidades de fé antes da institucionalização romana."
+category: "Série — A Verdadeira História da Igreja"
+image: "/image/selah/ekklesia.webp"
+subsecao: verdade-sobre-a-igreja
+subsection: verdade-sobre-a-igreja
+---
+
 # Ekklesia: Como Eram as Comunidades Antes de Roma Transformá-las em Templos
 ### A evidência textual e arqueológica que prova que a "igreja" que você frequenta não existia nos primeiros 200 anos do Cristianismo
 

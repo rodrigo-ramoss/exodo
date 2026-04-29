@@ -1,3 +1,17 @@
+---
+title: "Os Hereges que Tinham Razão"
+secao: selah
+section: selah
+theme: historia-da-igreja
+tema: historia-da-igreja
+seriesSlug: trilogia-o-canon-oculto
+description: "Revisitando os condenados pela história e suas verdades suprimidas."
+category: "Trilogia — O Cânon Oculto"
+image: "/image/selah/Os Hereges que Tinham Razão.webp"
+subsecao: verdade-sobre-a-igreja
+subsection: verdade-sobre-a-igreja
+---
+
 # Os Hereges que Tinham Razão
 ## Movimentos Silenciados que Pregavam um Cristianismo Diferente
 *Rodrigo Ramos — Voz do Deserto*

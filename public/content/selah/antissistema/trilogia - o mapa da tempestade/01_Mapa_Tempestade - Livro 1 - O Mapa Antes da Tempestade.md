@@ -1,3 +1,15 @@
+---
+title: "O Mapa Antes da Tempestade"
+secao: selah
+section: selah
+theme: antissistema
+tema: antissistema
+seriesSlug: trilogia-o-mapa-da-tempestade
+description: "Cartografando o colapso antes que ele aconteça."
+category: "Trilogia — O Mapa da Tempestade"
+image: "/image/selah/o mapa ants da tempestade.webp"
+---
+
 # O Mapa Antes da Tempestade
 ## Lendo os Sinais de um Mundo em Convulsão
 *Rodrigo Ramos — Voz do Deserto*

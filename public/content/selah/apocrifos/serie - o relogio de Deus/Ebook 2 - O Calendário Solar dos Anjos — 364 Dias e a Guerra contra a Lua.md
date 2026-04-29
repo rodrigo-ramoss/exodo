@@ -4,6 +4,11 @@ description: O Livro dos Jubileus e 1 Enoque revelam um calendário de 364 dias 
 seção: livraria
 category: Série — O Relógio de Deus
 image: /image/selah/o calendario solar dos anjos.webp
+theme: apocrifos
+tema: apocrifos
+subsecao: jubileus
+subsection: jubileus
+seriesSlug: o-relogio-de-deus
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: O Relógio de Deus — Volume 2*

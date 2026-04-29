@@ -4,6 +4,11 @@ description: Descubra a estrutura oculta do mundo espiritual caído. Entenda a d
 seção: livraria
 category: Série — A Arquitetura da Guerra Invisível
 image: /image/selah/arquitetura da guerra invisivl - o conselho das trevas.webp
+theme: batalha-espiritual
+tema: batalha-espiritual
+subsecao: resistencia
+subsection: resistencia
+seriesSlug: a-arquitetura-da-guerra-invisivel
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Arquitetura da Guerra Invisível — Volume 1*

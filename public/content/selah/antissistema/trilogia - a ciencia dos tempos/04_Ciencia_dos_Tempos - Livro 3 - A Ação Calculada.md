@@ -1,3 +1,15 @@
+---
+title: "A Ação Calculada"
+secao: selah
+section: selah
+theme: antissistema
+tema: antissistema
+seriesSlug: trilogia-a-ciencia-dos-tempos
+description: "Como agir com sabedoria estratégica nos tempos do fim."
+category: "Trilogia — A Ciência dos Tempos"
+image: "/image/selah/ação calculada.webp"
+---
+
 # A Ação Calculada
 ## Como Construir Resiliência e um Legado de Sabedoria para os Próximos Anos
 *Rodrigo Ramos — Voz do Deserto*

@@ -4,6 +4,11 @@ description: Baruque, o escriba de Jeremias, foi levado aos céus e testemunhou 
 seção: livraria
 category: Série — O Terceiro Céu de Paulo
 image: /image/selah/do segundo ao quinto ceu.webp
+theme: mundo-espiritual
+tema: mundo-espiritual
+subsecao: ceus-mundos
+subsection: ceus-mundos
+seriesSlug: o-terceiro-ceu-de-paulo
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: O Terceiro Céu de Paulo — Volume 2*

@@ -4,6 +4,11 @@ description: No século II a.C., uma comunidade judaica se isolou no deserto da 
 seção: livraria
 category: Série — O Relógio de Deus
 image: /image/selah/quram e a guerra dos calendario.webp
+theme: apocrifos
+tema: apocrifos
+subsecao: jubileus
+subsection: jubileus
+seriesSlug: o-relogio-de-deus
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: O Relógio de Deus — Volume 4*

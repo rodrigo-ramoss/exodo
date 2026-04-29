@@ -1,3 +1,17 @@
+---
+title: "A Palavra Fora da Caixa"
+secao: selah
+section: selah
+theme: historia-da-igreja
+tema: historia-da-igreja
+seriesSlug: trilogia-o-canon-oculto
+description: "Interpretando a Bíblia fora dos dogmas institucionais."
+category: "Trilogia — O Cânon Oculto"
+image: "/image/selah/A Palavra Fora da Caixa.webp"
+subsecao: verdade-sobre-a-igreja
+subsection: verdade-sobre-a-igreja
+---
+
 # A Palavra Fora da Caixa
 ## Como Resgatar a Bíblia da Prisão Institucional e Lê-la com Liberdade
 *Rodrigo Ramos — Voz do Deserto*

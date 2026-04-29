@@ -1,3 +1,15 @@
+---
+title: "A Paisagem da Crise"
+secao: selah
+section: selah
+theme: antissistema
+tema: antissistema
+seriesSlug: trilogia-a-ciencia-dos-tempos
+description: "Mapeando os tempos de crise com perspectiva profética."
+category: "Trilogia — A Ciência dos Tempos"
+image: "/image/selah/a paisagem da crise.webp"
+---
+
 # A Paisagem da Crise
 ## Decifrando os Sinais do Nosso Tempo em um Mundo à Beira do Abismo
 *Rodrigo Ramos — Voz do Deserto*

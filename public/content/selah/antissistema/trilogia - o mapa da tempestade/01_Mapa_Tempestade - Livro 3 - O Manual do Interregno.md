@@ -1,3 +1,15 @@
+---
+title: "O Manual do Interregno"
+secao: selah
+section: selah
+theme: antissistema
+tema: antissistema
+seriesSlug: trilogia-o-mapa-da-tempestade
+description: "Como navegar o período entre dois mundos."
+category: "Trilogia — O Mapa da Tempestade"
+image: "/image/selah/o manual.webp"
+---
+
 # O Manual do Interregno
 ## Estratégias de Sobrevivência para o Tempo Entre Dois Mundos
 *Rodrigo Ramos — Voz do Deserto*

@@ -4,6 +4,11 @@ description: Quem é Miguel? Por que ele é chamado de Arcanjo e Príncipe de Is
 seção: livraria
 category: Série — A Arquitetura da Guerra Invisível
 image: /image/selah/arquitetura da guerra invisivl - miguel.webp
+theme: batalha-espiritual
+tema: batalha-espiritual
+subsecao: resistencia
+subsection: resistencia
+seriesSlug: a-arquitetura-da-guerra-invisivel
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Arquitetura da Guerra Invisível — Volume 2*

@@ -4,6 +4,11 @@ description: Antes de Paulo, antes de João, um patriarca subiu aos céus e viu 
 seção: livraria
 category: Série — O Terceiro Céu de Paulo
 image: /image/selah/o primeiro ceu.webp
+theme: mundo-espiritual
+tema: mundo-espiritual
+subsecao: ceus-mundos
+subsection: ceus-mundos
+seriesSlug: o-terceiro-ceu-de-paulo
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: O Terceiro Céu de Paulo — Volume 1*

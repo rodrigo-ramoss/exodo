@@ -4,6 +4,11 @@ description: As 70 semanas de Daniel são o calendário profético que governa a
 seção: livraria
 category: Série — A Revelação do Século
 image: /image/selah/o selo dos 490 anos.webp
+theme: fim-dos-tempos
+tema: fim-dos-tempos
+subsecao: armagedom
+subsection: armagedom
+seriesSlug: a-revelacao-do-seculo
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Revelação dos Séculos — Volume 2*

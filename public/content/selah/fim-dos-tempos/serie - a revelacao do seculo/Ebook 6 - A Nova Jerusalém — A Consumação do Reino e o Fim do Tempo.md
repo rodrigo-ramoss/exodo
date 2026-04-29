@@ -4,6 +4,11 @@ description: O fim de todas as coisas é o começo de tudo o que foi prometido. 
 seção: livraria
 category: Série — A Revelação do Século
 image: /image/selah/a nova jerusalem.webp
+theme: fim-dos-tempos
+tema: fim-dos-tempos
+subsecao: armagedom
+subsection: armagedom
+seriesSlug: a-revelacao-do-seculo
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Revelação dos Séculos — Volume 6*

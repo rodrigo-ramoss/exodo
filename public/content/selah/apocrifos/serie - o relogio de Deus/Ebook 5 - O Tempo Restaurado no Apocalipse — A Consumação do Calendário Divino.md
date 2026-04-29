@@ -4,6 +4,11 @@ description: O que acontece com o tempo no fim? O Apocalipse revela que, na Nova
 seção: livraria
 category: Série — O Relógio de Deus
 image: /image/selah/o tempo restaurado.webp
+theme: apocrifos
+tema: apocrifos
+subsecao: jubileus
+subsection: jubileus
+seriesSlug: o-relogio-de-deus
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: O Relógio de Deus — Volume 5*

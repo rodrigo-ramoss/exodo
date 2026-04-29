@@ -4,6 +4,11 @@ description: Daniel profetizou que o inimigo tentaria "mudar os tempos e a lei".
 seção: livraria
 category: Série — O Relógio de Deus
 image: /image/selah/a corrupcao do tempo.webp
+theme: apocrifos
+tema: apocrifos
+subsecao: jubileus
+subsection: jubileus
+seriesSlug: o-relogio-de-deus
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: O Relógio de Deus — Volume 3*

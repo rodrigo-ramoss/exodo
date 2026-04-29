@@ -1,4 +1,6 @@
 export type SelahThemeTitle =
+  | 'ANTISSISTEMA'
+  | 'HISTÓRIA DA IGREJA'
   | 'JESUS CRISTO'
   | 'IA & APOCALIPSE'
   | 'SATANÁS E DEMÔNIOS'
@@ -12,6 +14,8 @@ export type SelahThemeTitle =
   | 'FIM DOS TEMPOS';
 
 export type SelahThemeSlug =
+  | 'antissistema'
+  | 'historia-da-igreja'
   | 'jesus-cristo'
   | 'ia-e-apocalipse'
   | 'satanas-e-demonios'
@@ -57,11 +61,36 @@ function buildSubsections(themeSlug: SelahThemeSlug, titles: readonly string[]):
 
 export const SELAH_STRUCTURE: SelahThemeConfig[] = [
   {
+    id: 'antissistema',
+    slug: 'antissistema',
+    title: 'ANTISSISTEMA',
+    description: 'Estudos que usam a Escritura para discernir as estruturas, narrativas e poderes que moldam o sistema deste século.',
+    order: 1,
+    subsections: [],
+  },
+  {
+    id: 'historia-da-igreja',
+    slug: 'historia-da-igreja',
+    title: 'HISTÓRIA DA IGREJA',
+    description: 'Estudos sobre a formação, os desvios, os conflitos e os fundamentos da igreja ao longo da história.',
+    order: 2,
+    subsections: buildSubsections('historia-da-igreja', [
+      'Verdade sobre a Igreja',
+      'Eclésia',
+      'Ceia do Senhor',
+      'Batismo',
+      'Falsas Doutrinas',
+      'Pais da Igreja',
+      'Concílios e Credos',
+      'Reforma e Remanescente',
+    ]),
+  },
+  {
     id: 'jesus-cristo',
     slug: 'jesus-cristo',
     title: 'JESUS CRISTO',
     description: 'Pessoa, obra, autoridade e missão de Cristo.',
-    order: 1,
+    order: 3,
     subsections: buildSubsections('jesus-cristo', ['Ressurreição', 'Sangue', 'Cruz', 'Batalha', 'Salvador', 'Sumo Sacerdote', 'Logos', 'Cordeiro']),
   },
   {
@@ -69,7 +98,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     slug: 'ia-e-apocalipse',
     title: 'IA & APOCALIPSE',
     description: 'Tecnologia, controle, marca e sinais do fim.',
-    order: 2,
+    order: 4,
     subsections: buildSubsections('ia-e-apocalipse', ['Marca', 'Imagem da besta', 'Transhumanismo', 'Singularidade', 'Vigilância', 'CBDC', 'Metaverso', 'Falsa revelação']),
   },
   {
@@ -77,7 +106,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     slug: 'satanas-e-demonios',
     title: 'SATANÁS E DEMÔNIOS',
     description: 'Queda, rebelião, atuação e derrota do império das trevas.',
-    order: 3,
+    order: 5,
     subsections: buildSubsections('satanas-e-demonios', ['Belial', 'Gadreel', 'Nefilim', 'Possessão', 'Sedução', 'Acusador', 'Estratégias', 'Derrota']),
   },
   {
@@ -85,7 +114,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     slug: 'deus-pai',
     title: 'DEUS PAI',
     description: 'Aliança, governo, justiça, misericórdia e santidade do Pai.',
-    order: 4,
+    order: 6,
     subsections: buildSubsections('deus-pai', ['Yahweh', 'Conselho divino', 'Aliança', 'Eleição', 'Justiça', 'Misericórdia', 'Santidade', 'Onipresença']),
   },
   {
@@ -93,15 +122,15 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     slug: 'espirito-santo',
     title: 'ESPÍRITO SANTO',
     description: 'Pessoa, dons, frutos e ministério do Espírito.',
-    order: 5,
-    subsections: buildSubsections('espirito-santo', ['Pentecostes', 'Unção', 'Dons', 'Frutos', 'Selo', 'Convicção', 'Revelação', 'Intercessão']),
+    order: 7,
+    subsections: buildSubsections('espirito-santo', ['Pentecostes', 'Unção', 'Dons', 'Frutos', 'Selo', 'Blasfêmia', 'Revelação', 'Intercessão']),
   },
   {
     id: 'batalha-espiritual',
     slug: 'batalha-espiritual',
     title: 'BATALHA ESPIRITUAL',
     description: 'Discernimento, resistência e estratégias de guerra espiritual.',
-    order: 6,
+    order: 8,
     subsections: buildSubsections('batalha-espiritual', ['Armadura', 'Oração', 'Jejum', 'Discernimento', 'Autoridade', 'Libertação', 'Vitória', 'Resistência']),
   },
   {
@@ -109,7 +138,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     slug: 'reino-de-deus',
     title: 'REINO DE DEUS',
     description: 'Teologia do Reino, cidadania e consumação escatológica.',
-    order: 7,
+    order: 9,
     subsections: buildSubsections('reino-de-deus', ['Já e ainda não', 'Cidadania', 'Remanescente', 'Justiça', 'Nova Jerusalém', 'Milênio', 'Trono', 'Filhos do Reino']),
   },
   {
@@ -117,7 +146,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     slug: 'cosmologia-biblica',
     title: 'COSMOLOGIA BÍBLICA',
     description: 'Leitura bíblica da criação, céus, firmamento e abismo.',
-    order: 8,
+    order: 10,
     subsections: buildSubsections('cosmologia-biblica', ['Terra plana', 'Estrelas', 'Planetas', 'Inferno', 'Céus', 'Mundos', 'Firmamento', 'Abismo']),
   },
   {
@@ -125,15 +154,15 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     slug: 'mundo-espiritual',
     title: 'MUNDO ESPIRITUAL',
     description: 'Conselho celestial, hierarquias e geografia invisível.',
-    order: 9,
-    subsections: buildSubsections('mundo-espiritual', ['Vigilantes', 'Anjos', 'Querubins', 'Sarim territoriais', 'Conselho divino', 'Tártaro', 'Sheol', 'Hierarquia celestial']),
+    order: 11,
+    subsections: buildSubsections('mundo-espiritual', ['Vigilantes', 'Anjos', 'Querubins', 'Sarim territoriais', 'Conselho divino', 'Tártaro', 'Sheol', 'Hierarquia celestial', 'Céus/Mundos']),
   },
   {
     id: 'apocrifos',
     slug: 'apocrifos',
     title: 'APÓCRIFOS',
     description: 'Enoque, Jubileus e textos intertestamentários.',
-    order: 10,
+    order: 12,
     subsections: buildSubsections('apocrifos', ['Enoque', 'Jubileus', 'Testamentos', 'Apocalipse de Abraão', '2 Baruque', '4 Esdras', 'Qumran', 'Cânon perdido']),
   },
   {
@@ -141,7 +170,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     slug: 'fim-dos-tempos',
     title: 'FIM DOS TEMPOS',
     description: 'Escatologia bíblica, juízo, restauração e consumação.',
-    order: 11,
+    order: 13,
     subsections: buildSubsections('fim-dos-tempos', ['Anticristo', 'Tribulação', 'Arrebatamento', 'Trombetas', 'Bestas', 'Babilônia', 'Armagedom', 'Restauração', 'Tempo']),
   },
 ];
@@ -194,6 +223,10 @@ export function resolveSelahSubsectionTitle(themeTitle: SelahThemeTitle, value: 
   const normalized = slugifyStable(value);
   if (!normalized) return null;
 
+  if (themeTitle === 'ESPÍRITO SANTO' && normalized === 'conviccao') {
+    return 'Blasfêmia';
+  }
+
   const subsection = SELAH_SUBSECTIONS_BY_THEME_TITLE[themeTitle].find(
     (item) => item.slug === normalized || slugifyStable(item.title) === normalized,
   );
@@ -203,6 +236,10 @@ export function resolveSelahSubsectionTitle(themeTitle: SelahThemeTitle, value: 
 export function resolveSelahSubsectionSlug(themeTitle: SelahThemeTitle, value: string): string | null {
   const normalized = slugifyStable(value);
   if (!normalized) return null;
+
+  if (themeTitle === 'ESPÍRITO SANTO' && normalized === 'conviccao') {
+    return 'blasfemia';
+  }
 
   const subsection = SELAH_SUBSECTIONS_BY_THEME_TITLE[themeTitle].find(
     (item) => item.slug === normalized || slugifyStable(item.title) === normalized,

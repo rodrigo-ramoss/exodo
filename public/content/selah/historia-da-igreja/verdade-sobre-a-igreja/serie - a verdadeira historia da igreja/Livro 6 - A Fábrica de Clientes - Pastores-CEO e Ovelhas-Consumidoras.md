@@ -1,3 +1,17 @@
+---
+title: "A Fábrica de Clientes"
+secao: selah
+section: selah
+theme: historia-da-igreja
+tema: historia-da-igreja
+seriesSlug: a-verdadeira-historia-da-igreja
+description: "Crítica ao modelo de consumo religioso e à lógica de mercado no púlpito."
+category: "Série — A Verdadeira História da Igreja"
+image: "/image/selah/a fabrica de clientes.webp"
+subsecao: verdade-sobre-a-igreja
+subsection: verdade-sobre-a-igreja
+---
+
 # A Fábrica de Clientes: Pastores-CEO e Ovelhas-Consumidoras
 ## A engenharia da dependência eclesiástica e o modelo de negócio que transformou o rebanho em mercado consumidor
 

@@ -1,3 +1,17 @@
+---
+title: "O Cânone Invertido"
+secao: selah
+section: selah
+theme: historia-da-igreja
+tema: historia-da-igreja
+seriesSlug: a-verdadeira-historia-da-igreja
+description: "Os grupos suprimidos e as correntes teológicas apagadas da história oficial."
+category: "Série — A Verdadeira História da Igreja"
+image: "/image/selah/o canone invertido.webp"
+subsecao: verdade-sobre-a-igreja
+subsection: verdade-sobre-a-igreja
+---
+
 # O Cânone Invertido: Os Grupos que Roma Apagou e o que Eles Ensinavam
 ### A história não contada dos ebionitas, nazarenos, gnósticos, montanistas, novacianos e donatistas — e por que a voz dos vencedores não é a única que importa
 

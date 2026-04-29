@@ -4,8 +4,12 @@ description: "Segundo volume da série sobre o pecado imperdoável. As figuras d
 seção: selah
 category: espirito santo
 image: /image/livraria/blasfemia-contra-ruach-vol2.webp
+theme: espirito-santo
+tema: espirito-santo
+subsecao: blasfemia
+subsection: blasfemia
+seriesSlug: a-blasfemia-contra-o-ruah
 ---
-
 *Rodrigo Ramos — Voz do Deserto*
 
 *Série: A Blasfêmia Contra a Ruach — O Pecado que Não Tem Perdão — Volume 2*

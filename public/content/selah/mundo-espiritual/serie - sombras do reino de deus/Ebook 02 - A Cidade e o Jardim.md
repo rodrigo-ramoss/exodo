@@ -1,3 +1,11 @@
+---
+title: "A Cidade e o Jardim"
+theme: mundo-espiritual
+tema: mundo-espiritual
+subsecao: ceus-mundos
+subsection: ceus-mundos
+seriesSlug: sombras-do-reino-de-deus
+---
 # A Cidade e o Jardim
 ## A Nova Jerusalém e a Restauração da Criação
 *Rodrigo Ramos — Voz do Deserto*

@@ -1,3 +1,17 @@
+---
+title: "O Que Sobra Depois do Deserto"
+secao: selah
+section: selah
+theme: historia-da-igreja
+tema: historia-da-igreja
+seriesSlug: a-verdadeira-historia-da-igreja
+description: "Síntese da jornada e proposta de reconstrução da comunidade fora do sistema."
+category: "Série — A Verdadeira História da Igreja"
+image: "/image/selah/o que sobre depois do deserto.webp"
+subsecao: verdade-sobre-a-igreja
+subsection: verdade-sobre-a-igreja
+---
+
 # O Que Sobra Depois do Deserto: Ekklesia 2.0
 ## Como Ser Igreja Fora do Sistema Sem Perder a Fé
 

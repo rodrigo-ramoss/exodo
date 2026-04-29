@@ -1,3 +1,15 @@
+---
+title: "A Anatomia da Ruptura"
+secao: selah
+section: selah
+theme: antissistema
+tema: antissistema
+seriesSlug: trilogia-o-mapa-da-tempestade
+description: "Entendendo os pontos de ruptura nos sistemas religiosos e sociais."
+category: "Trilogia — O Mapa da Tempestade"
+image: "/image/selah/a anatomia da ruptura.webp"
+---
+
 # A Anatomia da Ruptura
 ## O Que os Ciclos da História Revelam Sobre o Nosso Futuro
 *Rodrigo Ramos — Voz do Deserto*

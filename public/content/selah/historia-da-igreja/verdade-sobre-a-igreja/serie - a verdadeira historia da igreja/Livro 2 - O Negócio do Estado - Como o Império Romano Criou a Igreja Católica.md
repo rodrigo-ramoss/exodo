@@ -1,3 +1,17 @@
+---
+title: "O Negócio do Estado"
+secao: selah
+section: selah
+theme: historia-da-igreja
+tema: historia-da-igreja
+seriesSlug: a-verdadeira-historia-da-igreja
+description: "A formação da igreja estatal e seus impactos doutrinários e políticos."
+category: "Série — A Verdadeira História da Igreja"
+image: "/image/selah/o negocio do estado.webp"
+subsecao: verdade-sobre-a-igreja
+subsection: verdade-sobre-a-igreja
+---
+
 # O Negócio do Estado: Como o Império Romano Criou a Igreja Católica
 ### A engenharia política, econômica e jurídica que transformou uma rede de casas em uma máquina de poder imperial
 

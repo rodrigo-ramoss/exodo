@@ -1,3 +1,17 @@
+---
+title: "A Biblioteca Proibida"
+secao: selah
+section: selah
+theme: historia-da-igreja
+tema: historia-da-igreja
+seriesSlug: trilogia-o-canon-oculto
+description: "Os livros que foram censurados e o que eles revelam."
+category: "Trilogia — O Cânon Oculto"
+image: "/image/selah/A Biblioteca Proibida.webp"
+subsecao: verdade-sobre-a-igreja
+subsection: verdade-sobre-a-igreja
+---
+
 # A Biblioteca Proibida
 ## Evangelhos, Atos e Apocalipses que Ficaram de Fora
 *Rodrigo Ramos — Voz do Deserto*

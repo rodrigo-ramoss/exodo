@@ -1,3 +1,15 @@
+---
+title: "O Manual do Discernimento"
+secao: selah
+section: selah
+theme: antissistema
+tema: antissistema
+seriesSlug: trilogia-a-ciencia-dos-tempos
+description: "Guia prático para discernir os sinais dos tempos."
+category: "Trilogia — A Ciência dos Tempos"
+image: "/image/selah/manual do discernimento.webp"
+---
+
 # O Manual do Discernimento
 ## Princípios Estratégicos para Navegar a Incerteza e Agir com Clareza
 *Rodrigo Ramos — Voz do Deserto*

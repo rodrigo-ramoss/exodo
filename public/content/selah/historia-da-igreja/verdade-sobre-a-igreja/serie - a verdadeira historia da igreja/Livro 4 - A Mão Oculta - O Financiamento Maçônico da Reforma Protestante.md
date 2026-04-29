@@ -1,3 +1,17 @@
+---
+title: "A Mão Oculta"
+secao: selah
+section: selah
+theme: historia-da-igreja
+tema: historia-da-igreja
+seriesSlug: a-verdadeira-historia-da-igreja
+description: "Uma análise das forças políticas e financeiras por trás da Reforma."
+category: "Série — A Verdadeira História da Igreja"
+image: "/image/selah/a mao oculta.webp"
+subsecao: verdade-sobre-a-igreja
+subsection: verdade-sobre-a-igreja
+---
+
 # A Mão Oculta: O Financiamento Maçônico da Reforma Protestante
 ### A verdadeira história do dinheiro, da política e das sociedades secretas que tornaram a Reforma possível
 

@@ -1,3 +1,17 @@
+---
+title: "A Bíblia que Não Caiu do Céu"
+secao: selah
+section: selah
+theme: historia-da-igreja
+tema: historia-da-igreja
+seriesSlug: trilogia-o-canon-oculto
+description: "A formação política e histórica do cânon bíblico."
+category: "Trilogia — O Cânon Oculto"
+image: "/image/selah/A Bíblia que Não Caiu do Céu.webp"
+subsecao: verdade-sobre-a-igreja
+subsection: verdade-sobre-a-igreja
+---
+
 # A Bíblia que Não Caiu do Céu
 ## A História Política e Humana da Formação do Cânon
 *Rodrigo Ramos — Voz do Deserto*

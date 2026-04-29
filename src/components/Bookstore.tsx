@@ -1071,7 +1071,7 @@ type SectionKey =
   | 'DEUS PAI'
   | 'ESPÍRITO SANTO'
   | 'REINO DE DEUS'
-  | 'ANTISISTEMA'
+  | 'ANTISSISTEMA'
   | 'IA & APOCALIPSE'
   | 'FIM DOS TEMPOS'
   | 'BATALHA ESPIRITUAL'
@@ -1155,7 +1155,7 @@ const SECTIONS: Record<SectionKey, {
     Icon: Eye,
     accent: 'from-violet-900/70 to-violet-800/10',
   },
-  'ANTISISTEMA': {
+  'ANTISSISTEMA': {
     numero: '12',
     label: 'Antissistema',
     description: 'Os protocolos de sobrevivência espiritual dentro de sistemas hostis. Daniel, José e os que atravessaram.',
@@ -1220,9 +1220,11 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Série — Como nos Dias de Noé':             'ESPÍRITO SANTO',
   'Série — Ruah — A Pessoa Esquecida da Divindade': 'ESPÍRITO SANTO',
   'Série — A Blasfêmia contra o Ruah':        'ESPÍRITO SANTO',
-  'Trilogia — O Mapa da Tempestade':          'ANTISISTEMA',
-  'Trilogia — O Estrangeiro Próspero':        'ANTISISTEMA',
-  'Trilogia — A Ciência dos Tempos':          'ANTISISTEMA',
+  'Trilogia — O Mapa da Tempestade':          'ANTISSISTEMA',
+  'Trilogia — O Estrangeiro Próspero':        'ANTISSISTEMA',
+  'Trilogia — A Ciência dos Tempos':          'ANTISSISTEMA',
+  'antissistema':                             'ANTISSISTEMA',
+  'historia-da-igreja':                       'HISTÓRIA DA IGREJA',
   'Trilogia — A Marca':                       'IA & APOCALIPSE',
   'Trilogia — O Véu Rasgado':                 'IA & APOCALIPSE',
   'Trilogia — A Coroa Roubada':               'SATANÁS E DEMÔNIOS',
@@ -2749,6 +2751,7 @@ export default function Bookstore({
     if (selectedTheme) {
       const themeLabel = SECTIONS[selectedSection].label;
       const themeDescription = SECTIONS[selectedSection].description;
+      const themeSubsections = SELAH_SUBSECTIONS_BY_THEME_TITLE[selectedTheme];
       const subsectionCounts = subsecaoAvailabilityByName ?? new Map<string, number>();
       const filteredSubsecaoBooks = selectedSubsecao
         ? booksBySection[selectedSection].filter((book) => {
@@ -2921,12 +2924,14 @@ export default function Bookstore({
             </div>
 
             <div className="relative z-10 border-t border-primary/15 pt-4 sm:pt-5">
-              <h3 className="font-headline text-lg sm:text-xl font-black tracking-tight text-on-surface mb-3">
-                Subseções
-              </h3>
+              {themeSubsections.length > 0 ? (
+                <>
+                  <h3 className="font-headline text-lg sm:text-xl font-black tracking-tight text-on-surface mb-3">
+                    Subseções
+                  </h3>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
-                {SELAH_SUBSECTIONS_BY_THEME_TITLE[selectedTheme].map((subsecaoEntry) => {
+                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
+                    {themeSubsections.map((subsecaoEntry) => {
                   const subsecao = subsecaoEntry.title;
                   const count = subsectionCounts.get(subsecao) || 0;
                   const subsecaoCover = booksBySection[selectedSection]
@@ -2937,39 +2942,101 @@ export default function Bookstore({
                     ))
                     ?.image;
 
-                  return (
-                    <button
-                      key={`${selectedTheme}-${slugify(subsecao)}`}
-                      type="button"
-                      onClick={() => setSelectedSubsecao(subsecao)}
-                      className={[
-                        'subsecao-botao group relative overflow-hidden rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left',
-                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,175,55,0.45)]',
-                        count > 0 ? 'bg-black/20 cursor-pointer' : 'bg-black/15 em-breve cursor-pointer',
-                      ].join(' ')}
-                    >
-                      {subsecaoCover && (
-                        <AppImage
-                          src={subsecaoCover}
-                          alt=""
-                          className="absolute inset-0 h-full w-full object-cover opacity-35"
-                          fallbackClassName="opacity-0"
-                        />
-                      )}
-                      <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/15" />
+                    return (
+                      <button
+                        key={`${selectedTheme}-${slugify(subsecao)}`}
+                        type="button"
+                        onClick={() => setSelectedSubsecao(subsecao)}
+                        className={[
+                          'subsecao-botao group relative overflow-hidden rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left',
+                          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,175,55,0.45)]',
+                          count > 0 ? 'bg-black/20 cursor-pointer' : 'bg-black/15 em-breve cursor-pointer',
+                        ].join(' ')}
+                      >
+                        {subsecaoCover && (
+                          <AppImage
+                            src={subsecaoCover}
+                            alt=""
+                            className="absolute inset-0 h-full w-full object-cover opacity-35"
+                            fallbackClassName="opacity-0"
+                          />
+                        )}
+                        <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/15" />
 
-                      <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-on-surface">{subsecao}</span>
-                      {count > 0 ? (
-                        <span className="relative mt-1 block text-[9px] sm:text-[10px] text-primary/80">{count} estudo{count > 1 ? 's' : ''}</span>
-                      ) : (
-                        <span className="relative mt-1 block text-[9px] sm:text-[10px] text-on-surface-variant/85">Em breve</span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
+                        <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-on-surface">{subsecao}</span>
+                        {count > 0 ? (
+                          <span className="relative mt-1 block text-[9px] sm:text-[10px] text-primary/80">{count} estudo{count > 1 ? 's' : ''}</span>
+                        ) : (
+                          <span className="relative mt-1 block text-[9px] sm:text-[10px] text-on-surface-variant/85">Em preparação</span>
+                        )}
+                      </button>
+                    );
+                  })}
+                  </div>
+                </>
+              ) : (
+                <>
+                  {seriesInSection.map(([cat, items], index) => {
+                    const reads = items.map((b) => pm.getReadCount('livraria', b.slug));
+                    const minReads = reads.length ? Math.min(...reads) : 0;
+                    const label = toSeriesDisplayLabel(cat);
+                    const seriesDescription = buildAutoSeriesDescription(cat, items);
+                    const badgeLabel = getSeriesBadgeLabel(selectedSection, cat);
+                    const seriesKey = `${selectedSection}-${slugify(cat)}`;
 
-              {seriesWithoutSubsecao.length > 0 && (
+                    return (
+                      <div key={cat} className="mb-5 sm:mb-6">
+                        <div className="mb-2">
+                          <div className="mb-1 flex items-center justify-between gap-2">
+                            <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-primary">
+                              {badgeLabel}
+                            </span>
+                          </div>
+                          <div className="flex items-baseline gap-2 flex-wrap">
+                            <h4 className="font-headline font-extrabold text-lg sm:text-xl text-on-surface tracking-tighter uppercase leading-none">
+                              {label}
+                            </h4>
+                            {minReads > 0 && (
+                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">
+                                (Lido {minReads} vez{minReads > 1 ? 'es' : ''})
+                              </span>
+                            )}
+                          </div>
+                          {seriesDescription && (
+                            <p className="mt-1 text-[9px] sm:text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm">
+                              {seriesDescription}
+                            </p>
+                          )}
+                        </div>
+                        <div
+                          ref={(element) => {
+                            sectionSeriesRowRefs.current[seriesKey] = element;
+                          }}
+                          className="relative -mx-4 px-4 sm:-mx-6 sm:px-6"
+                        >
+                          <DragScrollRow>
+                            {items.map((item, j) => (
+                              <BookCard
+                                key={item.slug}
+                                item={item}
+                                displayVolume={extractVolumeFromBook(item) ?? (j + 1)}
+                                onSelect={() => handleSelectBook(item.slug)}
+                              />
+                            ))}
+                          </DragScrollRow>
+                        </div>
+                        {index < seriesInSection.length - 1 && (
+                          <div className="mt-2.5 sm:mt-3 px-1">
+                            <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/55 to-transparent animate-[pulse_4.5s_ease-in-out_infinite]" />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </>
+              )}
+
+              {themeSubsections.length > 0 && seriesWithoutSubsecao.length > 0 && (
                 <div className="mt-6 border-t border-amber-300/25 pt-4 sm:pt-5">
                   <h4 className="font-headline text-base sm:text-lg font-black tracking-tight text-amber-100 mb-2">
                     Sem subseção definida

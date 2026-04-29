@@ -1,3 +1,15 @@
+---
+title: "O Testamento do Estrangeiro"
+secao: selah
+section: selah
+theme: antissistema
+tema: antissistema
+seriesSlug: trilogia-o-estrangeiro-prospero
+description: "O legado do forasteiro que transformou nações."
+category: "Trilogia — O Estrangeiro Próspero"
+image: "/image/selah/o testamento do estranheiro.webp"
+---
+
 # O Testamento do Estrangeiro
 ## Legado, Sucessão e a Arte de Deixar o Egito Para Trás
 *Rodrigo Ramos — Voz do Deserto*

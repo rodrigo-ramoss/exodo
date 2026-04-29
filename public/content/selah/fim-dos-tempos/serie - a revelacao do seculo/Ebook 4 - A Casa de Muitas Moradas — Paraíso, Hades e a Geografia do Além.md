@@ -4,6 +4,11 @@ description: O que acontece imediatamente após a morte? Este ebook investiga a 
 seção: livraria
 category: Série — A Revelação do Século
 image: /image/selah/a casa de muitas moradas.webp
+theme: fim-dos-tempos
+tema: fim-dos-tempos
+subsecao: armagedom
+subsection: armagedom
+seriesSlug: a-revelacao-do-seculo
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Revelação dos Séculos — Volume 4*

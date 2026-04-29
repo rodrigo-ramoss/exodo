@@ -1,3 +1,15 @@
+---
+title: "O Protocolo Daniel"
+secao: selah
+section: selah
+theme: antissistema
+tema: antissistema
+seriesSlug: trilogia-o-estrangeiro-prospero
+description: "Como prosperar e manter integridade dentro de sistemas hostis."
+category: "Trilogia — O Estrangeiro Próspero"
+image: "/image/selah/protocolo daniel.webp"
+---
+
 # O Protocolo Daniel
 ## Como Subir na Hierarquia da Babilônia Sem Se Curvar aos Seus Deuses
 *Rodrigo Ramos — Voz do Deserto*

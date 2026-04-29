@@ -1,3 +1,11 @@
+---
+title: "A Jornada e o Mistério"
+theme: mundo-espiritual
+tema: mundo-espiritual
+subsecao: ceus-mundos
+subsection: ceus-mundos
+seriesSlug: sombras-do-reino-de-deus
+---
 # A Jornada e o Mistério
 ## A Geografia do Céu e a Mística da Ascensão
 *Rodrigo Ramos — Voz do Deserto*

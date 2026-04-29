@@ -1,3 +1,17 @@
+---
+title: "As Lojas no Templo"
+secao: selah
+section: selah
+theme: historia-da-igreja
+tema: historia-da-igreja
+seriesSlug: a-verdadeira-historia-da-igreja
+description: "Relações históricas entre estruturas religiosas e sociedades discretas."
+category: "Série — A Verdadeira História da Igreja"
+image: "/image/selah/as lojas nos templos.webp"
+subsecao: verdade-sobre-a-igreja
+subsection: verdade-sobre-a-igreja
+---
+
 # As Lojas no Templo: A Maçonaria que Você Não Vê
 ## Como a Ordem Infiltrou o Evangelicalismo Moderno — e Por Que Ninguém Fala Sobre Isso
 

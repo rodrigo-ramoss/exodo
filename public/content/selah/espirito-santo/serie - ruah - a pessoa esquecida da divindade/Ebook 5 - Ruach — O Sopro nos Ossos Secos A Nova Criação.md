@@ -4,8 +4,12 @@ description: "Quinto e último volume da série que recupera a Pessoa esquecida 
 seção: selah
 category: espirito santo
 image: "/image/selah/ruach o sopro nos ossos secos a nova criacao.webp"
+theme: espirito-santo
+tema: espirito-santo
+subsecao: revelacao
+subsection: revelacao
+seriesSlug: ruah-a-pessoa-esquecida-da-divindade
 ---
-
 *Rodrigo Ramos — Voz do Deserto*
 
 *Série: Ruach — A Pessoa Esquecida da Divindade Recuperada pela Tipologia — Volume 5*

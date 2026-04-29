@@ -4,6 +4,11 @@ description: Antes do Armagedom, anjos foram julgados. Este ebook revela como a 
 seção: livraria
 category: Série — A Revelação do Século
 image: /image/selah/o dspertar dos vigilantes.webp
+theme: fim-dos-tempos
+tema: fim-dos-tempos
+subsecao: armagedom
+subsection: armagedom
+seriesSlug: a-revelacao-do-seculo
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Revelação dos Séculos — Volume 1*

@@ -4,6 +4,11 @@ description: O que significa "julgar os anjos"? Qual é o papel dos santos no tr
 seção: livraria
 category: Série — A Arquitetura da Guerra Invisível
 image: /image/selah/arquitetura da guerra invisivl - julgaremos os anjos.webp
+theme: batalha-espiritual
+tema: batalha-espiritual
+subsecao: resistencia
+subsection: resistencia
+seriesSlug: a-arquitetura-da-guerra-invisivel
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Arquitetura da Guerra Invisível — Volume 6*

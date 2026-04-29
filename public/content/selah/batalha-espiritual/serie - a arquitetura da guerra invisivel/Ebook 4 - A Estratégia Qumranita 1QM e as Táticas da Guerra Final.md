@@ -4,6 +4,11 @@ description: Como os "Filhos da Luz" lutavam? Um mergulho no Rolo da Guerra de Q
 seção: livraria
 category: Série — A Arquitetura da Guerra Invisível
 image: /image/selah/arquitetura da guerra invisivl - a estrategia qumranita.webp
+theme: batalha-espiritual
+tema: batalha-espiritual
+subsecao: resistencia
+subsection: resistencia
+seriesSlug: a-arquitetura-da-guerra-invisivel
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Arquitetura da Guerra Invisível — Volume 4*

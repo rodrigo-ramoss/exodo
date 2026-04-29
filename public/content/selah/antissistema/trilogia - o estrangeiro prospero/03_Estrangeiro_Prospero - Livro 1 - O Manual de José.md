@@ -1,3 +1,15 @@
+---
+title: "O Manual de José"
+secao: selah
+section: selah
+theme: antissistema
+tema: antissistema
+seriesSlug: trilogia-o-estrangeiro-prospero
+description: "Estratégias de sobrevivência e excelência do estrangeiro próspero."
+category: "Trilogia — O Estrangeiro Próspero"
+image: "/image/selah/o manual de josé.webp"
+---
+
 # O Manual de José
 ## Estratégias de Acumulação, Estoque e Poder no Meio do Império
 *Rodrigo Ramos — Voz do Deserto*

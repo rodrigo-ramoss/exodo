@@ -4,6 +4,11 @@ description: Isaías foi levado através dos sete céus e viu o trono de Deus, a
 seção: livraria
 category: Série — O Terceiro Céu de Paulo
 image: /image/selah/o sexto e o setimo ceu.webp
+theme: mundo-espiritual
+tema: mundo-espiritual
+subsecao: ceus-mundos
+subsection: ceus-mundos
+seriesSlug: o-terceiro-ceu-de-paulo
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: O Terceiro Céu de Paulo — Volume 3*

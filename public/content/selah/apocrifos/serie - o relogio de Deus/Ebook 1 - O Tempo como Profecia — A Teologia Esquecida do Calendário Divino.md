@@ -4,6 +4,11 @@ description: Deus criou o tempo não apenas para nos orientar, mas para nos reve
 seção: livraria
 category: Série — O Relógio de Deus
 image: /image/selah/o tempo como profecia.webp
+theme: apocrifos
+tema: apocrifos
+subsecao: jubileus
+subsection: jubileus
+seriesSlug: o-relogio-de-deus
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: O Relógio de Deus — Volume 1*

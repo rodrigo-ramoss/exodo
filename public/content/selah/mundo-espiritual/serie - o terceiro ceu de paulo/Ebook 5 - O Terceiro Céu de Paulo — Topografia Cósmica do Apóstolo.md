@@ -4,6 +4,11 @@ description: Paulo foi arrebatado ao terceiro céu e ouviu palavras inefáveis. 
 seção: livraria
 category: Série — O Terceiro Céu de Paulo
 image: /image/selah/o terceiro ceu de paulo.webp
+theme: mundo-espiritual
+tema: mundo-espiritual
+subsecao: ceus-mundos
+subsection: ceus-mundos
+seriesSlug: o-terceiro-ceu-de-paulo
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: O Terceiro Céu de Paulo — Volume 5*

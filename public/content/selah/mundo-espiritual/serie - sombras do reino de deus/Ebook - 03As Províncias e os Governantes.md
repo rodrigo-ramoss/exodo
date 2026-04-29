@@ -1,3 +1,11 @@
+---
+title: "As Províncias e os Governantes"
+theme: mundo-espiritual
+tema: mundo-espiritual
+subsecao: ceus-mundos
+subsection: ceus-mundos
+seriesSlug: sombras-do-reino-de-deus
+---
 # As Províncias e os Governantes
 ## Galardão, Hierarquia e a Administração do Cosmos
 *Rodrigo Ramos — Voz do Deserto*

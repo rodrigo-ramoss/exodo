@@ -4,6 +4,11 @@ description: Roma é chamada de Babilônia nos apocalipses judaicos. Este ebook 
 seção: livraria
 category: Série — A Revelação do Século
 image: /image/selah/a queda de babilonia.webp
+theme: fim-dos-tempos
+tema: fim-dos-tempos
+subsecao: armagedom
+subsection: armagedom
+seriesSlug: a-revelacao-do-seculo
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Série: A Revelação dos Séculos — Volume 3*
