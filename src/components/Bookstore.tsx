@@ -350,6 +350,8 @@ function pickCategoryByFolder(folder: string): string {
     ['serie - sombras do reino de deus', 'SOMBRAS DO REINO DE DEUS'],
     ['serie - a verdadeira historia da igreja', 'Série — A Verdadeira História da Igreja'],
     ['serie - o codigo das eras', 'Série — O Código das Eras'],
+    ['serie - as origens do sabado', 'Série — As Origens do Sábado'],
+    ['serie - o relogio escatologico', 'Série — O Relógio Escatológico'],
     ['serie - parabolas de jesus', 'Série — Parábolas de Jesus'],
     ['serie - ruah - a pessoa esquecida da divindade', 'Série — Ruah — A Pessoa Esquecida da Divindade'],
     ['serie - a blasfemia contra o ruah', 'Série — A Blasfêmia contra o Ruah'],
@@ -995,6 +997,7 @@ type SectionKey =
   | 'APÓCRIFOS'
   | 'HISTÓRIA DA IGREJA'
   | 'COSMOLOGIA BÍBLICA'
+  | 'MUNDO ESPIRITUAL'
   | 'SATANÁS E DEMÔNIOS'
   | 'JESUS CRISTO'
   | 'DEUS PAI'
@@ -1034,6 +1037,13 @@ const SECTIONS: Record<SectionKey, {
     description: 'Uma leitura bíblica da criação: firmamento, pilares, quatro cantos, montes e trono. Exegese e contexto do Segundo Templo para reconstruir o mapa cosmológico das Escrituras.',
     Icon: Eye,
     accent: 'from-blue-900/70 to-cyan-800/10',
+  },
+  'MUNDO ESPIRITUAL': {
+    numero: '13',
+    label: 'Mundo Espiritual',
+    description: 'Cartografia bíblica do mundo invisível: céus, hierarquias, conselho celestial e dinâmica espiritual que atravessa as Escrituras.',
+    Icon: Eye,
+    accent: 'from-cyan-900/70 to-sky-800/10',
   },
   'SATANÁS E DEMÔNIOS': {
     numero: '10',
@@ -1113,6 +1123,7 @@ const SECTION_ORDER: SectionKey[] = [
   'ESPÍRITO SANTO',
   'BATALHA ESPIRITUAL',
   'REINO DE DEUS',
+  'MUNDO ESPIRITUAL',
   'COSMOLOGIA BÍBLICA',
   'FIM DOS TEMPOS',
   'APÓCRIFOS',
@@ -1141,12 +1152,14 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'tipologia tabernaculo':                    'TIPOLOGIA BÍBLICA',
   'sombras do reino':                         'TIPOLOGIA BÍBLICA',
   'a terra e o tabernaculo':                  'TIPOLOGIA BÍBLICA',
-  'SOMBRAS DO REINO DE DEUS':                 'REINO DE DEUS',
+  'SOMBRAS DO REINO DE DEUS':                 'MUNDO ESPIRITUAL',
+  'Série — As Origens do Sábado':             'BATALHA ESPIRITUAL',
+  'Série — O Relógio Escatológico':           'FIM DOS TEMPOS',
   'Série — Parábolas de Jesus':               'JESUS CRISTO',
   'Série — O Código do Jardim':               'IA & APOCALIPSE',
   'Série — A Queda do Mundo Espiritual':      'SATANÁS E DEMÔNIOS',
   'Série — A Queda do Querubim Ungido':       'SATANÁS E DEMÔNIOS',
-  'Série — O Terceiro Céu de Paulo':          'REINO DE DEUS',
+  'Série — O Terceiro Céu de Paulo':          'MUNDO ESPIRITUAL',
   'Série — O Fio do Trono':                   'BATALHA ESPIRITUAL',
   'Série — Como nos Dias de Noé':             'ESPÍRITO SANTO',
   'Série — Ruah — A Pessoa Esquecida da Divindade': 'ESPÍRITO SANTO',
@@ -1172,8 +1185,9 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'espirito-santo':                           'ESPÍRITO SANTO',
   'reino-de-deus':                            'REINO DE DEUS',
   'reino de deus':                            'REINO DE DEUS',
-  'mundo espiritual':                         'REINO DE DEUS',
-  'mundo-espiritual':                         'REINO DE DEUS',
+  'MUNDO ESPIRITUAL':                         'MUNDO ESPIRITUAL',
+  'mundo espiritual':                         'MUNDO ESPIRITUAL',
+  'mundo-espiritual':                         'MUNDO ESPIRITUAL',
   'satanas e demonios':                       'SATANÁS E DEMÔNIOS',
   'satanas-e-demonios':                       'SATANÁS E DEMÔNIOS',
   'apocrifos':                                'APÓCRIFOS',
@@ -1192,6 +1206,7 @@ const SELAH_THEME_BY_SECTION: Partial<Record<SectionKey, SelahThemeName>> = {
   'ESPÍRITO SANTO': 'ESPÍRITO SANTO',
   'BATALHA ESPIRITUAL': 'BATALHA ESPIRITUAL',
   'REINO DE DEUS': 'REINO DE DEUS',
+  'MUNDO ESPIRITUAL': 'MUNDO ESPIRITUAL',
   'COSMOLOGIA BÍBLICA': 'COSMOLOGIA BÍBLICA',
   'APÓCRIFOS': 'APÓCRIFOS',
   'FIM DOS TEMPOS': 'FIM DOS TEMPOS',
@@ -1953,7 +1968,7 @@ function SectionCard({ sectionKey, books, onSelect }: {
   onSelect: () => void;
 }) {
   const { label, description, Icon, accent, numero } = SECTIONS[sectionKey];
-  const cover = books[0]?.image;
+  const cover = books.find((book) => Boolean(book.image))?.image;
   const totalRead = pm.countRead('livraria', books.map((b) => b.slug));
 
   return (
@@ -2138,8 +2153,13 @@ export default function Bookstore({
   const booksBySection = SECTION_ORDER.reduce((acc, sec) => {
     acc[sec] = mergedBooks.filter((b) => {
       const category = (b.category || '').trim();
-      const mapped = CATEGORY_TO_SECTION[category] ?? CATEGORY_TO_SECTION[category.toLowerCase()];
-      return mapped === sec;
+      const mappedByCategory = CATEGORY_TO_SECTION[category] ?? CATEGORY_TO_SECTION[category.toLowerCase()];
+      if (mappedByCategory === sec) return true;
+
+      const resolvedTheme = resolveSelahTheme(b);
+      if (!resolvedTheme) return false;
+      const mappedByTheme = CATEGORY_TO_SECTION[resolvedTheme] ?? CATEGORY_TO_SECTION[resolvedTheme.toLowerCase()];
+      return mappedByTheme === sec;
     });
     return acc;
   }, {} as Record<SectionKey, BookItem[]>);
@@ -2688,6 +2708,120 @@ export default function Bookstore({
             }, {} as Record<string, BookItem[]>)
           ).map(([category, items]) => [category, sortBooksInSeries(category, items)] as [string, BookItem[]])
         : [];
+      const hasAnyActiveSubsecao = Array.from(subsectionCounts.values()).some((count) => count > 0);
+
+      if (!hasAnyActiveSubsecao) {
+        return (
+          <div className="pt-4 sm:pt-6 pb-24 sm:pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
+            <section className="relative overflow-hidden rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-4 sm:p-6">
+              <FireflyLayer />
+
+              <button
+                onClick={() => setSelectedSection(null)}
+                className="relative z-10 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
+              >
+                <ArrowLeft size={12} />
+                Selah
+              </button>
+
+              <div className="relative z-10 mt-3 sm:mt-4 mb-4 sm:mb-5">
+                <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
+                  Seção Selah
+                </span>
+                <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
+                  {themeLabel}
+                </h2>
+                <p className="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">{themeDescription}</p>
+              </div>
+
+              <div className="relative z-10 border-t border-primary/15 pt-4 sm:pt-5">
+                {seriesInSection.map(([cat, items], index) => {
+                  const reads = items.map((b) => pm.getReadCount('livraria', b.slug));
+                  const minReads = reads.length ? Math.min(...reads) : 0;
+                  const label = toSeriesDisplayLabel(cat);
+                  const seriesDescription = buildAutoSeriesDescription(cat, items);
+                  const badgeLabel = getSeriesBadgeLabel(selectedSection, cat);
+                  const seriesKey = `${selectedSection}-${slugify(cat)}`;
+
+                  return (
+                    <div key={cat} className="mb-5 sm:mb-6">
+                      <div className="mb-2">
+                        <div className="mb-1 flex items-center justify-between gap-2">
+                          <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-primary">
+                            {badgeLabel}
+                          </span>
+                          <div className="hidden sm:flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => scrollSectionSeries(seriesKey, -240)}
+                              className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant/45 bg-black/35 text-on-surface-variant transition-colors hover:border-primary/55 hover:text-primary"
+                              aria-label={`Voltar ${label}`}
+                            >
+                              <ChevronLeft size={13} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => scrollSectionSeries(seriesKey, 240)}
+                              className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant/45 bg-black/35 text-on-surface-variant transition-colors hover:border-primary/55 hover:text-primary"
+                              aria-label={`Avançar ${label}`}
+                            >
+                              <ChevronRight size={13} />
+                            </button>
+                          </div>
+                        </div>
+                        <div className="flex items-baseline gap-2 flex-wrap">
+                          <h4 className="font-headline font-extrabold text-lg sm:text-xl text-on-surface tracking-tighter uppercase leading-none">
+                            {label}
+                          </h4>
+                          {minReads > 0 && (
+                            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">
+                              (Lido {minReads} vez{minReads > 1 ? 'es' : ''})
+                            </span>
+                          )}
+                        </div>
+                        {seriesDescription && (
+                          <p className="mt-1 text-[9px] sm:text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm">
+                            {seriesDescription}
+                          </p>
+                        )}
+                      </div>
+                      <div
+                        ref={(element) => {
+                          sectionSeriesRowRefs.current[seriesKey] = element;
+                        }}
+                        className="relative -mx-4 px-4 sm:-mx-6 sm:px-6"
+                      >
+                        <DragScrollRow>
+                          {items.map((item, j) => (
+                            <BookCard
+                              key={item.slug}
+                              item={item}
+                              displayVolume={extractVolumeFromBook(item) ?? (j + 1)}
+                              onSelect={() => handleSelectBook(item.slug)}
+                            />
+                          ))}
+                        </DragScrollRow>
+                      </div>
+
+                      {index < seriesInSection.length - 1 && (
+                        <div className="mt-2.5 sm:mt-3 px-1">
+                          <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/55 to-transparent animate-[pulse_4.5s_ease-in-out_infinite]" />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {seriesInSection.length === 0 && !loading && (
+                  <p className="text-center text-[10px] uppercase tracking-widest text-on-surface-variant/40 py-12 sm:py-16 font-bold">
+                    Em preparação.
+                  </p>
+                )}
+              </div>
+            </section>
+          </div>
+        );
+      }
 
       if (selectedSubsecao) {
         return (
@@ -2842,6 +2976,14 @@ export default function Bookstore({
                 {SELAH_SUBSECOES_BY_THEME[selectedTheme].map((subsecao) => {
                   const count = subsectionCounts.get(subsecao) || 0;
                   const isActive = count > 0;
+                  const subsecaoCover = booksBySection[selectedSection]
+                    .find((book) => (
+                      (book.subsecao || '').trim() === subsecao
+                      && resolveSelahTheme(book) === selectedTheme
+                      && book.image
+                    ))
+                    ?.image;
+
                   return (
                     <button
                       key={`${selectedTheme}-${slugify(subsecao)}`}
@@ -2849,16 +2991,26 @@ export default function Bookstore({
                       disabled={!isActive}
                       onClick={() => setSelectedSubsecao(subsecao)}
                       className={[
-                        'subsecao-botao group rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left',
+                        'subsecao-botao group relative overflow-hidden rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left',
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,175,55,0.45)]',
                         isActive ? 'bg-black/20 cursor-pointer' : 'bg-black/15 em-breve',
                       ].join(' ')}
                     >
-                      <span className="block text-[11px] sm:text-xs font-black tracking-wide text-on-surface">{subsecao}</span>
+                      {subsecaoCover && (
+                        <AppImage
+                          src={subsecaoCover}
+                          alt=""
+                          className="absolute inset-0 h-full w-full object-cover opacity-35"
+                          fallbackClassName="opacity-0"
+                        />
+                      )}
+                      <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/15" />
+
+                      <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-on-surface">{subsecao}</span>
                       {isActive ? (
-                        <span className="mt-1 block text-[9px] sm:text-[10px] text-primary/80">{count} estudo{count > 1 ? 's' : ''}</span>
+                        <span className="relative mt-1 block text-[9px] sm:text-[10px] text-primary/80">{count} estudo{count > 1 ? 's' : ''}</span>
                       ) : (
-                        <span className="mt-1 block text-[9px] sm:text-[10px] text-on-surface-variant/85">Em breve</span>
+                        <span className="relative mt-1 block text-[9px] sm:text-[10px] text-on-surface-variant/85">Em breve</span>
                       )}
                     </button>
                   );
