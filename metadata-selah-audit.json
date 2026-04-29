@@ -1,0 +1,1177 @@
+{
+  "total": 126,
+  "counts": [
+    {
+      "theme": "APÓCRIFOS",
+      "total": 23
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "total": 22
+    },
+    {
+      "theme": "COSMOLOGIA BÍBLICA",
+      "total": 7
+    },
+    {
+      "theme": "ESPÍRITO SANTO",
+      "total": 8
+    },
+    {
+      "theme": "FIM DOS TEMPOS",
+      "total": 10
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "total": 19
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "total": 19
+    },
+    {
+      "theme": "MUNDO ESPIRITUAL",
+      "total": 9
+    },
+    {
+      "theme": "SATANÁS E DEMÔNIOS",
+      "total": 9
+    }
+  ],
+  "items": [
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "A Bênção Roubada e o Príncipe que Lutou com Deus",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - jubileus/Ebook 6 - A Bênção Roubada e o Príncipe que Lutou com Deus.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "A Corrupção do Tempo — Como o Calendário de Deus Foi Substituído",
+      "description": "Daniel profetizou que o inimigo tentaria \"mudar os tempos e a lei\". Esta é a história dessa profecia em ação: da Babilônia a Roma, do calendário lunar ao gregoriano, a guerra silenciosa pela alma do tempo.",
+      "category": "Série — O Relógio de Deus",
+      "subsecao": "",
+      "file": "apocrifos/serie - o relogio de Deus/Ebook 3 - A Corrupção do Tempo — Como o Calendário de Deus Foi Substituído.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "A Epístola de Enoque",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - 1 enoque/Parte 9 - Enoque - A Epístola de Enoque.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "A Herança Amaldiçoada de Noé",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - jubileus/Ebook 4 - A Herança Amaldiçoada de Noé.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "A Origem dos Demônios",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - 1 enoque/Parte 2 - Enoque - A Origem dos Demônios.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "Enoque, o Escriba da Justiça",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - 1 enoque/Parte 4 - Enoque, o Escriba da Justiça.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Calendário Secreto do Céu",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - jubileus/Ebook 1 - o calendario secreto do ceu.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Calendário Solar dos Anjos — 364 Dias e a Guerra contra a Lua",
+      "description": "O Livro dos Jubileus e 1 Enoque revelam um calendário de 364 dias — o relógio dos anjos. Este ebook investiga a matemática divina do tempo, a subjugação da lua e a guerra espiritual travada nas páginas do calendário.",
+      "category": "Série — O Relógio de Deus",
+      "subsecao": "",
+      "file": "apocrifos/serie - o relogio de Deus/Ebook 2 - O Calendário Solar dos Anjos — 364 Dias e a Guerra contra a Lua.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Faraó, o Grão-Vizir e a Fome Divina",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - jubileus/Ebook 7 - O Faraó, o Grão-Vizir e a Fome Divina.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Jardim que o Tempo Esqueceu",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - jubileus/Ebook 2 - O Jardim que o Tempo Esqueceu.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Julgamento dos Anjos e as Prisões Eternas",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - 1 enoque/Parte 3 - Enoque - O Julgamento dos Anjos e as Prisões Eternas.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Livro Astronômico",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - 1 enoque/Parte 7 - Enoque - O Livro Astronômico.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Livro das Parábolas",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - 1 enoque/Parte 6 - Enoque - O Livro das Parábolas.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Livro dos Sonhos",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - 1 enoque/Parte 8 - Enoque - O Livro dos Sonhos.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Nascimento de Noé e os Apêndices Escatológicos",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - 1 enoque/parte 10 - Enoque - O Nascimento de Noé e os Apêndices Escatológicos.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Pacto de Fogo de Abraão",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - jubileus/Ebook 5 - O Pacto de Fogo de Abraão.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Primeiro Cordeiro e o Último Relógio",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - jubileus/Ebook 8 - O Primeiro Cordeiro e o Último Relógio.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Prólogo e a Geografia Cósmica",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - 1 enoque/Parte 5 - Enoque- O Prólogo e a Geografia Cósmica.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Tempo como Profecia — A Teologia Esquecida do Calendário Divino",
+      "description": "Deus criou o tempo não apenas para nos orientar, mas para nos revelar seu plano. Este ebook inaugura a série \"O Relógio de Deus\", mostrando como o calendário bíblico é uma profecia silenciosa — e como sua corrupção nos desorientou espiritualmente.",
+      "category": "Série — O Relógio de Deus",
+      "subsecao": "",
+      "file": "apocrifos/serie - o relogio de Deus/Ebook 1 - O Tempo como Profecia — A Teologia Esquecida do Calendário Divino.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "O Tempo Restaurado no Apocalipse — A Consumação do Calendário Divino",
+      "description": "O que acontece com o tempo no fim? O Apocalipse revela que, na Nova Jerusalém, não haverá mais sol nem lua — pois a glória de Deus iluminará tudo. Este volume final da série explora a consumação do calendário e o sábado eterno.",
+      "category": "Série — O Relógio de Deus",
+      "subsecao": "",
+      "file": "apocrifos/serie - o relogio de Deus/Ebook 5 - O Tempo Restaurado no Apocalipse — A Consumação do Calendário Divino.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "Os Filhos de Deus e os Nefilins",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - 1 enoque/Parte 1 - Enoque - Os Filhos de Deus e os Nefilins.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "Quando os Nefilins Ressurgiram",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "apocrifos/serie - jubileus/Ebook 3 - Quando os Nefilins Ressurgiram.md"
+    },
+    {
+      "theme": "APÓCRIFOS",
+      "themeSlug": "apocrifos",
+      "title": "Qumran e a Guerra dos Calendários — A Comunidade que Preferiu o Deserto",
+      "description": "No século II a.C., uma comunidade judaica se isolou no deserto da Judeia, rejeitou o Templo de Jerusalém e travou uma guerra santa... por causa do calendário. Este ebook revela a história dos essênios de Qumran e sua luta pelo tempo de Deus.",
+      "category": "Série — O Relógio de Deus",
+      "subsecao": "",
+      "file": "apocrifos/serie - o relogio de Deus/Ebook 4 - Qumran e a Guerra dos Calendários — A Comunidade que Preferiu o Deserto.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Armadura do Remanescente — Volume 1 — O Cinto da Verdade: A Integridade que Sustenta a Batalha",
+      "description": "Primeiro volume da série sobre a Armadura de Deus. A verdade como fundamento da estabilidade espiritual. Uma leitura paulina de Efésios 6:14 à luz do Segundo Templo, de Isaías e da formação rabínica do apóstolo.",
+      "category": "Série — A Armadura do Remanescente",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a armadura do remanescente/Ebook 1 - O Cinto da Verdade  A Integridade que Sustenta a Batalha.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Armadura do Remanescente — Volume 2 — A Couraça da Justiça: O Coração Protegido pela Aliança",
+      "description": "Segundo volume da série sobre a Armadura de Deus. A justiça como proteção do coração e dos órgãos vitais. Justificação imputada e santificação prática na teologia paulina, ancoradas em Isaías 59 e Sabedoria de Salomão.",
+      "category": "Série — A Armadura do Remanescente",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a armadura do remanescente/Ebook 2 - A Couraça da Justiça O Coração Protegido pela Aliança.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Armadura do Remanescente — Volume 3 — Os Calçados do Evangelho da Paz: A Prontidão para Avançar",
+      "description": "Terceiro volume da série sobre a Armadura de Deus. A prontidão que vem do Evangelho da paz como fundamento para a mobilidade e o avanço do Reino. Uma leitura paulina de Efésios 6:15 à luz do Segundo Templo e do contexto imperial romano.",
+      "category": "batalha-espiritual",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a armadura do remanescente/Ebook 3 - Os Calçados do Evangelho da Paz A Prontidão para Avançar.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Armadura do Remanescente — Volume 4 — O Escudo da Fé: Apagando os Dardos do Maligno",
+      "description": "Quarto volume da série sobre a Armadura de Deus. A fé como confiança ativa que neutraliza os ataques do inimigo. Uma leitura paulina de Efésios 6:16 à luz do Segundo Templo, de Habacuque e da teologia do apóstolo.",
+      "category": "batalha-espiritual",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a armadura do remanescente/Ebook  4 - O Escudo da Fé Apagando os Dardos do Maligno.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Armadura do Remanescente — Volume 6 — A Espada do Espírito: A Palavra de Deus como Arma Ofensiva",
+      "description": "Sexto volume da série sobre a Armadura de Deus. A Palavra de Deus como a espada afiada que o Espírito Santo coloca nas mãos do crente. Uma leitura paulina de Efésios 6:17b à luz do Antigo Testamento, da literatura do Segundo Templo e da teologia da proclamação do apóstolo.",
+      "category": "batalha-espiritual",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a armadura do remanescente/Ebook 6 - A Espada do Espírito A Palavra de Deus como Arma Ofensiva.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Armadura do Remanescente — Volume 7 — A Oração no Espírito: A Linha Direta com o Quartel-General",
+      "description": "Sétimo e último volume da série sobre a Armadura de Deus. A oração como a atmosfera da batalha espiritual. Uma leitura paulina de Efésios 6:18 à luz do Antigo Testamento, da vida de oração do apóstolo e da tradição do Segundo Templo.",
+      "category": "batalha-espiritual",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a armadura do remanescente/Ebook 7 - A Oração no Espírito A Linha Direta com o Quartel-General.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Arquitetura da Guerra Invisível — Volume 1 — O Conselho das Trevas: Belial e a Hierarquia do Adversário",
+      "description": "Descubra a estrutura oculta do mundo espiritual caído. Entenda a diferença entre Belial, Gadreel, os Vigilantes e os Sarim territoriais. Uma jornada exegética baseada nos Rolos do Mar Morto e na literatura do Segundo Templo para equipar o remanescente.",
+      "category": "Série — A Arquitetura da Guerra Invisível",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a arquitetura da guerra invisivel/Ebook 1 -  O Conselho das Trevas Belial e a Hierarquia do Adversário.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Arquitetura da Guerra Invisível — Volume 2 — Miguel, o Príncipe da Luz: O General do Remanescente",
+      "description": "Quem é Miguel? Por que ele é chamado de Arcanjo e Príncipe de Israel? Descubra o papel do comandante dos exércitos celestiais na guerra contra Belial e os Sarim, baseado nos Rolos do Mar Morto, em Daniel e no Apocalipse.",
+      "category": "Série — A Arquitetura da Guerra Invisível",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a arquitetura da guerra invisivel/Ebook 2 - Miguel, o Príncipe da Luz O General do Remanescente.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Arquitetura da Guerra Invisível — Volume 3 — O Mapa do Território: Principados, Potestades e Kosmokratores",
+      "description": "Onde exatamente a guerra espiritual acontece? Uma cartografia completa do campo de batalha invisível baseada em Efésios 6, Testamento de Levi, Ascensão de Isaías e na geografia celestial do Segundo Templo.",
+      "category": "Série — A Arquitetura da Guerra Invisível",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a arquitetura da guerra invisivel/Ebook 3 - O Mapa do Território Principados, Potestades e Kosmokratores.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Arquitetura da Guerra Invisível — Volume 4 — A Estratégia Qumranita: 1QM e as Táticas da Guerra Final",
+      "description": "Como os \"Filhos da Luz\" lutavam? Um mergulho no Rolo da Guerra de Qumran (1QM) para extrair as táticas de combate espiritual do remanescente do deserto e aplicá-las à batalha contemporânea.",
+      "category": "Série — A Arquitetura da Guerra Invisível",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a arquitetura da guerra invisivel/Ebook 4 - A Estratégia Qumranita 1QM e as Táticas da Guerra Final.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Arquitetura da Guerra Invisível — Volume 5 — Melquisedeque e o Jubileu da Guerra: O Fim do Cativeiro Cósmico",
+      "description": "Quem é Melquisedeque na teologia de Qumran e em Hebreus? Como o Sacerdote-Rei celestial decreta o Jubileu escatológico e executa o juízo sobre Belial e os Sarim. Uma jornada por 11QMelch, Lucas 4 e o coração da vitória cósmica.",
+      "category": "Série — A Arquitetura da Guerra Invisível",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a arquitetura da guerra invisivel/eBOOK 5 - Melquisedeque e o Jubileu da Guerra O Fim do Cativeiro Cósmico.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Arquitetura da Guerra Invisível — Volume 6 — Julgaremos os Anjos: O Veredito Final do Remanescente",
+      "description": "O que significa \"julgar os anjos\"? Qual é o papel dos santos no tribunal escatológico? Baseado em 1 Coríntios 6:3, 1 Enoque 10, Daniel 7 e Apocalipse 20, este volume revela a participação do remanescente no juízo final sobre Vigilantes, Sarim e Nefilim.",
+      "category": "Série — A Arquitetura da Guerra Invisível",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a arquitetura da guerra invisivel/Ebook 6 - Julgaremos os Anjos O Veredito Final do Remanescente.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Arquitetura da Guerra Invisível — Volume 7 — A Restauração da Herança: Desfazendo a Maldição de Babel",
+      "description": "O destino final das nações redimidas. Como a Igreja, como remanescente, reverte a sentença de Deuteronômio 32 e Salmo 82, ocupando territórios antes dominados pelos Sarim e cumprindo a Grande Comissão como ato de guerra e restauração cósmica.",
+      "category": "Série — A Arquitetura da Guerra Invisível",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a arquitetura da guerra invisivel/Ebook - A Restauração da Herança Desfazendo a Maldição de Babel.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Oração da Noiva — Intimidade, Perseverança e o Clamor pelo Retorno do Rei",
+      "description": "Volume 7 da série O Fio do Trono. A oração como jardim de intimidade com Deus. A viúva persistente. O clamor escatológico da Noiva: \"Maranata!\". A adoração contemplativa. O último grito do remanescente nos últimos dias.",
+      "category": "ferramentas-espirituais",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - o fio do trono/Ebook 7 - A Oração da Noiva — Intimidade, Perseverança e o Clamor pelo Retorno do Rei.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Oração de Guerra — Jejum, Intercessão Estratégica e Mapeamento Espiritual",
+      "description": "Volume 6 da série O Fio do Trono. A oração como ato de batalha. O jejum que quebra fortalezas. Intercessão territorial e estratégica. O modelo de Daniel 9 e 10. A oração que move os exércitos angelicais.",
+      "category": "ferramentas-espirituais",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - o fio do trono/Ebook 6 -  A Oração de Guerra — Jejum, Intercessão Estratégica e Mapeamento Espiritual.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Oração de Jesus — O Pai Nosso e o Clamor do Filho",
+      "description": "Volume 3 da série O Fio do Trono. A vida de oração de Jesus nos Evangelhos. O Pai Nosso como a oração do Reino. A oração sacerdotal de João 17. O Getsêmani. A oração no Nome de Jesus e a intercessão celestial de Cristo.",
+      "category": "Série — O Fio do Trono",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - o fio do trono/Ebook 3 - A Oração de Jesus — O Pai Nosso e o Clamor do Filho.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Oração na Biblioteca Mental de Paulo — Súplica, Ações de Graças e Intercessão",
+      "description": "Volume 4 da série O Fio do Trono. A vida de oração do apóstolo Paulo. Suas orações registradas nas cartas, a teologia da súplica incessante, a intercessão como combate e a prática devocional que sustentou a missão aos gentios.",
+      "category": "Série — O Fio do Trono",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - o fio do trono/Ebook 4 - A Oração na Biblioteca Mental de Paulo — Súplica, Ações de Graças e Intercessão.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "A Oração no Segundo Templo — Sinagogas, Qumran e a Expectativa Messiânica",
+      "description": "Volume 2 da série O Fio do Trono. A evolução da oração no período intertestamentário: sinagogas, Qumran, literatura apocalíptica e a expectativa messiânica que moldou a oração do remanescente.",
+      "category": "Série — O Fio do Trono",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - o fio do trono/Ebook 2 -  A Oração no Segundo Templo — Sinagogas, Qumran e a Expectativa Messiânica.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "Ebook 5 - O Escudo da Fé",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - a armadura do remanescente/Ebook 5 - O Escudo da Fé.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "O Fundamento da Oração — O Diálogo da Aliança",
+      "description": "Volume 1 da série O Fio do Trono. A oração como aliança falada: da primeira invocação em Gênesis ao altar de incenso do Tabernáculo. Uma jornada pelas raízes hebraicas da oração bíblica para o remanescente que quer profundidade.",
+      "category": "Série — O Fio do Trono",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - o fio do trono/Ebook 1 - o fundamento da oracao.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "O Ritmo da Criação — As Origens do Sábado",
+      "description": "O sábado não foi inventado no Sinai. Foi instituído no Éden, antes do pecado, antes da fadiga. Este ebook revela o sábado como ritmo cósmico, proteção espiritual e antegozo do descanso eterno.",
+      "category": "ferramentas-espirituais",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - as origens do sabado/Ebook - O Ritmo da Criação — As Origens do Sábado.md"
+    },
+    {
+      "theme": "BATALHA ESPIRITUAL",
+      "themeSlug": "batalha-espiritual",
+      "title": "Oração no Espírito — A Intercessão do Espírito e o Falar em Línguas",
+      "description": "Volume 5 da série O Fio do Trono. O papel do Espírito Santo na oração. Romanos 8:26-27, o dom de línguas em 1 Coríntios 14, a edificação espiritual e a oração carismática na igreja primitiva.",
+      "category": "ferramentas-espirituais",
+      "subsecao": "",
+      "file": "batalha-espiritual/serie - o fio do trono/Ebook 5 - Oração no Espírito — A Intercessão do Espírito e o Falar em Línguas.md"
+    },
+    {
+      "theme": "COSMOLOGIA BÍBLICA",
+      "themeSlug": "cosmologia-biblica",
+      "title": "A Mesa do Rei — O Banquete das Bodas do Cordeiro",
+      "description": "Sétimo e último volume da série TERRA PLANA: O Tabernáculo, o Trono e a Mesa do Rei. Explora a tipologia da mesa e do banquete nas Escrituras, culminando na Ceia das Bodas do Cordeiro e na comunhão eterna dos redimidos no cosmos plano restaurado.",
+      "category": "cosmologia-biblica",
+      "subsecao": "",
+      "file": "cosmologia-biblica/serie - terra plana/Ebook 7 - A Mesa do Rei — O Banquete das Bodas do Cordeiro.md"
+    },
+    {
+      "theme": "COSMOLOGIA BÍBLICA",
+      "themeSlug": "cosmologia-biblica",
+      "title": "A Sombra do Corpo e o Templo Humano",
+      "description": "Quarto volume da série TERRA PLANA: O Tabernáculo, o Trono e a Mesa do Rei. Investiga a tipologia antropológica do cosmos plano, mostrando como o corpo humano é um microcosmo do tabernáculo e como a redenção em Cristo restaura a estrutura templária do ser humano.",
+      "category": "cosmologia-biblica",
+      "subsecao": "",
+      "file": "cosmologia-biblica/serie - terra plana/Ebook 4 - a  Sombra do Corpo e o Templo Humano.md"
+    },
+    {
+      "theme": "COSMOLOGIA BÍBLICA",
+      "themeSlug": "cosmologia-biblica",
+      "title": "O Cosmos como Tabernáculo",
+      "description": "Primeiro volume da série TERRA PLANA: O Tabernáculo, o Trono e a Mesa do Rei. Investiga como o santuário de Israel revela uma cosmologia bíblica de terra plana sob um firmamento sólido, usando tipologia controlada e a cosmovisão do Segundo Templo.",
+      "category": "cosmologia-biblica",
+      "subsecao": "",
+      "file": "cosmologia-biblica/serie - terra plana/Ebook 1 - O Cosmos como Tabernáculo.md"
+    },
+    {
+      "theme": "COSMOLOGIA BÍBLICA",
+      "themeSlug": "cosmologia-biblica",
+      "title": "O Dragão, o Abismo e a Besta",
+      "description": "Quinto volume da série TERRA PLANA: O Tabernáculo, o Trono e a Mesa do Rei. Investiga a topografia da guerra espiritual no cosmos plano, mapeando o Abismo, o Tártaro, o Sheol e o Lago de Fogo, e expondo a hierarquia do adversário e sua derrota final.",
+      "category": "cosmologia-biblica",
+      "subsecao": "",
+      "file": "cosmologia-biblica/serie - terra plana/Ebook 5 - O Dragão, o Abismo e a Best.md"
+    },
+    {
+      "theme": "COSMOLOGIA BÍBLICA",
+      "themeSlug": "cosmologia-biblica",
+      "title": "O Monte do Encontro e as Fronteiras do Sagrado",
+      "description": "Segundo volume da série TERRA PLANA: O Tabernáculo, o Trono e a Mesa do Rei. Este volume investiga a tipologia locativa das montanhas sagradas como eixos de conexão cósmica, a divisão territorial das nações no plano terrestre e a geografia da guerra espiritual, revelando a centralidade do plano horizontal no governo divino.",
+      "category": "cosmologia-biblica",
+      "subsecao": "",
+      "file": "cosmologia-biblica/serie - terra plana/Ebook 2 - O Monte do Encontro e as Fronteiras do Sagrado.md"
+    },
+    {
+      "theme": "COSMOLOGIA BÍBLICA",
+      "themeSlug": "cosmologia-biblica",
+      "title": "O Reino de Pedra — O Monte que Enche a Terra",
+      "description": "Sexto volume da série TERRA PLANA: O Tabernáculo, o Trono e a Mesa do Rei. Explora a consumação do Reino de Deus, a profecia da pedra que se torna monte, a descida da Nova Jerusalém e a restauração final do cosmos plano como templo eterno.",
+      "category": "cosmologia-biblica",
+      "subsecao": "",
+      "file": "cosmologia-biblica/serie - terra plana/Ebook 6 - O Reino de Pedra — O Monte que Enche a Terra.md"
+    },
+    {
+      "theme": "COSMOLOGIA BÍBLICA",
+      "themeSlug": "cosmologia-biblica",
+      "title": "O Relógio do Rei: A Mesa, o Tempo e o Pão da Presença",
+      "description": "Terceiro volume da série TERRA PLANA: O Tabernáculo, o Trono e a Mesa do Rei. Investiga como o calendário bíblico, os ciclos das festas e a Mesa da Proposição revelam uma cronologia cósmica para uma terra plana governada pelo trono de Deus.",
+      "category": "cosmologia-biblica",
+      "subsecao": "",
+      "file": "cosmologia-biblica/serie - terra plana/Ebook 3 - A Mesa, o Tempo e o Pão da Presença.md"
+    },
+    {
+      "theme": "ESPÍRITO SANTO",
+      "themeSlug": "espirito-santo",
+      "title": "A Blasfêmia Contra a Ruach — As Sombras da Blasfêmia nas Escrituras de Israel",
+      "description": "Segundo volume da série sobre o pecado imperdoável. As figuras do Antigo Testamento que prefiguraram a blasfêmia contra o Espírito: Nadabe e Abiú, Faraó, Corá, Saul e os espias incrédulos. O que essas sombras revelam sobre o pecado que não tem perdão.",
+      "category": "espirito santo",
+      "subsecao": "",
+      "file": "espirito-santo/serie - a blasfemia contra o ruah/Ebook 2 - As Sombras da Blasfêmia nas Escrituras de Israel.md"
+    },
+    {
+      "theme": "ESPÍRITO SANTO",
+      "themeSlug": "espirito-santo",
+      "title": "A Blasfêmia Contra a Ruach — O Que Jesus Realmente Disse",
+      "description": "Primeiro volume da série sobre o pecado imperdoável contra o Espírito Santo. Análise dos três relatos dos Evangelhos. Para quem carrega o terror de ter cometido o pecado sem perdão e precisa ouvir o que Jesus realmente ensinou.",
+      "category": "espirito santo",
+      "subsecao": "",
+      "file": "espirito-santo/serie - a blasfemia contra o ruah/Ebook 1 - O Que Jesus Realmente Disse.md"
+    },
+    {
+      "theme": "ESPÍRITO SANTO",
+      "themeSlug": "espirito-santo",
+      "title": "A Blasfêmia Contra a Ruach — O Que Jesus Realmente Disse",
+      "description": "Primeiro volume da série sobre o pecado imperdoável contra o Espírito Santo. Análise cuidadosa dos três relatos dos Evangelhos à luz das Escrituras de Israel. Para quem carrega o terror de ter cometido o pecado sem perdão e precisa ouvir o que Jesus realmente ensinou.",
+      "category": "espirito santo",
+      "subsecao": "",
+      "file": "espirito-santo/serie - a blasfemia contra o ruah/Ebook 2 - O Que Jesus Realmente Disse.md"
+    },
+    {
+      "theme": "ESPÍRITO SANTO",
+      "themeSlug": "espirito-santo",
+      "title": "Ruach — A Nuvem e o Fogo: O Guia no Deserto",
+      "description": "Terceiro volume da série que recupera a Pessoa esquecida do Espírito Santo através das tipologias do Antigo Testamento. A coluna de nuvem e a coluna de fogo revelam o Espírito como Guia, Protetor e Presença Shekinah que nunca abandona o remanescente no deserto.",
+      "category": "espirito santo",
+      "subsecao": "",
+      "file": "espirito-santo/serie - ruah - a pessoa esquecida da divindade/Ebook 3 - Ruach — A Nuvem e o Fogo O Guia no Deserto.md"
+    },
+    {
+      "theme": "ESPÍRITO SANTO",
+      "themeSlug": "espirito-santo",
+      "title": "Ruach — O Óleo que Desce da Cabeça de Arão",
+      "description": "Segundo volume da série que recupera a Pessoa esquecida do Espírito Santo através das tipologias do Antigo Testamento. O óleo da unção revela a dimensão mais concreta do Espírito: Ele é o Óleo que sara, separa, capacita e identifica os filhos do Reino.",
+      "category": "espirito santo",
+      "subsecao": "",
+      "file": "espirito-santo/serie - ruah - a pessoa esquecida da divindade/Ebook 2 - Ruach — O Óleo que Desce da Cabeça de Arão.md"
+    },
+    {
+      "theme": "ESPÍRITO SANTO",
+      "themeSlug": "espirito-santo",
+      "title": "Ruach — O Selo e o Penhor: A Garantia da Herança",
+      "description": "Quarto volume da série que recupera a Pessoa esquecida do Espírito Santo através das tipologias do Antigo Testamento. A circuncisão, o sábado e o jubileu revelam o Espírito como o Selo e o Penhor que garantem a herança irrevogável do remanescente.",
+      "category": "espirito santo",
+      "subsecao": "",
+      "file": "espirito-santo/serie - ruah - a pessoa esquecida da divindade/Ebook 4 - Ruach — O Selo e o Penhor A Garantia da Herança.md"
+    },
+    {
+      "theme": "ESPÍRITO SANTO",
+      "themeSlug": "espirito-santo",
+      "title": "Ruach — O Sopro nos Ossos Secos: A Nova Criação",
+      "description": "Quinto e último volume da série que recupera a Pessoa esquecida do Espírito Santo através das tipologias do Antigo Testamento. Do vale de ossos secos de Ezequiel à Nova Jerusalém, o Espírito se revela como o poder da ressurreição e o agente da nova criação.",
+      "category": "espirito santo",
+      "subsecao": "",
+      "file": "espirito-santo/serie - ruah - a pessoa esquecida da divindade/Ebook 5 - Ruach — O Sopro nos Ossos Secos A Nova Criação.md"
+    },
+    {
+      "theme": "ESPÍRITO SANTO",
+      "themeSlug": "espirito-santo",
+      "title": "Ruach — O Sopro que Pairou sobre as Águas",
+      "description": "Primeiro volume da série que recupera a Pessoa esquecida do Espírito Santo através das tipologias do Antigo Testamento. Água, vento, pomba e sopro revelam quem é a Ruach de Deus, muito além do que a teologia institucionalizada conseguiu enxergar.",
+      "category": "espirito santo",
+      "subsecao": "",
+      "file": "espirito-santo/serie - ruah - a pessoa esquecida da divindade/Ebook 1 - Ruach — O Sopro que Pairou sobre as Águas.md"
+    },
+    {
+      "theme": "FIM DOS TEMPOS",
+      "themeSlug": "fim-dos-tempos",
+      "title": "A Casa de Muitas Moradas — Paraíso, Hades e a Geografia do Além",
+      "description": "O que acontece imediatamente após a morte? Este ebook investiga a geografia espiritual do além na literatura apocalíptica judaica: o Seio de Abraão, o Hades, a psicostasia, os sete céus, e o Paraíso.",
+      "category": "Série — A Revelação do Século",
+      "subsecao": "",
+      "file": "fim-dos-tempos/serie - a revelacao do seculo/Ebook 4 - A Casa de Muitas Moradas — Paraíso, Hades e a Geografia do Além.md"
+    },
+    {
+      "theme": "FIM DOS TEMPOS",
+      "themeSlug": "fim-dos-tempos",
+      "title": "A Guerra dos Dois Espíritos — O Rolo da Guerra de Qumran e o Armagedom",
+      "description": "Antes do Apocalipse, os essênios de Qumran já haviam descrito a batalha final entre os filhos da luz e os filhos das trevas. Este ebook revela o Rolo da Guerra (1QM), o papel de Belial e Melquisedeque, e a visão judaica da guerra escatológica que moldou o Novo Testamento.",
+      "category": "Série — A Revelação do Século",
+      "subsecao": "",
+      "file": "fim-dos-tempos/serie - a revelacao do seculo/Ebook 5 - A Guerra dos Dois Espíritos — O Rolo da Guerra de Qumran e o Armagedom.md"
+    },
+    {
+      "theme": "FIM DOS TEMPOS",
+      "themeSlug": "fim-dos-tempos",
+      "title": "A Nova Jerusalém — A Consumação do Reino e o Fim do Tempo",
+      "description": "O fim de todas as coisas é o começo de tudo o que foi prometido. Este ebook final da série escatológica explora a Nova Jerusalém, a ressurreição dos mortos, o fim do tempo e o sábado eterno — a esperança que aguarda o remanescente.",
+      "category": "Série — A Revelação do Século",
+      "subsecao": "",
+      "file": "fim-dos-tempos/serie - a revelacao do seculo/Ebook 6 - A Nova Jerusalém — A Consumação do Reino e o Fim do Tempo.md"
+    },
+    {
+      "theme": "FIM DOS TEMPOS",
+      "themeSlug": "fim-dos-tempos",
+      "title": "A Queda de Babilônia — O Julgamento dos Impérios nos Apocalipses Judaicos",
+      "description": "Roma é chamada de Babilônia nos apocalipses judaicos. Este ebook revela como os Oráculos Sibilinos, 4 Esdras, 2 Baruque e o Apocalipse de Abraão profetizaram a queda do império romano — e como esses textos iluminam o julgamento final.",
+      "category": "Série — A Revelação do Século",
+      "subsecao": "",
+      "file": "fim-dos-tempos/serie - a revelacao do seculo/Ebook 3 - A Queda de Babilônia — O Julgamento dos Impérios nos Apocalipses Judaicos.md"
+    },
+    {
+      "theme": "FIM DOS TEMPOS",
+      "themeSlug": "fim-dos-tempos",
+      "title": "As Festas que Disparam o Fim — Trombetas, Expiação e Tabernáculos",
+      "description": "Yom Teruah, Yom Kippur e Sukkot não são apenas símbolos. São os gatilhos temporais da contagem regressiva final. Este ebook revela o cronograma escatológico inscrito nas Festas de Outono.",
+      "category": "fim-dos-tempos",
+      "subsecao": "",
+      "file": "fim-dos-tempos/serie - o relogio escatologico/Ebook 3 - As Festas que Disparam o Fim — Trombetas, Expiação e Tabernáculos.md"
+    },
+    {
+      "theme": "FIM DOS TEMPOS",
+      "themeSlug": "fim-dos-tempos",
+      "title": "O Calendário que Cronometra o Fim — Como o Tempo de Deus Revela a Estação Escatológica",
+      "description": "O calendário de 364 dias não é apenas liturgia; é o cronômetro da história. Este ebook revela como Qumran usava o verdadeiro calendário para projetar o fim dos tempos, e como podemos discernir a estação escatológica sem dogmatizar datas.",
+      "category": "fim-dos-tempos",
+      "subsecao": "",
+      "file": "fim-dos-tempos/serie - o relogio escatologico/Ebook 1 - O Calendário que Cronometra o Fim — Como o Tempo de Deus Revela a Estação Escatológica.md"
+    },
+    {
+      "theme": "FIM DOS TEMPOS",
+      "themeSlug": "fim-dos-tempos",
+      "title": "O Despertar dos Vigilantes — O Julgamento Cósmico Como Modelo Escatológico",
+      "description": "Antes do Armagedom, anjos foram julgados. Este ebook revela como a queda dos Vigilantes serve como o arquétipo para o Juízo Final. Explore a escatologia do Yom Kippur, a psicostasia, o Messias nos apócrifos e a visão do fim dos tempos na literatura do Segundo Templo.",
+      "category": "Série — A Revelação do Século",
+      "subsecao": "",
+      "file": "fim-dos-tempos/serie - a revelacao do seculo/Ebook 1 - O Despertar dos Vigilantes — O Julgamento Cósmico Como Modelo Escatológico.md"
+    },
+    {
+      "theme": "FIM DOS TEMPOS",
+      "themeSlug": "fim-dos-tempos",
+      "title": "O Metrônomo dos Jubileus — A Estrutura Oculta da História",
+      "description": "Os jubileus de 49 anos são o relógio interno da história. Este ebook revela como os ciclos de Levítico 25, Daniel 9 e a tradição dos 6.000 anos do Talmud se conectam, mostrando como podemos reconhecer a estação escatológica.",
+      "category": "fim-dos-tempos",
+      "subsecao": "",
+      "file": "fim-dos-tempos/serie - o relogio escatologico/Ebook 2 - O Metrônomo dos Jubileus — A Estrutura Oculta da História.md"
+    },
+    {
+      "theme": "FIM DOS TEMPOS",
+      "themeSlug": "fim-dos-tempos",
+      "title": "O Selo dos 490 Anos — O Cronograma Mestre da História",
+      "description": "As 70 semanas de Daniel são o calendário profético que governa a história da redenção. Este ebook revela como o relógio das 70 semanas foi programado, como foi corrompido, e o que ainda resta para se cumprir.",
+      "category": "Série — A Revelação do Século",
+      "subsecao": "",
+      "file": "fim-dos-tempos/serie - a revelacao do seculo/Ebook 2 - O Selo dos 490 Anos — O Cronograma Mestre da História.md"
+    },
+    {
+      "theme": "FIM DOS TEMPOS",
+      "themeSlug": "fim-dos-tempos",
+      "title": "O Sétimo Milênio — O Descanso que Aguarda o Povo de Deus",
+      "description": "O sétimo milênio é o grande descanso sabático da história. Este ebook final da série revela a tradição dos seis mil anos, o milênio escatológico, e a eternidade sem tempo que aguarda os redimidos.",
+      "category": "fim-dos-tempos",
+      "subsecao": "",
+      "file": "fim-dos-tempos/serie - o relogio escatologico/Ebook - O Sétimo Milênio — O Descanso que Aguarda o Povo de Deus.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "A Árvore do Conhecimento",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/serie - o codigo do jardim/Ebook 01 - A Árvore do Conhecimento.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "A Babel Invertida",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/serie - o codigo do jardim/Ebook 03 -  Babel Invertida.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "A Convergência dos Tempos",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/serie - o codigo das eras/Ebook 5 - A Convergência dos Tempos.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "A Dança dos Ciclos",
+      "description": "A precessão dos equinócios e o calendário de Deus em uma leitura bíblica dos ciclos do tempo.",
+      "category": "Série — O Código das Eras",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/serie - o codigo das eras/Ebook 2 - A Dança dos Ciclos.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "A Imagem que Fala",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/Trilogia - a Marca/02_A_Marca - Livro 2 - A Imagem que Fala.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "A Sabedoria do Deserto",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/Trilogia - a Marca/02_A_Marca - Livro 3 - A Sabedoria do Deserto.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "A Voz dos Nefilins",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/trilogia - o veu rasgado/Ebook 3 - A Voz dos Nefilins.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "Aquário",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/serie - o codigo das eras/Ebook 4 - A Era do Conhecimento Derramado e o Retorno do Rei.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "As Partículas Fantasmas do Abismo",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/trilogia - o veu rasgado/Ebook 2 - As Partículas Fantasmas do Abismo.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "O Algoritmo que Prevê Tudo — Como as Redes Sociais Imitam a Onisciência",
+      "description": "Os algoritmos de redes sociais coletam seus dados, inferem seus padrões e prevêem seus comportamentos — às vezes melhor do que você mesmo. Este ebook analisa a tecnologia por trás da vigilância digital e mostra como ela imita o método de inferência de Satanás.",
+      "category": "Série — A Onisciência como Atributo Exclusivo",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/serie - a onisciencia como atributo exclusivo/Ebook 2 - O Algoritmo que Prevê Tudo — Como as Redes Sociais Imitam a Onisciência.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "O Conselheiro Silenciado",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/serie - o codigo do jardim/Ebook 04 - O Conselheiro Silenciado.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "O Deus Que Sabe Tudo — A Onisciência como Atributo Exclusivo",
+      "description": "Deus conhece todas as coisas — passado, presente e futuro. Satanás, não. Ele infere, deduz, mas não sabe. Este ebook estabelece a base teológica para entender a diferença entre o conhecimento absoluto de Deus e o conhecimento inferido do inimigo — e como os algoritmos imitam essa segunda forma.",
+      "category": "Série — A Onisciência como Atributo Exclusivo",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/serie - a onisciencia como atributo exclusivo/Ebook 1 - O Deus Que Sabe Tudo — A Onisciência como Atributo Exclusivo.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "O Nome da Besta",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/Trilogia - a Marca/02_A_Marca - Livro 1 - O Nome da Besta.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "O Nome da Criatura",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/serie - o codigo do jardim/Ebook 02 - O Nome da Criatura.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "O Reino que Não Terá Fim",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/serie - o codigo das eras/Ebook 6 - O Reino que Não Terá Fim.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "O Relógio de Deus",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/serie - o codigo das eras/Ebook 1 - O Relógio de Deus.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "O Zigurate de Silício",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/trilogia - o veu rasgado/Ebook 1 - O Zigurate de Silício.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "Peixes",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/serie - o codigo das eras/Ebook 3 - A Era do Cordeiro Oculto e a Fé Perseguida.md"
+    },
+    {
+      "theme": "IA & APOCALIPSE",
+      "themeSlug": "ia-e-apocalipse",
+      "title": "Viver em Vigilância — Discernimento Espiritual na Era da Informação",
+      "description": "Em um mundo onde algoritmos prevêem seus passos e o inimigo infere suas fraquezas, como viver como cristão sem medo? Este ebook final da trilogia oferece discernimento prático, disciplinas espirituais e estratégias para proteger sua alma na era digital.",
+      "category": "Série — A Onisciência como Atributo Exclusivo",
+      "subsecao": "",
+      "file": "ia-e-apocalipse/serie - a onisciencia como atributo exclusivo/Ebook 3 - Viver em Vigilância — Discernimento Espiritual na Era da Informação.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "A Descida ao Hades — A Pregação aos Espíritos em Prisão",
+      "description": "O que Jesus fez nas profundezas entre sua morte e ressurreição? Uma investigação sobre a descida ao Hades, a proclamação aos Vigilantes aprisionados e o triunfo sobre o reino dos mortos.",
+      "category": "Série — A Cruz no Mundo Espiritual",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - a cruz no mundo espiritual/Ebook 3 - A Descida ao Hades — A Pregação aos Espíritos em Prisão.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "A Intercessão que Não Cessa — Cristo como Sumo Sacerdote em Operação",
+      "description": "O que Jesus está fazendo agora, neste exato momento, no trono da graça? Uma investigação sobre a intercessão contínua do Sumo Sacerdote celestial e como ela sustenta a Igreja.",
+      "category": "mundo-espiritual",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - a cruz no mundo espiritual/Ebook 8 - A Intercessão que Não Cessa — Cristo como Sumo Sacerdote em Operação.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "A Vitória sobre os Principados — O Despojo das Hostes Espirituais",
+      "description": "Como a cruz desarmou as hierarquias espirituais da maldade, expôs sua derrota e transferiu a autoridade cósmica para o Cordeiro. Uma investigação sobre Colossenses 2:15 e a batalha invisível.",
+      "category": "Série — A Cruz no Mundo Espiritual",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - a cruz no mundo espiritual/Ebook 4 - A Vitória sobre os Principados — O Despojo das Hostes Espirituais.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "As Três Horas de Trevas — O Dia que Virou Noite",
+      "description": "O que as três horas de escuridão sobre o Calvário revelam sobre o mundo espiritual, o julgamento cósmico e a resposta da criação à morte do seu Criador.",
+      "category": "Série — A Cruz no Mundo Espiritual",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - a cruz no mundo espiritual/Ebook 1 - As Três Horas de Trevas — O Dia que Virou Noite.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "Belial Desarmado — O Fim do Império do Acusador",
+      "description": "Como a cruz aniquilou aquele que tinha o império da morte, desarmou o acusador e transferiu as chaves do Hades para as mãos do Cordeiro.",
+      "category": "Série — A Cruz no Mundo Espiritual",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - a cruz no mundo espiritual/Ebook 5 - Belial Desarmado — O Fim do Império do Acusador.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "Invasão Legal — Volume 1 — O Decreto Pregado na Cruz: Desmascarando os Poderes",
+      "description": "A Cruz não foi um resgate pago a Satanás. Foi a execução pública de uma sentença judicial que desarmou principados e potestades. Baseado em Colossenses 2:14-15 e 11QMelch, este volume revela o fundamento legal da vitória cósmica.",
+      "category": "Série — Invasão Legal",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - invasao legal/Ebook 1 - O Decreto Pregado na Cruz Desmascarando os Poderes.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "Invasão Legal — Volume 2 — A Queda de Satanás: Apocalipse 12 e a Expulsão do Acusador",
+      "description": "Apocalipse 12 descreve uma guerra cósmica e a expulsão definitiva do Acusador. Mas quando essa guerra ocorreu? Quem são os combatentes? E como essa vitória celestial se manifesta na vida da Igreja? Baseado em Apocalipse 12, Daniel e 1QM, este volume revela a execução da sentença da Cruz nos lugares celestiais.",
+      "category": "Série — Invasão Legal",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - invasao legal/Ebook 2 - A Queda de Satanás Apocalipse 12 e a Expulsão do Acusador.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "Invasão Legal — Volume 3 — Emboscada aos Vigilantes: Por que Jesus Pregou aos Espíritos em Prisão",
+      "description": "Para onde Jesus foi entre Sua morte e ressurreição? O que Ele proclamou aos \"espíritos em prisão\"? Baseado em 1 Pedro 3:19-20 e 1 Enoque 12-16, este volume revela a missão de Cristo ao Tártaro para notificar os Vigilantes de sua derrota final.",
+      "category": "Série — Invasão Legal",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - invasao legal/Ebook 3 - Emboscada aos Vigilantes Por que Jesus Pregou aos Espíritos em Prisão.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "Invasão Legal — Volume 4 — O Trono do Ar: Ocupação Territorial e a Autoridade do Crente",
+      "description": "Como a Igreja exerce a autoridade delegada de Cristo para ocupar o território do \"ar\", a esfera de influência do príncipe da potestade do ar. Baseado em Efésios 2:2, Lucas 10:19 e na Grande Comissão, este volume revela as estratégias de ocupação territorial do Reino.",
+      "category": "Série — Invasão Legal",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - invasao legal/eBOOK 4 - O Trono do Ar Ocupação Territorial e a Autoridade do Crente.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "Invasão Legal — Volume 5 — Armas da Luz: O Manual de Combate do Remanescente",
+      "description": "Quais são as armas ofensivas e defensivas do guerreiro espiritual? Baseado em Efésios 6, Sabedoria de Salomão 5 e na tradição de Qumran, este volume abre o arsenal da luz: a Palavra, o louvor, o jejum, a oração no Espírito, o sangue do Cordeiro e o testemunho.",
+      "category": "Série — Invasão Legal",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - invasao legal/Ebook 5 - Armas da Luz O Manual de Combate do Remanescente.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "Invasão Legal — Volume 6 — A Sessão do Tribunal: O Veredito Final e a Execução da Sentença",
+      "description": "O clímax da guerra cósmica: o Grande Trono Branco. Baseado em Apocalipse 20, Daniel 7 e 1 Enoque, este volume revela o julgamento final de Satanás, dos Vigilantes, dos Sarim e dos ímpios, e a execução da sentença definitiva no Lago de Fogo.",
+      "category": "Série — Invasão Legal",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - invasao legal/Ebook 6 - A Sessão do Tribunal - O Veredito Final e a Execução da Sentença.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "Invasão Legal — Volume 7 — Novos Céus e Nova Terra: A Habitação da Justiça",
+      "description": "O desfecho glorioso da guerra cósmica. Baseado em Apocalipse 21-22, Isaías 65-66 e 1 Enoque, este volume contempla a Nova Jerusalém, o rio da vida, a árvore da vida e a cura das nações — a eternidade de paz e justiça.",
+      "category": "Série — Invasão Legal",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - invasao legal/Ebook 7 - Novos Céus e Nova Terra A Habitação da Justiça.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "O Grito de Vitória — As Palavras Finais de Jesus como Operações Cósmicas",
+      "description": "As sete frases de Jesus na cruz não foram apenas palavras de um moribundo. Foram decretos que abalaram o cosmos, transformaram o mundo espiritual e consumaram a redenção.",
+      "category": "mundo-espiritual",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - a cruz no mundo espiritual/Ebook 11 - O Grito de Vitória — As Palavras Finais de Jesus como Operações Cósmicas.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "O Sangue no Trono da Graça — A Purificação do Santuário Celestial",
+      "description": "O que aconteceu no céu quando o sangue de Cristo foi apresentado no propiciatório celestial? Como o tabernáculo eterno foi purificado e o trono de juízo tornou-se trono de graça.",
+      "category": "mundo-espiritual",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - a cruz no mundo espiritual/Ebook 6 - O Sangue no Trono da Graça — A Purificação do Santuário Celestial.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "O Sangue que Fala Melhor — A Voz do Sangue de Cristo",
+      "description": "O sangue de Abel clamava por justiça. O sangue de Cristo clama por misericórdia. O que a voz do sangue derramado proclama no céu, na terra e na consciência?",
+      "category": "mundo-espiritual",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - a cruz no mundo espiritual/Ebook 9 - O Sangue que Fala Melhor — A Voz do Sangue de Cristo.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "O Terremoto e as Rochas Partidas — A Criação Responde ao seu Criador",
+      "description": "Quando Jesus morreu, a terra tremeu, as rochas se partiram e os sepulcros se abriram. O que esses fenômenos revelam sobre a resposta do cosmos à crucificação do seu Criador?",
+      "category": "mundo-espiritual",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - a cruz no mundo espiritual/Ebook 10 - O Terremoto e as Rochas Partidas — A Criação Responde ao seu Criador.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "O Último Inimigo — A Destruição Final da Morte e a Consumação do Reino",
+      "description": "A cruz venceu a morte, mas ainda não a destruiu. O que a Bíblia revela sobre o fim da Morte, a ressurreição final, o lago de fogo e a entrega do reino ao Pai?",
+      "category": "mundo-espiritual",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - a cruz no mundo espiritual/Ebook 12 - O Último Inimigo — A Destruição Final da Morte e a Consumação do Reino.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "O Véu Rasgado — O Fim do Acesso Restrito",
+      "description": "O rasgar do véu do templo no momento da morte de Cristo não foi um detalhe arquitetônico. Foi o fim de uma era cósmica e a abertura definitiva do caminho para a presença de Deus.",
+      "category": "Série — A Cruz no Mundo Espiritual",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - a cruz no mundo espiritual/Ebook 2 - O Véu Rasgado — O Fim do Acesso Restrito.md"
+    },
+    {
+      "theme": "JESUS CRISTO",
+      "themeSlug": "jesus-cristo",
+      "title": "Os Santos da Ressurreição — As Primícias que Saíram dos Sepulcros",
+      "description": "Quem eram os santos que ressuscitaram quando Jesus morreu e apareceram em Jerusalém? Uma investigação sobre Mateus 27:52-53 e o primeiro fruto visível da vitória de Cristo sobre a morte.",
+      "category": "mundo-espiritual",
+      "subsecao": "",
+      "file": "jesus-cristo/serie - a cruz no mundo espiritual/Ebook 7 - Os Santos da Ressurreição — As Primícias que Saíram dos Sepulcros.md"
+    },
+    {
+      "theme": "MUNDO ESPIRITUAL",
+      "themeSlug": "mundo-espiritual",
+      "title": "A Cidade e o Jardim",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "mundo-espiritual/serie - sombras do reino de deus/Ebook 02 - A Cidade e o Jardim.md"
+    },
+    {
+      "theme": "MUNDO ESPIRITUAL",
+      "themeSlug": "mundo-espiritual",
+      "title": "A Escada de Enoque — A Viagem Completa pelos Sete Céus",
+      "description": "Enoque foi levado ao mais alto céu e transformado em ser celestial. Este ebook revela a ascensão mais detalhada da literatura apocalíptica: 2 Enoque e a geografia completa dos sete céus.",
+      "category": "Série — O Terceiro Céu de Paulo",
+      "subsecao": "",
+      "file": "mundo-espiritual/serie - o terceiro ceu de paulo/Ebook 4 - A Escada de Enoque — A Viagem Completa pelos Sete Céus.md"
+    },
+    {
+      "theme": "MUNDO ESPIRITUAL",
+      "themeSlug": "mundo-espiritual",
+      "title": "A Jornada e o Mistério",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "mundo-espiritual/serie - sombras do reino de deus/Ebook 4 - A Jornada e o Mistério.md"
+    },
+    {
+      "theme": "MUNDO ESPIRITUAL",
+      "themeSlug": "mundo-espiritual",
+      "title": "As Províncias e os Governantes",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "mundo-espiritual/serie - sombras do reino de deus/Ebook - 03As Províncias e os Governantes.md"
+    },
+    {
+      "theme": "MUNDO ESPIRITUAL",
+      "themeSlug": "mundo-espiritual",
+      "title": "Do Segundo ao Quinto Céu — O Testemunho de Baruque",
+      "description": "Baruque, o escriba de Jeremias, foi levado aos céus e testemunhou o castigo dos construtores de Babel, a carruagem do sol, e a serpente primordial. Este ebook revela a geografia espiritual do juízo no Segundo Templo.",
+      "category": "Série — O Terceiro Céu de Paulo",
+      "subsecao": "",
+      "file": "mundo-espiritual/serie - o terceiro ceu de paulo/Ebook 2 - Do Segundo ao Quinto Céu — O Testemunho de Baruque.md"
+    },
+    {
+      "theme": "MUNDO ESPIRITUAL",
+      "themeSlug": "mundo-espiritual",
+      "title": "O Primeiro Céu — A Viagem de Levi e o Templo Celestial",
+      "description": "Antes de Paulo, antes de João, um patriarca subiu aos céus e viu o templo celestial. O Testamento de Levi revela a hierarquia angelical, o sacerdócio celestial e a geografia do primeiro céu — a base esquecida da teologia de Hebreus.",
+      "category": "Série — O Terceiro Céu de Paulo",
+      "subsecao": "",
+      "file": "mundo-espiritual/serie - o terceiro ceu de paulo/Ebook 1 - O Primeiro Céu — A Viagem de Levi e o Templo Celestial.md"
+    },
+    {
+      "theme": "MUNDO ESPIRITUAL",
+      "themeSlug": "mundo-espiritual",
+      "title": "O Sexto e o Sétimo Céu — A Ascensão de Isaías",
+      "description": "Isaías foi levado através dos sete céus e viu o trono de Deus, a descida do Amado (Cristo) disfarçado de anjo, e a vitória sobre os principados. Este ebook revela a cosmologia mais cristológica da literatura apocalíptica.",
+      "category": "Série — O Terceiro Céu de Paulo",
+      "subsecao": "",
+      "file": "mundo-espiritual/serie - o terceiro ceu de paulo/Ebook 3 - O Sexto e o Sétimo Céu — A Ascensão de Isaías.md"
+    },
+    {
+      "theme": "MUNDO ESPIRITUAL",
+      "themeSlug": "mundo-espiritual",
+      "title": "O Terceiro Céu de Paulo — Topografia Cósmica do Apóstolo",
+      "description": "Paulo foi arrebatado ao terceiro céu e ouviu palavras inefáveis. Agora, com o mapa completo dos sete céus, podemos entender sua experiência — e o que ela significa para a guerra espiritual e a esperança cristã.",
+      "category": "Série — O Terceiro Céu de Paulo",
+      "subsecao": "",
+      "file": "mundo-espiritual/serie - o terceiro ceu de paulo/Ebook 5 - O Terceiro Céu de Paulo — Topografia Cósmica do Apóstolo.md"
+    },
+    {
+      "theme": "MUNDO ESPIRITUAL",
+      "themeSlug": "mundo-espiritual",
+      "title": "O Trono e o Templo",
+      "description": "",
+      "category": "",
+      "subsecao": "",
+      "file": "mundo-espiritual/serie - sombras do reino de deus/Ebook 01 - O Trono e o Templo.md"
+    },
+    {
+      "theme": "SATANÁS E DEMÔNIOS",
+      "themeSlug": "satanas-e-demonios",
+      "title": "A Queda do Querubim Ungido — Volume 1: O Querubim Ungido: Glória e Queda Primordial",
+      "description": "O nascimento do mal no conselho divino. Uma investigação bíblica e da literatura do Segundo Templo sobre a glória e a rebelião do querubim caído no Éden cósmico. A primeira rebelião, o Éden como templo e a semente prometida.",
+      "category": "satanas e demonios",
+      "subsecao": "",
+      "file": "satanas-e-demonios/serie - a queda do querubim ungido/Ebook 1 - Glória e Queda Primordial.yaml"
+    },
+    {
+      "theme": "SATANÁS E DEMÔNIOS",
+      "themeSlug": "satanas-e-demonios",
+      "title": "A Queda do Querubim Ungido — Volume 2: O Acusador no Conselho Divino",
+      "description": "Ha-Satan, os filhos de Deus e a corte celestial. Como o querubim caído se tornou o acusador oficial do conselho divino, e como Cristo o expulsou. Uma investigação sobre Jó, Zacarias e o trono de Yahweh.",
+      "category": "satanas e demonios",
+      "subsecao": "",
+      "file": "satanas-e-demonios/serie - a queda do querubim ungido/Ebook 2 - O Acusador no Conselho Divino.yaml"
+    },
+    {
+      "theme": "SATANÁS E DEMÔNIOS",
+      "themeSlug": "satanas-e-demonios",
+      "title": "A Queda do Querubim Ungido — Volume 3: A Segunda Rebelião: Os Vigilantes",
+      "description": "Gênesis 6, o Monte Hermon e a corrupção da criação. Como duzentos anjos caíram, geraram os Nefilim e exigiram o dilúvio — com aplicações para a guerra cósmica hoje.",
+      "category": "satanas e demonios",
+      "subsecao": "",
+      "file": "satanas-e-demonios/serie - a queda do querubim ungido/Ebook 3 - A Segunda Rebelião Os Vigilantes.yaml"
+    },
+    {
+      "theme": "SATANÁS E DEMÔNIOS",
+      "themeSlug": "satanas-e-demonios",
+      "title": "A Queda do Querubim Ungido — Volume 4: Os Nefilim e a Origem dos Demônios",
+      "description": "Híbridos, gigantes e espíritos desencarnados. A origem dos demônios segundo 1 Enoque, os exorcismos de Jesus e por que espíritos imundos buscam corpos e lugares — com aplicações para a libertação hoje.",
+      "category": "satanas e demonios",
+      "subsecao": "",
+      "file": "satanas-e-demonios/serie - a queda do querubim ungido/Ebook 4 - Os Nefilim e a Origem dos Demônios.yaml"
+    },
+    {
+      "theme": "SATANÁS E DEMÔNIOS",
+      "themeSlug": "satanas-e-demonios",
+      "title": "A Queda do Querubim Ungido — Volume 5: Babel e os Príncipes Territoriais",
+      "description": "A terceira rebelião — como as nações foram postas sob sarim e o que isso significa para a missão da Igreja. Geopolítica do mundo espiritual à luz de Deuteronômio 32, Salmo 82 e Daniel 10.",
+      "category": "satanas e demonios",
+      "subsecao": "",
+      "file": "satanas-e-demonios/serie - a queda do querubim ungido/Ebook 5 - Babel e os Príncipes Territoriais.yaml"
+    },
+    {
+      "theme": "SATANÁS E DEMÔNIOS",
+      "themeSlug": "satanas-e-demonios",
+      "title": "A Queda do Querubim Ungido — Volume 6: Belial: O Adversário Consumado",
+      "description": "A unificação das figuras adversariais em um único arqui-inimigo escatológico. Como Gadreel, Azazel, Mastema e Satanás convergem em Belial — e o confronto direto com Cristo no deserto.",
+      "category": "satanas e demonios",
+      "subsecao": "",
+      "file": "satanas-e-demonios/serie - a queda do querubim ungido/Ebook 6 - Belial O Adversário Consumado.yaml"
+    },
+    {
+      "theme": "SATANÁS E DEMÔNIOS",
+      "themeSlug": "satanas-e-demonios",
+      "title": "A Queda do Querubim Ungido — Volume 7: A Cruz como Sentença: A Derrota Jurídica",
+      "description": "Como a morte de Cristo desmantelou legalmente o poder do acusador. O decreto cravado, os principados despidos, o sumo sacerdote no Santo dos Santos — a anatomia jurídica da vitória.",
+      "category": "satanas e demonios",
+      "subsecao": "",
+      "file": "satanas-e-demonios/serie - a queda do querubim ungido/Ebook 7 - A Cruz como Sentença A Derrota Jurídica.yaml"
+    },
+    {
+      "theme": "SATANÁS E DEMÔNIOS",
+      "themeSlug": "satanas-e-demonios",
+      "title": "A Queda do Querubim Ungido — Volume 8: O Abismo, o Milênio e o Lago de Fogo",
+      "description": "A consumação do juízo. Do aprisionamento no abismo à destruição definitiva no lago de fogo — o destino final do querubim caído e de todos os seus aliados.",
+      "category": "satanas e demonios",
+      "subsecao": "",
+      "file": "satanas-e-demonios/serie - a queda do querubim ungido/Ebook 8 - O Abismo, o Milênio e o Lago de Fogo.yaml"
+    },
+    {
+      "theme": "SATANÁS E DEMÔNIOS",
+      "themeSlug": "satanas-e-demonios",
+      "title": "A Queda do Querubim Ungido — Volume 9 (Bônus): Discernimento Espiritual: Aplicações Práticas",
+      "description": "A guerra do dia a dia. Como resistir ao diabo, discernir os espíritos e viver a vitória de Cristo na prática. Baseado nas Regras de Hilel, nos 8 Tipos de Tipologia e na cosmovisão do Segundo Templo.",
+      "category": "satanas e demonios",
+      "subsecao": "",
+      "file": "satanas-e-demonios/serie - a queda do querubim ungido/Ebook 9 - Discernimento Espiritual Aplicações Práticas.yaml"
+    }
+  ]
+}

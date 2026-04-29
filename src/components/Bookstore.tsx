@@ -4,6 +4,16 @@ import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
 import { AppImage } from './AppImage';
+import {
+  SELAH_SUBSECTIONS_BY_THEME_TITLE,
+  SELAH_THEME_BY_TITLE,
+  SELAH_THEME_SLUG_BY_TITLE,
+  SELAH_THEME_TITLES_IN_ORDER,
+  resolveSelahSubsectionSlug,
+  resolveSelahSubsectionTitle,
+  resolveSelahThemeTitleFromSlug,
+  type SelahThemeTitle,
+} from '../config/selahStructure';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface BookItem {
@@ -18,56 +28,15 @@ interface BookItem {
   image?: string;
 }
 
-type SelahThemeName =
-  | 'JESUS CRISTO'
-  | 'IA & APOCALIPSE'
-  | 'SATANÁS E DEMÔNIOS'
-  | 'DEUS PAI'
-  | 'ESPÍRITO SANTO'
-  | 'BATALHA ESPIRITUAL'
-  | 'REINO DE DEUS'
-  | 'COSMOLOGIA BÍBLICA'
-  | 'MUNDO ESPIRITUAL'
-  | 'APÓCRIFOS'
-  | 'FIM DOS TEMPOS';
-
 interface SubsecaoAuditEntry {
   slug: string;
   title: string;
-  tema: SelahThemeName;
+  tema: SelahThemeTitle;
   category: string;
   subsecao?: string;
   reason: 'missing' | 'invalid';
   validSubsecoes: readonly string[];
 }
-
-const SELAH_THEMES_BY_FOLDER: Record<string, SelahThemeName> = {
-  'jesus-cristo': 'JESUS CRISTO',
-  'ia-e-apocalipse': 'IA & APOCALIPSE',
-  'satanas-e-demonios': 'SATANÁS E DEMÔNIOS',
-  'deus-pai': 'DEUS PAI',
-  'espirito-santo': 'ESPÍRITO SANTO',
-  'batalha-espiritual': 'BATALHA ESPIRITUAL',
-  'reino-de-deus': 'REINO DE DEUS',
-  'cosmologia-biblica': 'COSMOLOGIA BÍBLICA',
-  'mundo-espiritual': 'MUNDO ESPIRITUAL',
-  'apocrifos': 'APÓCRIFOS',
-  'fim-dos-tempos': 'FIM DOS TEMPOS',
-};
-
-const SELAH_SUBSECOES_BY_THEME: Record<SelahThemeName, readonly string[]> = {
-  'JESUS CRISTO': ['Ressurreição', 'Sangue', 'Cruz', 'Batalha', 'Salvador', 'Sumo Sacerdote', 'Logos', 'Cordeiro'],
-  'IA & APOCALIPSE': ['Marca', 'Imagem da besta', 'Transhumanismo', 'Singularidade', 'Vigilância', 'CBDC', 'Metaverso', 'Falsa revelação'],
-  'SATANÁS E DEMÔNIOS': ['Belial', 'Gadreel', 'Nefilim', 'Possessão', 'Sedução', 'Acusador', 'Estratégias', 'Derrota'],
-  'DEUS PAI': ['Yahweh', 'Conselho divino', 'Aliança', 'Eleição', 'Justiça', 'Misericórdia', 'Santidade', 'Onipresença'],
-  'ESPÍRITO SANTO': ['Pentecostes', 'Unção', 'Dons', 'Frutos', 'Selo', 'Convicção', 'Revelação', 'Intercessão'],
-  'BATALHA ESPIRITUAL': ['Armadura', 'Oração', 'Jejum', 'Discernimento', 'Autoridade', 'Libertação', 'Vitória', 'Resistência'],
-  'REINO DE DEUS': ['Já e ainda não', 'Cidadania', 'Remanescente', 'Justiça', 'Nova Jerusalém', 'Milênio', 'Trono', 'Filhos do Reino'],
-  'COSMOLOGIA BÍBLICA': ['Terra plana', 'Estrelas', 'Planetas', 'Inferno', 'Céus', 'Mundos', 'Firmamento', 'Abismo'],
-  'MUNDO ESPIRITUAL': ['Vigilantes', 'Anjos', 'Querubins', 'Sarim territoriais', 'Conselho divino', 'Tártaro', 'Sheol', 'Hierarquia celestial'],
-  'APÓCRIFOS': ['Enoque', 'Jubileus', 'Testamentos', 'Apocalipse de Abraão', '2 Baruque', '4 Esdras', 'Qumran', 'Cânon perdido'],
-  'FIM DOS TEMPOS': ['Anticristo', 'Tribulação', 'Arrebatamento', 'Trombetas', 'Bestas', 'Babilônia', 'Armagedom', 'Restauração'],
-};
 
 type TypologyDivisionId =
   | 'tipologia-pessoal'
@@ -302,9 +271,15 @@ function parseFrontmatter(markdown: string): Record<string, string> {
 
   const result: Record<string, string> = {};
   for (const line of match[1].split(/\r?\n/)) {
-    const item = line.match(/^\s*([A-Za-z_][\w-]*)\s*:\s*(.*?)\s*$/);
+    const item = line.match(/^\s*([\p{L}_][\p{L}\p{N}_-]*)\s*:\s*(.*?)\s*$/u);
     if (!item) continue;
-    result[item[1].toLowerCase()] = item[2].replace(/^["']|["']$/g, '');
+    const rawKey = item[1].toLowerCase();
+    const normalizedKey = rawKey
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+    const value = item[2].replace(/^["']|["']$/g, '');
+    result[rawKey] = value;
+    result[normalizedKey] = value;
   }
   return result;
 }
@@ -902,20 +877,96 @@ function inferSeriesFallbackCover(title: string, slug: string, category?: string
   return null;
 }
 
+const SELAH_SUBSECTION_FALLBACK_RULES: Partial<Record<SelahThemeTitle, Array<{ subsection: string; matchers: string[] }>>> = {
+  'JESUS CRISTO': [
+    { subsection: 'Cruz', matchers: ['a cruz no mundo espiritual', 'cruz no mundo espiritual'] },
+    { subsection: 'Batalha', matchers: ['invasao legal'] },
+  ],
+  'BATALHA ESPIRITUAL': [
+    { subsection: 'Armadura', matchers: ['armadura do remanescente'] },
+    { subsection: 'Oração', matchers: ['o fio do trono'] },
+  ],
+  'IA & APOCALIPSE': [
+    { subsection: 'Marca', matchers: ['trilogia - a marca', 'a marca'] },
+  ],
+  'APÓCRIFOS': [
+    { subsection: 'Enoque', matchers: ['serie - 1 enoque', '1 enoque'] },
+    { subsection: 'Jubileus', matchers: ['serie - jubileus', 'jubileus'] },
+  ],
+};
+
+function extractFrontmatterSubsectionCandidate(frontmatter: Record<string, string>): string {
+  const keys = ['subsecao', 'subsection', 'temainterno', 'tema_interno', 'sub_secao', 'sub-secao', 'subcategory', 'category'];
+  for (const key of keys) {
+    const value = (frontmatter[key] || '').trim();
+    if (value) return value;
+  }
+  return '';
+}
+
+function inferSelahSubsectionFromContext(params: {
+  themeTitle: SelahThemeTitle | null;
+  frontmatterSubsection?: string;
+  pathSubsectionCandidate?: string;
+  seriesFolder?: string;
+  category?: string;
+  title?: string;
+  description?: string;
+}): string | undefined {
+  const { themeTitle } = params;
+  if (!themeTitle) return undefined;
+
+  const directCandidates = [
+    params.frontmatterSubsection || '',
+    params.pathSubsectionCandidate || '',
+    params.category || '',
+  ];
+
+  for (const candidate of directCandidates) {
+    const resolved = resolveSelahSubsectionTitle(themeTitle, candidate);
+    if (resolved) return resolved;
+  }
+
+  const seriesFolder = params.seriesFolder || '';
+  const fromSeriesFolder = resolveSelahSubsectionTitle(themeTitle, seriesFolder);
+  if (fromSeriesFolder) return fromSeriesFolder;
+
+  const haystack = normalizeSearchToken([
+    seriesFolder,
+    params.category || '',
+    params.title || '',
+    params.description || '',
+  ].join(' '));
+
+  const rules = SELAH_SUBSECTION_FALLBACK_RULES[themeTitle] ?? [];
+  for (const rule of rules) {
+    const matches = rule.matchers.some((matcher) => haystack.includes(normalizeSearchToken(matcher)));
+    if (!matches) continue;
+    const resolved = resolveSelahSubsectionTitle(themeTitle, rule.subsection);
+    if (resolved) return resolved;
+  }
+
+  return undefined;
+}
+
 function inferBookCoverCandidates(frontmatter: Record<string, string>, title: string, slug: string): string[] {
   const candidates = new Set<string>();
-  const fromMeta = (frontmatter.image || frontmatter.thumbnail || '').trim();
+  const fromMeta = (frontmatter.image || frontmatter.cover || frontmatter.capa || frontmatter.thumbnail || '').trim();
   const seriesFolder = slug.split('/')[0] ?? '';
 
   if (fromMeta) {
     if (fromMeta.startsWith('/')) {
-      candidates.add(fromMeta);
-      const metaFileName = fromMeta.split('/').pop();
+      const normalizedMetaPath = fromMeta.startsWith('/public/') ? fromMeta.slice('/public'.length) : fromMeta;
+      candidates.add(normalizedMetaPath);
+      const metaFileName = normalizedMetaPath.split('/').pop();
       if (metaFileName && seriesFolder) candidates.add(`/image/selah/${seriesFolder}/${metaFileName}`);
+      if (metaFileName) candidates.add(`/image/selah/${metaFileName}`);
     } else if (/^https?:\/\//i.test(fromMeta)) {
       if (!isWeakRemoteImage(fromMeta)) candidates.add(fromMeta);
     } else {
-      candidates.add(`/image/selah/${fromMeta.replace(/^.*[\\/]/, '')}`);
+      const fileName = fromMeta.replace(/^.*[\\/]/, '');
+      candidates.add(`/image/selah/${fileName}`);
+      if (seriesFolder) candidates.add(`/image/selah/${seriesFolder}/${fileName}`);
     }
   }
 
@@ -968,13 +1019,25 @@ function discoverBooksFromMarkdown(): BookItem[] {
 
     const parts = relative.split('/').filter(Boolean);
     const fileName = parts[parts.length - 1] ?? '';
+    const themeFolder = parts[0] ?? '';
+    const pathSubsectionCandidate = parts.length >= 4 ? (parts[1] ?? '') : '';
     const seriesFolder = parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? 'livraria');
-    const themeFolder = parts.length > 2 ? parts[parts.length - 3] : '';
     const fileStem = fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
     const slug = `${seriesFolder}/${fileStem}`;
     const frontmatter = parseFrontmatter(content);
     const firstHeading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
     const title = frontmatter.title || firstHeading || fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
+    const themeTitle = resolveSelahThemeTitleFromSlug(themeFolder);
+    const frontmatterSubsection = extractFrontmatterSubsectionCandidate(frontmatter);
+    const inferredSubsection = inferSelahSubsectionFromContext({
+      themeTitle,
+      frontmatterSubsection,
+      pathSubsectionCandidate,
+      seriesFolder,
+      category: frontmatter.category || '',
+      title,
+      description: frontmatter.description || '',
+    });
     const cover =
       inferBookCoverCandidates(frontmatter, title, slug).find((candidate) => isAvailableCoverCandidate(candidate))
       || inferSeriesFallbackCover(title, slug, frontmatter.category);
@@ -985,8 +1048,8 @@ function discoverBooksFromMarkdown(): BookItem[] {
       description: frontmatter.description || '',
       date: frontmatter.date || '2026-04-18',
       category: normalizeBookCategory(frontmatter.category, seriesFolder),
-      tema: SELAH_THEMES_BY_FOLDER[themeFolder] ?? undefined,
-      subsecao: (frontmatter.subsecao || '').trim() || undefined,
+      tema: themeTitle ?? undefined,
+      subsecao: inferredSubsection,
       time: frontmatter.time || 'LIVRO',
       image: cover,
     };
@@ -1118,19 +1181,7 @@ const SECTIONS: Record<SectionKey, {
 };
 
 const SECTION_ORDER: SectionKey[] = [
-  'JESUS CRISTO',
-  'DEUS PAI',
-  'ESPÍRITO SANTO',
-  'BATALHA ESPIRITUAL',
-  'REINO DE DEUS',
-  'MUNDO ESPIRITUAL',
-  'COSMOLOGIA BÍBLICA',
-  'FIM DOS TEMPOS',
-  'APÓCRIFOS',
-  'HISTÓRIA DA IGREJA',
-  'SATANÁS E DEMÔNIOS',
-  'IA & APOCALIPSE',
-  'ANTISISTEMA',
+  ...SELAH_THEME_TITLES_IN_ORDER,
 ];
 
 // Maps existing category strings → top-level section
@@ -1198,23 +1249,19 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'parabolas-de-jesus':                       'JESUS CRISTO',
 };
 
-const SELAH_THEME_BY_SECTION: Partial<Record<SectionKey, SelahThemeName>> = {
-  'JESUS CRISTO': 'JESUS CRISTO',
-  'IA & APOCALIPSE': 'IA & APOCALIPSE',
-  'SATANÁS E DEMÔNIOS': 'SATANÁS E DEMÔNIOS',
-  'DEUS PAI': 'DEUS PAI',
-  'ESPÍRITO SANTO': 'ESPÍRITO SANTO',
-  'BATALHA ESPIRITUAL': 'BATALHA ESPIRITUAL',
-  'REINO DE DEUS': 'REINO DE DEUS',
-  'MUNDO ESPIRITUAL': 'MUNDO ESPIRITUAL',
-  'COSMOLOGIA BÍBLICA': 'COSMOLOGIA BÍBLICA',
-  'APÓCRIFOS': 'APÓCRIFOS',
-  'FIM DOS TEMPOS': 'FIM DOS TEMPOS',
-};
+const SELAH_THEME_BY_SECTION: Partial<Record<SectionKey, SelahThemeTitle>> = SELAH_THEME_TITLES_IN_ORDER.reduce((acc, themeTitle) => {
+  acc[themeTitle] = themeTitle;
+  return acc;
+}, {} as Partial<Record<SectionKey, SelahThemeTitle>>);
 
-function resolveSelahTheme(book: BookItem): SelahThemeName | null {
-  if (book.tema && book.tema in SELAH_SUBSECOES_BY_THEME) {
-    return book.tema as SelahThemeName;
+function resolveSelahTheme(book: BookItem): SelahThemeTitle | null {
+  const rawTheme = (book.tema || '').trim();
+  if (rawTheme && SELAH_THEME_BY_TITLE[rawTheme]) {
+    return rawTheme as SelahThemeTitle;
+  }
+  if (rawTheme) {
+    const resolvedFromSlug = resolveSelahThemeTitleFromSlug(rawTheme);
+    if (resolvedFromSlug) return resolvedFromSlug;
   }
 
   const category = (book.category || '').trim();
@@ -1227,21 +1274,13 @@ function resolveSelahTheme(book: BookItem): SelahThemeName | null {
 }
 
 function resolveSectionFromThemeSlug(themeSlug: string): SectionKey | null {
-  const normalized = slugify(themeSlug);
-  for (const [section, theme] of Object.entries(SELAH_THEME_BY_SECTION) as [SectionKey, SelahThemeName][]) {
-    if (slugify(theme) === normalized) return section;
-  }
-  const themeFromFolderSlug = SELAH_THEMES_BY_FOLDER[normalized];
-  if (!themeFromFolderSlug) return null;
-  for (const [section, theme] of Object.entries(SELAH_THEME_BY_SECTION) as [SectionKey, SelahThemeName][]) {
-    if (theme === themeFromFolderSlug) return section;
-  }
-  return null;
+  const themeTitle = resolveSelahThemeTitleFromSlug(themeSlug);
+  if (!themeTitle) return null;
+  return themeTitle as SectionKey;
 }
 
-function resolveSubsecaoFromSlug(theme: SelahThemeName, subsecaoSlug: string): string | null {
-  const normalized = slugify(subsecaoSlug);
-  return SELAH_SUBSECOES_BY_THEME[theme].find((subsecao) => slugify(subsecao) === normalized) ?? null;
+function resolveSubsecaoFromSlug(theme: SelahThemeTitle, subsecaoSlug: string): string | null {
+  return resolveSelahSubsectionTitle(theme, subsecaoSlug);
 }
 
 // Short display labels per series
@@ -2079,13 +2118,25 @@ export default function Bookstore({
   const normalizeMergedBookCategory = (book: BookItem): BookItem => {
     const seriesFolder = book.slug.split('/')[0] ?? '';
     const normalizedCategory = normalizeBookCategory(book.category, seriesFolder);
-    const normalizedSubsecao = (book.subsecao || '').trim();
     const section = CATEGORY_TO_SECTION[normalizedCategory] ?? CATEGORY_TO_SECTION[normalizedCategory.toLowerCase()];
-    return {
+    const resolvedTheme = resolveSelahTheme({
       ...book,
       category: normalizedCategory,
       tema: book.tema || (section ? SELAH_THEME_BY_SECTION[section] : undefined),
-      subsecao: normalizedSubsecao || undefined,
+    });
+    const canonicalSubsecao = inferSelahSubsectionFromContext({
+      themeTitle: resolvedTheme,
+      frontmatterSubsection: (book.subsecao || '').trim(),
+      seriesFolder,
+      category: normalizedCategory,
+      title: book.title,
+      description: book.description,
+    }) || (book.subsecao || '').trim();
+    return {
+      ...book,
+      category: normalizedCategory,
+      tema: resolvedTheme || undefined,
+      subsecao: canonicalSubsecao || undefined,
     };
   };
   const mergedBooks = useMemo(() => {
@@ -2114,8 +2165,9 @@ export default function Bookstore({
       const tema = resolveSelahTheme(book);
       if (!tema) return [];
 
-      const validSubsecoes = SELAH_SUBSECOES_BY_THEME[tema];
+      const validSubsecoes = SELAH_SUBSECTIONS_BY_THEME_TITLE[tema].map((entry) => entry.title);
       const subsecao = (book.subsecao || '').trim();
+      const canonicalSubsecao = resolveSelahSubsectionTitle(tema, subsecao);
       if (!subsecao) {
         return [{
           slug: book.slug,
@@ -2127,7 +2179,7 @@ export default function Bookstore({
         }];
       }
 
-      const isValid = validSubsecoes.includes(subsecao);
+      const isValid = Boolean(canonicalSubsecao);
       if (isValid) return [];
 
       return [{
@@ -2181,14 +2233,14 @@ export default function Bookstore({
     if (!selectedTheme) return null;
 
     const map = new Map<string, number>();
-    for (const subsecao of SELAH_SUBSECOES_BY_THEME[selectedTheme]) {
-      map.set(subsecao, 0);
+    for (const subsecao of SELAH_SUBSECTIONS_BY_THEME_TITLE[selectedTheme]) {
+      map.set(subsecao.title, 0);
     }
 
     for (const book of booksBySection[selectedSection]) {
       const resolvedTheme = resolveSelahTheme(book);
       if (resolvedTheme !== selectedTheme) continue;
-      const subsecao = (book.subsecao || '').trim();
+      const subsecao = resolveSelahSubsectionTitle(selectedTheme, (book.subsecao || '').trim());
       if (!subsecao || !map.has(subsecao)) continue;
       map.set(subsecao, (map.get(subsecao) || 0) + 1);
     }
@@ -2203,9 +2255,9 @@ export default function Bookstore({
     const theme = SELAH_THEME_BY_SECTION[selectedSection];
     if (!theme) return '/selah';
 
-    let path = `/selah/${slugify(theme)}`;
+    let path = `/selah/${SELAH_THEME_SLUG_BY_TITLE[theme]}`;
     if (selectedSubsecao) {
-      path += `/${slugify(selectedSubsecao)}`;
+      path += `/${resolveSelahSubsectionSlug(theme, selectedSubsecao) ?? slugify(selectedSubsecao)}`;
     }
     if (selectedSlug) {
       path += `/${encodeURIComponent(selectedSlug)}`;
@@ -2697,7 +2749,8 @@ export default function Bookstore({
         ? booksBySection[selectedSection].filter((book) => {
             const resolvedTheme = resolveSelahTheme(book);
             if (resolvedTheme !== selectedTheme) return false;
-            return (book.subsecao || '').trim() === selectedSubsecao;
+            const normalizedSubsecao = resolveSelahSubsectionTitle(selectedTheme, (book.subsecao || '').trim());
+            return normalizedSubsecao === selectedSubsecao;
           })
         : [];
       const seriesInSubsecao: [string, BookItem[]][] = selectedSubsecao
@@ -2708,6 +2761,15 @@ export default function Bookstore({
             }, {} as Record<string, BookItem[]>)
           ).map(([category, items]) => [category, sortBooksInSeries(category, items)] as [string, BookItem[]])
         : [];
+      const seriesWithoutSubsecao: [string, BookItem[]][] = Object.entries(
+        booksBySection[selectedSection].reduce((acc, book) => {
+          if (resolveSelahTheme(book) !== selectedTheme) return acc;
+          const resolvedSubsecao = resolveSelahSubsectionTitle(selectedTheme, (book.subsecao || '').trim());
+          if (resolvedSubsecao) return acc;
+          (acc[book.category] ??= []).push(book);
+          return acc;
+        }, {} as Record<string, BookItem[]>),
+      ).map(([category, items]) => [category, sortBooksInSeries(category, items)] as [string, BookItem[]]);
 
       if (selectedSubsecao) {
         return (
@@ -2817,10 +2879,10 @@ export default function Bookstore({
                 {seriesInSubsecao.length === 0 && (
                   <div className="rounded-2xl border border-primary/20 bg-black/20 px-4 sm:px-5 py-4 sm:py-5">
                     <p className="text-xs sm:text-sm font-semibold text-primary/95">
-                      Em breve novos estudos sobre {selectedSubsecao}
+                      Em preparação
                     </p>
                     <p className="mt-1 text-[11px] sm:text-xs text-on-surface-variant/80 leading-relaxed">
-                      Esta subseção está preparada e receberá novos conteúdos assim que forem etiquetados.
+                      Esta área será preenchida quando as séries deste tema forem adicionadas.
                     </p>
                   </div>
                 )}
@@ -2859,12 +2921,12 @@ export default function Bookstore({
               </h3>
 
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
-                {SELAH_SUBSECOES_BY_THEME[selectedTheme].map((subsecao) => {
+                {SELAH_SUBSECTIONS_BY_THEME_TITLE[selectedTheme].map((subsecaoEntry) => {
+                  const subsecao = subsecaoEntry.title;
                   const count = subsectionCounts.get(subsecao) || 0;
-                  const isActive = count > 0;
                   const subsecaoCover = booksBySection[selectedSection]
                     .find((book) => (
-                      (book.subsecao || '').trim() === subsecao
+                      resolveSelahSubsectionTitle(selectedTheme, (book.subsecao || '').trim()) === subsecao
                       && resolveSelahTheme(book) === selectedTheme
                       && book.image
                     ))
@@ -2874,12 +2936,11 @@ export default function Bookstore({
                     <button
                       key={`${selectedTheme}-${slugify(subsecao)}`}
                       type="button"
-                      disabled={!isActive}
                       onClick={() => setSelectedSubsecao(subsecao)}
                       className={[
                         'subsecao-botao group relative overflow-hidden rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left',
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,175,55,0.45)]',
-                        isActive ? 'bg-black/20 cursor-pointer' : 'bg-black/15 em-breve',
+                        count > 0 ? 'bg-black/20 cursor-pointer' : 'bg-black/15 em-breve cursor-pointer',
                       ].join(' ')}
                     >
                       {subsecaoCover && (
@@ -2893,7 +2954,7 @@ export default function Bookstore({
                       <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/15" />
 
                       <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-on-surface">{subsecao}</span>
-                      {isActive ? (
+                      {count > 0 ? (
                         <span className="relative mt-1 block text-[9px] sm:text-[10px] text-primary/80">{count} estudo{count > 1 ? 's' : ''}</span>
                       ) : (
                         <span className="relative mt-1 block text-[9px] sm:text-[10px] text-on-surface-variant/85">Em breve</span>
@@ -2902,6 +2963,93 @@ export default function Bookstore({
                   );
                 })}
               </div>
+
+              {seriesWithoutSubsecao.length > 0 && (
+                <div className="mt-6 border-t border-amber-300/25 pt-4 sm:pt-5">
+                  <h4 className="font-headline text-base sm:text-lg font-black tracking-tight text-amber-100 mb-2">
+                    Sem subseção definida
+                  </h4>
+                  <p className="text-[10px] sm:text-xs text-amber-100/75 mb-3 sm:mb-4">
+                    Séries reais deste tema que ainda precisam de classificação editorial.
+                  </p>
+                  {seriesWithoutSubsecao.map(([cat, items], index) => {
+                    const reads = items.map((b) => pm.getReadCount('livraria', b.slug));
+                    const minReads = reads.length ? Math.min(...reads) : 0;
+                    const label = toSeriesDisplayLabel(cat);
+                    const seriesDescription = buildAutoSeriesDescription(cat, items);
+                    const badgeLabel = getSeriesBadgeLabel(selectedSection, cat);
+                    const seriesKey = `${selectedSection}-sem-subsecao-${slugify(cat)}`;
+
+                    return (
+                      <div key={`sem-subsecao-${cat}`} className="mb-5 sm:mb-6">
+                        <div className="mb-2">
+                          <div className="mb-1 flex items-center justify-between gap-2">
+                            <span className="inline-flex items-center rounded-full border border-amber-300/35 bg-amber-400/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-amber-100">
+                              {badgeLabel}
+                            </span>
+                            <div className="hidden sm:flex items-center gap-1">
+                              <button
+                                type="button"
+                                onClick={() => scrollSectionSeries(seriesKey, -240)}
+                                className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-amber-200/30 bg-black/35 text-amber-100/80 transition-colors hover:border-amber-200/60 hover:text-amber-50"
+                                aria-label={`Voltar ${label}`}
+                              >
+                                <ChevronLeft size={13} />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => scrollSectionSeries(seriesKey, 240)}
+                                className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-amber-200/30 bg-black/35 text-amber-100/80 transition-colors hover:border-amber-200/60 hover:text-amber-50"
+                                aria-label={`Avançar ${label}`}
+                              >
+                                <ChevronRight size={13} />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex items-baseline gap-2 flex-wrap">
+                            <h4 className="font-headline font-extrabold text-lg sm:text-xl text-on-surface tracking-tighter uppercase leading-none">
+                              {label}
+                            </h4>
+                            {minReads > 0 && (
+                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">
+                                (Lido {minReads} vez{minReads > 1 ? 'es' : ''})
+                              </span>
+                            )}
+                          </div>
+                          {seriesDescription && (
+                            <p className="mt-1 text-[9px] sm:text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm">
+                              {seriesDescription}
+                            </p>
+                          )}
+                        </div>
+                        <div
+                          ref={(element) => {
+                            sectionSeriesRowRefs.current[seriesKey] = element;
+                          }}
+                          className="relative -mx-4 px-4 sm:-mx-6 sm:px-6"
+                        >
+                          <DragScrollRow>
+                            {items.map((item, j) => (
+                              <BookCard
+                                key={item.slug}
+                                item={item}
+                                displayVolume={extractVolumeFromBook(item) ?? (j + 1)}
+                                onSelect={() => handleSelectBook(item.slug)}
+                              />
+                            ))}
+                          </DragScrollRow>
+                        </div>
+
+                        {index < seriesWithoutSubsecao.length - 1 && (
+                          <div className="mt-2.5 sm:mt-3 px-1">
+                            <div className="h-px w-full bg-gradient-to-r from-transparent via-amber-300/55 to-transparent animate-[pulse_4.5s_ease-in-out_infinite]" />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </section>
         </div>
