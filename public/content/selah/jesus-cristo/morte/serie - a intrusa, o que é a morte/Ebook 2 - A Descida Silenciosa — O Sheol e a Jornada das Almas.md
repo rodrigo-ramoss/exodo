@@ -1,17 +1,18 @@
 ---
 title: "A Descida Silenciosa — O Sheol e a Jornada das Almas"
 description: "O que acontece entre a morte e a ressurreição? Este volume resgata a topografia esquecida do mundo dos mortos — Sheol, Hades, Tártaro e Abismo — segundo a Bíblia, 1 Enoque e Qumran. Um mapa da jornada das almas que o cristianismo institucional apagou."
-seção: livraria
+section: selah
+secao: selah
+seção: selah
+theme: jesus-cristo
+tema: jesus-cristo
+subsection: morte
+subsecao: morte
 category: morte
+series: "A Intrusa — O que é a Morte"
+serie: "A Intrusa — O que é a Morte"
+seriesSlug: a-intrusa-o-que-e-a-morte
 image: /image/tipos/a descida silenciosa.webp
-
-*Rodrigo Ramos — Voz do Deserto*
-
-*Série: Tipologia Escatológica — Volume 2*
-
-# A DESCIDA SILENCIOSA
-## O Sheol e a Jornada das Almas
-
 ---
 
 ## Índice

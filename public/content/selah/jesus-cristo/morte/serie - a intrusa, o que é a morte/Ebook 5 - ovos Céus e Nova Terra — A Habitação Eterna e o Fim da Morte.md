@@ -1,17 +1,18 @@
 ---
 title: "Novos Céus e Nova Terra — A Habitação Eterna e o Fim da Morte"
 description: "O destino final não é um céu etéreo, mas uma cidade que desce, um jardim restaurado e um cosmos transformado em templo. Este volume conclui a série sobre a morte explorando o estado eterno — a Nova Jerusalém, a Árvore da Vida e a vitória final sobre a morte."
-seção: livraria
+section: selah
+secao: selah
+seção: selah
+theme: jesus-cristo
+tema: jesus-cristo
+subsection: morte
+subsecao: morte
 category: morte
+series: "A Intrusa — O que é a Morte"
+serie: "A Intrusa — O que é a Morte"
+seriesSlug: a-intrusa-o-que-e-a-morte
 image: /image/tipos/novos ceus e nova terra.webp
-
-*Rodrigo Ramos — Voz do Deserto*
-
-*Série: Tipologia Escatológica — Volume 5*
-
-# NOVOS CÉUS E NOVA TERRA
-## A Habitação Eterna e o Fim da Morte
-
 ---
 
 ## Índice

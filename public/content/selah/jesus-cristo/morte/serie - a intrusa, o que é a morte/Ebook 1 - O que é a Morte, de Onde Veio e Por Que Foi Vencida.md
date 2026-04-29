@@ -1,17 +1,18 @@
 ---
 title: "A Intrusa — O que é a Morte, de Onde Veio e Por Que Foi Vencida"
 description: "A morte não é natural, não é biológica e não é o fim. Este ebook revela a origem cósmica da morte segundo a matriz essênica, sua manifestação nas três rebeliões espirituais e sua derrota escatológica na cruz. Um resgate do conhecimento perdido sobre o último inimigo."
-seção: livraria
+section: selah
+secao: selah
+seção: selah
+theme: jesus-cristo
+tema: jesus-cristo
+subsection: morte
+subsecao: morte
 category: morte
+series: "A Intrusa — O que é a Morte"
+serie: "A Intrusa — O que é a Morte"
+seriesSlug: a-intrusa-o-que-e-a-morte
 image: /image/tipos/o que é a morte.webp
-
-*Rodrigo Ramos — Voz do Deserto*
-
-*Série: Tipologia Escatológica — Volume 1*
-
-# A INTRUSA
-## O que é a Morte, de Onde Veio e Por Que Foi Vencida
-
 ---
 
 ## Índice

@@ -2934,6 +2934,7 @@ export default function Bookstore({
                     {themeSubsections.map((subsecaoEntry) => {
                   const subsecao = subsecaoEntry.title;
                   const count = subsectionCounts.get(subsecao) || 0;
+                  const isHistoriaDaIgreja = selectedTheme === 'HISTÓRIA DA IGREJA';
                   const subsecaoCover = booksBySection[selectedSection]
                     .find((book) => (
                       resolveSelahSubsectionTitle(selectedTheme, (book.subsecao || '').trim()) === subsecao
@@ -2964,9 +2965,10 @@ export default function Bookstore({
                         <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/15" />
 
                         <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-on-surface">{subsecao}</span>
-                        {count > 0 ? (
+                        {!isHistoriaDaIgreja && count > 0 && (
                           <span className="relative mt-1 block text-[9px] sm:text-[10px] text-primary/80">{count} estudo{count > 1 ? 's' : ''}</span>
-                        ) : (
+                        )}
+                        {count === 0 && (
                           <span className="relative mt-1 block text-[9px] sm:text-[10px] text-on-surface-variant/85">Em preparação</span>
                         )}
                       </button>
@@ -3036,7 +3038,7 @@ export default function Bookstore({
                 </>
               )}
 
-              {themeSubsections.length > 0 && seriesWithoutSubsecao.length > 0 && (
+              {themeSubsections.length > 0 && seriesWithoutSubsecao.length > 0 && selectedTheme !== 'HISTÓRIA DA IGREJA' && (
                 <div className="mt-6 border-t border-amber-300/25 pt-4 sm:pt-5">
                   <h4 className="font-headline text-base sm:text-lg font-black tracking-tight text-amber-100 mb-2">
                     Sem subseção definida

@@ -1,17 +1,18 @@
 ---
 title: "O Dia do Juízo — O Grande Trono Branco e a Destruição da Morte"
 description: "O julgamento final não é vingança, é justiça. Este volume desvenda o Grande Trono Branco, o destino dos ímpios, dos Vigilantes e da própria Morte, segundo a Bíblia e a literatura do Segundo Templo."
-seção: livraria
+section: selah
+secao: selah
+seção: selah
+theme: jesus-cristo
+tema: jesus-cristo
+subsection: morte
+subsecao: morte
 category: morte
+series: "A Intrusa — O que é a Morte"
+serie: "A Intrusa — O que é a Morte"
+seriesSlug: a-intrusa-o-que-e-a-morte
 image: /image/tipos/o dia do juizo.webp
-
-*Rodrigo Ramos — Voz do Deserto*
-
-*Série: Tipologia Escatológica — Volume 4*
-
-# O DIA DO JUÍZO
-## O Grande Trono Branco e a Destruição da Morte
-
 ---
 
 ## Índice

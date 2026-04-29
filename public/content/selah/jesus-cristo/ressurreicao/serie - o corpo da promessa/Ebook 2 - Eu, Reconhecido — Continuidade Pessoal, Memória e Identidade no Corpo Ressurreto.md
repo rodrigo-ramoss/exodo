@@ -1,17 +1,18 @@
 ---
 title: "Eu, Reconhecido — Continuidade Pessoal, Memória e Identidade no Corpo Ressurreto"
 description: "Serei eu na ressurreição? Minhas memórias, minha personalidade, meus amores — o que sobrevive e como serei reconhecido? Este volume explora a continuidade da identidade pessoal através da morte e da ressurreição, a memória redimida e o reconhecimento mútuo na comunhão dos santos."
-seção: livraria
+section: selah
+secao: selah
+seção: selah
+theme: jesus-cristo
+tema: jesus-cristo
+subsection: ressurreicao
+subsecao: ressurreicao
 category: ressurreicao
+series: "O Corpo da Promessa"
+serie: "O Corpo da Promessa"
+seriesSlug: o-corpo-da-promessa
 image: /image/tipos/eu reconhecido.webp
-
-*Rodrigo Ramos — Voz do Deserto*
-
-*Série: O Corpo da Promessa — Volume 2*
-
-# EU, RECONHECIDO
-## Continuidade Pessoal, Memória e Identidade no Corpo Ressurreto
-
 ---
 
 ## Índice

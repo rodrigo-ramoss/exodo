@@ -1,17 +1,18 @@
 ---
 title: "O Corpo que Venceu a Morte — O que o Cadáver de Jesus nos Ensina Sobre o Nosso Futuro"
 description: "Jesus não ressuscitou como fantasma, mas como um corpo real que come, anda e pode ser tocado — e também atravessa paredes e desaparece. Este primeiro volume da série O Corpo da Promessa investiga o corpo ressurreto de Jesus como protótipo da nossa futura humanidade, unindo os Evangelhos, 1 Coríntios 15 e as fontes do Segundo Templo."
-seção: livraria
+section: selah
+secao: selah
+seção: selah
+theme: jesus-cristo
+tema: jesus-cristo
+subsection: ressurreicao
+subsecao: ressurreicao
 category: ressurreicao
+series: "O Corpo da Promessa"
+serie: "O Corpo da Promessa"
+seriesSlug: o-corpo-da-promessa
 image: /image/tipos/o corpo que venceu.webp
-
-*Rodrigo Ramos — Voz do Deserto*
-
-*Série: O Corpo da Promessa — Volume 1*
-
-# O CORPO QUE VENCEU A MORTE
-## O que o Cadáver de Jesus nos Ensina Sobre o Nosso Futuro
-
 ---
 
 ## Índice

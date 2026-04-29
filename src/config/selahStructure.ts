@@ -59,6 +59,20 @@ function buildSubsections(themeSlug: SelahThemeSlug, titles: readonly string[]):
   }));
 }
 
+function buildSubsectionsWithCustomSlugs(
+  themeSlug: SelahThemeSlug,
+  entries: ReadonlyArray<{ title: string; slug: string }>,
+): SelahSubsectionConfig[] {
+  return entries.map((entry, index) => ({
+    id: `${themeSlug}-${entry.slug}`,
+    slug: entry.slug,
+    title: entry.title,
+    order: index + 1,
+    initialState: 'ready',
+    expectedContentPath: `/public/content/selah/${themeSlug}/${entry.slug}`,
+  }));
+}
+
 export const SELAH_STRUCTURE: SelahThemeConfig[] = [
   {
     id: 'antissistema',
@@ -74,15 +88,39 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     title: 'HISTÓRIA DA IGREJA',
     description: 'Estudos sobre a formação, os desvios, os conflitos e os fundamentos da igreja ao longo da história.',
     order: 2,
-    subsections: buildSubsections('historia-da-igreja', [
-      'Verdade sobre a Igreja',
-      'Eclésia',
-      'Ceia do Senhor',
-      'Batismo',
-      'Falsas Doutrinas',
-      'Pais da Igreja',
-      'Concílios e Credos',
-      'Reforma e Remanescente',
+    subsections: buildSubsectionsWithCustomSlugs('historia-da-igreja', [
+      {
+        title: 'Ceia do Senhor: A Refeição que Virou Sacrifício',
+        slug: 'ceia-do-senhor-a-refeicao-que-virou-sacrificio',
+      },
+      {
+        title: 'Batismo: A Imersão que Virou Aspersão',
+        slug: 'batismo-a-imersao-que-virou-aspersao',
+      },
+      {
+        title: 'Eclésia: A Comunidade que Virou Hierarquia',
+        slug: 'eclesia-a-comunidade-que-virou-hierarquia',
+      },
+      {
+        title: 'Dízimo: A Generosidade que Virou Imposto',
+        slug: 'dizimo-a-generosidade-que-virou-imposto',
+      },
+      {
+        title: 'Templo: A Casa que Virou Masmorra',
+        slug: 'templo-a-casa-que-virou-masmorra',
+      },
+      {
+        title: 'Jejum e Calendário: A Liberdade que Virou Obrigação',
+        slug: 'jejum-e-calendario-a-liberdade-que-virou-obrigacao',
+      },
+      {
+        title: 'Música e Louvor: A Adoração que Virou Show',
+        slug: 'musica-e-louvor-a-adoracao-que-virou-show',
+      },
+      {
+        title: 'Ceia, Batismo e o Voto de Pobreza Original',
+        slug: 'ceia-batismo-e-o-voto-de-pobreza-original',
+      },
     ]),
   },
   {
@@ -91,7 +129,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     title: 'JESUS CRISTO',
     description: 'Pessoa, obra, autoridade e missão de Cristo.',
     order: 3,
-    subsections: buildSubsections('jesus-cristo', ['Ressurreição', 'Sangue', 'Cruz', 'Batalha', 'Salvador', 'Sumo Sacerdote', 'Logos', 'Cordeiro']),
+    subsections: buildSubsections('jesus-cristo', ['Ressurreição', 'Morte', 'Sangue', 'Cruz', 'Batalha', 'Salvador', 'Sumo Sacerdote', 'Logos', 'Cordeiro']),
   },
   {
     id: 'ia-e-apocalipse',

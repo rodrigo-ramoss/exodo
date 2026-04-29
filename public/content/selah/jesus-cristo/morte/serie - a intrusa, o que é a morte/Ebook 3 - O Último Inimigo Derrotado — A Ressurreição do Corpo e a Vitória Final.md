@@ -1,17 +1,18 @@
 ---
 title: "O Último Inimigo Derrotado — A Ressurreição do Corpo e a Vitória Final"
 description: "A ressurreição do corpo não é metáfora. É o desfecho da vitória de Cristo sobre a morte. Este volume explora a tipologia das Primícias, o corpo ressurreto de Jesus como protótipo e o destino dos corpos — cremados, desaparecidos, perdidos no ventre. A escatologia bíblica que a igreja deixou de pregar."
-seção: livraria
+section: selah
+secao: selah
+seção: selah
+theme: jesus-cristo
+tema: jesus-cristo
+subsection: morte
+subsecao: morte
 category: morte
+series: "A Intrusa — O que é a Morte"
+serie: "A Intrusa — O que é a Morte"
+seriesSlug: a-intrusa-o-que-e-a-morte
 image: /image/tipos/o ultimo inimigo derrotado.webp
-
-*Rodrigo Ramos — Voz do Deserto*
-
-*Série: Tipologia Escatológica — Volume 3*
-
-# O ÚLTIMO INIMIGO DERROTADO
-## A Ressurreição do Corpo e a Vitória Final
-
 ---
 
 ## Índice

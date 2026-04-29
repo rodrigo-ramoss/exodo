@@ -1,8 +1,17 @@
 ---
 title: "A Cidade que Desce — O Cosmos Redimido e a Habitação Eterna"
 description: "Onde viveremos na eternidade? Como será a geografia da Nova Jerusalém? Este volume final explora o cosmos redimido — a cidade que desce, o jardim restaurado, o rio da vida e a Árvore da Vida — e revela como o corpo glorioso habitará um universo transfigurado."
-seção: livraria
+section: selah
+secao: selah
+seção: selah
+theme: jesus-cristo
+tema: jesus-cristo
+subsection: ressurreicao
+subsecao: ressurreicao
 category: ressurreicao
+series: "O Corpo da Promessa"
+serie: "O Corpo da Promessa"
+seriesSlug: o-corpo-da-promessa
 image: "/image/tipos/a cidade que desce.webp"
 ---
 

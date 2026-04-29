@@ -1,8 +1,17 @@
 ---
 title: "Jardineiros, Artesãos e Reis — O Trabalho na Eternidade e o Mandato Cultural Redimido"
 description: "A eternidade não é férias, é promoção. O trabalho que fazemos agora ecoa na nova criação? Como será nossa atividade nos novos céus e nova terra? Este volume revela o que a Bíblia ensina sobre reinar com Cristo, cultivar a terra redimida e criar beleza na Nova Jerusalém."
-seção: livraria
+section: selah
+secao: selah
+seção: selah
+theme: jesus-cristo
+tema: jesus-cristo
+subsection: ressurreicao
+subsecao: ressurreicao
 category: ressurreicao
+series: "O Corpo da Promessa"
+serie: "O Corpo da Promessa"
+seriesSlug: o-corpo-da-promessa
 image: "/image/tipos/jardineiro artesaos e reis.webp"
 ---
 

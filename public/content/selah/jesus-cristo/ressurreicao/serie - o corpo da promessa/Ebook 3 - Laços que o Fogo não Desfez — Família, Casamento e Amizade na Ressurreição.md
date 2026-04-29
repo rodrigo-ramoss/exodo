@@ -1,8 +1,17 @@
 ---
 title: "Laços que o Fogo não Desfez — Família, Casamento e Amizade na Ressurreição"
 description: "Estarei com minha família na eternidade? O casamento continua? Que tipo de relacionamentos nos aguardam? Este volume enfrenta as perguntas mais angustiantes sobre a vida após a morte, revelando o que a Bíblia realmente ensina sobre os laços humanos na nova criação."
-seção: livraria
+section: selah
+secao: selah
+seção: selah
+theme: jesus-cristo
+tema: jesus-cristo
+subsection: ressurreicao
+subsecao: ressurreicao
 category: ressurreicao
+series: "O Corpo da Promessa"
+serie: "O Corpo da Promessa"
+seriesSlug: o-corpo-da-promessa
 image: "/image/tipos/lacos que o fogo nao destroi.webp"
 ---
 
