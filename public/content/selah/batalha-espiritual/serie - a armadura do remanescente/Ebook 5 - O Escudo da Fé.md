@@ -1,9 +1,0 @@
-**Prompt para capa do ebook "A Armadura do Remanescente - Volume 4: O Escudo da Fé":**
-
-Crie uma capa de ebook para o título "A Armadura do Remanescente" e subtítulo "Volume 4: O Escudo da Fé — Apagando os Dardos do Maligno". Estilo de ilustração digital realista com influência de arte conceitual histórica e batalha épica.
-
-**Imagem principal:** Em primeiro plano, um **grande escudo retangular romano** (*scutum*) visto de frente, ocupando a metade inferior da imagem. O escudo é de madeira com revestimento de couro desgastado, mostrando marcas de batalha. Em sua superfície, vemos três **dardos inflamados** que acabaram de atingi-lo; as chamas estão se apagando em nuvens de fumaça, e os projéteis caem inertes. Sobre o escudo, brilha um símbolo: uma **chama inversa**, como um fogo que é engolido por uma luz dourada. Ao fundo, o cenário é de um **campo de batalha noturno**, com uma chuva de flechas de fogo cruzando o céu escuro. As silhuetas de soldados se protegem atrás de seus escudos. A luz que emana do escudo principal ilumina a escuridão ao redor. A atmosfera é de **intenso ataque, mas proteção absoluta**. A paleta de cores é dominada pelo marrom do couro, o vermelho/alaranjado do fogo dos dardos, e o dourado da luz que apaga o fogo.
-
-**Tipografia:** O título "A ARMADURA DO REMANESCENTE" em fonte serifada pesada, cor prata ou bronze. O subtítulo "Volume 4: O Escudo da Fé" em fonte menor, cor dourada. Na parte inferior: "Rodrigo Ramos — Voz do Deserto".
-
-Sem elementos de inteligência artificial aparentes. Texto da capa em português. Estilo: Épico de batalha, focado na defesa poderosa e na proteção divina.

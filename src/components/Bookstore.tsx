@@ -1020,14 +1020,19 @@ function discoverBooksFromMarkdown(): BookItem[] {
     const parts = relative.split('/').filter(Boolean);
     const fileName = parts[parts.length - 1] ?? '';
     const themeFolder = parts[0] ?? '';
-    const pathSubsectionCandidate = parts.length >= 4 ? (parts[1] ?? '') : '';
-    const seriesFolder = parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? 'livraria');
+    const themeTitle = resolveSelahThemeTitleFromSlug(themeFolder);
+    const possibleSubsectionFromPath = parts.length >= 3 ? (parts[1] ?? '') : '';
+    const pathSubsectionCandidate = themeTitle && possibleSubsectionFromPath
+      ? (resolveSelahSubsectionTitle(themeTitle, possibleSubsectionFromPath) ? possibleSubsectionFromPath : '')
+      : '';
+    const seriesFolder = pathSubsectionCandidate
+      ? (parts[2] ?? parts[parts.length - 2] ?? parts[0] ?? 'livraria')
+      : (parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? 'livraria'));
     const fileStem = fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
     const slug = `${seriesFolder}/${fileStem}`;
     const frontmatter = parseFrontmatter(content);
     const firstHeading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
     const title = frontmatter.title || firstHeading || fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
-    const themeTitle = resolveSelahThemeTitleFromSlug(themeFolder);
     const frontmatterSubsection = extractFrontmatterSubsectionCandidate(frontmatter);
     const inferredSubsection = inferSelahSubsectionFromContext({
       themeTitle,

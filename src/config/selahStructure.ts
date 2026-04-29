@@ -142,7 +142,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     title: 'FIM DOS TEMPOS',
     description: 'Escatologia bíblica, juízo, restauração e consumação.',
     order: 11,
-    subsections: buildSubsections('fim-dos-tempos', ['Anticristo', 'Tribulação', 'Arrebatamento', 'Trombetas', 'Bestas', 'Babilônia', 'Armagedom', 'Restauração']),
+    subsections: buildSubsections('fim-dos-tempos', ['Anticristo', 'Tribulação', 'Arrebatamento', 'Trombetas', 'Bestas', 'Babilônia', 'Armagedom', 'Restauração', 'Tempo']),
   },
 ];
 
