@@ -12,9 +12,62 @@ interface BookItem {
   description: string;
   date: string;
   category: string;
+  tema?: string;
+  subsecao?: string;
   time: string;
   image?: string;
 }
+
+type SelahThemeName =
+  | 'JESUS CRISTO'
+  | 'IA & APOCALIPSE'
+  | 'SATANÁS E DEMÔNIOS'
+  | 'DEUS PAI'
+  | 'ESPÍRITO SANTO'
+  | 'BATALHA ESPIRITUAL'
+  | 'REINO DE DEUS'
+  | 'COSMOLOGIA BÍBLICA'
+  | 'MUNDO ESPIRITUAL'
+  | 'APÓCRIFOS'
+  | 'FIM DOS TEMPOS';
+
+interface SubsecaoAuditEntry {
+  slug: string;
+  title: string;
+  tema: SelahThemeName;
+  category: string;
+  subsecao?: string;
+  reason: 'missing' | 'invalid';
+  validSubsecoes: readonly string[];
+}
+
+const SELAH_THEMES_BY_FOLDER: Record<string, SelahThemeName> = {
+  'jesus-cristo': 'JESUS CRISTO',
+  'ia-e-apocalipse': 'IA & APOCALIPSE',
+  'satanas-e-demonios': 'SATANÁS E DEMÔNIOS',
+  'deus-pai': 'DEUS PAI',
+  'espirito-santo': 'ESPÍRITO SANTO',
+  'batalha-espiritual': 'BATALHA ESPIRITUAL',
+  'reino-de-deus': 'REINO DE DEUS',
+  'cosmologia-biblica': 'COSMOLOGIA BÍBLICA',
+  'mundo-espiritual': 'MUNDO ESPIRITUAL',
+  'apocrifos': 'APÓCRIFOS',
+  'fim-dos-tempos': 'FIM DOS TEMPOS',
+};
+
+const SELAH_SUBSECOES_BY_THEME: Record<SelahThemeName, readonly string[]> = {
+  'JESUS CRISTO': ['Ressurreição', 'Sangue', 'Cruz', 'Batalha', 'Salvador', 'Sumo Sacerdote', 'Logos', 'Cordeiro'],
+  'IA & APOCALIPSE': ['Marca', 'Imagem da besta', 'Transhumanismo', 'Singularidade', 'Vigilância', 'CBDC', 'Metaverso', 'Falsa revelação'],
+  'SATANÁS E DEMÔNIOS': ['Belial', 'Gadreel', 'Nefilim', 'Possessão', 'Sedução', 'Acusador', 'Estratégias', 'Derrota'],
+  'DEUS PAI': ['Yahweh', 'Conselho divino', 'Aliança', 'Eleição', 'Justiça', 'Misericórdia', 'Santidade', 'Onipresença'],
+  'ESPÍRITO SANTO': ['Pentecostes', 'Unção', 'Dons', 'Frutos', 'Selo', 'Convicção', 'Revelação', 'Intercessão'],
+  'BATALHA ESPIRITUAL': ['Armadura', 'Oração', 'Jejum', 'Discernimento', 'Autoridade', 'Libertação', 'Vitória', 'Resistência'],
+  'REINO DE DEUS': ['Já e ainda não', 'Cidadania', 'Remanescente', 'Justiça', 'Nova Jerusalém', 'Milênio', 'Trono', 'Filhos do Reino'],
+  'COSMOLOGIA BÍBLICA': ['Terra plana', 'Estrelas', 'Planetas', 'Inferno', 'Céus', 'Mundos', 'Firmamento', 'Abismo'],
+  'MUNDO ESPIRITUAL': ['Vigilantes', 'Anjos', 'Querubins', 'Sarim territoriais', 'Conselho divino', 'Tártaro', 'Sheol', 'Hierarquia celestial'],
+  'APÓCRIFOS': ['Enoque', 'Jubileus', 'Testamentos', 'Apocalipse de Abraão', '2 Baruque', '4 Esdras', 'Qumran', 'Cânon perdido'],
+  'FIM DOS TEMPOS': ['Anticristo', 'Tribulação', 'Arrebatamento', 'Trombetas', 'Bestas', 'Babilônia', 'Armagedom', 'Restauração'],
+};
 
 type TypologyDivisionId =
   | 'tipologia-pessoal'
@@ -914,6 +967,7 @@ function discoverBooksFromMarkdown(): BookItem[] {
     const parts = relative.split('/').filter(Boolean);
     const fileName = parts[parts.length - 1] ?? '';
     const seriesFolder = parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? 'livraria');
+    const themeFolder = parts.length > 2 ? parts[parts.length - 3] : '';
     const fileStem = fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
     const slug = `${seriesFolder}/${fileStem}`;
     const frontmatter = parseFrontmatter(content);
@@ -929,6 +983,8 @@ function discoverBooksFromMarkdown(): BookItem[] {
       description: frontmatter.description || '',
       date: frontmatter.date || '2026-04-18',
       category: normalizeBookCategory(frontmatter.category, seriesFolder),
+      tema: SELAH_THEMES_BY_FOLDER[themeFolder] ?? undefined,
+      subsecao: (frontmatter.subsecao || '').trim() || undefined,
       time: frontmatter.time || 'LIVRO',
       image: cover,
     };
@@ -1127,6 +1183,51 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'parabolas de jesus':                       'JESUS CRISTO',
   'parabolas-de-jesus':                       'JESUS CRISTO',
 };
+
+const SELAH_THEME_BY_SECTION: Partial<Record<SectionKey, SelahThemeName>> = {
+  'JESUS CRISTO': 'JESUS CRISTO',
+  'IA & APOCALIPSE': 'IA & APOCALIPSE',
+  'SATANÁS E DEMÔNIOS': 'SATANÁS E DEMÔNIOS',
+  'DEUS PAI': 'DEUS PAI',
+  'ESPÍRITO SANTO': 'ESPÍRITO SANTO',
+  'BATALHA ESPIRITUAL': 'BATALHA ESPIRITUAL',
+  'REINO DE DEUS': 'REINO DE DEUS',
+  'COSMOLOGIA BÍBLICA': 'COSMOLOGIA BÍBLICA',
+  'APÓCRIFOS': 'APÓCRIFOS',
+  'FIM DOS TEMPOS': 'FIM DOS TEMPOS',
+};
+
+function resolveSelahTheme(book: BookItem): SelahThemeName | null {
+  if (book.tema && book.tema in SELAH_SUBSECOES_BY_THEME) {
+    return book.tema as SelahThemeName;
+  }
+
+  const category = (book.category || '').trim();
+  const section = CATEGORY_TO_SECTION[category] ?? CATEGORY_TO_SECTION[category.toLowerCase()];
+  if (section && SELAH_THEME_BY_SECTION[section]) {
+    return SELAH_THEME_BY_SECTION[section] ?? null;
+  }
+
+  return null;
+}
+
+function resolveSectionFromThemeSlug(themeSlug: string): SectionKey | null {
+  const normalized = slugify(themeSlug);
+  for (const [section, theme] of Object.entries(SELAH_THEME_BY_SECTION) as [SectionKey, SelahThemeName][]) {
+    if (slugify(theme) === normalized) return section;
+  }
+  const themeFromFolderSlug = SELAH_THEMES_BY_FOLDER[normalized];
+  if (!themeFromFolderSlug) return null;
+  for (const [section, theme] of Object.entries(SELAH_THEME_BY_SECTION) as [SectionKey, SelahThemeName][]) {
+    if (theme === themeFromFolderSlug) return section;
+  }
+  return null;
+}
+
+function resolveSubsecaoFromSlug(theme: SelahThemeName, subsecaoSlug: string): string | null {
+  const normalized = slugify(subsecaoSlug);
+  return SELAH_SUBSECOES_BY_THEME[theme].find((subsecao) => slugify(subsecao) === normalized) ?? null;
+}
 
 // Short display labels per series
 const SERIES_LABEL: Record<string, string> = {
@@ -1925,6 +2026,9 @@ function SectionCard({ sectionKey, books, onSelect }: {
 interface BookstoreProps {
   mode?: 'default' | 'types';
   openSlug?: string;
+  routeThemeSlug?: string;
+  routeSubsecaoSlug?: string;
+  routeEbookSlug?: string;
 }
 
 function clearOpenSlugFromUrl() {
@@ -1935,9 +2039,16 @@ function clearOpenSlugFromUrl() {
   window.history.replaceState(null, '', nextUrl);
 }
 
-export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps) {
+export default function Bookstore({
+  mode = 'default',
+  openSlug,
+  routeThemeSlug,
+  routeSubsecaoSlug,
+  routeEbookSlug,
+}: BookstoreProps) {
   const isTypesMode = mode === 'types';
   const [selectedSection, setSelectedSection] = useState<SectionKey | null>(null);
+  const [selectedSubsecao, setSelectedSubsecao] = useState<string | null>(null);
   const [activeTypeId, setActiveTypeId] = useState<TypologyDivisionId | null>(null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
@@ -1952,9 +2063,14 @@ export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps
   const typologyMarkdownBySlug = useMemo(() => buildTypologyMarkdownBySlugIndex(), []);
   const normalizeMergedBookCategory = (book: BookItem): BookItem => {
     const seriesFolder = book.slug.split('/')[0] ?? '';
+    const normalizedCategory = normalizeBookCategory(book.category, seriesFolder);
+    const normalizedSubsecao = (book.subsecao || '').trim();
+    const section = CATEGORY_TO_SECTION[normalizedCategory] ?? CATEGORY_TO_SECTION[normalizedCategory.toLowerCase()];
     return {
       ...book,
-      category: normalizeBookCategory(book.category, seriesFolder),
+      category: normalizedCategory,
+      tema: book.tema || (section ? SELAH_THEME_BY_SECTION[section] : undefined),
+      subsecao: normalizedSubsecao || undefined,
     };
   };
   const mergedBooks = useMemo(() => {
@@ -1967,10 +2083,54 @@ export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps
     for (const indexed of books ?? []) {
       const normalized = normalizeMergedBookCategory(indexed);
       if (isRemovedAnthropologySeriesBook(normalized)) continue;
-      map.set(normalized.slug, normalized);
+      const existing = map.get(normalized.slug);
+      map.set(normalized.slug, existing ? {
+        ...existing,
+        ...normalized,
+        tema: existing.tema || normalized.tema,
+        subsecao: normalized.subsecao || existing.subsecao,
+      } : normalized);
     }
     return Array.from(map.values());
   }, [books, discoveredBooks]);
+
+  const booksWithoutValidSubsecao = useMemo<SubsecaoAuditEntry[]>(() => {
+    return mergedBooks.flatMap((book): SubsecaoAuditEntry[] => {
+      const tema = resolveSelahTheme(book);
+      if (!tema) return [];
+
+      const validSubsecoes = SELAH_SUBSECOES_BY_THEME[tema];
+      const subsecao = (book.subsecao || '').trim();
+      if (!subsecao) {
+        return [{
+          slug: book.slug,
+          title: book.title,
+          tema,
+          category: book.category,
+          reason: 'missing' as const,
+          validSubsecoes,
+        }];
+      }
+
+      const isValid = validSubsecoes.includes(subsecao);
+      if (isValid) return [];
+
+      return [{
+        slug: book.slug,
+        title: book.title,
+        tema,
+        category: book.category,
+        subsecao,
+        reason: 'invalid' as const,
+        validSubsecoes,
+      }];
+    });
+  }, [mergedBooks]);
+
+  useEffect(() => {
+    if (booksWithoutValidSubsecao.length === 0) return;
+    console.warn('[Selah] Ebooks sem subseção válida detectados:', booksWithoutValidSubsecao);
+  }, [booksWithoutValidSubsecao]);
 
   const visibleSectionOrder: SectionKey[] = SECTION_ORDER;
 
@@ -1993,6 +2153,101 @@ export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps
         }, {} as Record<string, BookItem[]>)
       ).map(([category, items]) => [category, sortBooksInSeries(category, items)] as [string, BookItem[]])
     : [];
+
+  const subsecaoAvailabilityByName = useMemo(() => {
+    if (!selectedSection) return null;
+
+    const selectedTheme = SELAH_THEME_BY_SECTION[selectedSection];
+    if (!selectedTheme) return null;
+
+    const map = new Map<string, number>();
+    for (const subsecao of SELAH_SUBSECOES_BY_THEME[selectedTheme]) {
+      map.set(subsecao, 0);
+    }
+
+    for (const book of booksBySection[selectedSection]) {
+      const resolvedTheme = resolveSelahTheme(book);
+      if (resolvedTheme !== selectedTheme) continue;
+      const subsecao = (book.subsecao || '').trim();
+      if (!subsecao || !map.has(subsecao)) continue;
+      map.set(subsecao, (map.get(subsecao) || 0) + 1);
+    }
+
+    return map;
+  }, [booksBySection, selectedSection]);
+
+  const canonicalSelahPath = useMemo(() => {
+    if (isTypesMode) return null;
+    if (!selectedSection) return '/selah';
+
+    const theme = SELAH_THEME_BY_SECTION[selectedSection];
+    if (!theme) return '/selah';
+
+    let path = `/selah/${slugify(theme)}`;
+    if (selectedSubsecao) {
+      path += `/${slugify(selectedSubsecao)}`;
+    }
+    if (selectedSlug) {
+      path += `/${encodeURIComponent(selectedSlug)}`;
+    }
+    return path;
+  }, [isTypesMode, selectedSection, selectedSlug, selectedSubsecao]);
+
+  useEffect(() => {
+    if (isTypesMode) return;
+    if (!canonicalSelahPath) return;
+    if (routeThemeSlug && !selectedSection) return;
+    if (routeThemeSlug && routeSubsecaoSlug && !selectedSubsecao) return;
+    if (routeThemeSlug && routeSubsecaoSlug && routeEbookSlug && !selectedSlug) return;
+
+    const currentPath = window.location.pathname;
+    if (currentPath === canonicalSelahPath) return;
+
+    const currentPathWithoutTrailing = currentPath.length > 1 && currentPath.endsWith('/')
+      ? currentPath.slice(0, -1)
+      : currentPath;
+    if (currentPathWithoutTrailing === canonicalSelahPath) return;
+
+    window.history.pushState(null, '', canonicalSelahPath);
+  }, [
+    canonicalSelahPath,
+    isTypesMode,
+    routeEbookSlug,
+    routeSubsecaoSlug,
+    routeThemeSlug,
+    selectedSection,
+    selectedSlug,
+    selectedSubsecao,
+  ]);
+
+  useEffect(() => {
+    if (isTypesMode) return;
+
+    if (!routeThemeSlug) {
+      setSelectedSection((current) => (current ? null : current));
+      setSelectedSubsecao((current) => (current ? null : current));
+      return;
+    }
+
+    const section = resolveSectionFromThemeSlug(routeThemeSlug);
+    if (!section) return;
+    const theme = SELAH_THEME_BY_SECTION[section];
+
+    setSelectedSection((current) => (current === section ? current : section));
+
+    if (!routeSubsecaoSlug || !theme) {
+      setSelectedSubsecao((current) => (current ? null : current));
+      return;
+    }
+
+    const subsecao = resolveSubsecaoFromSlug(theme, routeSubsecaoSlug);
+    if (!subsecao) {
+      setSelectedSubsecao((current) => (current ? null : current));
+      return;
+    }
+
+    setSelectedSubsecao((current) => (current === subsecao ? current : subsecao));
+  }, [isTypesMode, routeThemeSlug, routeSubsecaoSlug]);
 
   const scrollSectionSeries = (seriesKey: string, delta: number) => {
     const wrapper = sectionSeriesRowRefs.current[seriesKey];
@@ -2140,7 +2395,7 @@ export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
-  }, [selectedSection, activeTypeId, selectedSlug]);
+  }, [selectedSection, selectedSubsecao, activeTypeId, selectedSlug]);
 
   const handleSelectBook = async (slug: string) => {
     setSelectedSlug(slug);
@@ -2175,6 +2430,14 @@ export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps
     clearOpenSlugFromUrl();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mergedBooks, openSlug, selectedSlug, typologyMarkdownBySlug]);
+
+  useEffect(() => {
+    if (isTypesMode || !routeEbookSlug || selectedSlug) return;
+    const hasMatch = mergedBooks.some((book) => book.slug === routeEbookSlug) || Boolean(typologyMarkdownBySlug[routeEbookSlug]);
+    if (!hasMatch) return;
+    void handleSelectBook(routeEbookSlug);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isTypesMode, mergedBooks, routeEbookSlug, selectedSlug, typologyMarkdownBySlug]);
 
   const handleCloseReader = () => { setSelectedSlug(null); setMarkdownContent(null); };
 
@@ -2405,6 +2668,208 @@ export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps
 
   // ── Section detail ─────────────────────────────────────────────────────────
   if (selectedSection) {
+    const selectedTheme = SELAH_THEME_BY_SECTION[selectedSection];
+    if (selectedTheme) {
+      const themeLabel = SECTIONS[selectedSection].label;
+      const themeDescription = SECTIONS[selectedSection].description;
+      const subsectionCounts = subsecaoAvailabilityByName ?? new Map<string, number>();
+      const filteredSubsecaoBooks = selectedSubsecao
+        ? booksBySection[selectedSection].filter((book) => {
+            const resolvedTheme = resolveSelahTheme(book);
+            if (resolvedTheme !== selectedTheme) return false;
+            return (book.subsecao || '').trim() === selectedSubsecao;
+          })
+        : [];
+      const seriesInSubsecao: [string, BookItem[]][] = selectedSubsecao
+        ? Object.entries(
+            filteredSubsecaoBooks.reduce((acc, book) => {
+              (acc[book.category] ??= []).push(book);
+              return acc;
+            }, {} as Record<string, BookItem[]>)
+          ).map(([category, items]) => [category, sortBooksInSeries(category, items)] as [string, BookItem[]])
+        : [];
+
+      if (selectedSubsecao) {
+        return (
+          <div className="pt-4 sm:pt-6 pb-24 sm:pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
+            <section className="relative overflow-hidden rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-4 sm:p-6">
+              <FireflyLayer />
+
+              <button
+                onClick={() => setSelectedSubsecao(null)}
+                className="relative z-10 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
+              >
+                <ArrowLeft size={12} />
+                Subseções
+              </button>
+
+              <div className="relative z-10 mt-3 sm:mt-4 mb-4 sm:mb-5">
+                <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
+                  Seção Selah
+                </span>
+                <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
+                  {selectedSubsecao}
+                </h2>
+                <p className="text-[10px] sm:text-xs text-on-surface-variant/85 leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">
+                  {themeLabel} {'>'} {selectedSubsecao}
+                </p>
+              </div>
+
+              <div className="relative z-10 border-t border-primary/15 pt-4 sm:pt-5">
+                {seriesInSubsecao.map(([cat, items], index) => {
+                  const reads = items.map((b) => pm.getReadCount('livraria', b.slug));
+                  const minReads = reads.length ? Math.min(...reads) : 0;
+                  const label = toSeriesDisplayLabel(cat);
+                  const seriesDescription = buildAutoSeriesDescription(cat, items);
+                  const badgeLabel = getSeriesBadgeLabel(selectedSection, cat);
+                  const seriesKey = `${selectedSection}-${slugify(selectedSubsecao)}-${slugify(cat)}`;
+
+                  return (
+                    <div key={cat} className="mb-5 sm:mb-6">
+                      <div className="mb-2">
+                        <div className="mb-1 flex items-center justify-between gap-2">
+                          <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-primary">
+                            {badgeLabel}
+                          </span>
+                          <div className="hidden sm:flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => scrollSectionSeries(seriesKey, -240)}
+                              className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant/45 bg-black/35 text-on-surface-variant transition-colors hover:border-primary/55 hover:text-primary"
+                              aria-label={`Voltar ${label}`}
+                            >
+                              <ChevronLeft size={13} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => scrollSectionSeries(seriesKey, 240)}
+                              className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant/45 bg-black/35 text-on-surface-variant transition-colors hover:border-primary/55 hover:text-primary"
+                              aria-label={`Avançar ${label}`}
+                            >
+                              <ChevronRight size={13} />
+                            </button>
+                          </div>
+                        </div>
+                        <div className="flex items-baseline gap-2 flex-wrap">
+                          <h4 className="font-headline font-extrabold text-lg sm:text-xl text-on-surface tracking-tighter uppercase leading-none">
+                            {label}
+                          </h4>
+                          {minReads > 0 && (
+                            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">
+                              (Lido {minReads} vez{minReads > 1 ? 'es' : ''})
+                            </span>
+                          )}
+                        </div>
+                        {seriesDescription && (
+                          <p className="mt-1 text-[9px] sm:text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm">
+                            {seriesDescription}
+                          </p>
+                        )}
+                      </div>
+
+                      <div
+                        ref={(element) => {
+                          sectionSeriesRowRefs.current[seriesKey] = element;
+                        }}
+                        className="relative -mx-4 px-4 sm:-mx-6 sm:px-6"
+                      >
+                        <DragScrollRow>
+                          {items.map((item, j) => (
+                            <BookCard
+                              key={item.slug}
+                              item={item}
+                              displayVolume={extractVolumeFromBook(item) ?? (j + 1)}
+                              onSelect={() => handleSelectBook(item.slug)}
+                            />
+                          ))}
+                        </DragScrollRow>
+                      </div>
+
+                      {index < seriesInSubsecao.length - 1 && (
+                        <div className="mt-2.5 sm:mt-3 px-1">
+                          <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/55 to-transparent animate-[pulse_4.5s_ease-in-out_infinite]" />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {seriesInSubsecao.length === 0 && (
+                  <div className="rounded-2xl border border-primary/20 bg-black/20 px-4 sm:px-5 py-4 sm:py-5">
+                    <p className="text-xs sm:text-sm font-semibold text-primary/95">
+                      Em breve novos estudos sobre {selectedSubsecao}
+                    </p>
+                    <p className="mt-1 text-[11px] sm:text-xs text-on-surface-variant/80 leading-relaxed">
+                      Esta subseção está preparada e receberá novos conteúdos assim que forem etiquetados.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </section>
+          </div>
+        );
+      }
+
+      return (
+        <div className="pt-4 sm:pt-6 pb-24 sm:pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
+          <section className="relative overflow-hidden rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-4 sm:p-6">
+            <FireflyLayer />
+
+            <button
+              onClick={() => setSelectedSection(null)}
+              className="relative z-10 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
+            >
+              <ArrowLeft size={12} />
+              Selah
+            </button>
+
+            <div className="relative z-10 mt-3 sm:mt-4 mb-4 sm:mb-5">
+              <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
+                Seção Selah
+              </span>
+              <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
+                {themeLabel}
+              </h2>
+              <p className="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">{themeDescription}</p>
+            </div>
+
+            <div className="relative z-10 border-t border-primary/15 pt-4 sm:pt-5">
+              <h3 className="font-headline text-lg sm:text-xl font-black tracking-tight text-on-surface mb-3">
+                Subseções
+              </h3>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
+                {SELAH_SUBSECOES_BY_THEME[selectedTheme].map((subsecao) => {
+                  const count = subsectionCounts.get(subsecao) || 0;
+                  const isActive = count > 0;
+                  return (
+                    <button
+                      key={`${selectedTheme}-${slugify(subsecao)}`}
+                      type="button"
+                      disabled={!isActive}
+                      onClick={() => setSelectedSubsecao(subsecao)}
+                      className={[
+                        'subsecao-botao group rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,175,55,0.45)]',
+                        isActive ? 'bg-black/20 cursor-pointer' : 'bg-black/15 em-breve',
+                      ].join(' ')}
+                    >
+                      <span className="block text-[11px] sm:text-xs font-black tracking-wide text-on-surface">{subsecao}</span>
+                      {isActive ? (
+                        <span className="mt-1 block text-[9px] sm:text-[10px] text-primary/80">{count} estudo{count > 1 ? 's' : ''}</span>
+                      ) : (
+                        <span className="mt-1 block text-[9px] sm:text-[10px] text-on-surface-variant/85">Em breve</span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
     const { label, description, Icon, numero } = SECTIONS[selectedSection];
     return (
       <div className="pt-4 sm:pt-6 pb-24 sm:pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
@@ -2415,7 +2880,10 @@ export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps
           </div>
 
           <button
-            onClick={() => setSelectedSection(null)}
+            onClick={() => {
+              setSelectedSubsecao(null);
+              setSelectedSection(null);
+            }}
             className="relative z-10 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
           >
             <ArrowLeft size={12} />
@@ -2570,10 +3038,42 @@ export default function Bookstore({ mode = 'default', openSlug }: BookstoreProps
                 key={sec}
                 sectionKey={sec}
                 books={booksBySection[sec]}
-                onSelect={() => setSelectedSection(sec)}
+                onSelect={() => {
+                  setSelectedSubsecao(null);
+                  setSelectedSection(sec);
+                }}
               />
             ))}
           </div>
+        )}
+
+        {booksWithoutValidSubsecao.length > 0 && (
+          <details className="mt-4 rounded-2xl border border-amber-400/35 bg-amber-950/20 px-3 sm:px-4 py-3 sm:py-4">
+            <summary className="cursor-pointer text-[10px] sm:text-xs font-black uppercase tracking-widest text-amber-200">
+              Ebooks sem subseção válida ({booksWithoutValidSubsecao.length})
+            </summary>
+            <p className="mt-2 text-[11px] sm:text-xs text-amber-100/85 leading-relaxed">
+              Estes conteúdos continuam carregáveis, mas precisam de revisão no campo <span className="font-black">subsecao</span>.
+            </p>
+            <ul className="mt-2 space-y-1.5">
+              {booksWithoutValidSubsecao.map((entry) => (
+                <li key={entry.slug} className="rounded-lg border border-amber-300/20 bg-black/20 px-2.5 py-2">
+                  <p className="text-[11px] sm:text-xs font-semibold text-amber-100">{entry.title}</p>
+                  <p className="text-[10px] sm:text-[11px] text-amber-100/80">
+                    Tema: {entry.tema} | Categoria atual: {entry.category}
+                  </p>
+                  <p className="text-[10px] sm:text-[11px] text-amber-100/80">
+                    {entry.reason === 'missing'
+                      ? 'Subseção ausente.'
+                      : `Subseção inválida: ${entry.subsecao}.`}
+                  </p>
+                  <p className="text-[10px] sm:text-[11px] text-amber-100/70">
+                    Válidas: {entry.validSubsecoes.join(', ')}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </details>
         )}
 
         {error && (

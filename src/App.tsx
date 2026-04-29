@@ -53,7 +53,37 @@ const normalizePath = (path: string) => {
   return path.toLowerCase();
 };
 
-const resolveScreenFromPath = (path: string) => SCREEN_BY_PATH[normalizePath(path)] ?? Screen.HOME;
+interface SelahRouteParams {
+  themeSlug?: string;
+  subsecaoSlug?: string;
+  ebookSlug?: string;
+}
+
+const parseSelahRoute = (path: string): SelahRouteParams => {
+  const raw = path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
+  if (!raw.toLowerCase().startsWith('/selah')) return {};
+
+  const parts = raw.split('/').filter(Boolean).slice(1);
+  const decodePart = (value: string) => {
+    try {
+      return decodeURIComponent(value);
+    } catch {
+      return value;
+    }
+  };
+
+  return {
+    themeSlug: parts[0] ? decodePart(parts[0]) : undefined,
+    subsecaoSlug: parts[1] ? decodePart(parts[1]) : undefined,
+    ebookSlug: parts[2] ? decodePart(parts[2]) : undefined,
+  };
+};
+
+const resolveScreenFromPath = (path: string) => {
+  const normalized = normalizePath(path);
+  if (normalized.startsWith('/selah/')) return Screen.BOOKSTORE;
+  return SCREEN_BY_PATH[normalized] ?? Screen.HOME;
+};
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>(() => resolveScreenFromPath(window.location.pathname));
@@ -111,6 +141,7 @@ export default function App() {
 
   const renderScreen = () => {
     const openSlug = new URLSearchParams(window.location.search).get('open') || undefined;
+    const selahRoute = parseSelahRoute(window.location.pathname);
     switch (currentScreen) {
       case Screen.HOME:
         return <HomeDashboard onNavigate={handleNavigate} />;
@@ -123,7 +154,14 @@ export default function App() {
       case Screen.EBD:
         return <EBD onNavigate={handleNavigate} />;
       case Screen.BOOKSTORE:
-        return <Bookstore openSlug={openSlug} />;
+        return (
+          <Bookstore
+            openSlug={openSlug}
+            routeThemeSlug={selahRoute.themeSlug}
+            routeSubsecaoSlug={selahRoute.subsecaoSlug}
+            routeEbookSlug={selahRoute.ebookSlug}
+          />
+        );
       case Screen.TOOLS:
         return <Bookstore mode="types" openSlug={openSlug} />;
       case Screen.REFUTACAO:
