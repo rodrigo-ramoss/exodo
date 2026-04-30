@@ -325,8 +325,6 @@ function pickCategoryByFolder(folder: string): string {
     ['serie - sombras do reino de deus', 'SOMBRAS DO REINO DE DEUS'],
     ['serie - a verdadeira historia da igreja', 'Série — A Verdadeira História da Igreja'],
     ['serie - o codigo das eras', 'Série — O Código das Eras'],
-    ['serie - as origens do sabado', 'Série — As Origens do Sábado'],
-    ['serie - o relogio escatologico', 'Série — O Relógio Escatológico'],
     ['serie - parabolas de jesus', 'Série — Parábolas de Jesus'],
     ['serie - ruah - a pessoa esquecida da divindade', 'Série — Ruah — A Pessoa Esquecida da Divindade'],
     ['serie - a blasfemia contra o ruah', 'Série — A Blasfêmia contra o Ruah'],
@@ -809,6 +807,8 @@ function normalizeLocalCoverPath(path: string): string {
     .split('#')[0]
     .replace(/\\/g, '/')
     .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
 }
 
@@ -879,6 +879,8 @@ function inferSeriesFallbackCover(title: string, slug: string, category?: string
 
 const SELAH_SUBSECTION_FALLBACK_RULES: Partial<Record<SelahThemeTitle, Array<{ subsection: string; matchers: string[] }>>> = {
   'JESUS CRISTO': [
+    { subsection: 'Ressurreição', matchers: ['santos da ressurreicao', 'primicias que sairam dos sepulcros'] },
+    { subsection: 'Morte', matchers: ['descida ao hades', 'chaves da morte e do hades', 'morte do diabo', 'poder da morte desmantelado'] },
     { subsection: 'Cruz', matchers: ['a cruz no mundo espiritual', 'cruz no mundo espiritual'] },
     { subsection: 'Batalha', matchers: ['invasao legal'] },
   ],
@@ -892,6 +894,10 @@ const SELAH_SUBSECTION_FALLBACK_RULES: Partial<Record<SelahThemeTitle, Array<{ s
   'APÓCRIFOS': [
     { subsection: 'Enoque', matchers: ['serie - 1 enoque', '1 enoque'] },
     { subsection: 'Jubileus', matchers: ['serie - jubileus', 'jubileus'] },
+  ],
+  'HISTÓRIA DA IGREJA': [
+    { subsection: 'Ceia do Senhor: A Refeição que Virou Sacrifício', matchers: ['serie - a refeicao que virou missa', 'ceia-do-senhor'] },
+    { subsection: 'Eclésia: A Comunidade que Virou Hierarquia', matchers: ['verdade-sobre-a-igreja', 'serie - a verdadeira historia da igreja', 'trilogia - o canon oculto', 'serie - o veu rasgado'] },
   ],
 };
 
@@ -1209,8 +1215,6 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'sombras do reino':                         'TIPOLOGIA BÍBLICA',
   'a terra e o tabernaculo':                  'TIPOLOGIA BÍBLICA',
   'SOMBRAS DO REINO DE DEUS':                 'MUNDO ESPIRITUAL',
-  'Série — As Origens do Sábado':             'BATALHA ESPIRITUAL',
-  'Série — O Relógio Escatológico':           'FIM DOS TEMPOS',
   'Série — Parábolas de Jesus':               'JESUS CRISTO',
   'Série — O Código do Jardim':               'IA & APOCALIPSE',
   'Série — A Queda do Mundo Espiritual':      'SATANÁS E DEMÔNIOS',
