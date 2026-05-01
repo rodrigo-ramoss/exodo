@@ -1,4 +1,4 @@
-import { BookMarked, BookOpen, CheckCircle2, Flag, GraduationCap, Layers, Library, TrendingUp } from 'lucide-react';
+import { BookMarked, BookOpen, CheckCircle2, Flag, GraduationCap, Library, TrendingUp } from 'lucide-react';
 import { Screen } from '../types';
 import { useProfile } from '../state/ProfileContext';
 import { AppImage } from './AppImage';
@@ -15,7 +15,6 @@ interface HomeDashboardProps {
 const SECTION_NAVIGATION = {
   MANÁ: Screen.MANA,
   ENSINOS: Screen.ENSINOS,
-  TIPOS: Screen.TOOLS,
   SELAH: Screen.BOOKSTORE,
   BABEL: Screen.REFUTACAO,
 };
@@ -23,7 +22,6 @@ const SECTION_NAVIGATION = {
 const SECTION_ICON = {
   MANÁ: GraduationCap,
   ENSINOS: BookOpen,
-  TIPOS: Layers,
   SELAH: Library,
   BABEL: BookMarked,
 };
@@ -48,7 +46,6 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
   const continueCards = [
     lastReadings.mana,
     lastReadings.ensinos,
-    lastReadings.tipos,
     lastReadings.selah,
     lastReadings.babel,
   ];

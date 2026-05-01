@@ -76,8 +76,8 @@ interface GroupActivity {
 }
 
 export interface LastReadingCard {
-  section: 'mana' | 'tipos' | 'selah' | 'babel' | 'ensinos';
-  label: 'MANÁ' | 'TIPOS' | 'SELAH' | 'BABEL' | 'ENSINOS';
+  section: 'mana' | 'selah' | 'babel' | 'ensinos';
+  label: 'MANÁ' | 'SELAH' | 'BABEL' | 'ENSINOS';
   category: Category;
   title: string;
   slug: string;
@@ -94,7 +94,6 @@ export interface UserProgressSnapshot {
   goals: GoalProgress[];
   lastReadings: {
     mana: LastReadingCard;
-    tipos: LastReadingCard;
     selah: LastReadingCard;
     babel: LastReadingCard;
     ensinos: LastReadingCard;
@@ -344,13 +343,13 @@ function computeWeeklyGoal(
   };
 }
 
-function isTypesBook(item: LibraryItem): boolean {
-  const category = normalizeKey(item.category || '').replace(/-/g, ' ');
-  const slug = normalizeKey(item.slug || '').replace(/-/g, ' ');
+function isArchivedTypesBook(item: LibraryItem): boolean {
+  const category = normalizeKey(item.category || '');
+  const slug = normalizeKey(item.slug || '');
   return (
     category.includes('tipologia') ||
-    category.includes('tabernaculo') ||
-    slug.includes('tipologia biblica')
+    slug.includes('tipologia-biblica') ||
+    slug.includes('codigo-dos-arquetipos')
   );
 }
 
@@ -551,17 +550,10 @@ export function useUserProgress(): UserProgressSnapshot {
     () => (studies ?? []).map((item) => ({ title: item.title || item.slug, slug: item.slug, image: item.image })),
     [studies],
   );
-  const tiposCards = useMemo(
-    () =>
-      mergedLibraryCards
-        .filter(isTypesBook)
-        .map((item) => ({ title: item.title || item.slug, slug: item.slug, image: item.image })),
-    [mergedLibraryCards],
-  );
   const selahCards = useMemo(
     () =>
       mergedLibraryCards
-        .filter((item) => !isTypesBook(item))
+        .filter((item) => !isArchivedTypesBook(item))
         .map((item) => ({ title: item.title || item.slug, slug: item.slug, image: item.image })),
     [mergedLibraryCards],
   );
@@ -574,22 +566,9 @@ export function useUserProgress(): UserProgressSnapshot {
     [],
   );
 
-  const groupedTiposSeries = useMemo(() => {
-    const grouped = new Map<string, GoalGroup>();
-    for (const item of mergedLibraryCards.filter(isTypesBook)) {
-      const fallback = livrariaModuleEntries.find((entry) => entry.slug === item.slug);
-      const label = (item.category || fallback?.fallbackSeriesLabel || titleCase(item.slug.split('/')[0] || 'Série')).trim();
-      const key = normalizeKey(label);
-      const current = grouped.get(key) ?? { label, slugs: [] };
-      current.slugs.push(item.slug);
-      grouped.set(key, current);
-    }
-    return Array.from(grouped.values());
-  }, [mergedLibraryCards]);
-
   const groupedSelahSeries = useMemo(() => {
     const grouped = new Map<string, GoalGroup>();
-    for (const item of mergedLibraryCards.filter((entry) => !isTypesBook(entry))) {
+    for (const item of mergedLibraryCards.filter((entry) => !isArchivedTypesBook(entry))) {
       const fallback = livrariaModuleEntries.find((entry) => entry.slug === item.slug);
       const label = (item.category || fallback?.fallbackSeriesLabel || titleCase(item.slug.split('/')[0] || 'Série')).trim();
       const key = normalizeKey(label);
@@ -645,13 +624,6 @@ export function useUserProgress(): UserProgressSnapshot {
         itemName: 'série',
         unitName: 'volumes',
       }),
-      computeWeeklyGoal('livraria', groupedTiposSeries, weekStartMs, {
-        key: 'meta-tipos',
-        label: '1 série em Tipos',
-        target: '1 série em Tipos',
-        itemName: 'série',
-        unitName: 'volumes',
-      }),
       computeWeeklyGoal('mana', groupedManaEbooks, weekStartMs, {
         key: 'meta-mana',
         label: '1 e-book em Maná',
@@ -672,7 +644,6 @@ export function useUserProgress(): UserProgressSnapshot {
       groupedEnsinosSeries,
       groupedManaEbooks,
       groupedSelahSeries,
-      groupedTiposSeries,
       weekStartMs,
     ],
   );
@@ -746,12 +717,11 @@ export function useUserProgress(): UserProgressSnapshot {
   const lastReadings = useMemo(
     () => ({
       mana: pickLastReading('mana', 'MANÁ', 'mana', manaCards),
-      tipos: pickLastReading('tipos', 'TIPOS', 'livraria', tiposCards),
       selah: pickLastReading('selah', 'SELAH', 'livraria', selahCards),
       babel: pickLastReading('babel', 'BABEL', 'refutacao', babelCards),
       ensinos: pickLastReading('ensinos', 'ENSINOS', 'ensinos', ensinosCards),
     }),
-    [babelCards, ensinosCards, manaCards, selahCards, tiposCards],
+    [babelCards, ensinosCards, manaCards, selahCards],
   );
 
   const countsByCategory = (category: Category, slugs: string[]) => {
@@ -770,14 +740,14 @@ export function useUserProgress(): UserProgressSnapshot {
 
   const totals = useMemo(() => {
     const mana = countsByCategory('mana', manaCards.map((item) => item.slug));
-    const livraria = countsByCategory('livraria', [...tiposCards, ...selahCards].map((item) => item.slug));
+    const livraria = countsByCategory('livraria', selahCards.map((item) => item.slug));
     const babel = countsByCategory('refutacao', babelCards.map((item) => item.slug));
     const ensinos = countsByCategory('ensinos', ensinosCards.map((item) => item.slug));
     const completed = mana.completed + livraria.completed + babel.completed + ensinos.completed;
     const inProgress = mana.inProgress + livraria.inProgress + babel.inProgress + ensinos.inProgress;
     const startedSeries = Object.values(lastReadings).filter((item) => item.status !== 'Aguardando').length;
     return { completed, inProgress, startedSeries };
-  }, [babelCards, ensinosCards, lastReadings, manaCards, selahCards, tiposCards]);
+  }, [babelCards, ensinosCards, lastReadings, manaCards, selahCards]);
 
   const hasAnyReadingStarted = totals.completed > 0 || totals.inProgress > 0;
 

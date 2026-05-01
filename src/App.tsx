@@ -25,7 +25,6 @@ const PATH_BY_SCREEN: Record<Screen, string> = {
   [Screen.ENSINOS]: '/ensinos',
   [Screen.EBD]: '/ebd',
   [Screen.BOOKSTORE]: '/selah',
-  [Screen.TOOLS]: '/tipos',
   [Screen.REFUTACAO]: '/babel',
   [Screen.APOCRYPHA]: '/apocrifos',
   [Screen.SETTINGS]: '/configuracoes',
@@ -41,7 +40,7 @@ const SCREEN_BY_PATH: Record<string, Screen> = {
   '/ensinos': Screen.ENSINOS,
   '/ebd': Screen.EBD,
   '/selah': Screen.BOOKSTORE,
-  '/tipos': Screen.TOOLS,
+  '/tipos': Screen.BOOKSTORE,
   '/babel': Screen.REFUTACAO,
   '/apocrifos': Screen.APOCRYPHA,
   '/configuracoes': Screen.SETTINGS,
@@ -162,8 +161,6 @@ export default function App() {
             routeEbookSlug={selahRoute.ebookSlug}
           />
         );
-      case Screen.TOOLS:
-        return <Bookstore mode="types" openSlug={openSlug} />;
       case Screen.REFUTACAO:
         return <Refutation openSlug={openSlug} />;
       case Screen.APOCRYPHA:
