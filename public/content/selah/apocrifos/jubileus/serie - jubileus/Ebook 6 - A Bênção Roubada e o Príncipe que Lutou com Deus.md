@@ -1,6 +1,7 @@
 ---
 title: A Bênção Roubada e o Príncipe que Lutou com Deus
 category: SÉRIE — JUBILEUS
+image: "/image/selah/a bencao roubada.webp"
 time: LIVRO
 theme: apocrifos
 subsecao: jubileus

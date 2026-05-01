@@ -2,6 +2,7 @@
 title: "Enoque, o Escriba da Justiça"
 subcategory: "Enoque"
 category: A REVELAÇÃO DE ENOQUE
+image: "/image/apocrifos/o escritba da justiça.webp"
 theme: apocrifos
 subsecao: enoque
 subsection: enoque

@@ -3,7 +3,7 @@ title: "O Calendário da Consumação — As Festas de Outono e o Fim dos Tempos
 description: "Quarto volume da série, uma exegese completa de Levítico 23 e sua correlação com a escatologia do Novo Testamento. Descubra como as festas de outono de Israel — Trombetas, Yom Kippur e Tabernáculos — são o mapa litúrgico da segunda vinda, do juízo e do reinado eterno do Messias."
 seção: selah
 category: restauracao
-image: URL da capa (a definir)
+image: "/image/selah/o calendario da cunsumacao.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

@@ -4,7 +4,7 @@ description: "Segundo volume da série, uma exegese de Apocalipse 7 e das promes
 seção: selah
 tema: fim dos tempos
 subseção: arrebatamento
-image: URL da capa (a definir)
+image: "/image/selah/o selo da promessa.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

@@ -2,6 +2,7 @@
 title: "A Origem dos Demônios"
 subcategory: "Enoque"
 category: A REVELAÇÃO DE ENOQUE
+image: "/image/apocrifos/a origem dos demonios.webp"
 theme: apocrifos
 subsecao: enoque
 subsection: enoque

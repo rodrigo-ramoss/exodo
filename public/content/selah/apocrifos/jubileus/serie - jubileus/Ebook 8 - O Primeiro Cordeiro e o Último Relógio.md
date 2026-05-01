@@ -1,6 +1,7 @@
 ---
 title: O Primeiro Cordeiro e o Último Relógio
 category: SÉRIE — JUBILEUS
+image: "/image/selah/o primeiro cordero e o ultimo relogio.webp"
 time: LIVRO
 theme: apocrifos
 subsecao: jubileus

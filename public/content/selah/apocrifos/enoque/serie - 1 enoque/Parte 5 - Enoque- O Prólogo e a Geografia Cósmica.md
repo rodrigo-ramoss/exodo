@@ -1,6 +1,7 @@
 ---
 title: O Prólogo e a Geografia Cósmica
 category: A REVELAÇÃO DE ENOQUE
+image: "/image/apocrifos/o prologo.webp"
 time: LIVRO
 theme: apocrifos
 subsecao: enoque

@@ -5,7 +5,7 @@ description: "Depois de desmascarar a corrupção do batismo, este volume restau
 seção: selah
 tema: historia da igreja
 subseção: batismo
-image: URL_da_capa_placeholder
+image: "/image/selah/o caminhos das aguas.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

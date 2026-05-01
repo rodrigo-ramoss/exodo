@@ -3,7 +3,7 @@ title: "A Blasfêmia Contra a Ruach — O Que Jesus Realmente Disse"
 description: "Primeiro volume da série sobre o pecado imperdoável contra o Espírito Santo. Análise cuidadosa dos três relatos dos Evangelhos à luz das Escrituras de Israel. Para quem carrega o terror de ter cometido o pecado sem perdão e precisa ouvir o que Jesus realmente ensinou."
 seção: selah
 category: espirito santo
-image: "/image/livraria/blasfemia-contra-ruach-vol1.webp"
+image: "/image/selah/o sopro que pairou sobre as aguas.webp"
 theme: espirito-santo
 tema: espirito-santo
 subsecao: blasfemia

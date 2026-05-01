@@ -3,7 +3,7 @@ title: "A Blasfêmia Contra a Ruach — As Sombras da Blasfêmia nas Escrituras 
 description: "Segundo volume da série sobre o pecado imperdoável. As figuras do Antigo Testamento que prefiguraram a blasfêmia contra o Espírito: Nadabe e Abiú, Faraó, Corá, Saul e os espias incrédulos. O que essas sombras revelam sobre o pecado que não tem perdão."
 seção: selah
 category: espirito santo
-image: /image/livraria/blasfemia-contra-ruach-vol2.webp
+image: "/image/selah/ruach o sopro nos ossos secos a nova criacao.webp"
 theme: espirito-santo
 tema: espirito-santo
 subsecao: blasfemia

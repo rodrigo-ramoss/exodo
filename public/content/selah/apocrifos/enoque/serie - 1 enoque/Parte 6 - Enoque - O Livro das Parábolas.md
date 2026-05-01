@@ -1,6 +1,7 @@
 ---
 title: O Livro das Parábolas
 category: A REVELAÇÃO DE ENOQUE
+image: "/image/apocrifos/o livro das parabolas (1).webp"
 time: LIVRO
 theme: apocrifos
 subsecao: enoque

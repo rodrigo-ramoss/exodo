@@ -2,6 +2,7 @@
 title: "Os Filhos de Deus e os Nefilins"
 subcategory: "Enoque"
 category: A REVELAÇÃO DE ENOQUE
+image: "/image/apocrifos/os filhos de deus e os nefilins.webp"
 theme: apocrifos
 subsecao: enoque
 subsection: enoque

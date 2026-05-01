@@ -2,6 +2,7 @@
 title: "O Julgamento dos Anjos e as Prisões Eternas"
 subcategory: "Enoque"
 category: A REVELAÇÃO DE ENOQUE
+image: "/image/apocrifos/o julgamento dos anjos.webp"
 theme: apocrifos
 subsecao: enoque
 subsection: enoque

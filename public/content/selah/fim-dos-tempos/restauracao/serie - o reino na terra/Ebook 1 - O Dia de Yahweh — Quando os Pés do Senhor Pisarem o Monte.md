@@ -3,7 +3,7 @@ title: "O Dia de Yahweh — Quando os Pés do Senhor Pisarem o Monte"
 description: "Exegese completa de Zacarias 14 à luz do método PaRDeS e da cosmovisão do Segundo Templo. O capítulo que desmonta a escatologia de decretos e revela o reinado material e litúrgico do Messias sobre as nações."
 seção: selah
 category: restauracao
-image: URL da capa (a definir)
+image: "/image/selah/o dia de yahwev.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

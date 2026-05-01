@@ -1,6 +1,7 @@
 ---
 title: O Nascimento de Noé e os Apêndices Escatológicos
 category: A REVELAÇÃO DE ENOQUE
+image: "/image/apocrifos/o nascimento de noe.webp"
 time: LIVRO
 theme: apocrifos
 subsecao: enoque

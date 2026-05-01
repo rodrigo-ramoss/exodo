@@ -3,7 +3,7 @@ title: "Terra, Reis e Rio — A Materialidade do Estado Eterno"
 description: "Quinto e último volume da série, uma exegese sobre a vida cotidiana na eternidade. Descubra o que significa a ressurreição do corpo, a cultura redimida, o reinado dos santos e a geografia da Nova Jerusalém, onde o rio da vida corre sob o trono do Cordeiro."
 seção: selah
 category: restauracao
-image: URL da capa (a definir)
+image: "/image/selah/terra reis e rio.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*
