@@ -2255,6 +2255,7 @@ export default function Bookstore({
 
   // Group books by top-level section
   const booksBySection = SECTION_ORDER.reduce((acc, sec) => {
+    const expectedThemeForSection = SELAH_THEME_BY_SECTION[sec];
     acc[sec] = mergedBooks.filter((b) => {
       const category = (b.category || '').trim();
       const mappedByCategory = CATEGORY_TO_SECTION[category] ?? CATEGORY_TO_SECTION[category.toLowerCase()];
@@ -2262,6 +2263,8 @@ export default function Bookstore({
 
       const resolvedTheme = resolveSelahTheme(b);
       if (!resolvedTheme) return false;
+      if (expectedThemeForSection && resolvedTheme === expectedThemeForSection) return true;
+
       const mappedByTheme = CATEGORY_TO_SECTION[resolvedTheme] ?? CATEGORY_TO_SECTION[resolvedTheme.toLowerCase()];
       return mappedByTheme === sec;
     });
