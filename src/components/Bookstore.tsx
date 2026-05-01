@@ -194,6 +194,11 @@ const TYPOLOGY_ESCATOLOGICAL_TOPICS: TypologyObjectalTopicMeta[] = [
 ];
 
 const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
+  'a refeicao que virou missa': {
+    1: 'a mesa do rei o banquete das bodas do cordeiro',
+    2: 'arquetipo do sacrificio',
+    3: 'a mesa do rei o banquete das bodas do cordeiro',
+  },
   'invasao legal': {
     1: 'invasao legal volume 1',
     2: 'invasao legal volume 2',
@@ -262,6 +267,12 @@ const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
     5: 'o santo dos santos',
     6: 'o cosmo e o templo',
   },
+};
+
+const CEIA_TITLE_TO_COVER_STEM: Record<string, string> = {
+  'a mesa do cordeiro': 'a mesa do rei o banquete das bodas do cordeiro',
+  'o altar da repeticao': 'arquetipo do sacrificio',
+  'o banquete da alianca': 'a mesa do rei o banquete das bodas do cordeiro',
 };
 
 function buildCoverStemVariants(stem: string): string[] {
@@ -343,6 +354,9 @@ function pickCategoryByFolder(folder: string): string {
     ['serie - ferramentas de estudo', 'FERRAMENTAS'],
     ['serie - sombras do reino de deus', 'SOMBRAS DO REINO DE DEUS'],
     ['serie - a verdadeira historia da igreja', 'Série — A Verdadeira História da Igreja'],
+    ['serie - a refeicao que virou missa', 'Série — A Refeição que Virou Missa'],
+    ['serie - a imersao que virou aspersao', 'Série — A Imersão que Virou Aspersão'],
+    ['serie - o corpo que virou empresa', 'Série — O Corpo que Virou Empresa'],
     ['serie - o codigo das eras', 'Série — O Código das Eras'],
     ['serie - parabolas de jesus', 'Série — Parábolas de Jesus'],
     ['serie - ruah - a pessoa esquecida da divindade', 'Série — Ruah — A Pessoa Esquecida da Divindade'],
@@ -370,6 +384,8 @@ function pickCategoryByFolder(folder: string): string {
 const SECTION_CATEGORY_ALIASES = new Set<string>([
   'apocrifos',
   'historia da igreja',
+  'ceia do senhor',
+  'batismo',
   'tipologia biblica',
   'cosmologia biblica',
   'mundo espiritual',
@@ -393,6 +409,12 @@ function normalizeBookCategory(rawCategory: string | undefined, seriesFolder: st
   const normalizedSeriesFolder = normalizeSlugLookupKey(seriesFolder).replace(/-/g, ' ');
   if (normalizedSeriesFolder === 'sombras do reino') return 'Série — Sombras do Reino';
   if (normalizedSeriesFolder === 'a terra e o tabernaculo') return 'Série — A Terra e o Tabernáculo';
+  if (normalizedSeriesFolder === 'a refeicao que virou missa') return 'Série — A Refeição que Virou Missa';
+  if (normalizedSeriesFolder === 'a imersao que virou aspersao') return 'Série — A Imersão que Virou Aspersão';
+  if (normalizedSeriesFolder === 'o corpo que virou empresa') return 'Série — O Corpo que Virou Empresa';
+  if (normalizedSeriesFolder === 'a verdadeira historia da igreja') return 'Série — A Verdadeira História da Igreja';
+  if (normalizedSeriesFolder === 'o canon oculto') return 'Trilogia — O Cânon Oculto';
+  if (normalizedSeriesFolder === 'o veu rasgado') return 'Trilogia — O Véu Rasgado';
 
   const categoryFromFolder = pickCategoryByFolder(seriesFolder);
   if (
@@ -855,6 +877,10 @@ function inferSeriesVolumeCoverStem(title: string, slug: string, category?: stri
   if (!volume) return null;
   const haystack = normalizeTitlePreservingPunctuation(`${category || ''} ${title} ${slug}`);
 
+  for (const [needle, stem] of Object.entries(CEIA_TITLE_TO_COVER_STEM)) {
+    if (haystack.includes(needle)) return stem;
+  }
+
   if (haystack.includes('invasao legal')) return SERIES_VOLUME_COVER_STEMS['invasao legal'][volume] ?? null;
   if (haystack.includes('arquitetura da guerra invisivel')) return SERIES_VOLUME_COVER_STEMS['a arquitetura da guerra invisivel'][volume] ?? null;
   if (haystack.includes('armadura do remanescente')) return SERIES_VOLUME_COVER_STEMS['a armadura do remanescente'][volume] ?? null;
@@ -862,6 +888,7 @@ function inferSeriesVolumeCoverStem(title: string, slug: string, category?: stri
   if (haystack.includes('relogio de deus')) return SERIES_VOLUME_COVER_STEMS['o relogio de deus'][volume] ?? null;
   if (haystack.includes('terceiro ceu de paulo')) return SERIES_VOLUME_COVER_STEMS['o terceiro ceu de paulo'][volume] ?? null;
   if (haystack.includes('fio do trono')) return SERIES_VOLUME_COVER_STEMS['o fio do trono'][volume] ?? null;
+  if (haystack.includes('refeicao que virou missa')) return SERIES_VOLUME_COVER_STEMS['a refeicao que virou missa'][volume] ?? null;
   if (haystack.includes('ruah') || haystack.includes('ruach')) {
     if (volume === 5) return 'ruach o sopro nos ossos secos a nova criacao';
   }
@@ -915,9 +942,9 @@ const SELAH_SUBSECTION_FALLBACK_RULES: Partial<Record<SelahThemeTitle, Array<{ s
     { subsection: 'Jubileus', matchers: ['serie - jubileus', 'jubileus'] },
   ],
   'HISTÓRIA DA IGREJA': [
-    { subsection: 'Ceia do Senhor: A Refeição que Virou Sacrifício', matchers: ['serie - a refeicao que virou missa', 'ceia-do-senhor'] },
-    { subsection: 'Ekkelsia: A Comunidade que Virou Hierarquia', matchers: ['eclesia-a-comunidade-que-virou-hierarquia', 'serie - o corpo que virou empresa'] },
-    { subsection: 'Templo: A Casa que Virou Masmorra', matchers: ['verdade-sobre-a-igreja', 'serie - a verdadeira historia da igreja', 'trilogia - o canon oculto', 'serie - o veu rasgado'] },
+    { subsection: 'Ceia do Senhor', matchers: ['serie - a refeicao que virou missa', 'ceia-do-senhor'] },
+    { subsection: 'Ekkelsia', matchers: ['eclesia-a-comunidade-que-virou-hierarquia', 'serie - o corpo que virou empresa'] },
+    { subsection: 'Templo', matchers: ['verdade-sobre-a-igreja', 'serie - a verdadeira historia da igreja', 'trilogia - o canon oculto', 'serie - o veu rasgado'] },
   ],
 };
 
@@ -2205,6 +2232,8 @@ export default function Bookstore({
       map.set(normalized.slug, existing ? {
         ...existing,
         ...normalized,
+        category: existing.category || normalized.category,
+        image: existing.image || normalized.image,
         tema: existing.tema || normalized.tema,
         subsecao: existing.subsecao || normalized.subsecao,
       } : normalized);

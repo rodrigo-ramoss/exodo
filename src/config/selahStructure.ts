@@ -90,31 +90,31 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     order: 9,
     subsections: buildSubsectionsWithCustomSlugs('historia-da-igreja', [
       {
-        title: 'Ceia do Senhor: A Refeição que Virou Sacrifício',
+        title: 'Ceia do Senhor',
         slug: 'ceia-do-senhor-a-refeicao-que-virou-sacrificio',
       },
       {
-        title: 'Batismo: A Imersão que Virou Aspersão',
+        title: 'Batismo',
         slug: 'batismo-a-imersao-que-virou-aspersao',
       },
       {
-        title: 'Ekkelsia: A Comunidade que Virou Hierarquia',
+        title: 'Ekkelsia',
         slug: 'eclesia-a-comunidade-que-virou-hierarquia',
       },
       {
-        title: 'Dízimo: A Generosidade que Virou Imposto',
+        title: 'Dízimo',
         slug: 'dizimo-a-generosidade-que-virou-imposto',
       },
       {
-        title: 'Templo: A Casa que Virou Masmorra',
+        title: 'Templo',
         slug: 'templo-a-casa-que-virou-masmorra',
       },
       {
-        title: 'Jejum e Calendário: A Liberdade que Virou Obrigação',
+        title: 'Jejum e Calendário',
         slug: 'jejum-e-calendario-a-liberdade-que-virou-obrigacao',
       },
       {
-        title: 'Música e Louvor: A Adoração que Virou Show',
+        title: 'Música e Louvor',
         slug: 'musica-e-louvor-a-adoracao-que-virou-show',
       },
       {
@@ -266,16 +266,16 @@ export function resolveSelahSubsectionTitle(themeTitle: SelahThemeTitle, value: 
   }
   if (themeTitle === 'HISTÓRIA DA IGREJA') {
     const historiaAliases: Record<string, string> = {
-      ceia: 'Ceia do Senhor: A Refeição que Virou Sacrifício',
-      'ceia-do-senhor': 'Ceia do Senhor: A Refeição que Virou Sacrifício',
-      batismo: 'Batismo: A Imersão que Virou Aspersão',
+      ceia: 'Ceia do Senhor',
+      'ceia-do-senhor': 'Ceia do Senhor',
+      batismo: 'Batismo',
       'ceia-batismo': 'Ceia, Batismo e o Voto de Pobreza Original',
       'ceia-e-batismo': 'Ceia, Batismo e o Voto de Pobreza Original',
       'ceia-batismo-e-voto': 'Ceia, Batismo e o Voto de Pobreza Original',
-      eclesia: 'Ekkelsia: A Comunidade que Virou Hierarquia',
-      ekkelsia: 'Ekkelsia: A Comunidade que Virou Hierarquia',
-      'verdade-sobre-a-igreja': 'Templo: A Casa que Virou Masmorra',
-      'falsas-doutrinas': 'Templo: A Casa que Virou Masmorra',
+      eclesia: 'Ekkelsia',
+      ekkelsia: 'Ekkelsia',
+      'verdade-sobre-a-igreja': 'Templo',
+      'falsas-doutrinas': 'Templo',
     };
     const aliasTitle = historiaAliases[normalized];
     if (aliasTitle) return aliasTitle;
