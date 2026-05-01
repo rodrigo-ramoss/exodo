@@ -204,13 +204,13 @@ const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
     7: 'invasao legal volume 7',
   },
   'a arquitetura da guerra invisivel': {
-    1: 'arquitetura da guerra invisivl - o conselho das trevas',
-    2: 'arquitetura da guerra invisivl - miguel',
-    3: 'arquitetura da guerra invisivl - o mapado territorio',
-    4: 'arquitetura da guerra invisivl - a estrategia qumranita',
-    5: 'arquitetura da guerra invisivl - melquisedeque e o jubileu da guerra',
-    6: 'arquitetura da guerra invisivl - julgaremos os anjos',
-    7: 'arquitetura da guerra invisivl - restauracao da herenca',
+    1: 'arquitetura da guerra invisivel - o conselho das trevas',
+    2: 'arquitetura da guerra invisivel - miguel',
+    3: 'arquitetura da guerra invisivel - o mapa do territorio',
+    4: 'arquitetura da guerra invisivel - a estrategia qumranita',
+    5: 'arquitetura da guerra invisivel - melquisedeque e o jubileu da guerra',
+    6: 'arquitetura da guerra invisivel - julgaremos os anjos',
+    7: 'arquitetura da guerra invisivel - restauracao da heranca',
   },
   'a armadura do remanescente': {
     1: 'o cinto da verdade',
@@ -222,7 +222,7 @@ const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
     7: 'a oracao do espirito',
   },
   'a revelacao do seculo': {
-    1: 'o dspertar dos vigilantes',
+    1: 'o despertar dos vigilantes',
     2: 'o selo dos 490 anos',
     3: 'a queda de babilonia',
     4: 'a casa de muitas moradas',
@@ -233,7 +233,7 @@ const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
     1: 'o tempo como profecia',
     2: 'o calendario solar dos anjos',
     3: 'a corrupcao do tempo',
-    4: 'quram e a guerra dos calendario',
+    4: 'qumran e a guerra dos calendario',
     5: 'o tempo restaurado',
   },
   'o terceiro ceu de paulo': {
@@ -263,6 +263,25 @@ const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
     6: 'o cosmo e o templo',
   },
 };
+
+function buildCoverStemVariants(stem: string): string[] {
+  const normalized = normalizeTitlePreservingPunctuation(stem);
+  const variants = new Set<string>([normalized]);
+
+  const replacements: Array<[string, string]> = [
+    ['invisivel', 'invisivl'],
+    ['mapa do', 'mapado'],
+    ['despertar', 'dspertar'],
+    ['qumran', 'quram'],
+    ['bronze', 'broze'],
+  ];
+
+  for (const [from, to] of replacements) {
+    if (normalized.includes(from)) variants.add(normalized.replace(from, to));
+  }
+
+  return Array.from(variants);
+}
 
 function parseFrontmatter(markdown: string): Record<string, string> {
   const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
@@ -446,7 +465,7 @@ const TYPOLOGY_COVER_HINTS: Array<[string, string]> = [
   ['patio e as quatro esquinas da terra', 'o patio e as quatro esquinas da terra'],
   ['firmamento como veu estendido', 'o fundamento com o veu escondido'],
   ['colunas da terra', 'as colunas da terra'],
-  ['mar de bronze', 'o mar de broze e as aguas do caos'],
+  ['mar de bronze', 'o mar de bronze e as aguas do caos'],
   ['trono no extremo norte', 'o trono no exremo norte'],
   ['linho bordado', 'o linho bordado'],
   ['pelo de cabra', 'o pelo de cabra'],
@@ -897,8 +916,16 @@ const SELAH_SUBSECTION_FALLBACK_RULES: Partial<Record<SelahThemeTitle, Array<{ s
   ],
   'HISTÓRIA DA IGREJA': [
     { subsection: 'Ceia do Senhor: A Refeição que Virou Sacrifício', matchers: ['serie - a refeicao que virou missa', 'ceia-do-senhor'] },
-    { subsection: 'Eclésia: A Comunidade que Virou Hierarquia', matchers: ['verdade-sobre-a-igreja', 'serie - a verdadeira historia da igreja', 'trilogia - o canon oculto', 'serie - o veu rasgado'] },
+    { subsection: 'Eclésia: A Comunidade que Virou Hierarquia', matchers: ['eclesia-a-comunidade-que-virou-hierarquia', 'serie - o corpo que virou empresa'] },
+    { subsection: 'Ceia, Batismo e o Voto de Pobreza Original', matchers: ['verdade-sobre-a-igreja', 'serie - a verdadeira historia da igreja', 'trilogia - o canon oculto', 'serie - o veu rasgado'] },
   ],
+};
+
+const SELAH_SUBSECTION_COVER_FALLBACKS: Partial<Record<SelahThemeTitle, Record<string, string>>> = {
+  'FIM DOS TEMPOS': {
+    Arrebatamento: '/image/selah/o clangor da trombeta.webp',
+    Restauração: '/image/selah/a noiva cubica.webp',
+  },
 };
 
 function extractFrontmatterSubsectionCandidate(frontmatter: Record<string, string>): string {
@@ -1004,10 +1031,12 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
   ]);
   for (const stem of variantStems) {
     if (!stem) continue;
-    for (const extension of COVER_EXTENSIONS) {
-      candidates.add(`/image/selah/${stem}.${extension}`);
-      if (seriesFolder) candidates.add(`/image/selah/${seriesFolder}/${stem}.${extension}`);
-      if (usesTabernacleCovers) candidates.add(`/image/tipos/${stem}.${extension}`);
+    for (const variantStem of buildCoverStemVariants(stem)) {
+      for (const extension of COVER_EXTENSIONS) {
+        candidates.add(`/image/selah/${variantStem}.${extension}`);
+        if (seriesFolder) candidates.add(`/image/selah/${seriesFolder}/${variantStem}.${extension}`);
+        if (usesTabernacleCovers) candidates.add(`/image/tipos/${variantStem}.${extension}`);
+      }
     }
   }
 
@@ -2939,13 +2968,15 @@ export default function Bookstore({
                   const subsecao = subsecaoEntry.title;
                   const count = subsectionCounts.get(subsecao) || 0;
                   const isHistoriaDaIgreja = selectedTheme === 'HISTÓRIA DA IGREJA';
-                  const subsecaoCover = booksBySection[selectedSection]
+                  const discoveredSubsecaoCover = booksBySection[selectedSection]
                     .find((book) => (
                       resolveSelahSubsectionTitle(selectedTheme, (book.subsecao || '').trim()) === subsecao
                       && resolveSelahTheme(book) === selectedTheme
                       && book.image
                     ))
                     ?.image;
+                  const fallbackSubsecaoCover = SELAH_SUBSECTION_COVER_FALLBACKS[selectedTheme]?.[subsecao];
+                  const subsecaoCover = discoveredSubsecaoCover || fallbackSubsecaoCover;
 
                     return (
                       <button

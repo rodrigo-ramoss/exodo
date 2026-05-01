@@ -266,11 +266,15 @@ export function resolveSelahSubsectionTitle(themeTitle: SelahThemeTitle, value: 
   }
   if (themeTitle === 'HISTÓRIA DA IGREJA') {
     const historiaAliases: Record<string, string> = {
+      ceia: 'Ceia do Senhor: A Refeição que Virou Sacrifício',
       'ceia-do-senhor': 'Ceia do Senhor: A Refeição que Virou Sacrifício',
       batismo: 'Batismo: A Imersão que Virou Aspersão',
+      'ceia-batismo': 'Ceia, Batismo e o Voto de Pobreza Original',
+      'ceia-e-batismo': 'Ceia, Batismo e o Voto de Pobreza Original',
+      'ceia-batismo-e-voto': 'Ceia, Batismo e o Voto de Pobreza Original',
       eclesia: 'Eclésia: A Comunidade que Virou Hierarquia',
-      'verdade-sobre-a-igreja': 'Eclésia: A Comunidade que Virou Hierarquia',
-      'falsas-doutrinas': 'Eclésia: A Comunidade que Virou Hierarquia',
+      'verdade-sobre-a-igreja': 'Ceia, Batismo e o Voto de Pobreza Original',
+      'falsas-doutrinas': 'Ceia, Batismo e o Voto de Pobreza Original',
     };
     const aliasTitle = historiaAliases[normalized];
     if (aliasTitle) return aliasTitle;
@@ -291,11 +295,15 @@ export function resolveSelahSubsectionSlug(themeTitle: SelahThemeTitle, value: s
   }
   if (themeTitle === 'HISTÓRIA DA IGREJA') {
     const historiaAliases: Record<string, string> = {
+      ceia: 'ceia-do-senhor-a-refeicao-que-virou-sacrificio',
       'ceia-do-senhor': 'ceia-do-senhor-a-refeicao-que-virou-sacrificio',
       batismo: 'batismo-a-imersao-que-virou-aspersao',
+      'ceia-batismo': 'ceia-batismo-e-o-voto-de-pobreza-original',
+      'ceia-e-batismo': 'ceia-batismo-e-o-voto-de-pobreza-original',
+      'ceia-batismo-e-voto': 'ceia-batismo-e-o-voto-de-pobreza-original',
       eclesia: 'eclesia-a-comunidade-que-virou-hierarquia',
-      'verdade-sobre-a-igreja': 'eclesia-a-comunidade-que-virou-hierarquia',
-      'falsas-doutrinas': 'eclesia-a-comunidade-que-virou-hierarquia',
+      'verdade-sobre-a-igreja': 'ceia-batismo-e-o-voto-de-pobreza-original',
+      'falsas-doutrinas': 'ceia-batismo-e-o-voto-de-pobreza-original',
     };
     const aliasSlug = historiaAliases[normalized];
     if (aliasSlug) return aliasSlug;
