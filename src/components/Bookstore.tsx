@@ -367,7 +367,7 @@ function pickCategoryByFolder(folder: string): string {
     ['trilogia - o estrangeiro prospero', 'Trilogia — O Estrangeiro Próspero'],
     ['trilogia - a ciencia dos tempos', 'Trilogia — A Ciência dos Tempos'],
     ['trilogia - a marca', 'Trilogia — A Marca'],
-    ['trilogia - o canon oculto', 'Trilogia — O Cânon Oculto'],
+    ['trilogia - o canon oculto', 'Série — O Cânon Oculto'],
     ['trilogia - o veu rasgado', 'Trilogia — O Véu Rasgado'],
     ['trilogia - a coroa roubada', 'Trilogia — A Coroa Roubada'],
     ['ferramentas-espirituais', 'FERRAMENTAS'],
@@ -413,7 +413,7 @@ function normalizeBookCategory(rawCategory: string | undefined, seriesFolder: st
   if (normalizedSeriesFolder === 'a imersao que virou aspersao') return 'Série — A Imersão que Virou Aspersão';
   if (normalizedSeriesFolder === 'o corpo que virou empresa') return 'Série — O Corpo que Virou Empresa';
   if (normalizedSeriesFolder === 'a verdadeira historia da igreja') return 'Série — A Verdadeira História da Igreja';
-  if (normalizedSeriesFolder === 'o canon oculto') return 'Trilogia — O Cânon Oculto';
+  if (normalizedSeriesFolder === 'o canon oculto') return 'Série — O Cânon Oculto';
   if (normalizedSeriesFolder === 'o veu rasgado') return 'Trilogia — O Véu Rasgado';
 
   const categoryFromFolder = pickCategoryByFolder(seriesFolder);
@@ -1255,6 +1255,7 @@ const SECTION_ORDER: SectionKey[] = [
 const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'A REVELAÇÃO DE ENOQUE':                   'APÓCRIFOS',
   'SÉRIE — JUBILEUS':                        'APÓCRIFOS',
+  'Série — O Cânon Oculto':                   'HISTÓRIA DA IGREJA',
   'Trilogia — O Cânon Oculto':                'HISTÓRIA DA IGREJA',
   'Série — A Verdadeira História da Igreja':  'HISTÓRIA DA IGREJA',
   'COSMOLOGIA BÍBLICA':                       'COSMOLOGIA BÍBLICA',
@@ -1371,7 +1372,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Trilogia — A Marca':                       'A Marca',
   'Trilogia — O Estrangeiro Próspero':        'O Estrangeiro Próspero',
   'Trilogia — A Ciência dos Tempos':          'A Ciência dos Tempos',
-  'Trilogia — O Cânon Oculto':                'O Cânon Oculto',
+  'Série — O Cânon Oculto':                   'O Cânon Oculto',
   'Trilogia — O Véu Rasgado':                 'O Véu Rasgado',
   'Trilogia — A Coroa Roubada':               'A Coroa Roubada',
   'A REVELAÇÃO DE ENOQUE':                    'A Revelação de Enoque',
@@ -1424,7 +1425,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Série — Ruah — A Pessoa Esquecida da Divindade': 'Uma série sobre a pessoa e a obra do Espírito Santo: criação, selo, guia, santificação e nova criação em Cristo.',
   'Série — A Blasfêmia contra o Ruah': 'Estudos sobre o ensino de Jesus a respeito da blasfêmia contra o Espírito e o discernimento bíblico desse tema.',
   'Série — A Verdadeira História da Igreja': 'Uma arqueologia da fé cristã primitiva, revelando o caminho entre a ekklesia viva e a institucionalização religiosa ao longo dos séculos.',
-  'Trilogia — O Cânon Oculto': 'Uma imersão nos bastidores da formação bíblica, nos textos suprimidos e nas leituras que ficaram fora da narrativa oficial.',
+  'Série — O Cânon Oculto': 'Uma imersão nos bastidores da formação bíblica, nos textos suprimidos e nas leituras que ficaram fora da narrativa oficial.',
   'Trilogia — O Mapa da Tempestade': 'Um diagnóstico de ruptura civilizacional e um mapa prático para atravessar colapsos sistêmicos com lucidez, preparo e fé.',
   'Trilogia — O Estrangeiro Próspero': 'Princípios de José e Daniel para prosperar dentro do sistema sem perder identidade, integridade e aliança.',
   'Trilogia — A Ciência dos Tempos': 'Discernimento profético e estratégico para ler ciclos históricos, interpretar sinais e agir com precisão em tempos críticos.',
@@ -2238,8 +2239,54 @@ export default function Bookstore({
         subsecao: existing.subsecao || normalized.subsecao,
       } : normalized);
     }
-    return Array.from(map.values());
-  }, [books, discoveredBooks]);
+    const scoreForDisplay = (book: BookItem): number => {
+      let score = 0;
+      const rawSlug = (book.slug || '').trim();
+      const normalizedSlug = normalizeSlugLookupKey(rawSlug);
+      if (rawSlug && (markdownBySlug[rawSlug] || markdownBySlug[normalizedSlug])) score += 4;
+      if ((book.image || '').trim()) score += 2;
+      if ((book.description || '').trim()) score += 1;
+      if ((book.subsecao || '').trim()) score += 1;
+      if ((book.tema || '').trim()) score += 1;
+      return score;
+    };
+
+    const deduped = new Map<string, BookItem>();
+    for (const book of map.values()) {
+      const dedupeKey = [
+        normalizeSlugLookupKey(book.tema || ''),
+        normalizeSlugLookupKey(book.category || ''),
+        normalizeSlugLookupKey(book.title || ''),
+      ].join('|');
+      const existing = deduped.get(dedupeKey);
+      if (!existing) {
+        deduped.set(dedupeKey, book);
+        continue;
+      }
+
+      const incomingScore = scoreForDisplay(book);
+      const existingScore = scoreForDisplay(existing);
+      if (incomingScore > existingScore) {
+        deduped.set(dedupeKey, {
+          ...existing,
+          ...book,
+          image: book.image || existing.image,
+          subsecao: book.subsecao || existing.subsecao,
+          tema: book.tema || existing.tema,
+        });
+      } else {
+        deduped.set(dedupeKey, {
+          ...book,
+          ...existing,
+          image: existing.image || book.image,
+          subsecao: existing.subsecao || book.subsecao,
+          tema: existing.tema || book.tema,
+        });
+      }
+    }
+
+    return Array.from(deduped.values());
+  }, [books, discoveredBooks, markdownBySlug]);
 
   const booksWithoutValidSubsecao = useMemo<SubsecaoAuditEntry[]>(() => {
     return mergedBooks.flatMap((book): SubsecaoAuditEntry[] => {
