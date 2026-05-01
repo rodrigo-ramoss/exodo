@@ -3,7 +3,7 @@ title: A Oração na Biblioteca Mental de Paulo — Súplica, Ações de Graças
 description: Volume 4 da série O Fio do Trono. A vida de oração do apóstolo Paulo. Suas orações registradas nas cartas, a teologia da súplica incessante, a intercessão como combate e a prática devocional que sustentou a missão aos gentios.
 seção: livraria
 category: Série — O Fio do Trono
-image: /image/selah/a oracao do espirito.webp
+image: /image/selah/a oracao na biblioteca mental de paulo.webp
 theme: batalha-espiritual
 subsecao: oracao
 subsection: oracao

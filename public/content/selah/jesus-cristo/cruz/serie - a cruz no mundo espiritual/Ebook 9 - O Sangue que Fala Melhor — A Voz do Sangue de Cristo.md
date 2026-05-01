@@ -3,7 +3,7 @@ title: "O Sangue que Fala Melhor — A Voz do Sangue de Cristo"
 description: "O sangue de Abel clamava por justiça. O sangue de Cristo clama por misericórdia. O que a voz do sangue derramado proclama no céu, na terra e na consciência?"
 seção: livraria
 category: mundo-espiritual
-image: https://via.placeholder.com/1600x2400?text=Capa+Volume+9
+image: /image/selah/o sangue que fala melhor.webp
 theme: jesus-cristo
 subsecao: cruz
 subsection: cruz
