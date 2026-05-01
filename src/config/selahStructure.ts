@@ -98,7 +98,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
         slug: 'batismo-a-imersao-que-virou-aspersao',
       },
       {
-        title: 'Eclésia: A Comunidade que Virou Hierarquia',
+        title: 'Ekkelsia: A Comunidade que Virou Hierarquia',
         slug: 'eclesia-a-comunidade-que-virou-hierarquia',
       },
       {
@@ -272,9 +272,10 @@ export function resolveSelahSubsectionTitle(themeTitle: SelahThemeTitle, value: 
       'ceia-batismo': 'Ceia, Batismo e o Voto de Pobreza Original',
       'ceia-e-batismo': 'Ceia, Batismo e o Voto de Pobreza Original',
       'ceia-batismo-e-voto': 'Ceia, Batismo e o Voto de Pobreza Original',
-      eclesia: 'Eclésia: A Comunidade que Virou Hierarquia',
-      'verdade-sobre-a-igreja': 'Ceia, Batismo e o Voto de Pobreza Original',
-      'falsas-doutrinas': 'Ceia, Batismo e o Voto de Pobreza Original',
+      eclesia: 'Ekkelsia: A Comunidade que Virou Hierarquia',
+      ekkelsia: 'Ekkelsia: A Comunidade que Virou Hierarquia',
+      'verdade-sobre-a-igreja': 'Templo: A Casa que Virou Masmorra',
+      'falsas-doutrinas': 'Templo: A Casa que Virou Masmorra',
     };
     const aliasTitle = historiaAliases[normalized];
     if (aliasTitle) return aliasTitle;
@@ -302,8 +303,9 @@ export function resolveSelahSubsectionSlug(themeTitle: SelahThemeTitle, value: s
       'ceia-e-batismo': 'ceia-batismo-e-o-voto-de-pobreza-original',
       'ceia-batismo-e-voto': 'ceia-batismo-e-o-voto-de-pobreza-original',
       eclesia: 'eclesia-a-comunidade-que-virou-hierarquia',
-      'verdade-sobre-a-igreja': 'ceia-batismo-e-o-voto-de-pobreza-original',
-      'falsas-doutrinas': 'ceia-batismo-e-o-voto-de-pobreza-original',
+      ekkelsia: 'eclesia-a-comunidade-que-virou-hierarquia',
+      'verdade-sobre-a-igreja': 'templo-a-casa-que-virou-masmorra',
+      'falsas-doutrinas': 'templo-a-casa-que-virou-masmorra',
     };
     const aliasSlug = historiaAliases[normalized];
     if (aliasSlug) return aliasSlug;

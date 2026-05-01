@@ -916,8 +916,8 @@ const SELAH_SUBSECTION_FALLBACK_RULES: Partial<Record<SelahThemeTitle, Array<{ s
   ],
   'HISTÓRIA DA IGREJA': [
     { subsection: 'Ceia do Senhor: A Refeição que Virou Sacrifício', matchers: ['serie - a refeicao que virou missa', 'ceia-do-senhor'] },
-    { subsection: 'Eclésia: A Comunidade que Virou Hierarquia', matchers: ['eclesia-a-comunidade-que-virou-hierarquia', 'serie - o corpo que virou empresa'] },
-    { subsection: 'Ceia, Batismo e o Voto de Pobreza Original', matchers: ['verdade-sobre-a-igreja', 'serie - a verdadeira historia da igreja', 'trilogia - o canon oculto', 'serie - o veu rasgado'] },
+    { subsection: 'Ekkelsia: A Comunidade que Virou Hierarquia', matchers: ['eclesia-a-comunidade-que-virou-hierarquia', 'serie - o corpo que virou empresa'] },
+    { subsection: 'Templo: A Casa que Virou Masmorra', matchers: ['verdade-sobre-a-igreja', 'serie - a verdadeira historia da igreja', 'trilogia - o canon oculto', 'serie - o veu rasgado'] },
   ],
 };
 
@@ -950,8 +950,8 @@ function inferSelahSubsectionFromContext(params: {
   if (!themeTitle) return undefined;
 
   const directCandidates = [
-    params.frontmatterSubsection || '',
     params.pathSubsectionCandidate || '',
+    params.frontmatterSubsection || '',
     params.category || '',
   ];
 
@@ -1321,6 +1321,18 @@ function resolveSectionFromThemeSlug(themeSlug: string): SectionKey | null {
 
 function resolveSubsecaoFromSlug(theme: SelahThemeTitle, subsecaoSlug: string): string | null {
   return resolveSelahSubsectionTitle(theme, subsecaoSlug);
+}
+
+function getSubsectionButtonLabel(theme: SelahThemeTitle, subsectionTitle: string): string {
+  if (theme !== 'HISTÓRIA DA IGREJA') return subsectionTitle;
+
+  const shortLabel = subsectionTitle.split(':')[0]?.trim() || subsectionTitle;
+  const normalizedShort = shortLabel
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+  if (normalizedShort === 'eclesia' || normalizedShort === 'ekkelsia') return 'Ekkelsia';
+  return shortLabel;
 }
 
 // Short display labels per series
@@ -2194,7 +2206,7 @@ export default function Bookstore({
         ...existing,
         ...normalized,
         tema: existing.tema || normalized.tema,
-        subsecao: normalized.subsecao || existing.subsecao,
+        subsecao: existing.subsecao || normalized.subsecao,
       } : normalized);
     }
     return Array.from(map.values());
@@ -2966,6 +2978,7 @@ export default function Bookstore({
                   <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
                     {themeSubsections.map((subsecaoEntry) => {
                   const subsecao = subsecaoEntry.title;
+                  const subsecaoButtonLabel = getSubsectionButtonLabel(selectedTheme, subsecao);
                   const count = subsectionCounts.get(subsecao) || 0;
                   const isHistoriaDaIgreja = selectedTheme === 'HISTÓRIA DA IGREJA';
                   const discoveredSubsecaoCover = booksBySection[selectedSection]
@@ -2999,7 +3012,7 @@ export default function Bookstore({
                         )}
                         <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/15" />
 
-                        <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-on-surface">{subsecao}</span>
+                        <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-on-surface">{subsecaoButtonLabel}</span>
                         {!isHistoriaDaIgreja && count > 0 && (
                           <span className="relative mt-1 block text-[9px] sm:text-[10px] text-primary/80">{count} estudo{count > 1 ? 's' : ''}</span>
                         )}
