@@ -333,6 +333,9 @@ function pickCategoryByFolder(folder: string): string {
   const dynamicMap: Array<[string, string]> = [
     ['tabernaculo', 'TABERNACULO'],
     ['serie - o codigo dos arquetipos', 'TIPOLOGIA BÍBLICA'],
+    ['serie - o relogio do santuario', 'Série — O Relógio do Santuário'],
+    ['serie - o tetravel', 'Série — O Tetravéu'],
+    ['serie - tabernaculo e os 7 ceus', 'Série — Os 7 Céus do Santuário'],
     ['serie - o codigo do jardim', 'Série — O Código do Jardim'],
     ['serie - a revelacao do seculo', 'Série — A Revelação do Século'],
     ['serie - invasao legal', 'Série — Invasão Legal'],
@@ -404,6 +407,9 @@ function normalizeBookCategory(rawCategory: string | undefined, seriesFolder: st
   const normalizedSeriesFolder = normalizeSlugLookupKey(seriesFolder).replace(/-/g, ' ');
   if (normalizedSeriesFolder === 'sombras do reino') return 'Série — Sombras do Reino';
   if (normalizedSeriesFolder === 'a terra e o tabernaculo') return 'Série — A Terra e o Tabernáculo';
+  if (normalizedSeriesFolder === 'o tetravel') return 'Série — O Tetravéu';
+  if (normalizedSeriesFolder === 'o relogio do santuario') return 'Série — O Relógio do Santuário';
+  if (normalizedSeriesFolder === 'tabernaculo e os 7 ceus') return 'Série — Os 7 Céus do Santuário';
   if (normalizedSeriesFolder === 'a refeicao que virou missa') return 'Série — A Refeição que Virou Missa';
   if (normalizedSeriesFolder === 'a imersao que virou aspersao') return 'Série — A Imersão que Virou Aspersão';
   if (normalizedSeriesFolder === 'o corpo que virou empresa') return 'Série — O Corpo que Virou Empresa';
@@ -415,6 +421,9 @@ function normalizeBookCategory(rawCategory: string | undefined, seriesFolder: st
   if (
     categoryFromFolder === 'Série — Sombras do Reino'
     || categoryFromFolder === 'Série — A Terra e o Tabernáculo'
+    || categoryFromFolder === 'Série — O Tetravéu'
+    || categoryFromFolder === 'Série — O Relógio do Santuário'
+    || categoryFromFolder === 'Série — Os 7 Céus do Santuário'
   ) {
     return categoryFromFolder;
   }
@@ -940,6 +949,21 @@ const SELAH_SUBSECTION_FALLBACK_RULES: Partial<Record<SelahThemeTitle, Array<{ s
     { subsection: 'Ekkelsia', matchers: ['eclesia-a-comunidade-que-virou-hierarquia', 'serie - o corpo que virou empresa'] },
     { subsection: 'Templo', matchers: ['verdade-sobre-a-igreja', 'serie - a verdadeira historia da igreja', 'trilogia - o canon oculto', 'serie - o veu rasgado'] },
   ],
+  'TIPOLOGIA BÍBLICA': [
+    {
+      subsection: 'Tabernáculo',
+      matchers: [
+        'serie - sombras do reino',
+        'serie - a terra e o tabernaculo',
+        'serie - o tetravel',
+        'serie - o relogio do santuario',
+        'serie - tabernaculo e os 7 ceus',
+        'serie - os 7 ceus do santuario',
+        'os 7 ceus do santuario',
+        'a escada de jaco',
+      ],
+    },
+  ],
 };
 
 const SELAH_SUBSECTION_COVER_FALLBACKS: Partial<Record<SelahThemeTitle, Record<string, string>>> = {
@@ -1142,42 +1166,42 @@ const SECTIONS: Record<SectionKey, {
   accent: string;
 }> = {
   'APÓCRIFOS': {
-    numero: '08',
+    numero: '09',
     label: 'Apócrifos',
     description: 'Enoque, Jubileus e os textos banidos. A tradição que o cânon oficial não quis preservar.',
     Icon: Shield,
     accent: 'from-amber-900/70 to-amber-800/10',
   },
   'HISTÓRIA DA IGREJA': {
-    numero: '09',
+    numero: '10',
     label: 'História da Igreja',
     description: 'A anatomia do dogma e os bastidores do poder. Uma análise sobre a verdadeira história da igreja, a formação de suas doutrinas e como a estrutura religiosa foi utilizada como ferramenta de manipulação e controle sistêmico.',
     Icon: BookOpen,
     accent: 'from-sky-900/70 to-sky-800/10',
   },
   'COSMOLOGIA BÍBLICA': {
-    numero: '06',
+    numero: '07',
     label: 'Cosmologia Bíblica',
     description: 'Uma leitura bíblica da criação: firmamento, pilares, quatro cantos, montes e trono. Exegese e contexto do Segundo Templo para reconstruir o mapa cosmológico das Escrituras.',
     Icon: Eye,
     accent: 'from-blue-900/70 to-cyan-800/10',
   },
   'MUNDO ESPIRITUAL': {
-    numero: '13',
+    numero: '14',
     label: 'Mundo Espiritual',
     description: 'Cartografia bíblica do mundo invisível: céus, hierarquias, conselho celestial e dinâmica espiritual que atravessa as Escrituras.',
     Icon: Eye,
     accent: 'from-cyan-900/70 to-sky-800/10',
   },
   'SATANÁS E DEMÔNIOS': {
-    numero: '10',
+    numero: '11',
     label: 'Satanás e Demônios',
     description: 'A queda do querubim, a rebelião dos seres espirituais e a disputa pela autoridade das nações. Estudos bíblicos sobre origem, atuação e destino do império das trevas.',
     Icon: Flame,
     accent: 'from-rose-950/70 to-red-900/20',
   },
   'TIPOLOGIA BÍBLICA': {
-    numero: '00',
+    numero: '04',
     label: 'Tipologia',
     description: 'Como um Deus infinito usa uma tenda portátil para explicar o universo. As bases teológicas da tipologia bíblica — tavnit, hypodeigma e skia — e o que significa que o tabernáculo foi construído como réplica de uma realidade celestial.',
     Icon: Layers,
@@ -1205,35 +1229,35 @@ const SECTIONS: Record<SectionKey, {
     accent: 'from-teal-900/70 to-cyan-800/10',
   },
   'REINO DE DEUS': {
-    numero: '05',
+    numero: '06',
     label: 'Reino de Deus',
     description: 'Uma jornada bíblica pelo Reino de Deus, conselho celeste e realidades invisíveis. Em Hebreus 8, o texto diz que servem como “exemplar e sombra das coisas celestiais”. Como é o mundo espiritual? A Bíblia responde.',
     Icon: Eye,
     accent: 'from-violet-900/70 to-violet-800/10',
   },
   'ANTISSISTEMA': {
-    numero: '12',
+    numero: '13',
     label: 'Antissistema',
     description: 'Os protocolos de sobrevivência espiritual dentro de sistemas hostis. Daniel, José e os que atravessaram.',
     Icon: Zap,
     accent: 'from-emerald-900/70 to-emerald-800/10',
   },
   'IA & APOCALIPSE': {
-    numero: '11',
+    numero: '12',
     label: 'IA & Apocalipse',
     description: 'Controle tecnológico, a Marca e os mecanismos proféticos que moldam o fim dos tempos.',
     Icon: Cpu,
     accent: 'from-rose-900/70 to-rose-800/10',
   },
   'FIM DOS TEMPOS': {
-    numero: '07',
+    numero: '08',
     label: 'Fim dos Tempos',
     description: 'Escatologia bíblica, sinais proféticos e a reta final da história sob a perspectiva das Escrituras.',
     Icon: Hourglass,
     accent: 'from-orange-900/70 to-amber-800/10',
   },
   'BATALHA ESPIRITUAL': {
-    numero: '04',
+    numero: '05',
     label: 'Batalha Espiritual',
     description: 'Discernimento, resistência e estratégias bíblicas para enfrentar as guerras invisíveis do nosso tempo.',
     Icon: Flame,
@@ -1259,6 +1283,9 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'TIPOLOGIA BÍBLICA':                        'TIPOLOGIA BÍBLICA',
   'Série — Sombras do Reino':                 'TIPOLOGIA BÍBLICA',
   'Série — A Terra e o Tabernáculo':          'TIPOLOGIA BÍBLICA',
+  'Série — O Tetravéu':                       'TIPOLOGIA BÍBLICA',
+  'Série — O Relógio do Santuário':           'TIPOLOGIA BÍBLICA',
+  'Série — Os 7 Céus do Santuário':           'TIPOLOGIA BÍBLICA',
   'TABERNACULO':                              'TIPOLOGIA BÍBLICA',
   'tabernaculo':                              'TIPOLOGIA BÍBLICA',
   'tipologia/tabernaculo':                    'TIPOLOGIA BÍBLICA',
@@ -1315,7 +1342,37 @@ const SELAH_THEME_BY_SECTION: Partial<Record<SectionKey, SelahThemeTitle>> = SEL
   return acc;
 }, {} as Partial<Record<SectionKey, SelahThemeTitle>>);
 
+const TYPOLOGY_THEME_SERIES_SLUG_PREFIXES = [
+  'serie - sombras do reino/',
+  'serie - a terra e o tabernaculo/',
+  'serie - o tetravel/',
+  'serie - o relogio do santuario/',
+  'serie - tabernaculo e os 7 ceus/',
+];
+
+const TYPOLOGY_THEME_CATEGORIES = new Set([
+  'Série — Sombras do Reino',
+  'Série — A Terra e o Tabernáculo',
+  'Série — O Tetravéu',
+  'Série — O Relógio do Santuário',
+  'Série — Os 7 Céus do Santuário',
+].map((value) => normalizeSearchToken(value)));
+
+function shouldForceTipologiaTheme(book: BookItem): boolean {
+  const normalizedSlug = normalizeSlugLookupKey((book.slug || '').trim());
+  if (TYPOLOGY_THEME_SERIES_SLUG_PREFIXES.some((prefix) => normalizedSlug.startsWith(normalizeSlugLookupKey(prefix)))) {
+    return true;
+  }
+
+  const normalizedCategory = normalizeSearchToken((book.category || '').trim());
+  return TYPOLOGY_THEME_CATEGORIES.has(normalizedCategory);
+}
+
 function resolveSelahTheme(book: BookItem): SelahThemeTitle | null {
+  if (shouldForceTipologiaTheme(book)) {
+    return 'TIPOLOGIA BÍBLICA';
+  }
+
   const rawTheme = (book.tema || '').trim();
   if (rawTheme && SELAH_THEME_BY_TITLE[rawTheme]) {
     return rawTheme as SelahThemeTitle;
@@ -1375,6 +1432,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — A Terra e o Tabernáculo':          'A Terra e o Tabernáculo',
   'Série — O Tetravéu':                       'O Tetravéu',
   'Série — O Relógio do Santuário':           'O Relógio do Santuário',
+  'Série — Os 7 Céus do Santuário':           'Os 7 Céus do Santuário',
   'Série — O Código do Jardim':               'O Código do Jardim',
   'Série — A Queda do Mundo Espiritual':      'A Queda do Mundo Espiritual',
   'Série — A Queda do Querubim Ungido':       'A Queda do Querubim Ungido',
@@ -1408,6 +1466,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Série — A Terra e o Tabernáculo': 'Uma série sobre cosmografia bíblica e tabernáculo: pátio, firmamento, véu, fundamentos, mar de bronze e o trono, em leitura tipológica estruturada.',
   'Série — O Tetravéu': 'Da camada visível ao limite do invisível: uma leitura progressiva do linho, do pelo de cabra e das peles que cobrem o tabernáculo para revelar separação, proteção, glória e acesso na cosmografia bíblica.',
   'Série — O Relógio do Santuário': 'Uma série sobre o relógio do santuário: menorá, mesa dos pães, incenso e sábado como linguagem temporal do Reino.',
+  'Série — Os 7 Céus do Santuário': 'Uma série sobre o tabernáculo como mapa dos sete céus: jornada espiritual, liturgia, hierarquias celestiais e aproximação ao trono.',
   'Série — O Código do Jardim': 'Uma série sobre os arquétipos de Gênesis: conhecimento, nomeação, Babel e sabedoria para discernir o conflito espiritual no presente.',
   'Série — A Queda do Mundo Espiritual': 'Uma série sobre a rebelião no céu e a origem da guerra espiritual: Nachash, querubins caídos e as raízes invisíveis do conflito humano.',
   'Série — A Queda do Querubim Ungido': 'Uma investigação bíblica da trajetória de Satanás: da glória no conselho divino à consumação do juízo final, com aplicações práticas para discernimento espiritual.',
