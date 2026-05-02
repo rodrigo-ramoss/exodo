@@ -16,6 +16,18 @@ interface EnsinoTema {
   description: string;
 }
 
+interface ParabolaItem {
+  title: string;
+  references: string;
+}
+
+interface ParabolaGroup {
+  id: string;
+  title: string;
+  description: string;
+  items: string[];
+}
+
 const ENSINOS_TEMAS: EnsinoTema[] = [
   {
     id: 'parabolas-de-jesus',
@@ -51,7 +63,105 @@ const ENSINOS_TEMAS: EnsinoTema[] = [
   },
 ];
 
+const PARABOLAS_DE_CRISTO: ParabolaItem[] = [
+  { title: 'O Semeador', references: 'Mt 13:1-9; Mc 4:1-9; Lc 8:4-8' },
+  { title: 'O Joio e o Trigo', references: 'Mt 13:24-30' },
+  { title: 'O Grão de Mostarda', references: 'Mt 13:31-32; Mc 4:30-32; Lc 13:18-19' },
+  { title: 'O Fermento', references: 'Mt 13:33; Lc 13:20-21' },
+  { title: 'O Tesouro Escondido', references: 'Mt 13:44' },
+  { title: 'A Pérola de Grande Valor', references: 'Mt 13:45-46' },
+  { title: 'A Rede de Pesca', references: 'Mt 13:47-50' },
+  { title: 'A Ovelha Perdida', references: 'Mt 18:12-14; Lc 15:4-7' },
+  { title: 'O Servo Implacável', references: 'Mt 18:21-35' },
+  { title: 'Os Trabalhadores da Vinha', references: 'Mt 20:1-16' },
+  { title: 'Os Dois Filhos', references: 'Mt 21:28-32' },
+  { title: 'Os Lavradores Maus', references: 'Mt 21:33-46; Mc 12:1-12; Lc 20:9-19' },
+  { title: 'O Banquete de Casamento', references: 'Mt 22:1-14' },
+  { title: 'As Dez Virgens', references: 'Mt 25:1-13' },
+  { title: 'Os Talentos', references: 'Mt 25:14-30' },
+  { title: 'As Ovelhas e os Cabritos', references: 'Mt 25:31-46' },
+  { title: 'O Semeador que Dorme', references: 'Mc 4:26-29' },
+  { title: 'O Bom Samaritano', references: 'Lc 10:25-37' },
+  { title: 'O Amigo Importuno', references: 'Lc 11:5-8' },
+  { title: 'O Rico Insensato', references: 'Lc 12:13-21' },
+  { title: 'A Figueira Estéril', references: 'Lc 13:6-9' },
+  { title: 'A Dracma Perdida', references: 'Lc 15:8-10' },
+  { title: 'O Filho Pródigo', references: 'Lc 15:11-32' },
+  { title: 'O Administrador Infiel', references: 'Lc 16:1-13' },
+  { title: 'O Rico e Lázaro', references: 'Lc 16:19-31' },
+  { title: 'O Servo Inútil', references: 'Lc 17:7-10' },
+  { title: 'O Juiz Iníquo', references: 'Lc 18:1-8' },
+  { title: 'O Fariseu e o Publicano', references: 'Lc 18:9-14' },
+  { title: 'As Minas', references: 'Lc 19:11-27' },
+  { title: 'O Bom Pastor', references: 'Jo 10:1-18' },
+  { title: 'A Videira Verdadeira', references: 'Jo 15:1-8' },
+];
+
+const PARABOLAS_GRUPOS: ParabolaGroup[] = [
+  {
+    id: '01',
+    title: 'A Origem Oculta do Reino',
+    description: 'O Reino começa pequeno e opera silenciosamente, mas cresce até encher toda a criação.',
+    items: ['O Semeador', 'O Semeador que Dorme', 'O Grão de Mostarda', 'O Fermento'],
+  },
+  {
+    id: '02',
+    title: 'A Aquisição do Reino',
+    description: 'O valor supremo do Reino exige a entrega total.',
+    items: ['O Tesouro Escondido', 'A Pérola de Grande Valor'],
+  },
+  {
+    id: '03',
+    title: 'A Ética Invertida do Reino',
+    description: 'A graça subverte a lógica do mérito e da exclusão.',
+    items: [
+      'Os Trabalhadores da Vinha',
+      'O Bom Samaritano',
+      'O Servo Implacável',
+      'O Fariseu e o Publicano',
+      'O Filho Pródigo',
+      'O Administrador Infiel',
+    ],
+  },
+  {
+    id: '04',
+    title: 'A Consumação e o Juízo do Reino',
+    description: 'A separação final entre o sistema iníquo e os filhos do Reino.',
+    items: [
+      'O Joio e o Trigo',
+      'A Rede de Pesca',
+      'O Banquete de Casamento',
+      'As Dez Virgens',
+      'Os Talentos / As Minas',
+      'As Ovelhas e os Cabritos',
+      'O Rico e Lázaro',
+      'O Rico Insensato',
+      'Os Lavradores Maus',
+    ],
+  },
+  {
+    id: '05',
+    title: 'A Vigilância e a Espera do Reino',
+    description: 'A atitude do remanescente entre a primeira e a segunda vinda do Rei.',
+    items: ['A Figueira Estéril', 'O Amigo Importuno', 'O Juiz Iníquo', 'O Servo Inútil'],
+  },
+  {
+    id: '06',
+    title: 'A Identidade do Rei (Parábolas Joaninas)',
+    description: 'O Reino é orgânico e pessoal: Ele é o Pastor e a Videira.',
+    items: ['O Bom Pastor', 'A Videira Verdadeira'],
+  },
+  {
+    id: '07',
+    title: 'A Tipologia do Remanescente',
+    description: 'A divisão entre os que apenas dizem e os que de fato respondem ao chamado.',
+    items: ['Os Dois Filhos', 'A Ovelha Perdida', 'A Dracma Perdida'],
+  },
+];
+
 function EnsinoThemeCard({ tema, onOpen }: { tema: EnsinoTema; onOpen: () => void }) {
+  const isReady = tema.id === 'parabolas-de-jesus';
+
   return (
     <button
       type="button"
@@ -78,13 +188,72 @@ function EnsinoThemeCard({ tema, onOpen }: { tema: EnsinoTema; onOpen: () => voi
         <p className="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed">{tema.description}</p>
 
         <div className="mt-3.5 sm:mt-4 rounded-xl border border-primary/20 bg-black/25 px-3.5 sm:px-4 py-2.5 sm:py-3">
-          <p className="text-[10px] sm:text-[11px] font-semibold text-primary/95">Em preparação</p>
+          <p className="text-[10px] sm:text-[11px] font-semibold text-primary/95">{isReady ? 'Disponível' : 'Em preparação'}</p>
           <p className="mt-1 text-[9px] sm:text-[10px] leading-snug text-on-surface-variant/75">
-            Esta área será preenchida quando os estudos deste tema forem adicionados.
+            {isReady
+              ? 'Inventário com 31 parábolas de Cristo e organização em 7 grupos temáticos.'
+              : 'Esta área será preenchida quando os estudos deste tema forem adicionados.'}
           </p>
         </div>
       </div>
     </button>
+  );
+}
+
+function ParabolasInventory() {
+  return (
+    <div className="space-y-4 sm:space-y-6">
+      <div className="rounded-2xl border border-primary/25 bg-black/20 px-3.5 sm:px-5 py-3.5 sm:py-4">
+        <p className="text-xs sm:text-sm font-semibold text-primary/95">Inventário Completo</p>
+        <p className="mt-1 text-[11px] sm:text-xs leading-relaxed text-on-surface-variant/80 max-w-3xl">
+          Lista com 31 parábolas de Cristo e organização temática para estudo contínuo.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary">
+            31 parábolas
+          </span>
+          <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary">
+            7 grupos
+          </span>
+        </div>
+      </div>
+
+      <article className="rounded-2xl border border-outline-variant/25 bg-black/15 p-3.5 sm:p-5">
+        <h3 className="text-sm sm:text-base font-black uppercase tracking-wide text-on-surface">As 31 Parábolas de Cristo</h3>
+        <ol className="mt-3 grid grid-cols-1 xl:grid-cols-2 gap-2.5 sm:gap-3">
+          {PARABOLAS_DE_CRISTO.map((parabola, index) => (
+            <li key={parabola.title} className="rounded-xl border border-primary/15 bg-black/20 px-3 py-2.5">
+              <p className="text-[11px] sm:text-xs font-semibold text-on-surface">
+                {index + 1}. {parabola.title}
+              </p>
+              <p className="mt-0.5 text-[10px] sm:text-[11px] text-primary/90">{parabola.references}</p>
+            </li>
+          ))}
+        </ol>
+      </article>
+
+      <article className="rounded-2xl border border-outline-variant/25 bg-black/15 p-3.5 sm:p-5">
+        <h3 className="text-sm sm:text-base font-black uppercase tracking-wide text-on-surface">Grupos Temáticos</h3>
+        <div className="mt-3 grid grid-cols-1 xl:grid-cols-2 gap-3">
+          {PARABOLAS_GRUPOS.map((grupo) => (
+            <section key={grupo.id} className="rounded-xl border border-primary/15 bg-black/20 px-3.5 sm:px-4 py-3">
+              <span className="inline-flex rounded-full border border-primary/25 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.16em] text-primary">
+                Grupo {grupo.id}
+              </span>
+              <h4 className="mt-1.5 text-xs sm:text-sm font-black text-on-surface uppercase">{grupo.title}</h4>
+              <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">{grupo.description}</p>
+              <ul className="mt-2.5 space-y-1.5">
+                {grupo.items.map((item) => (
+                  <li key={`${grupo.id}-${item}`} className="text-[10px] sm:text-[11px] text-on-surface-variant">
+                    - {item}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      </article>
+    </div>
   );
 }
 
@@ -144,16 +313,20 @@ export default function Ensinos({ openSlug }: EnsinosProps) {
             </p>
           </div>
 
-          <div className="mt-5 sm:mt-7 rounded-2xl border border-primary/20 bg-black/20 px-3.5 sm:px-5 py-3.5 sm:py-4">
-            <p className="text-xs sm:text-sm font-semibold text-primary/95">Em preparação</p>
-            <p className="mt-1 text-[11px] sm:text-xs leading-relaxed text-on-surface-variant/80 max-w-2xl">
-              Esta área será preenchida quando os estudos deste tema forem adicionados.
-            </p>
-          </div>
+          {activeTema.id === 'parabolas-de-jesus' ? (
+            <ParabolasInventory />
+          ) : (
+            <div className="mt-5 sm:mt-7 rounded-2xl border border-primary/20 bg-black/20 px-3.5 sm:px-5 py-3.5 sm:py-4">
+              <p className="text-xs sm:text-sm font-semibold text-primary/95">Em preparação</p>
+              <p className="mt-1 text-[11px] sm:text-xs leading-relaxed text-on-surface-variant/80 max-w-2xl">
+                Esta área será preenchida quando os estudos deste tema forem adicionados.
+              </p>
+            </div>
+          )}
         </section>
       </div>
-    );
-  }
+  );
+}
 
   return (
     <div className="pb-20 sm:pb-24 min-h-screen bg-surface-container-lowest">

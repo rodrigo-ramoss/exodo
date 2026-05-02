@@ -194,6 +194,13 @@ const TYPOLOGY_ESCATOLOGICAL_TOPICS: TypologyObjectalTopicMeta[] = [
 ];
 
 const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
+  'a escada de jaco': {
+    1: 'o mapa e a jornada',
+    2: 'o primeiro ceu - tabernaculo  os 7 ceus',
+    3: 'os ceus intermediarios',
+    4: 'o sexto ceu',
+    5: 'o setimo ceu',
+  },
   'a refeicao que virou missa': {
     1: 'a mesa do rei o banquete das bodas do cordeiro',
     2: 'arquetipo do sacrificio',
@@ -892,6 +899,13 @@ function inferSeriesVolumeCoverStem(title: string, slug: string, category?: stri
   if (haystack.includes('relogio de deus')) return SERIES_VOLUME_COVER_STEMS['o relogio de deus'][volume] ?? null;
   if (haystack.includes('fio do trono')) return SERIES_VOLUME_COVER_STEMS['o fio do trono'][volume] ?? null;
   if (haystack.includes('refeicao que virou missa')) return SERIES_VOLUME_COVER_STEMS['a refeicao que virou missa'][volume] ?? null;
+  if (
+    haystack.includes('a escada de jaco')
+    || haystack.includes('7 ceus do santuario')
+    || haystack.includes('tabernaculo e os 7 ceus')
+  ) {
+    return SERIES_VOLUME_COVER_STEMS['a escada de jaco'][volume] ?? null;
+  }
   if (haystack.includes('ruah') || haystack.includes('ruach')) {
     if (volume === 5) return 'ruach o sopro nos ossos secos a nova criacao';
   }
