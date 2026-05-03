@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, BookOpen, ChevronRight, Sparkles, Tent } from 'lucide-react';
 import { AppImage } from './AppImage';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -528,6 +528,7 @@ function ParabolasInventory() {
   const [selectedStudy, setSelectedStudy] = useState<EnsinoStudy | null>(null);
   const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
   const [activeStudyTema, setActiveStudyTema] = useState<string | null>(null);
+  const updatesPanelRef = useRef<HTMLElement | null>(null);
   const ensinosStudies = useMemo(() => discoverEnsinosStudies(), []);
 
   const studiesByTema = useMemo(() => {
@@ -619,7 +620,7 @@ function ParabolasInventory() {
     setActiveGroupItem(groupItem);
     setActiveGroupId(groupId);
 
-    const matchedStudyTema = resolveStudyTemaFromGroupItem(groupItem) || resolveStudyTemaFromGroupId(groupId);
+    const matchedStudyTema = resolveStudyTemaFromGroupItem(groupItem);
     if (matchedStudyTema) setActiveStudyTema(matchedStudyTema);
     else setActiveStudyTema(null);
 
@@ -632,6 +633,11 @@ function ParabolasInventory() {
     if (!matched) return;
     setActiveParabola(matched.title);
   };
+
+  useEffect(() => {
+    if (!activeStudyList.length) return;
+    updatesPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [activeStudyList]);
 
   if (selectedStudy) {
     return (
@@ -679,12 +685,20 @@ function ParabolasInventory() {
               <p className="mt-0.5 text-[10px] leading-relaxed text-on-surface-variant/80">{grupo.description}</p>
               <div className="mt-2 grid grid-cols-1 gap-1.5">
                 {grupo.items.map((item) => {
-                  const hasSeries = Boolean(resolveStudyTemaFromGroupItem(item) || resolveStudyTemaFromGroupId(grupo.id));
+                  const hasSeries = Boolean(resolveStudyTemaFromGroupItem(item));
                   return (
                   <button
                     type="button"
                     key={`${grupo.id}-${item}`}
-                    onClick={() => openParabolaFromGroupItem(grupo.id, item)}
+                    onClick={() => {
+                      if (hasSeries) {
+                        openParabolaFromGroupItem(grupo.id, item);
+                        return;
+                      }
+                      setActiveGroupItem(item);
+                      setActiveGroupId(grupo.id);
+                      setActiveStudyTema(null);
+                    }}
                     className={`group flex items-center justify-between rounded-md border px-2 py-1.5 text-left text-[9px] sm:text-[10px] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:text-on-surface hover:shadow-[0_0_14px_rgba(242,192,141,0.18)] active:scale-[0.99] ${
                       activeGroupItem === item
                         ? 'border-primary/60 bg-gradient-to-r from-primary/20 via-black/35 to-primary/20 text-on-surface'
@@ -714,7 +728,7 @@ function ParabolasInventory() {
       </article>
 
       {activeStudyList.length > 0 && (
-        <article className="rounded-2xl border border-primary/25 bg-black/20 p-3 sm:p-4">
+        <article ref={updatesPanelRef} className="rounded-2xl border border-primary/25 bg-black/20 p-3 sm:p-4">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">Atualizações da Série</h3>
             <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[8px] font-semibold text-primary">
