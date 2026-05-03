@@ -1816,65 +1816,88 @@ function DragScrollRow({ children }: { children: ReactNode }) {
 }
 
 // ── Book Card ─────────────────────────────────────────────────────────────────
-function BookCard({ item, displayVolume, onSelect }: { item: BookItem; displayVolume: number; onSelect: () => void }) {
+function BookCard({
+  item,
+  displayVolume,
+  onSelect,
+  visualMode = 'default',
+}: {
+  item: BookItem;
+  displayVolume: number;
+  onSelect: () => void;
+  visualMode?: 'default' | 'selah';
+}) {
   const clamped = pm.getProgress('livraria', item.slug);
   const readsCount = pm.getReadCount('livraria', item.slug);
   const isCompleted = pm.isRead('livraria', item.slug);
   const isReading = clamped > 0 && !isCompleted;
+  const isSelahMode = visualMode === 'selah';
 
   return (
     <div
       onClick={onSelect}
-      className="interactive-card group shrink-0 w-[148px] sm:w-[168px] flex flex-col cursor-pointer active:scale-95 transition-transform snap-start"
+      className={[
+        'interactive-card group shrink-0 flex flex-col cursor-pointer active:scale-95 transition-transform snap-start',
+        isSelahMode ? 'w-[156px] sm:w-[176px]' : 'w-[148px] sm:w-[168px]',
+      ].join(' ')}
     >
-      <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden shadow-2xl border border-outline-variant/10 bg-surface-container-high group-hover:border-primary/50 transition-colors">
+      <div
+        className={[
+          'relative aspect-[2/3] w-full overflow-hidden shadow-2xl bg-surface-container-high transition-colors',
+          isSelahMode
+            ? 'rounded-2xl border border-primary/20 group-hover:border-primary/55'
+            : 'rounded-xl border border-outline-variant/10 group-hover:border-primary/50',
+        ].join(' ')}
+      >
         <AppImage
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
           src={item.image}
           alt={item.title}
         />
-        {isCompleted && (
+        {!isSelahMode && isCompleted && (
           <div className="absolute top-1.5 right-1.5 flex items-center gap-1 rounded-full bg-black/70 border border-[#D4AF37]/60 px-1.5 py-0.5">
             <Check size={8} className="text-[#D4AF37]" />
             <span className="text-[7px] font-black uppercase tracking-widest text-[#D4AF37]">Lido</span>
           </div>
         )}
       </div>
-      <div className="mt-2.5 px-0.5 select-none flex flex-col gap-1.5">
+      <div className={isSelahMode ? 'mt-2 px-0.5 select-none flex flex-col gap-1.5' : 'mt-2.5 px-0.5 select-none flex flex-col gap-1.5'}>
 
         {/* Volume label */}
-        <span className="text-[8px] font-black uppercase tracking-[0.15em] text-on-surface-variant/40 leading-none">
+        <span className={isSelahMode ? 'text-[9px] font-black uppercase tracking-[0.15em] text-on-surface-variant/45 leading-none' : 'text-[8px] font-black uppercase tracking-[0.15em] text-on-surface-variant/40 leading-none'}>
           Vol. {String(displayVolume).padStart(2, '0')}
         </span>
 
         {/* Description (only if available) */}
         {item.description && (
-          <p className="text-[9px] text-on-surface-variant/60 leading-snug line-clamp-2 font-medium">
+          <p className={isSelahMode ? 'text-[12px] text-on-surface-variant/80 leading-snug line-clamp-2 font-semibold' : 'text-[9px] text-on-surface-variant/60 leading-snug line-clamp-2 font-medium'}>
             {item.description}
           </p>
         )}
 
         {/* Progress bar + % */}
-        <div className="flex items-center gap-1.5 mt-0.5">
-          <div className="h-1 flex-1 bg-outline-variant/20 rounded-full overflow-hidden">
-            <div
-              className={
-                isCompleted
-                  ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_6px_rgba(212,175,55,0.4)]'
-                  : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_5px_rgba(249,115,22,0.3)]'
-              }
-              style={{ width: `${isReading ? clamped : isCompleted ? 100 : 0}%` }}
-            />
+        {!isSelahMode && (
+          <div className="flex items-center gap-1.5 mt-0.5">
+            <div className="h-1 flex-1 bg-outline-variant/20 rounded-full overflow-hidden">
+              <div
+                className={
+                  isCompleted
+                    ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_6px_rgba(212,175,55,0.4)]'
+                    : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_5px_rgba(249,115,22,0.3)]'
+                }
+                style={{ width: `${isReading ? clamped : isCompleted ? 100 : 0}%` }}
+              />
+            </div>
+            {(isReading || isCompleted) && (
+              <span className={`text-[8px] font-black leading-none shrink-0 ${isCompleted ? 'text-[#D4AF37]' : 'text-orange-400'}`}>
+                {isCompleted ? '100' : clamped}%
+              </span>
+            )}
           </div>
-          {(isReading || isCompleted) && (
-            <span className={`text-[8px] font-black leading-none shrink-0 ${isCompleted ? 'text-[#D4AF37]' : 'text-orange-400'}`}>
-              {isCompleted ? '100' : clamped}%
-            </span>
-          )}
-        </div>
+        )}
 
         {/* Lido badge */}
-        {readsCount > 0 && (
+        {!isSelahMode && readsCount > 0 && (
           <span className="text-[8px] font-black uppercase tracking-widest text-[#D4AF37]/80">
             Lido {readsCount}×
           </span>
@@ -3092,7 +3115,7 @@ export default function Bookstore({
                           </div>
                         </div>
                         <div className="flex items-baseline gap-2 flex-wrap">
-                          <h4 className="font-headline font-extrabold text-lg sm:text-xl text-on-surface tracking-tighter uppercase leading-none">
+                          <h4 className="font-headline font-extrabold text-xl sm:text-3xl text-on-surface tracking-tighter uppercase leading-none">
                             {label}
                           </h4>
                           {minReads > 0 && (
@@ -3102,7 +3125,7 @@ export default function Bookstore({
                           )}
                         </div>
                         {seriesDescription && (
-                          <p className="mt-1 text-[9px] sm:text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm">
+                          <p className="mt-1 text-[11px] sm:text-sm text-on-surface-variant/70 leading-snug font-medium max-w-2xl">
                             {seriesDescription}
                           </p>
                         )}
@@ -3120,6 +3143,7 @@ export default function Bookstore({
                               key={item.slug}
                               item={item}
                               displayVolume={extractVolumeFromBook(item) ?? (j + 1)}
+                              visualMode="selah"
                               onSelect={() => handleSelectBook(item.slug)}
                             />
                           ))}
