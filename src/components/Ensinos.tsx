@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, BookOpen, Sparkles, Tent } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronRight, Sparkles, Tent } from 'lucide-react';
+import { AppImage } from './AppImage';
 
 type EnsinoTemaId =
   | 'parabolas-de-jesus'
@@ -27,6 +28,31 @@ interface ParabolaGroup {
   description: string;
   items: string[];
 }
+
+interface EnsinoStudy {
+  id: string;
+  title: string;
+  description: string;
+  tema: string;
+  groupTitle: string;
+  seriesTitle: string;
+  volume: number;
+  image?: string;
+}
+
+const ensinosMarkdownModules = {
+  ...import.meta.glob('/public/content/Ensinos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/Ensinos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/Ensinos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/Ensinos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+
+const ensinosImageModules = {
+  ...import.meta.glob('/public/image/ensinos/**/*.webp'),
+  ...import.meta.glob('/public/image/ensinos/**/*.png'),
+  ...import.meta.glob('/public/image/ensinos/**/*.jpg'),
+  ...import.meta.glob('/public/image/ensinos/**/*.jpeg'),
+} as Record<string, unknown>;
 
 const ENSINOS_TEMAS: EnsinoTema[] = [
   {
@@ -100,14 +126,14 @@ const PARABOLAS_DE_CRISTO: ParabolaItem[] = [
 const PARABOLAS_GRUPOS: ParabolaGroup[] = [
   {
     id: '01',
-    title: 'A Origem Oculta do Reino',
+    title: 'A Origem do Oculto',
     description: 'O Reino começa pequeno e opera silenciosamente, mas cresce até encher toda a criação.',
     items: ['O Semeador', 'O Semeador que Dorme', 'O Grão de Mostarda', 'O Fermento'],
   },
   {
     id: '02',
-    title: 'A Aquisição do Reino',
-    description: 'O valor supremo do Reino exige a entrega total.',
+    title: 'A Questão do Reino',
+    description: 'O valor supremo do Reino exige entrega e prioridade total.',
     items: ['O Tesouro Escondido', 'A Pérola de Grande Valor'],
   },
   {
@@ -159,6 +185,219 @@ const PARABOLAS_GRUPOS: ParabolaGroup[] = [
   },
 ];
 
+function normalizeEnsinosToken(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function normalizeEnsinosTemaKey(raw: string): string {
+  return normalizeEnsinosToken(raw).replace(/^(o|a|os|as)\s+/, '').trim();
+}
+
+function parseFrontmatter(markdown: string): Record<string, string> {
+  const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
+  const match = normalized.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---/);
+  if (!match) return {};
+
+  const result: Record<string, string> = {};
+  for (const line of match[1].split(/\r?\n/)) {
+    const item = line.match(/^\s*([\p{L}_][\p{L}\p{N}_-]*)\s*:\s*(.*?)\s*$/u);
+    if (!item) continue;
+    const rawKey = item[1].toLowerCase();
+    const normalizedKey = rawKey
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+    const value = item[2].replace(/^["']|["']$/g, '');
+    result[rawKey] = value;
+    result[normalizedKey] = value;
+  }
+  return result;
+}
+
+function extractVolumeFromText(raw: string): number {
+  const numbered = raw.match(/(?:ebook|livro|parte|volume|vol\.)\s*0*(\d{1,3})/i);
+  if (numbered) {
+    const parsed = Number.parseInt(numbered[1], 10);
+    if (Number.isFinite(parsed)) return parsed;
+  }
+  if (/\bebook\s*-\s*/i.test(raw)) return 1;
+  return 999;
+}
+
+function normalizeImageStem(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/\.[a-z0-9]+$/i, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function tokenizeEnsinosStem(raw: string): string[] {
+  return normalizeImageStem(raw)
+    .split(' ')
+    .filter(Boolean);
+}
+
+function levenshteinDistance(a: string, b: string): number {
+  if (a === b) return 0;
+  if (!a.length) return b.length;
+  if (!b.length) return a.length;
+
+  const prev = Array.from({ length: b.length + 1 }, (_, index) => index);
+  const next = new Array(b.length + 1).fill(0);
+
+  for (let i = 1; i <= a.length; i += 1) {
+    next[0] = i;
+    for (let j = 1; j <= b.length; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      next[j] = Math.min(
+        next[j - 1] + 1,
+        prev[j] + 1,
+        prev[j - 1] + cost,
+      );
+    }
+    for (let j = 0; j <= b.length; j += 1) prev[j] = next[j];
+  }
+
+  return prev[b.length];
+}
+
+function computeEnsinosSimilarity(stem: string, candidate: string): number {
+  if (!stem || !candidate) return -1;
+  if (stem === candidate) return 100;
+
+  const lengthDelta = Math.abs(stem.length - candidate.length);
+  if (stem.includes(candidate) || candidate.includes(stem)) {
+    return 90 - Math.min(lengthDelta, 30);
+  }
+
+  const stemTokens = tokenizeEnsinosStem(stem);
+  const candidateTokens = tokenizeEnsinosStem(candidate);
+  const stemTokenSet = new Set(stemTokens);
+  const candidateTokenSet = new Set(candidateTokens);
+  const unionSize = new Set([...stemTokenSet, ...candidateTokenSet]).size || 1;
+  let intersectionSize = 0;
+  for (const token of stemTokenSet) {
+    if (candidateTokenSet.has(token)) intersectionSize += 1;
+  }
+
+  const jaccard = intersectionSize / unionSize;
+  const editDistance = levenshteinDistance(stem, candidate);
+  const maxLength = Math.max(stem.length, candidate.length, 1);
+  const editSimilarity = 1 - (editDistance / maxLength);
+  const sharedPrefixBonus = stemTokens[0] && stemTokens[0] === candidateTokens[0] ? 8 : 0;
+
+  return (jaccard * 65) + (editSimilarity * 35) + sharedPrefixBonus;
+}
+
+function buildEnsinosImageLookup(): Map<string, string> {
+  const lookup = new Map<string, string>();
+  for (const key of Object.keys(ensinosImageModules)) {
+    const normalized = key.replace(/\\/g, '/');
+    if (!normalized.startsWith('/public/image/ensinos/')) continue;
+    const fileName = normalized.split('/').pop();
+    if (!fileName) continue;
+    lookup.set(normalizeImageStem(fileName), normalized.slice('/public'.length));
+  }
+  return lookup;
+}
+
+const ENSINOS_IMAGE_LOOKUP = buildEnsinosImageLookup();
+const ENSINOS_IMAGE_PATHS = new Set(Array.from(ENSINOS_IMAGE_LOOKUP.values()));
+
+function findBestEnsinosCover(candidates: string[]): string | undefined {
+  const normalizedCandidates = candidates
+    .map((candidate) => normalizeImageStem(candidate))
+    .filter(Boolean);
+
+  for (const candidate of normalizedCandidates) {
+    const exact = ENSINOS_IMAGE_LOOKUP.get(candidate);
+    if (exact) return exact;
+  }
+
+  let bestScore = -1;
+  let bestPath: string | undefined;
+  for (const [stem, imagePath] of ENSINOS_IMAGE_LOOKUP.entries()) {
+    for (const candidate of normalizedCandidates) {
+      const score = computeEnsinosSimilarity(stem, candidate);
+      if (score > bestScore) {
+        bestScore = score;
+        bestPath = imagePath;
+      }
+    }
+  }
+  return bestScore >= 42 ? bestPath : undefined;
+}
+
+function resolveEnsinosCover(frontmatter: Record<string, string>, title: string, fileStem: string): string | undefined {
+  const fromMeta = (frontmatter.image || frontmatter.cover || frontmatter.capa || '').trim();
+  if (fromMeta.startsWith('/')) {
+    const normalizedMeta = fromMeta.startsWith('/public/') ? fromMeta.slice('/public'.length) : fromMeta;
+    if (ENSINOS_IMAGE_PATHS.has(normalizedMeta)) return normalizedMeta;
+  }
+
+  const shortTitle = title.split('—')[0]?.trim() || title;
+  const candidates = [
+    fromMeta,
+    title,
+    shortTitle,
+    fileStem.replace(/^ebook\s*\d*\s*-\s*/i, '').trim(),
+  ].filter(Boolean);
+
+  return findBestEnsinosCover(candidates);
+}
+
+function discoverEnsinosStudies(): EnsinoStudy[] {
+  const studies: EnsinoStudy[] = [];
+
+  for (const [pathKey, content] of Object.entries(ensinosMarkdownModules)) {
+    const normalizedPath = pathKey.replace(/\\/g, '/');
+    const marker = '/public/content/Ensinos/';
+    if (!normalizedPath.includes(marker)) continue;
+
+    const relativePath = normalizedPath.slice(normalizedPath.indexOf(marker) + marker.length);
+    const parts = relativePath.split('/').filter(Boolean);
+    if (parts.length < 4) continue;
+
+    const groupTitle = parts[1] ?? '';
+    const seriesTitle = parts[2] ?? '';
+    const fileName = parts[parts.length - 1] ?? '';
+    const fileStem = fileName.replace(/\.(?:md|mdx|ya?ml)$/i, '');
+
+    const frontmatter = parseFrontmatter(content);
+    const title = (frontmatter.title || fileStem).trim();
+    const description = (frontmatter.description || '').trim();
+    const tema = normalizeEnsinosTemaKey(frontmatter.tema || title);
+    const image = resolveEnsinosCover(frontmatter, title, fileStem);
+    const volume = extractVolumeFromText(fileStem);
+
+    studies.push({
+      id: relativePath,
+      title,
+      description,
+      tema,
+      groupTitle,
+      seriesTitle,
+      volume,
+      image,
+    });
+  }
+
+  return studies.sort((a, b) => {
+    if (a.tema !== b.tema) return a.tema.localeCompare(b.tema);
+    if (a.volume !== b.volume) return a.volume - b.volume;
+    return a.title.localeCompare(b.title);
+  });
+}
+
 function EnsinoThemeCard({ tema, onOpen }: { tema: EnsinoTema; onOpen: () => void }) {
   const isReady = tema.id === 'parabolas-de-jesus';
 
@@ -201,55 +440,170 @@ function EnsinoThemeCard({ tema, onOpen }: { tema: EnsinoTema; onOpen: () => voi
 }
 
 function ParabolasInventory() {
+  const [activeParabola, setActiveParabola] = useState<string | null>(null);
+  const [activeGroupItem, setActiveGroupItem] = useState<string | null>(null);
+  const [activeStudyTema, setActiveStudyTema] = useState<string | null>(null);
+  const ensinosStudies = useMemo(() => discoverEnsinosStudies(), []);
+
+  const studiesByTema = useMemo(() => {
+    const map = new Map<string, EnsinoStudy[]>();
+    for (const study of ensinosStudies) {
+      const key = normalizeEnsinosTemaKey(study.tema);
+      const existing = map.get(key) ?? [];
+      existing.push(study);
+      map.set(key, existing);
+    }
+    return map;
+  }, [ensinosStudies]);
+
+  const studyTemaKeys = useMemo(() => Array.from(studiesByTema.keys()), [studiesByTema]);
+  const defaultStudyTema = studyTemaKeys[0] ?? null;
+  const activeStudyList = activeStudyTema ? studiesByTema.get(activeStudyTema) ?? [] : [];
+
+  useEffect(() => {
+    if (!activeStudyTema && defaultStudyTema) setActiveStudyTema(defaultStudyTema);
+  }, [activeStudyTema, defaultStudyTema]);
+
+  const toParabolaId = (raw: string) => raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+
+  const openParabolaFromGroupItem = (groupItem: string) => {
+    setActiveGroupItem(groupItem);
+
+    const normalizedCandidates = groupItem
+      .split('/')
+      .map((item) => normalizeEnsinosTemaKey(item))
+      .filter(Boolean);
+
+    const matchedStudyTema = studyTemaKeys.find((temaKey) =>
+      normalizedCandidates.some((candidate) => candidate === temaKey || candidate.includes(temaKey) || temaKey.includes(candidate)),
+    );
+    if (matchedStudyTema) setActiveStudyTema(matchedStudyTema);
+
+    const candidates = groupItem
+      .split('/')
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    const matched = PARABOLAS_DE_CRISTO.find((parabola) => candidates.some((candidate) => candidate === parabola.title));
+    if (!matched) return;
+
+    setActiveParabola(matched.title);
+    const target = document.getElementById(`parabola-${toParabolaId(matched.title)}`);
+    target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="rounded-2xl border border-primary/25 bg-black/20 px-3.5 sm:px-5 py-3.5 sm:py-4">
-        <p className="text-xs sm:text-sm font-semibold text-primary/95">Inventário Completo</p>
-        <p className="mt-1 text-[11px] sm:text-xs leading-relaxed text-on-surface-variant/80 max-w-3xl">
-          Lista com 31 parábolas de Cristo e organização temática para estudo contínuo.
-        </p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary">
-            31 parábolas
-          </span>
-          <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary">
+    <div className="space-y-4 sm:space-y-5">
+      <article className="rounded-2xl border border-outline-variant/25 bg-black/15 p-3 sm:p-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="text-sm sm:text-base font-black uppercase tracking-wide text-on-surface">Grupos Temáticos</h3>
+          <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[9px] font-semibold text-primary">
             7 grupos
           </span>
         </div>
-      </div>
-
-      <article className="rounded-2xl border border-outline-variant/25 bg-black/15 p-3.5 sm:p-5">
-        <h3 className="text-sm sm:text-base font-black uppercase tracking-wide text-on-surface">As 31 Parábolas de Cristo</h3>
-        <ol className="mt-3 grid grid-cols-1 xl:grid-cols-2 gap-2.5 sm:gap-3">
-          {PARABOLAS_DE_CRISTO.map((parabola, index) => (
-            <li key={parabola.title} className="rounded-xl border border-primary/15 bg-black/20 px-3 py-2.5">
-              <p className="text-[11px] sm:text-xs font-semibold text-on-surface">
-                {index + 1}. {parabola.title}
-              </p>
-              <p className="mt-0.5 text-[10px] sm:text-[11px] text-primary/90">{parabola.references}</p>
-            </li>
-          ))}
-        </ol>
-      </article>
-
-      <article className="rounded-2xl border border-outline-variant/25 bg-black/15 p-3.5 sm:p-5">
-        <h3 className="text-sm sm:text-base font-black uppercase tracking-wide text-on-surface">Grupos Temáticos</h3>
-        <div className="mt-3 grid grid-cols-1 xl:grid-cols-2 gap-3">
+        <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">
+          Estrutura principal de navegação dos estudos de parábolas.
+        </p>
+        <div className="mt-2.5 grid grid-cols-1 xl:grid-cols-2 gap-2.5">
           {PARABOLAS_GRUPOS.map((grupo) => (
-            <section key={grupo.id} className="rounded-xl border border-primary/15 bg-black/20 px-3.5 sm:px-4 py-3">
-              <span className="inline-flex rounded-full border border-primary/25 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.16em] text-primary">
+            <section key={grupo.id} className="rounded-lg border border-primary/15 bg-black/20 px-3 py-2.5">
+              <span className="inline-flex rounded-full border border-primary/25 bg-primary/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.15em] text-primary">
                 Grupo {grupo.id}
               </span>
-              <h4 className="mt-1.5 text-xs sm:text-sm font-black text-on-surface uppercase">{grupo.title}</h4>
-              <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">{grupo.description}</p>
-              <ul className="mt-2.5 space-y-1.5">
+              <h4 className="mt-1 text-[11px] sm:text-xs font-black text-on-surface uppercase">{grupo.title}</h4>
+              <p className="mt-0.5 text-[10px] leading-relaxed text-on-surface-variant/80">{grupo.description}</p>
+              <div className="mt-2 grid grid-cols-1 gap-1.5">
                 {grupo.items.map((item) => (
-                  <li key={`${grupo.id}-${item}`} className="text-[10px] sm:text-[11px] text-on-surface-variant">
-                    - {item}
-                  </li>
+                  <button
+                    type="button"
+                    key={`${grupo.id}-${item}`}
+                    onClick={() => openParabolaFromGroupItem(item)}
+                    className={`group flex items-center justify-between rounded-md border px-2 py-1.5 text-left text-[9px] sm:text-[10px] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:text-on-surface hover:shadow-[0_0_14px_rgba(242,192,141,0.18)] active:scale-[0.99] ${
+                      activeGroupItem === item
+                        ? 'border-primary/60 bg-gradient-to-r from-primary/20 via-black/35 to-primary/20 text-on-surface'
+                        : 'border-primary/20 bg-gradient-to-r from-black/45 via-black/30 to-primary/10 text-on-surface-variant'
+                    }`}
+                  >
+                    <span className="font-semibold">{item}</span>
+                    <ChevronRight size={12} className="text-primary/75 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-primary" />
+                  </button>
                 ))}
-              </ul>
+              </div>
             </section>
+          ))}
+        </div>
+      </article>
+
+      {activeStudyList.length > 0 && (
+        <article className="rounded-2xl border border-primary/25 bg-black/20 p-3 sm:p-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">Série Disponível Nesta Seção</h3>
+            <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[8px] font-semibold text-primary">
+              {activeStudyList.length} estudos
+            </span>
+          </div>
+          <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">
+            Capas carregadas da pasta <code className="text-primary/90">/image/ensinos</code>.
+          </p>
+          <div className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
+            {activeStudyList.map((study) => (
+              <article
+                key={study.id}
+                className="group rounded-xl border border-primary/20 bg-gradient-to-b from-black/35 via-black/25 to-black/45 p-2.5 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_0_18px_rgba(242,192,141,0.2)]"
+              >
+                <div className="relative aspect-[3/4] overflow-hidden rounded-lg border border-primary/20 bg-black/35">
+                  <AppImage
+                    src={study.image}
+                    alt={study.title}
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fallbackClassName="opacity-85"
+                  />
+                </div>
+                <p className="mt-2 text-[10px] font-black uppercase tracking-[0.12em] text-primary/90">
+                  Vol. {String(study.volume).padStart(2, '0')}
+                </p>
+                <p className="mt-0.5 text-[11px] sm:text-xs font-semibold text-on-surface leading-snug line-clamp-2">
+                  {study.title}
+                </p>
+                <p className="mt-1 text-[10px] text-on-surface-variant/80 leading-snug line-clamp-3">
+                  {study.description}
+                </p>
+              </article>
+            ))}
+          </div>
+        </article>
+      )}
+
+      <article className="rounded-2xl border border-primary/20 bg-black/20 p-3 sm:p-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">Inventário Completo (Apoio)</h3>
+          <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[8px] font-semibold text-primary">
+            31 parábolas
+          </span>
+        </div>
+        <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">
+          Referência rápida para consulta, organizada em blocos compactos.
+        </p>
+        <div className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-1.5">
+          {PARABOLAS_DE_CRISTO.map((parabola, index) => (
+            <div
+              key={parabola.title}
+              id={`parabola-${toParabolaId(parabola.title)}`}
+              className={`rounded-md border px-2 py-1.5 transition-all duration-300 ${activeParabola === parabola.title
+                ? 'border-primary/60 bg-primary/10 shadow-[0_0_18px_rgba(242,192,141,0.2)]'
+                : 'border-primary/15 bg-black/25'}`}
+              title={`${parabola.title} — ${parabola.references}`}
+            >
+              <p className="text-[10px] sm:text-[11px] font-semibold text-on-surface leading-snug">
+                {index + 1}. {parabola.title}
+              </p>
+              <p className="mt-0.5 text-[9px] text-primary/85 leading-snug line-clamp-1">{parabola.references}</p>
+            </div>
           ))}
         </div>
       </article>
