@@ -77,6 +77,13 @@ const MATRIX_SERIES_DESCRIPTIONS: Record<string, string> = {
     'Mapeamento documental da camada humana do sistema: nós de poder, dinastias, ordens iniciáticas e ideologias que estruturam a governança global no plano visível.',
 };
 
+const MATRIX_SERIES_SUMMARY_STOPWORDS = new Set([
+  'a', 'o', 'os', 'as', 'de', 'da', 'do', 'das', 'dos', 'e', 'em', 'na', 'no', 'nas', 'nos',
+  'um', 'uma', 'uns', 'umas', 'para', 'por', 'com', 'sem', 'ao', 'aos', 'que', 'como',
+  'mais', 'menos', 'sobre', 'entre', 'ser', 'sao', 'foi', 'era', 'seu', 'sua', 'seus', 'suas',
+  'tambem', 'ja', 'primeiro', 'primeira', 'segundo', 'segunda', 'volume', 'volumes', 'ebook', 'livro',
+]);
+
 const refutationModules = {
   ...import.meta.glob('/public/content/babel/**/*.md', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/babel/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
@@ -216,6 +223,50 @@ function sortByVolume(a: RefutationStudy, b: RefutationStudy): number {
   if (a.volume !== null && b.volume === null) return -1;
   if (a.volume === null && b.volume !== null) return 1;
   return sortByNewest(a, b);
+}
+
+function collectMatrixSeriesKeywords(items: RefutationStudy[], limit = 4): string[] {
+  const counts = new Map<string, number>();
+
+  for (const item of items) {
+    const text = `${item.title || ''} ${item.description || ''}`
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/(?:ebook|livro|volume|vol\.)\s*0*\d{1,3}/g, ' ')
+      .replace(/[^a-z0-9]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    const uniqueTokens = new Set(text.split(' ').filter(Boolean));
+    for (const token of uniqueTokens) {
+      if (token.length < 4) continue;
+      if (MATRIX_SERIES_SUMMARY_STOPWORDS.has(token)) continue;
+      counts.set(token, (counts.get(token) || 0) + 1);
+    }
+  }
+
+  return [...counts.entries()]
+    .sort((a, b) => {
+      if (b[1] !== a[1]) return b[1] - a[1];
+      if (b[0].length !== a[0].length) return b[0].length - a[0].length;
+      return a[0].localeCompare(b[0], 'pt-BR');
+    })
+    .slice(0, limit)
+    .map(([token]) => token);
+}
+
+function buildAutoMatrixSeriesDescription(series: string, items: RefutationStudy[], themeSubtitle: string): string {
+  const curated = MATRIX_SERIES_DESCRIPTIONS[series];
+  if (curated) return curated;
+  if (!items.length) return themeSubtitle;
+
+  const keywords = collectMatrixSeriesKeywords(items);
+  const focus = keywords.length > 0
+    ? keywords.join(', ')
+    : 'documentacao, discernimento e analise critica';
+  const volumeText = `${items.length} ${items.length === 1 ? 'volume' : 'volumes'}`;
+  return `Serie em ${volumeText}: panorama de ${focus}, conectando contexto publico e discernimento biblico.`;
 }
 
 function loadRefutations(): RefutationStudy[] {
@@ -471,7 +522,7 @@ export default function Refutation({ openSlug }: RefutationProps) {
 
         {seriesInTheme.map(([series, items], index) => {
           const isSeries = items.length > 3;
-          const seriesDescription = MATRIX_SERIES_DESCRIPTIONS[series] || selectedTheme.subtitle;
+          const seriesDescription = buildAutoMatrixSeriesDescription(series, items, selectedTheme.subtitle);
           const seriesKey = `${selectedThemeId}-${slugify(series)}`;
           return (
             <section key={series} className="relative mb-6">

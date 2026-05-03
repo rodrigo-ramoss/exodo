@@ -189,6 +189,20 @@ const PARABOLAS_GRUPOS: ParabolaGroup[] = [
   },
 ];
 
+const ENSINOS_CURATED_SERIES_SUMMARY: Record<string, string> = {
+  'joio e o trigo':
+    'Série em 7 volumes sobre a parábola do joio e do trigo: cenário do mundo, infiltração do inimigo, paciência divina, colheita angelical e juízo final com destino dos justos e dos ímpios.',
+};
+
+const ENSINOS_SUMMARY_STOPWORDS = new Set([
+  'a', 'o', 'os', 'as', 'de', 'da', 'do', 'das', 'dos', 'e', 'em', 'na', 'no', 'nas', 'nos',
+  'um', 'uma', 'uns', 'umas', 'para', 'por', 'com', 'sem', 'ao', 'aos', 'à', 'às', 'que', 'como',
+  'mais', 'menos', 'sobre', 'entre', 'ser', 'sao', 'são', 'foi', 'era', 'seu', 'sua', 'seus', 'suas',
+  'nosso', 'nossa', 'nossos', 'nossas', 'ele', 'ela', 'eles', 'elas', 'isso', 'isto', 'esta', 'este',
+  'essas', 'esses', 'aquele', 'aquela', 'aqueles', 'aquelas', 'tambem', 'também', 'ja', 'já',
+  'primeiro', 'primeira', 'segundo', 'segunda', 'volume', 'volumes', 'ebook', 'livro',
+]);
+
 function normalizeEnsinosToken(raw: string): string {
   return raw
     .normalize('NFD')
@@ -206,6 +220,61 @@ function normalizeEnsinosTemaKey(raw: string): string {
 function extractGroupId(raw: string): string {
   const match = normalizeEnsinosToken(raw).match(/grupo\s*(\d{1,2})/);
   return match ? match[1].padStart(2, '0') : '';
+}
+
+function toEnsinosReadableLabel(raw: string): string {
+  const normalized = raw
+    .replace(/[-_]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+
+  if (!normalized) return 'o tema';
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+}
+
+function summarizeEnsinosSeries(studies: EnsinoStudy[], fallbackLabel?: string): string {
+  if (!studies.length) return '';
+
+  const temaKey = normalizeEnsinosTemaKey(studies[0]?.tema || '');
+  const curated = ENSINOS_CURATED_SERIES_SUMMARY[temaKey];
+  if (curated) return curated;
+
+  const descriptions = studies
+    .map((study) => (study.description || '').trim())
+    .filter(Boolean);
+
+  const tokenCounts = new Map<string, number>();
+  for (const description of descriptions) {
+    const tokens = normalizeEnsinosToken(description).split(' ').filter(Boolean);
+    for (const token of tokens) {
+      if (token.length < 4) continue;
+      if (ENSINOS_SUMMARY_STOPWORDS.has(token)) continue;
+      tokenCounts.set(token, (tokenCounts.get(token) || 0) + 1);
+    }
+  }
+
+  const highlights = [...tokenCounts.entries()]
+    .sort((a, b) => {
+      if (b[1] !== a[1]) return b[1] - a[1];
+      if (b[0].length !== a[0].length) return b[0].length - a[0].length;
+      return a[0].localeCompare(b[0], 'pt-BR');
+    })
+    .slice(0, 4)
+    .map(([token]) => token);
+
+  const subjectLabel = toEnsinosReadableLabel(
+    fallbackLabel
+    || studies[0]?.seriesTitle
+    || studies[0]?.tema
+    || 'tema bíblico',
+  );
+
+  const focus = highlights.length > 0
+    ? highlights.join(', ')
+    : 'fundamentos bíblicos, discernimento e aplicação prática';
+
+  return `Série em ${studies.length} volumes sobre ${subjectLabel}: panorama de ${focus}, com progressão temática e aplicação espiritual.`;
 }
 
 function parseFrontmatter(markdown: string): Record<string, string> {
@@ -474,10 +543,34 @@ function ParabolasInventory() {
 
   const studyTemaKeys = useMemo(() => Array.from(studiesByTema.keys()), [studiesByTema]);
   const activeStudyList = activeStudyTema ? studiesByTema.get(activeStudyTema) ?? [] : [];
+  const activeGroupLabel = activeGroupId
+    ? PARABOLAS_GRUPOS.find((group) => group.id === activeGroupId)?.title ?? null
+    : null;
   const recentActiveStudies = useMemo(
     () => [...activeStudyList].sort((a, b) => b.volume - a.volume).slice(0, 5),
     [activeStudyList],
   );
+  const studyTemasByGroupId = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const study of ensinosStudies) {
+      const groupId = (study.groupId || '').trim();
+      if (!groupId) continue;
+      const temaKey = normalizeEnsinosTemaKey(study.tema);
+      if (!temaKey) continue;
+      const existing = map.get(groupId) ?? [];
+      if (!existing.includes(temaKey)) existing.push(temaKey);
+      map.set(groupId, existing);
+    }
+    return map;
+  }, [ensinosStudies]);
+  const activeSeriesSummary = useMemo(() => (
+    activeStudyList.length
+      ? summarizeEnsinosSeries(
+          activeStudyList,
+          activeGroupItem || activeGroupLabel || activeStudyList[0]?.seriesTitle || activeStudyList[0]?.tema,
+        )
+      : ''
+  ), [activeGroupItem, activeStudyList, activeGroupLabel]);
 
   const toParabolaId = (raw: string) => raw
     .normalize('NFD')
@@ -497,11 +590,36 @@ function ParabolasInventory() {
     ) ?? null;
   };
 
+  const resolveStudyTemaFromGroupId = (groupId: string): string | null => {
+    const temas = studyTemasByGroupId.get(groupId) ?? [];
+    if (temas.length === 0) return null;
+    return temas[0] ?? null;
+  };
+
+  const openSeriesFromGroup = (groupId: string) => {
+    setActiveGroupId(groupId);
+    const temaFromGroup = resolveStudyTemaFromGroupId(groupId);
+    setActiveStudyTema(temaFromGroup);
+
+    const group = PARABOLAS_GRUPOS.find((entry) => entry.id === groupId);
+    if (!group) return;
+
+    const preferredItem = group.items.find((item) => resolveStudyTemaFromGroupItem(item) === temaFromGroup)
+      ?? group.items[0]
+      ?? null;
+    setActiveGroupItem(preferredItem);
+
+    if (!preferredItem) return;
+    const candidates = preferredItem.split('/').map((item) => item.trim()).filter(Boolean);
+    const matched = PARABOLAS_DE_CRISTO.find((parabola) => candidates.some((candidate) => candidate === parabola.title));
+    if (matched) setActiveParabola(matched.title);
+  };
+
   const openParabolaFromGroupItem = (groupId: string, groupItem: string) => {
     setActiveGroupItem(groupItem);
     setActiveGroupId(groupId);
 
-    const matchedStudyTema = resolveStudyTemaFromGroupItem(groupItem);
+    const matchedStudyTema = resolveStudyTemaFromGroupItem(groupItem) || resolveStudyTemaFromGroupId(groupId);
     if (matchedStudyTema) setActiveStudyTema(matchedStudyTema);
     else setActiveStudyTema(null);
 
@@ -514,10 +632,6 @@ function ParabolasInventory() {
     if (!matched) return;
     setActiveParabola(matched.title);
   };
-
-  const activeGroupLabel = activeGroupId
-    ? PARABOLAS_GRUPOS.find((group) => group.id === activeGroupId)?.title ?? null
-    : null;
 
   if (selectedStudy) {
     return (
@@ -545,14 +659,27 @@ function ParabolasInventory() {
         <div className="mt-2.5 grid grid-cols-1 xl:grid-cols-2 gap-2.5">
           {PARABOLAS_GRUPOS.map((grupo) => (
             <section key={grupo.id} className="rounded-lg border border-primary/15 bg-black/20 px-3 py-2.5">
-              <span className="inline-flex rounded-full border border-primary/25 bg-primary/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.15em] text-primary">
-                Grupo {grupo.id}
-              </span>
+              <div className="flex flex-wrap items-center justify-between gap-1.5">
+                <span className="inline-flex rounded-full border border-primary/25 bg-primary/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.15em] text-primary">
+                  Grupo {grupo.id}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => openSeriesFromGroup(grupo.id)}
+                  className={`rounded-full border px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.12em] transition-colors ${
+                    resolveStudyTemaFromGroupId(grupo.id)
+                      ? 'border-emerald-300/45 bg-emerald-400/12 text-emerald-200 hover:border-emerald-200/70'
+                      : 'border-primary/20 bg-black/30 text-on-surface-variant/70'
+                  }`}
+                >
+                  {resolveStudyTemaFromGroupId(grupo.id) ? 'Ler' : 'Em preparação'}
+                </button>
+              </div>
               <h4 className="mt-1 text-[11px] sm:text-xs font-black text-on-surface uppercase">{grupo.title}</h4>
               <p className="mt-0.5 text-[10px] leading-relaxed text-on-surface-variant/80">{grupo.description}</p>
               <div className="mt-2 grid grid-cols-1 gap-1.5">
                 {grupo.items.map((item) => {
-                  const hasSeries = Boolean(resolveStudyTemaFromGroupItem(item));
+                  const hasSeries = Boolean(resolveStudyTemaFromGroupItem(item) || resolveStudyTemaFromGroupId(grupo.id));
                   return (
                   <button
                     type="button"
@@ -600,6 +727,11 @@ function ParabolasInventory() {
           <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">
             {activeGroupItem ? `Parábola ativa: ${activeGroupItem}.` : (activeGroupLabel ? `Grupo ativo: ${activeGroupLabel}.` : 'Últimas capas da série selecionada.')}
           </p>
+          {activeSeriesSummary && (
+            <p className="mt-1.5 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80 line-clamp-4">
+              {activeSeriesSummary}
+            </p>
+          )}
           <div className="mt-2.5 overflow-x-auto hide-scrollbar">
             <div className="flex w-max gap-2 pb-1">
               {recentActiveStudies.map((study) => (

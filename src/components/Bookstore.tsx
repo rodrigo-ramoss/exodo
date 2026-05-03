@@ -1634,18 +1634,81 @@ function FireflyLayer() {
   );
 }
 
+const SERIES_SUMMARY_STOPWORDS = new Set([
+  'a', 'o', 'os', 'as', 'de', 'da', 'do', 'das', 'dos', 'e', 'em', 'na', 'no', 'nas', 'nos',
+  'um', 'uma', 'uns', 'umas', 'para', 'por', 'com', 'sem', 'ao', 'aos', 'a', 'as', 'que', 'como',
+  'mais', 'menos', 'sobre', 'entre', 'ser', 'sao', 'foi', 'era', 'seu', 'sua', 'seus', 'suas',
+  'nosso', 'nossa', 'nossos', 'nossas', 'ele', 'ela', 'eles', 'elas', 'isso', 'isto', 'esta', 'este',
+  'essas', 'esses', 'aquele', 'aquela', 'aqueles', 'aquelas', 'tambem', 'ja',
+  'primeiro', 'primeira', 'segundo', 'segunda', 'terceiro', 'terceira', 'volume', 'volumes', 'ebook', 'livro',
+]);
+
+function normalizeSeriesSummaryText(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function toReadableSeriesLabel(raw: string): string {
+  const normalized = raw
+    .replace(/[-_]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+  if (!normalized) return 'o tema';
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+}
+
+function collectSeriesSummaryKeywords(items: BookItem[], limit = 4): string[] {
+  const counts = new Map<string, number>();
+
+  for (const item of items) {
+    const raw = `${item.title || ''} ${item.description || ''}`
+      .replace(/(?:ebook|livro|volume|vol\.)\s*0*\d{1,3}/gi, ' ')
+      .replace(/\s+/g, ' ');
+
+    const tokens = normalizeSeriesSummaryText(raw).split(' ').filter(Boolean);
+    const uniqueTokens = new Set(tokens);
+    for (const token of uniqueTokens) {
+      if (token.length < 4) continue;
+      if (SERIES_SUMMARY_STOPWORDS.has(token)) continue;
+      counts.set(token, (counts.get(token) || 0) + 1);
+    }
+  }
+
+  return [...counts.entries()]
+    .sort((a, b) => {
+      if (b[1] !== a[1]) return b[1] - a[1];
+      if (b[0].length !== a[0].length) return b[0].length - a[0].length;
+      return a[0].localeCompare(b[0], 'pt-BR');
+    })
+    .slice(0, limit)
+    .map(([token]) => token);
+}
+
+function buildGeneratedSeriesDescription(category: string, items: BookItem[]): string {
+  if (!items.length) return '';
+
+  const keywords = collectSeriesSummaryKeywords(items);
+  const seriesLabel = toReadableSeriesLabel(toSeriesDisplayLabel(category));
+  const volumesText = `${items.length} ${items.length === 1 ? 'volume' : 'volumes'}`;
+  const focus = keywords.length > 0
+    ? keywords.join(', ')
+    : 'fundamentos bíblicos, discernimento e aplicação prática';
+
+  return `Série em ${volumesText} sobre ${seriesLabel}: panorama de ${focus}, com leitura progressiva e aplicação espiritual.`;
+}
+
 function buildAutoSeriesDescription(category: string, items: BookItem[]): string {
   const curated = SERIES_DESCRIPTION[category];
   if (curated) return curated;
 
-  // Fallback automático: reaproveita as descrições dos próprios volumes
-  // para que novas séries/trilogias nunca apareçam sem texto de apoio.
-  const fromBooks = items
-    .map((item) => item.description?.trim())
-    .filter((value): value is string => Boolean(value))
-    .slice(0, 2);
-
-  if (fromBooks.length > 0) return fromBooks.join(' ');
+  const generated = buildGeneratedSeriesDescription(category, items);
+  if (generated) return generated;
 
   const seriesLabel = toSeriesDisplayLabel(category);
   return `${seriesLabel}: coleção de estudos e livros com análise bíblica, histórica e aplicação prática.`;
