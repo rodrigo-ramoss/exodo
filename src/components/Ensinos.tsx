@@ -194,10 +194,6 @@ const ENSINOS_CURATED_SERIES_SUMMARY: Record<string, string> = {
     'Série em 7 volumes sobre a parábola do joio e do trigo: cenário do mundo, infiltração do inimigo, paciência divina, colheita angelical e juízo final com destino dos justos e dos ímpios.',
 };
 
-const PARABOLAS_GROUP_ITEM_TEMA_OVERRIDES: Record<string, string> = {
-  'joio e o trigo': 'joio e o trigo',
-};
-
 const ENSINOS_SUMMARY_STOPWORDS = new Set([
   'a', 'o', 'os', 'as', 'de', 'da', 'do', 'das', 'dos', 'e', 'em', 'na', 'no', 'nas', 'nos',
   'um', 'uma', 'uns', 'umas', 'para', 'por', 'com', 'sem', 'ao', 'aos', 'à', 'às', 'que', 'como',
@@ -451,29 +447,15 @@ function discoverEnsinosStudies(): EnsinoStudy[] {
 
     const groupTitle = parts[1] ?? '';
     const groupId = extractGroupId(groupTitle);
-    const nestedFolders = parts.slice(2, -1);
-    const parabolaFolder = nestedFolders.length > 1 ? (nestedFolders[0] ?? '') : '';
-    const seriesTitle = nestedFolders.length > 1
-      ? (nestedFolders[1] ?? '')
-      : (nestedFolders[0] ?? '');
+    const seriesTitle = parts[2] ?? '';
     const fileName = parts[parts.length - 1] ?? '';
     const fileStem = fileName.replace(/\.(?:md|mdx|ya?ml)$/i, '');
     const slug = relativePath.replace(/\.(?:md|mdx|ya?ml)$/i, '');
 
     const frontmatter = parseFrontmatter(content);
-    const section = normalizeEnsinosToken(frontmatter.secao || frontmatter.seção || '');
-    const category = normalizeEnsinosToken(frontmatter.category || '');
-    const rootFolder = normalizeEnsinosToken(parts[0] ?? '');
-
-    const belongsToParabolasFolder = rootFolder === 'parabolas de jesus';
-    const belongsToEnsinosSection = !section || section === 'ensinos';
-    const belongsToParabolasCategory = !category || category === 'parabolas de jesus';
-
-    if (!belongsToParabolasFolder || !belongsToEnsinosSection || !belongsToParabolasCategory) continue;
-
     const title = (frontmatter.title || fileStem).trim();
     const description = (frontmatter.description || '').trim();
-    const tema = normalizeEnsinosTemaKey(frontmatter.tema || parabolaFolder || title);
+    const tema = normalizeEnsinosTemaKey(frontmatter.tema || title);
     const image = resolveEnsinosCover(frontmatter, title, fileStem);
     const volume = extractVolumeFromText(fileStem);
 
@@ -541,10 +523,12 @@ function EnsinoThemeCard({ tema, onOpen }: { tema: EnsinoTema; onOpen: () => voi
 }
 
 function ParabolasInventory() {
+  const [activeParabola, setActiveParabola] = useState<string | null>(null);
   const [activeGroupItem, setActiveGroupItem] = useState<string | null>(null);
   const [selectedStudy, setSelectedStudy] = useState<EnsinoStudy | null>(null);
   const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
   const [activeStudyTema, setActiveStudyTema] = useState<string | null>(null);
+  const updatesPanelRef = useRef<HTMLElement | null>(null);
   const ensinosStudies = useMemo(() => discoverEnsinosStudies(), []);
 
   const studiesByTema = useMemo(() => {
@@ -560,6 +544,13 @@ function ParabolasInventory() {
 
   const studyTemaKeys = useMemo(() => Array.from(studiesByTema.keys()), [studiesByTema]);
   const activeStudyList = activeStudyTema ? studiesByTema.get(activeStudyTema) ?? [] : [];
+  const activeGroupLabel = activeGroupId
+    ? PARABOLAS_GRUPOS.find((group) => group.id === activeGroupId)?.title ?? null
+    : null;
+  const recentActiveStudies = useMemo(
+    () => [...activeStudyList].sort((a, b) => b.volume - a.volume).slice(0, 5),
+    [activeStudyList],
+  );
   const studyTemasByGroupId = useMemo(() => {
     const map = new Map<string, string[]>();
     for (const study of ensinosStudies) {
@@ -573,16 +564,21 @@ function ParabolasInventory() {
     }
     return map;
   }, [ensinosStudies]);
+  const activeSeriesSummary = useMemo(() => (
+    activeStudyList.length
+      ? summarizeEnsinosSeries(
+          activeStudyList,
+          activeGroupItem || activeGroupLabel || activeStudyList[0]?.seriesTitle || activeStudyList[0]?.tema,
+        )
+      : ''
+  ), [activeGroupItem, activeStudyList, activeGroupLabel]);
 
-  const openFirstStudyFromTema = (temaKey: string | null): boolean => {
-    if (!temaKey) return false;
-    const series = [...(studiesByTema.get(temaKey) ?? [])].sort((a, b) => a.volume - b.volume);
-    const firstStudy = series[0];
-    if (!firstStudy) return false;
-    setActiveStudyTema(temaKey);
-    setSelectedStudy(firstStudy);
-    return true;
-  };
+  const toParabolaId = (raw: string) => raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
 
   const resolveStudyTemaFromGroupItem = (groupItem: string): string | null => {
     const normalizedCandidates = groupItem
@@ -590,25 +586,12 @@ function ParabolasInventory() {
       .map((item) => normalizeEnsinosTemaKey(item))
       .filter(Boolean);
 
-    for (const candidate of normalizedCandidates) {
-      const forcedTema = PARABOLAS_GROUP_ITEM_TEMA_OVERRIDES[candidate];
-      if (forcedTema && studyTemaKeys.includes(forcedTema)) return forcedTema;
-    }
-
     return studyTemaKeys.find((temaKey) =>
       normalizedCandidates.some((candidate) => candidate === temaKey || candidate.includes(temaKey) || temaKey.includes(candidate)),
     ) ?? null;
   };
 
   const resolveStudyTemaFromGroupId = (groupId: string): string | null => {
-    const group = PARABOLAS_GRUPOS.find((entry) => entry.id === groupId);
-    if (group) {
-      for (const item of group.items) {
-        const temaFromItem = resolveStudyTemaFromGroupItem(item);
-        if (temaFromItem) return temaFromItem;
-      }
-    }
-
     const temas = studyTemasByGroupId.get(groupId) ?? [];
     if (temas.length === 0) return null;
     return temas[0] ?? null;
@@ -627,17 +610,34 @@ function ParabolasInventory() {
       ?? null;
     setActiveGroupItem(preferredItem);
 
-    if (openFirstStudyFromTema(temaFromGroup)) return;
+    if (!preferredItem) return;
+    const candidates = preferredItem.split('/').map((item) => item.trim()).filter(Boolean);
+    const matched = PARABOLAS_DE_CRISTO.find((parabola) => candidates.some((candidate) => candidate === parabola.title));
+    if (matched) setActiveParabola(matched.title);
   };
 
   const openParabolaFromGroupItem = (groupId: string, groupItem: string) => {
     setActiveGroupItem(groupItem);
     setActiveGroupId(groupId);
 
-    const matchedStudyTema = resolveStudyTemaFromGroupItem(groupItem) || resolveStudyTemaFromGroupId(groupId);
-    if (matchedStudyTema && openFirstStudyFromTema(matchedStudyTema)) return;
-    setActiveStudyTema(matchedStudyTema || null);
+    const matchedStudyTema = resolveStudyTemaFromGroupItem(groupItem);
+    if (matchedStudyTema) setActiveStudyTema(matchedStudyTema);
+    else setActiveStudyTema(null);
+
+    const candidates = groupItem
+      .split('/')
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    const matched = PARABOLAS_DE_CRISTO.find((parabola) => candidates.some((candidate) => candidate === parabola.title));
+    if (!matched) return;
+    setActiveParabola(matched.title);
   };
+
+  useEffect(() => {
+    if (!activeStudyList.length) return;
+    updatesPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [activeStudyList]);
 
   if (selectedStudy) {
     return (
@@ -685,8 +685,7 @@ function ParabolasInventory() {
               <p className="mt-0.5 text-[10px] leading-relaxed text-on-surface-variant/80">{grupo.description}</p>
               <div className="mt-2 grid grid-cols-1 gap-1.5">
                 {grupo.items.map((item) => {
-                  const itemTema = resolveStudyTemaFromGroupItem(item) || resolveStudyTemaFromGroupId(grupo.id);
-                  const hasSeries = Boolean(itemTema);
+                  const hasSeries = Boolean(resolveStudyTemaFromGroupItem(item));
                   return (
                   <button
                     type="button"
@@ -728,6 +727,56 @@ function ParabolasInventory() {
         </div>
       </article>
 
+      {activeStudyList.length > 0 && (
+        <article ref={updatesPanelRef} className="rounded-2xl border border-primary/25 bg-black/20 p-3 sm:p-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">Atualizações da Série</h3>
+            <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[8px] font-semibold text-primary">
+              {activeStudyList.length} atualizações
+            </span>
+            <span className="rounded-full border border-primary/20 bg-black/25 px-2 py-0.5 text-[8px] font-semibold text-on-surface-variant/80">
+              mostrando {Math.min(5, activeStudyList.length)}
+            </span>
+          </div>
+          <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">
+            {activeGroupItem ? `Parábola ativa: ${activeGroupItem}.` : (activeGroupLabel ? `Grupo ativo: ${activeGroupLabel}.` : 'Últimas capas da série selecionada.')}
+          </p>
+          {activeSeriesSummary && (
+            <p className="mt-1.5 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80 line-clamp-4">
+              {activeSeriesSummary}
+            </p>
+          )}
+          <div className="mt-2.5 overflow-x-auto hide-scrollbar">
+            <div className="flex w-max gap-2 pb-1">
+              {recentActiveStudies.map((study) => (
+                <button
+                  type="button"
+                  onClick={() => setSelectedStudy(study)}
+                  key={study.id}
+                  className="group w-[88px] shrink-0 rounded-md border border-primary/20 bg-gradient-to-b from-black/35 via-black/20 to-black/45 p-1 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_0_14px_rgba(242,192,141,0.18)]"
+                  title={`Abrir ${study.title}`}
+                >
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-primary/20 bg-black/35">
+                    <AppImage
+                      src={study.image}
+                      alt={study.title}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      fallbackClassName="opacity-85"
+                    />
+                  </div>
+                  <p className="mt-1 text-[7px] font-black uppercase tracking-[0.12em] text-primary/95">
+                    Vol. {String(study.volume).padStart(2, '0')}
+                  </p>
+                  <p className="mt-0.5 text-[8px] font-semibold text-on-surface leading-snug line-clamp-2">
+                    {study.title}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+        </article>
+      )}
+
       {activeGroupItem && activeStudyList.length === 0 && (
         <article className="rounded-2xl border border-primary/20 bg-black/20 p-3 sm:p-4">
           <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">Em preparação</h3>
@@ -737,6 +786,34 @@ function ParabolasInventory() {
         </article>
       )}
 
+      <article className="rounded-2xl border border-primary/20 bg-black/20 p-3 sm:p-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">Inventário Completo (Apoio)</h3>
+          <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[8px] font-semibold text-primary">
+            31 parábolas
+          </span>
+        </div>
+        <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">
+          Referência rápida para consulta, organizada em blocos compactos.
+        </p>
+        <div className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-1.5">
+          {PARABOLAS_DE_CRISTO.map((parabola, index) => (
+            <div
+              key={parabola.title}
+              id={`parabola-${toParabolaId(parabola.title)}`}
+              className={`rounded-md border px-2 py-1.5 transition-all duration-300 ${activeParabola === parabola.title
+                ? 'border-primary/60 bg-primary/10 shadow-[0_0_18px_rgba(242,192,141,0.2)]'
+                : 'border-primary/15 bg-black/25'}`}
+              title={`${parabola.title} — ${parabola.references}`}
+            >
+              <p className="text-[10px] sm:text-[11px] font-semibold text-on-surface leading-snug">
+                {index + 1}. {parabola.title}
+              </p>
+              <p className="mt-0.5 text-[9px] text-primary/85 leading-snug line-clamp-1">{parabola.references}</p>
+            </div>
+          ))}
+        </div>
+      </article>
     </div>
   );
 }
