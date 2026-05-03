@@ -560,10 +560,6 @@ function ParabolasInventory() {
   const activeGroupLabel = activeGroupId
     ? PARABOLAS_GRUPOS.find((group) => group.id === activeGroupId)?.title ?? null
     : null;
-  const recentActiveStudies = useMemo(
-    () => [...activeStudyList].sort((a, b) => b.volume - a.volume).slice(0, 5),
-    [activeStudyList],
-  );
   const studyTemasByGroupId = useMemo(() => {
     const map = new Map<string, string[]>();
     for (const study of ensinosStudies) {
@@ -734,50 +730,43 @@ function ParabolasInventory() {
 
       {activeStudyList.length > 0 && (
         <article ref={updatesPanelRef} className="rounded-2xl border border-primary/25 bg-black/20 p-3 sm:p-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">Atualizações da Série</h3>
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">
+              {activeGroupItem ?? activeGroupLabel ?? 'Série'}
+            </h3>
             <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[8px] font-semibold text-primary">
-              {activeStudyList.length} atualizações
-            </span>
-            <span className="rounded-full border border-primary/20 bg-black/25 px-2 py-0.5 text-[8px] font-semibold text-on-surface-variant/80">
-              mostrando {Math.min(5, activeStudyList.length)}
+              {activeStudyList.length} {activeStudyList.length === 1 ? 'volume' : 'volumes'}
             </span>
           </div>
-          <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">
-            {activeGroupItem ? `Parábola ativa: ${activeGroupItem}.` : (activeGroupLabel ? `Grupo ativo: ${activeGroupLabel}.` : 'Últimas capas da série selecionada.')}
-          </p>
           {activeSeriesSummary && (
-            <p className="mt-1.5 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80 line-clamp-4">
+            <p className="mb-3 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80 line-clamp-3">
               {activeSeriesSummary}
             </p>
           )}
-          <div className="mt-2.5 overflow-x-auto hide-scrollbar">
-            <div className="flex w-max gap-2 pb-1">
-              {recentActiveStudies.map((study) => (
-                <button
-                  type="button"
-                  onClick={() => setSelectedStudy(study)}
-                  key={study.id}
-                  className="group w-[88px] shrink-0 rounded-md border border-primary/20 bg-gradient-to-b from-black/35 via-black/20 to-black/45 p-1 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_0_14px_rgba(242,192,141,0.18)]"
-                  title={`Abrir ${study.title}`}
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-primary/20 bg-black/35">
-                    <AppImage
-                      src={study.image}
-                      alt={study.title}
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      fallbackClassName="opacity-85"
-                    />
-                  </div>
-                  <p className="mt-1 text-[7px] font-black uppercase tracking-[0.12em] text-primary/95">
-                    Vol. {String(study.volume).padStart(2, '0')}
-                  </p>
-                  <p className="mt-0.5 text-[8px] font-semibold text-on-surface leading-snug line-clamp-2">
+          <div className="flex flex-col gap-2">
+            {activeStudyList.map((study) => (
+              <button
+                type="button"
+                onClick={() => setSelectedStudy(study)}
+                key={study.id}
+                className="group flex items-center gap-3 rounded-xl border border-primary/20 bg-gradient-to-r from-black/40 via-black/25 to-primary/5 px-3 py-2.5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_0_14px_rgba(242,192,141,0.18)]"
+              >
+                <span className="shrink-0 w-8 text-center font-mono text-[9px] font-black uppercase tracking-widest text-primary/80">
+                  Vol.<br />{String(study.volume).padStart(2, '0')}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px] sm:text-xs font-black text-on-surface group-hover:text-primary transition-colors leading-snug line-clamp-2">
                     {study.title}
                   </p>
-                </button>
-              ))}
-            </div>
+                  {study.description && (
+                    <p className="mt-0.5 text-[9px] sm:text-[10px] text-on-surface-variant/70 leading-snug line-clamp-1">
+                      {study.description}
+                    </p>
+                  )}
+                </div>
+                <ChevronRight size={14} className="shrink-0 text-primary/50 group-hover:text-primary transition-colors" />
+              </button>
+            ))}
           </div>
         </article>
       )}
