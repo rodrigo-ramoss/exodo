@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, BookOpen, ChevronRight, Sparkles, Tent } from 'lucide-react';
 import { AppImage } from './AppImage';
+import { MarkdownViewer } from './MarkdownViewer';
 
 type EnsinoTemaId =
   | 'parabolas-de-jesus'
@@ -31,12 +32,15 @@ interface ParabolaGroup {
 
 interface EnsinoStudy {
   id: string;
+  slug: string;
   title: string;
   description: string;
   tema: string;
+  groupId: string;
   groupTitle: string;
   seriesTitle: string;
   volume: number;
+  content: string;
   image?: string;
 }
 
@@ -197,6 +201,11 @@ function normalizeEnsinosToken(raw: string): string {
 
 function normalizeEnsinosTemaKey(raw: string): string {
   return normalizeEnsinosToken(raw).replace(/^(o|a|os|as)\s+/, '').trim();
+}
+
+function extractGroupId(raw: string): string {
+  const match = normalizeEnsinosToken(raw).match(/grupo\s*(\d{1,2})/);
+  return match ? match[1].padStart(2, '0') : '';
 }
 
 function parseFrontmatter(markdown: string): Record<string, string> {
@@ -368,9 +377,11 @@ function discoverEnsinosStudies(): EnsinoStudy[] {
     if (parts.length < 4) continue;
 
     const groupTitle = parts[1] ?? '';
+    const groupId = extractGroupId(groupTitle);
     const seriesTitle = parts[2] ?? '';
     const fileName = parts[parts.length - 1] ?? '';
     const fileStem = fileName.replace(/\.(?:md|mdx|ya?ml)$/i, '');
+    const slug = relativePath.replace(/\.(?:md|mdx|ya?ml)$/i, '');
 
     const frontmatter = parseFrontmatter(content);
     const title = (frontmatter.title || fileStem).trim();
@@ -381,12 +392,15 @@ function discoverEnsinosStudies(): EnsinoStudy[] {
 
     studies.push({
       id: relativePath,
+      slug,
       title,
       description,
       tema,
+      groupId,
       groupTitle,
       seriesTitle,
       volume,
+      content,
       image,
     });
   }
@@ -442,6 +456,8 @@ function EnsinoThemeCard({ tema, onOpen }: { tema: EnsinoTema; onOpen: () => voi
 function ParabolasInventory() {
   const [activeParabola, setActiveParabola] = useState<string | null>(null);
   const [activeGroupItem, setActiveGroupItem] = useState<string | null>(null);
+  const [selectedStudy, setSelectedStudy] = useState<EnsinoStudy | null>(null);
+  const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
   const [activeStudyTema, setActiveStudyTema] = useState<string | null>(null);
   const ensinosStudies = useMemo(() => discoverEnsinosStudies(), []);
 
@@ -457,12 +473,11 @@ function ParabolasInventory() {
   }, [ensinosStudies]);
 
   const studyTemaKeys = useMemo(() => Array.from(studiesByTema.keys()), [studiesByTema]);
-  const defaultStudyTema = studyTemaKeys[0] ?? null;
   const activeStudyList = activeStudyTema ? studiesByTema.get(activeStudyTema) ?? [] : [];
-
-  useEffect(() => {
-    if (!activeStudyTema && defaultStudyTema) setActiveStudyTema(defaultStudyTema);
-  }, [activeStudyTema, defaultStudyTema]);
+  const recentActiveStudies = useMemo(
+    () => [...activeStudyList].sort((a, b) => b.volume - a.volume).slice(0, 5),
+    [activeStudyList],
+  );
 
   const toParabolaId = (raw: string) => raw
     .normalize('NFD')
@@ -471,18 +486,24 @@ function ParabolasInventory() {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
 
-  const openParabolaFromGroupItem = (groupItem: string) => {
-    setActiveGroupItem(groupItem);
-
+  const resolveStudyTemaFromGroupItem = (groupItem: string): string | null => {
     const normalizedCandidates = groupItem
       .split('/')
       .map((item) => normalizeEnsinosTemaKey(item))
       .filter(Boolean);
 
-    const matchedStudyTema = studyTemaKeys.find((temaKey) =>
+    return studyTemaKeys.find((temaKey) =>
       normalizedCandidates.some((candidate) => candidate === temaKey || candidate.includes(temaKey) || temaKey.includes(candidate)),
-    );
+    ) ?? null;
+  };
+
+  const openParabolaFromGroupItem = (groupId: string, groupItem: string) => {
+    setActiveGroupItem(groupItem);
+    setActiveGroupId(groupId);
+
+    const matchedStudyTema = resolveStudyTemaFromGroupItem(groupItem);
     if (matchedStudyTema) setActiveStudyTema(matchedStudyTema);
+    else setActiveStudyTema(null);
 
     const candidates = groupItem
       .split('/')
@@ -491,11 +512,23 @@ function ParabolasInventory() {
 
     const matched = PARABOLAS_DE_CRISTO.find((parabola) => candidates.some((candidate) => candidate === parabola.title));
     if (!matched) return;
-
     setActiveParabola(matched.title);
-    const target = document.getElementById(`parabola-${toParabolaId(matched.title)}`);
-    target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
+
+  const activeGroupLabel = activeGroupId
+    ? PARABOLAS_GRUPOS.find((group) => group.id === activeGroupId)?.title ?? null
+    : null;
+
+  if (selectedStudy) {
+    return (
+      <MarkdownViewer
+        content={selectedStudy.content}
+        slug={selectedStudy.slug}
+        category="ensinos"
+        onClose={() => setSelectedStudy(null)}
+      />
+    );
+  }
 
   return (
     <div className="space-y-4 sm:space-y-5">
@@ -518,11 +551,13 @@ function ParabolasInventory() {
               <h4 className="mt-1 text-[11px] sm:text-xs font-black text-on-surface uppercase">{grupo.title}</h4>
               <p className="mt-0.5 text-[10px] leading-relaxed text-on-surface-variant/80">{grupo.description}</p>
               <div className="mt-2 grid grid-cols-1 gap-1.5">
-                {grupo.items.map((item) => (
+                {grupo.items.map((item) => {
+                  const hasSeries = Boolean(resolveStudyTemaFromGroupItem(item));
+                  return (
                   <button
                     type="button"
                     key={`${grupo.id}-${item}`}
-                    onClick={() => openParabolaFromGroupItem(item)}
+                    onClick={() => openParabolaFromGroupItem(grupo.id, item)}
                     className={`group flex items-center justify-between rounded-md border px-2 py-1.5 text-left text-[9px] sm:text-[10px] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:text-on-surface hover:shadow-[0_0_14px_rgba(242,192,141,0.18)] active:scale-[0.99] ${
                       activeGroupItem === item
                         ? 'border-primary/60 bg-gradient-to-r from-primary/20 via-black/35 to-primary/20 text-on-surface'
@@ -530,9 +565,21 @@ function ParabolasInventory() {
                     }`}
                   >
                     <span className="font-semibold">{item}</span>
-                    <ChevronRight size={12} className="text-primary/75 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-primary" />
+                    <span className="flex items-center gap-1.5">
+                      <span
+                        className={`rounded-full border px-1.5 py-0.5 text-[8px] font-black uppercase tracking-[0.12em] ${
+                          hasSeries
+                            ? 'border-emerald-300/45 bg-emerald-400/12 text-emerald-200'
+                            : 'border-primary/20 bg-black/30 text-on-surface-variant/70'
+                        }`}
+                      >
+                        {hasSeries ? 'Ler' : 'Em preparação'}
+                      </span>
+                      <ChevronRight size={12} className="text-primary/75 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-primary" />
+                    </span>
                   </button>
-                ))}
+                  );
+                })}
               </div>
             </section>
           ))}
@@ -542,40 +589,54 @@ function ParabolasInventory() {
       {activeStudyList.length > 0 && (
         <article className="rounded-2xl border border-primary/25 bg-black/20 p-3 sm:p-4">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">Série Disponível Nesta Seção</h3>
+            <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">Atualizações da Série</h3>
             <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[8px] font-semibold text-primary">
-              {activeStudyList.length} estudos
+              {activeStudyList.length} atualizações
+            </span>
+            <span className="rounded-full border border-primary/20 bg-black/25 px-2 py-0.5 text-[8px] font-semibold text-on-surface-variant/80">
+              mostrando {Math.min(5, activeStudyList.length)}
             </span>
           </div>
           <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">
-            Capas carregadas da pasta <code className="text-primary/90">/image/ensinos</code>.
+            {activeGroupItem ? `Parábola ativa: ${activeGroupItem}.` : (activeGroupLabel ? `Grupo ativo: ${activeGroupLabel}.` : 'Últimas capas da série selecionada.')}
           </p>
-          <div className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
-            {activeStudyList.map((study) => (
-              <article
-                key={study.id}
-                className="group rounded-xl border border-primary/20 bg-gradient-to-b from-black/35 via-black/25 to-black/45 p-2.5 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_0_18px_rgba(242,192,141,0.2)]"
-              >
-                <div className="relative aspect-[3/4] overflow-hidden rounded-lg border border-primary/20 bg-black/35">
-                  <AppImage
-                    src={study.image}
-                    alt={study.title}
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    fallbackClassName="opacity-85"
-                  />
-                </div>
-                <p className="mt-2 text-[10px] font-black uppercase tracking-[0.12em] text-primary/90">
-                  Vol. {String(study.volume).padStart(2, '0')}
-                </p>
-                <p className="mt-0.5 text-[11px] sm:text-xs font-semibold text-on-surface leading-snug line-clamp-2">
-                  {study.title}
-                </p>
-                <p className="mt-1 text-[10px] text-on-surface-variant/80 leading-snug line-clamp-3">
-                  {study.description}
-                </p>
-              </article>
-            ))}
+          <div className="mt-2.5 overflow-x-auto hide-scrollbar">
+            <div className="flex w-max gap-2 pb-1">
+              {recentActiveStudies.map((study) => (
+                <button
+                  type="button"
+                  onClick={() => setSelectedStudy(study)}
+                  key={study.id}
+                  className="group w-[88px] shrink-0 rounded-md border border-primary/20 bg-gradient-to-b from-black/35 via-black/20 to-black/45 p-1 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_0_14px_rgba(242,192,141,0.18)]"
+                  title={`Abrir ${study.title}`}
+                >
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-primary/20 bg-black/35">
+                    <AppImage
+                      src={study.image}
+                      alt={study.title}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      fallbackClassName="opacity-85"
+                    />
+                  </div>
+                  <p className="mt-1 text-[7px] font-black uppercase tracking-[0.12em] text-primary/95">
+                    Vol. {String(study.volume).padStart(2, '0')}
+                  </p>
+                  <p className="mt-0.5 text-[8px] font-semibold text-on-surface leading-snug line-clamp-2">
+                    {study.title}
+                  </p>
+                </button>
+              ))}
+            </div>
           </div>
+        </article>
+      )}
+
+      {activeGroupItem && activeStudyList.length === 0 && (
+        <article className="rounded-2xl border border-primary/20 bg-black/20 p-3 sm:p-4">
+          <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">Em preparação</h3>
+          <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">
+            Ainda não há série publicada para <strong>{activeGroupItem}</strong>. Assim que sair conteúdo novo, ele aparece aqui.
+          </p>
         </article>
       )}
 

@@ -3,12 +3,10 @@ export type SelahThemeTitle =
   | 'HISTÓRIA DA IGREJA'
   | 'JESUS CRISTO'
   | 'IA & APOCALIPSE'
-  | 'SATANÁS E DEMÔNIOS'
   | 'DEUS PAI'
   | 'ESPÍRITO SANTO'
   | 'TIPOLOGIA BÍBLICA'
   | 'BATALHA ESPIRITUAL'
-  | 'REINO DE DEUS'
   | 'COSMOLOGIA BÍBLICA'
   | 'MUNDO ESPIRITUAL'
   | 'APÓCRIFOS'
@@ -19,12 +17,10 @@ export type SelahThemeSlug =
   | 'historia-da-igreja'
   | 'jesus-cristo'
   | 'ia-e-apocalipse'
-  | 'satanas-e-demonios'
   | 'deus-pai'
   | 'espirito-santo'
   | 'tipologia-biblica'
   | 'batalha-espiritual'
-  | 'reino-de-deus'
   | 'cosmologia-biblica'
   | 'mundo-espiritual'
   | 'apocrifos'
@@ -142,14 +138,6 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     subsections: buildSubsections('ia-e-apocalipse', ['Marca', 'Imagem da besta', 'Transhumanismo', 'Singularidade', 'Vigilância', 'CBDC', 'Metaverso', 'Falsa revelação']),
   },
   {
-    id: 'satanas-e-demonios',
-    slug: 'satanas-e-demonios',
-    title: 'SATANÁS E DEMÔNIOS',
-    description: 'Queda, rebelião, atuação e derrota do império das trevas.',
-    order: 11,
-    subsections: buildSubsections('satanas-e-demonios', ['Belial', 'Gadreel', 'Nefilim', 'Possessão', 'Sedução', 'Acusador', 'Estratégias', 'Derrota']),
-  },
-  {
     id: 'deus-pai',
     slug: 'deus-pai',
     title: 'DEUS PAI',
@@ -182,14 +170,6 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     subsections: buildSubsections('batalha-espiritual', ['Armadura', 'Oração', 'Jejum', 'Discernimento', 'Autoridade', 'Libertação', 'Vitória', 'Resistência']),
   },
   {
-    id: 'reino-de-deus',
-    slug: 'reino-de-deus',
-    title: 'REINO DE DEUS',
-    description: 'Teologia do Reino, cidadania e consumação escatológica.',
-    order: 6,
-    subsections: buildSubsections('reino-de-deus', ['Já e ainda não', 'Cidadania', 'Remanescente', 'Justiça', 'Nova Jerusalém', 'Milênio', 'Trono', 'Filhos do Reino']),
-  },
-  {
     id: 'cosmologia-biblica',
     slug: 'cosmologia-biblica',
     title: 'COSMOLOGIA BÍBLICA',
@@ -202,8 +182,19 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     slug: 'mundo-espiritual',
     title: 'MUNDO ESPIRITUAL',
     description: 'Conselho celestial, hierarquias e geografia invisível.',
-    order: 14,
-    subsections: buildSubsections('mundo-espiritual', ['Vigilantes', 'Anjos', 'Querubins', 'Sarim territoriais', 'Conselho divino', 'Tártaro', 'Sheol', 'Hierarquia celestial', 'Céus/Mundos']),
+    order: 6,
+    subsections: buildSubsections('mundo-espiritual', [
+      'Vigilantes',
+      'Sarim territoriais',
+      'Conselho divino',
+      'Satanás/Belial',
+      'Possessão demoníaca',
+      'Nefilim/Demônios',
+      'Sheol/Tártaro/Inferno',
+      'Hierarquia angelical',
+      'Hierarquia demoníaca',
+      'Céus/Mundos',
+    ]),
   },
   {
     id: 'apocrifos',
@@ -261,6 +252,13 @@ export function resolveSelahThemeTitleFromSlug(value: string): SelahThemeTitle |
   const normalized = slugifyStable(value);
   if (!normalized) return null;
 
+  const legacyThemeAliases: Record<string, SelahThemeTitle> = {
+    'satanas-e-demonios': 'MUNDO ESPIRITUAL',
+    'reino-de-deus': 'MUNDO ESPIRITUAL',
+  };
+  const legacyThemeAlias = legacyThemeAliases[normalized];
+  if (legacyThemeAlias) return legacyThemeAlias;
+
   const bySlug = SELAH_THEME_BY_SLUG[normalized];
   if (bySlug) return bySlug.title;
 
@@ -270,6 +268,36 @@ export function resolveSelahThemeTitleFromSlug(value: string): SelahThemeTitle |
 export function resolveSelahSubsectionTitle(themeTitle: SelahThemeTitle, value: string): string | null {
   const normalized = slugifyStable(value);
   if (!normalized) return null;
+
+  if (themeTitle === 'MUNDO ESPIRITUAL') {
+    const mundoAliases: Record<string, string> = {
+      anjos: 'Hierarquia angelical',
+      querubins: 'Hierarquia angelical',
+      'hierarquia-celestial': 'Hierarquia angelical',
+      belial: 'Satanás/Belial',
+      satanas: 'Satanás/Belial',
+      'satanas-belial': 'Satanás/Belial',
+      possessao: 'Possessão demoníaca',
+      'possessao-demoniaca': 'Possessão demoníaca',
+      nefilim: 'Nefilim/Demônios',
+      demonios: 'Nefilim/Demônios',
+      'nefilim-demonios': 'Nefilim/Demônios',
+      sheol: 'Sheol/Tártaro/Inferno',
+      tartaro: 'Sheol/Tártaro/Inferno',
+      inferno: 'Sheol/Tártaro/Inferno',
+      'sheol-tartaro': 'Sheol/Tártaro/Inferno',
+      'sheol-tartaro-inferno': 'Sheol/Tártaro/Inferno',
+      gadreel: 'Hierarquia demoníaca',
+      acusador: 'Hierarquia demoníaca',
+      estrategias: 'Hierarquia demoníaca',
+      seducao: 'Hierarquia demoníaca',
+      derrota: 'Hierarquia demoníaca',
+      'hierarquia-demoniaca': 'Hierarquia demoníaca',
+      'hierarquia-angelical': 'Hierarquia angelical',
+    };
+    const aliasTitle = mundoAliases[normalized];
+    if (aliasTitle) return aliasTitle;
+  }
 
   if (themeTitle === 'ESPÍRITO SANTO' && normalized === 'conviccao') {
     return 'Blasfêmia';
@@ -307,6 +335,36 @@ export function resolveSelahSubsectionTitle(themeTitle: SelahThemeTitle, value: 
 export function resolveSelahSubsectionSlug(themeTitle: SelahThemeTitle, value: string): string | null {
   const normalized = slugifyStable(value);
   if (!normalized) return null;
+
+  if (themeTitle === 'MUNDO ESPIRITUAL') {
+    const mundoAliasSlugs: Record<string, string> = {
+      anjos: 'hierarquia-angelical',
+      querubins: 'hierarquia-angelical',
+      'hierarquia-celestial': 'hierarquia-angelical',
+      belial: 'satanas-belial',
+      satanas: 'satanas-belial',
+      'satanas-belial': 'satanas-belial',
+      possessao: 'possessao-demoniaca',
+      'possessao-demoniaca': 'possessao-demoniaca',
+      nefilim: 'nefilim-demonios',
+      demonios: 'nefilim-demonios',
+      'nefilim-demonios': 'nefilim-demonios',
+      sheol: 'sheol-tartaro-inferno',
+      tartaro: 'sheol-tartaro-inferno',
+      inferno: 'sheol-tartaro-inferno',
+      'sheol-tartaro': 'sheol-tartaro-inferno',
+      'sheol-tartaro-inferno': 'sheol-tartaro-inferno',
+      gadreel: 'hierarquia-demoniaca',
+      acusador: 'hierarquia-demoniaca',
+      estrategias: 'hierarquia-demoniaca',
+      seducao: 'hierarquia-demoniaca',
+      derrota: 'hierarquia-demoniaca',
+      'hierarquia-demoniaca': 'hierarquia-demoniaca',
+      'hierarquia-angelical': 'hierarquia-angelical',
+    };
+    const aliasSlug = mundoAliasSlugs[normalized];
+    if (aliasSlug) return aliasSlug;
+  }
 
   if (themeTitle === 'ESPÍRITO SANTO' && normalized === 'conviccao') {
     return 'blasfemia';
