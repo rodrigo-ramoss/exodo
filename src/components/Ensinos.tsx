@@ -451,7 +451,11 @@ function discoverEnsinosStudies(): EnsinoStudy[] {
 
     const groupTitle = parts[1] ?? '';
     const groupId = extractGroupId(groupTitle);
-    const seriesTitle = parts[2] ?? '';
+    const nestedFolders = parts.slice(2, -1);
+    const parabolaFolder = nestedFolders.length > 1 ? (nestedFolders[0] ?? '') : '';
+    const seriesTitle = nestedFolders.length > 1
+      ? (nestedFolders[1] ?? '')
+      : (nestedFolders[0] ?? '');
     const fileName = parts[parts.length - 1] ?? '';
     const fileStem = fileName.replace(/\.(?:md|mdx|ya?ml)$/i, '');
     const slug = relativePath.replace(/\.(?:md|mdx|ya?ml)$/i, '');
@@ -469,7 +473,7 @@ function discoverEnsinosStudies(): EnsinoStudy[] {
 
     const title = (frontmatter.title || fileStem).trim();
     const description = (frontmatter.description || '').trim();
-    const tema = normalizeEnsinosTemaKey(frontmatter.tema || title);
+    const tema = normalizeEnsinosTemaKey(frontmatter.tema || parabolaFolder || title);
     const image = resolveEnsinosCover(frontmatter, title, fileStem);
     const volume = extractVolumeFromText(fileStem);
 
@@ -541,7 +545,6 @@ function ParabolasInventory() {
   const [selectedStudy, setSelectedStudy] = useState<EnsinoStudy | null>(null);
   const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
   const [activeStudyTema, setActiveStudyTema] = useState<string | null>(null);
-  const updatesPanelRef = useRef<HTMLElement | null>(null);
   const ensinosStudies = useMemo(() => discoverEnsinosStudies(), []);
 
   const studiesByTema = useMemo(() => {
@@ -557,13 +560,6 @@ function ParabolasInventory() {
 
   const studyTemaKeys = useMemo(() => Array.from(studiesByTema.keys()), [studiesByTema]);
   const activeStudyList = activeStudyTema ? studiesByTema.get(activeStudyTema) ?? [] : [];
-  const activeGroupLabel = activeGroupId
-    ? PARABOLAS_GRUPOS.find((group) => group.id === activeGroupId)?.title ?? null
-    : null;
-  const recentActiveStudies = useMemo(
-    () => [...activeStudyList].sort((a, b) => b.volume - a.volume).slice(0, 5),
-    [activeStudyList],
-  );
   const studyTemasByGroupId = useMemo(() => {
     const map = new Map<string, string[]>();
     for (const study of ensinosStudies) {
@@ -577,14 +573,16 @@ function ParabolasInventory() {
     }
     return map;
   }, [ensinosStudies]);
-  const activeSeriesSummary = useMemo(() => (
-    activeStudyList.length
-      ? summarizeEnsinosSeries(
-          activeStudyList,
-          activeGroupItem || activeGroupLabel || activeStudyList[0]?.seriesTitle || activeStudyList[0]?.tema,
-        )
-      : ''
-  ), [activeGroupItem, activeStudyList, activeGroupLabel]);
+
+  const openFirstStudyFromTema = (temaKey: string | null): boolean => {
+    if (!temaKey) return false;
+    const series = [...(studiesByTema.get(temaKey) ?? [])].sort((a, b) => a.volume - b.volume);
+    const firstStudy = series[0];
+    if (!firstStudy) return false;
+    setActiveStudyTema(temaKey);
+    setSelectedStudy(firstStudy);
+    return true;
+  };
 
   const resolveStudyTemaFromGroupItem = (groupItem: string): string | null => {
     const normalizedCandidates = groupItem
@@ -628,21 +626,18 @@ function ParabolasInventory() {
       ?? group.items[0]
       ?? null;
     setActiveGroupItem(preferredItem);
+
+    if (openFirstStudyFromTema(temaFromGroup)) return;
   };
 
   const openParabolaFromGroupItem = (groupId: string, groupItem: string) => {
     setActiveGroupItem(groupItem);
     setActiveGroupId(groupId);
 
-    const matchedStudyTema = resolveStudyTemaFromGroupItem(groupItem);
-    if (matchedStudyTema) setActiveStudyTema(matchedStudyTema);
-    else setActiveStudyTema(null);
+    const matchedStudyTema = resolveStudyTemaFromGroupItem(groupItem) || resolveStudyTemaFromGroupId(groupId);
+    if (matchedStudyTema && openFirstStudyFromTema(matchedStudyTema)) return;
+    setActiveStudyTema(matchedStudyTema || null);
   };
-
-  useEffect(() => {
-    if (!activeStudyList.length) return;
-    updatesPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, [activeStudyList]);
 
   if (selectedStudy) {
     return (
@@ -690,7 +685,8 @@ function ParabolasInventory() {
               <p className="mt-0.5 text-[10px] leading-relaxed text-on-surface-variant/80">{grupo.description}</p>
               <div className="mt-2 grid grid-cols-1 gap-1.5">
                 {grupo.items.map((item) => {
-                  const hasSeries = Boolean(resolveStudyTemaFromGroupItem(item));
+                  const itemTema = resolveStudyTemaFromGroupItem(item) || resolveStudyTemaFromGroupId(grupo.id);
+                  const hasSeries = Boolean(itemTema);
                   return (
                   <button
                     type="button"
@@ -731,56 +727,6 @@ function ParabolasInventory() {
           ))}
         </div>
       </article>
-
-      {activeStudyList.length > 0 && (
-        <article ref={updatesPanelRef} className="rounded-2xl border border-primary/25 bg-black/20 p-3 sm:p-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">Atualizações da Série</h3>
-            <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[8px] font-semibold text-primary">
-              {activeStudyList.length} atualizações
-            </span>
-            <span className="rounded-full border border-primary/20 bg-black/25 px-2 py-0.5 text-[8px] font-semibold text-on-surface-variant/80">
-              mostrando {Math.min(5, activeStudyList.length)}
-            </span>
-          </div>
-          <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">
-            {activeGroupItem ? `Parábola ativa: ${activeGroupItem}.` : (activeGroupLabel ? `Grupo ativo: ${activeGroupLabel}.` : 'Últimas capas da série selecionada.')}
-          </p>
-          {activeSeriesSummary && (
-            <p className="mt-1.5 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80 line-clamp-4">
-              {activeSeriesSummary}
-            </p>
-          )}
-          <div className="mt-2.5 overflow-x-auto hide-scrollbar">
-            <div className="flex w-max gap-2 pb-1">
-              {recentActiveStudies.map((study) => (
-                <button
-                  type="button"
-                  onClick={() => setSelectedStudy(study)}
-                  key={study.id}
-                  className="group w-[88px] shrink-0 rounded-md border border-primary/20 bg-gradient-to-b from-black/35 via-black/20 to-black/45 p-1 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_0_14px_rgba(242,192,141,0.18)]"
-                  title={`Abrir ${study.title}`}
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-primary/20 bg-black/35">
-                    <AppImage
-                      src={study.image}
-                      alt={study.title}
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      fallbackClassName="opacity-85"
-                    />
-                  </div>
-                  <p className="mt-1 text-[7px] font-black uppercase tracking-[0.12em] text-primary/95">
-                    Vol. {String(study.volume).padStart(2, '0')}
-                  </p>
-                  <p className="mt-0.5 text-[8px] font-semibold text-on-surface leading-snug line-clamp-2">
-                    {study.title}
-                  </p>
-                </button>
-              ))}
-            </div>
-          </div>
-        </article>
-      )}
 
       {activeGroupItem && activeStudyList.length === 0 && (
         <article className="rounded-2xl border border-primary/20 bg-black/20 p-3 sm:p-4">
