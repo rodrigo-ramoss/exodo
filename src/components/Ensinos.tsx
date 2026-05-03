@@ -194,6 +194,10 @@ const ENSINOS_CURATED_SERIES_SUMMARY: Record<string, string> = {
     'Série em 7 volumes sobre a parábola do joio e do trigo: cenário do mundo, infiltração do inimigo, paciência divina, colheita angelical e juízo final com destino dos justos e dos ímpios.',
 };
 
+const PARABOLAS_GROUP_ITEM_TEMA_OVERRIDES: Record<string, string> = {
+  'joio e o trigo': 'joio e o trigo',
+};
+
 const ENSINOS_SUMMARY_STOPWORDS = new Set([
   'a', 'o', 'os', 'as', 'de', 'da', 'do', 'das', 'dos', 'e', 'em', 'na', 'no', 'nas', 'nos',
   'um', 'uma', 'uns', 'umas', 'para', 'por', 'com', 'sem', 'ao', 'aos', 'à', 'às', 'que', 'como',
@@ -533,7 +537,6 @@ function EnsinoThemeCard({ tema, onOpen }: { tema: EnsinoTema; onOpen: () => voi
 }
 
 function ParabolasInventory() {
-  const [activeParabola, setActiveParabola] = useState<string | null>(null);
   const [activeGroupItem, setActiveGroupItem] = useState<string | null>(null);
   const [selectedStudy, setSelectedStudy] = useState<EnsinoStudy | null>(null);
   const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
@@ -583,18 +586,16 @@ function ParabolasInventory() {
       : ''
   ), [activeGroupItem, activeStudyList, activeGroupLabel]);
 
-  const toParabolaId = (raw: string) => raw
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
-
   const resolveStudyTemaFromGroupItem = (groupItem: string): string | null => {
     const normalizedCandidates = groupItem
       .split('/')
       .map((item) => normalizeEnsinosTemaKey(item))
       .filter(Boolean);
+
+    for (const candidate of normalizedCandidates) {
+      const forcedTema = PARABOLAS_GROUP_ITEM_TEMA_OVERRIDES[candidate];
+      if (forcedTema && studyTemaKeys.includes(forcedTema)) return forcedTema;
+    }
 
     return studyTemaKeys.find((temaKey) =>
       normalizedCandidates.some((candidate) => candidate === temaKey || candidate.includes(temaKey) || temaKey.includes(candidate)),
@@ -627,11 +628,6 @@ function ParabolasInventory() {
       ?? group.items[0]
       ?? null;
     setActiveGroupItem(preferredItem);
-
-    if (!preferredItem) return;
-    const candidates = preferredItem.split('/').map((item) => item.trim()).filter(Boolean);
-    const matched = PARABOLAS_DE_CRISTO.find((parabola) => candidates.some((candidate) => candidate === parabola.title));
-    if (matched) setActiveParabola(matched.title);
   };
 
   const openParabolaFromGroupItem = (groupId: string, groupItem: string) => {
@@ -641,15 +637,6 @@ function ParabolasInventory() {
     const matchedStudyTema = resolveStudyTemaFromGroupItem(groupItem);
     if (matchedStudyTema) setActiveStudyTema(matchedStudyTema);
     else setActiveStudyTema(null);
-
-    const candidates = groupItem
-      .split('/')
-      .map((item) => item.trim())
-      .filter(Boolean);
-
-    const matched = PARABOLAS_DE_CRISTO.find((parabola) => candidates.some((candidate) => candidate === parabola.title));
-    if (!matched) return;
-    setActiveParabola(matched.title);
   };
 
   useEffect(() => {
@@ -804,34 +791,6 @@ function ParabolasInventory() {
         </article>
       )}
 
-      <article className="rounded-2xl border border-primary/20 bg-black/20 p-3 sm:p-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">Inventário Completo (Apoio)</h3>
-          <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[8px] font-semibold text-primary">
-            31 parábolas
-          </span>
-        </div>
-        <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">
-          Referência rápida para consulta, organizada em blocos compactos.
-        </p>
-        <div className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-1.5">
-          {PARABOLAS_DE_CRISTO.map((parabola, index) => (
-            <div
-              key={parabola.title}
-              id={`parabola-${toParabolaId(parabola.title)}`}
-              className={`rounded-md border px-2 py-1.5 transition-all duration-300 ${activeParabola === parabola.title
-                ? 'border-primary/60 bg-primary/10 shadow-[0_0_18px_rgba(242,192,141,0.2)]'
-                : 'border-primary/15 bg-black/25'}`}
-              title={`${parabola.title} — ${parabola.references}`}
-            >
-              <p className="text-[10px] sm:text-[11px] font-semibold text-on-surface leading-snug">
-                {index + 1}. {parabola.title}
-              </p>
-              <p className="mt-0.5 text-[9px] text-primary/85 leading-snug line-clamp-1">{parabola.references}</p>
-            </div>
-          ))}
-        </div>
-      </article>
     </div>
   );
 }
