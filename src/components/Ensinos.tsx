@@ -453,6 +453,16 @@ function discoverEnsinosStudies(): EnsinoStudy[] {
     const slug = relativePath.replace(/\.(?:md|mdx|ya?ml)$/i, '');
 
     const frontmatter = parseFrontmatter(content);
+    const section = normalizeEnsinosToken(frontmatter.secao || frontmatter.seção || '');
+    const category = normalizeEnsinosToken(frontmatter.category || '');
+    const rootFolder = normalizeEnsinosToken(parts[0] ?? '');
+
+    const belongsToParabolasFolder = rootFolder === 'parabolas de jesus';
+    const belongsToEnsinosSection = !section || section === 'ensinos';
+    const belongsToParabolasCategory = !category || category === 'parabolas de jesus';
+
+    if (!belongsToParabolasFolder || !belongsToEnsinosSection || !belongsToParabolasCategory) continue;
+
     const title = (frontmatter.title || fileStem).trim();
     const description = (frontmatter.description || '').trim();
     const tema = normalizeEnsinosTemaKey(frontmatter.tema || title);
@@ -592,6 +602,14 @@ function ParabolasInventory() {
   };
 
   const resolveStudyTemaFromGroupId = (groupId: string): string | null => {
+    const group = PARABOLAS_GRUPOS.find((entry) => entry.id === groupId);
+    if (group) {
+      for (const item of group.items) {
+        const temaFromItem = resolveStudyTemaFromGroupItem(item);
+        if (temaFromItem) return temaFromItem;
+      }
+    }
+
     const temas = studyTemasByGroupId.get(groupId) ?? [];
     if (temas.length === 0) return null;
     return temas[0] ?? null;
