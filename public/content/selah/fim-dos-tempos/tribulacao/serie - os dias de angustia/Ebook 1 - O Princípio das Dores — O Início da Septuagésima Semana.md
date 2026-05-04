@@ -5,7 +5,7 @@ seção: fim dos tempos
 category: tribulacao
 subsecao: tribulacao
 tema: fim-dos-tempos
-image: ""
+image: /image/selah/o principio das dores.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*
@@ -269,6 +269,7 @@ A Besta se levantará. O Templo será profanado. A imagem da Besta será erigida
 *Série: Os Dias de Angústia — O Triunfo do Cordeiro na Grande Tribulação*
 *Próximo volume: Volume 2 — A Abominação Desoladora*
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+
 
 
 
