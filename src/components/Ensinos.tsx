@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, BookOpen, ChevronRight, Sparkles, Tent } from 'lucide-react';
 import { AppImage } from './AppImage';
 import { MarkdownViewer } from './MarkdownViewer';
+import { pm } from '../lib/progressManager';
 
 type EnsinoTemaId =
   | 'parabolas-de-jesus'
@@ -540,8 +541,6 @@ function ParabolasInventory() {
   const [activeGroupItem, setActiveGroupItem] = useState<string | null>(null);
   const [selectedStudy, setSelectedStudy] = useState<EnsinoStudy | null>(null);
   const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
-  const [activeStudyTema, setActiveStudyTema] = useState<string | null>(null);
-  const updatesPanelRef = useRef<HTMLElement | null>(null);
   const ensinosStudies = useMemo(() => discoverEnsinosStudies(), []);
 
   const studiesByTema = useMemo(() => {
@@ -556,10 +555,6 @@ function ParabolasInventory() {
   }, [ensinosStudies]);
 
   const studyTemaKeys = useMemo(() => Array.from(studiesByTema.keys()), [studiesByTema]);
-  const activeStudyList = activeStudyTema ? studiesByTema.get(activeStudyTema) ?? [] : [];
-  const activeGroupLabel = activeGroupId
-    ? PARABOLAS_GRUPOS.find((group) => group.id === activeGroupId)?.title ?? null
-    : null;
   const studyTemasByGroupId = useMemo(() => {
     const map = new Map<string, string[]>();
     for (const study of ensinosStudies) {
@@ -573,15 +568,6 @@ function ParabolasInventory() {
     }
     return map;
   }, [ensinosStudies]);
-  const activeSeriesSummary = useMemo(() => (
-    activeStudyList.length
-      ? summarizeEnsinosSeries(
-          activeStudyList,
-          activeGroupItem || activeGroupLabel || activeStudyList[0]?.seriesTitle || activeStudyList[0]?.tema,
-        )
-      : ''
-  ), [activeGroupItem, activeStudyList, activeGroupLabel]);
-
   const resolveStudyTemaFromGroupItem = (groupItem: string): string | null => {
     const normalizedCandidates = groupItem
       .split('/')
@@ -615,7 +601,6 @@ function ParabolasInventory() {
   const openSeriesFromGroup = (groupId: string) => {
     setActiveGroupId(groupId);
     const temaFromGroup = resolveStudyTemaFromGroupId(groupId);
-    setActiveStudyTema(temaFromGroup);
 
     const group = PARABOLAS_GRUPOS.find((entry) => entry.id === groupId);
     if (!group) return;
@@ -629,16 +614,7 @@ function ParabolasInventory() {
   const openParabolaFromGroupItem = (groupId: string, groupItem: string) => {
     setActiveGroupItem(groupItem);
     setActiveGroupId(groupId);
-
-    const matchedStudyTema = resolveStudyTemaFromGroupItem(groupItem);
-    if (matchedStudyTema) setActiveStudyTema(matchedStudyTema);
-    else setActiveStudyTema(null);
   };
-
-  useEffect(() => {
-    if (!activeStudyList.length) return;
-    updatesPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, [activeStudyList]);
 
   if (selectedStudy) {
     return (
@@ -686,40 +662,137 @@ function ParabolasInventory() {
               <p className="mt-0.5 text-[10px] leading-relaxed text-on-surface-variant/80">{grupo.description}</p>
               <div className="mt-2 grid grid-cols-1 gap-1.5">
                 {grupo.items.map((item) => {
-                  const hasSeries = Boolean(resolveStudyTemaFromGroupItem(item));
+                  const itemTema = resolveStudyTemaFromGroupItem(item);
+                  const hasSeries = Boolean(itemTema);
+                  const itemStudyList = itemTema ? studiesByTema.get(itemTema) ?? [] : [];
+                  const isExpanded = activeGroupId === grupo.id && activeGroupItem === item;
+                  const itemSummary = itemStudyList.length
+                    ? summarizeEnsinosSeries(itemStudyList, item)
+                    : '';
                   return (
-                  <button
-                    type="button"
-                    key={`${grupo.id}-${item}`}
-                    onClick={() => {
-                      if (hasSeries) {
-                        openParabolaFromGroupItem(grupo.id, item);
-                        return;
-                      }
-                      setActiveGroupItem(item);
-                      setActiveGroupId(grupo.id);
-                      setActiveStudyTema(null);
-                    }}
-                    className={`group flex items-center justify-between rounded-md border px-2 py-1.5 text-left text-[9px] sm:text-[10px] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:text-on-surface hover:shadow-[0_0_14px_rgba(242,192,141,0.18)] active:scale-[0.99] ${
-                      activeGroupItem === item
-                        ? 'border-primary/60 bg-gradient-to-r from-primary/20 via-black/35 to-primary/20 text-on-surface'
-                        : 'border-primary/20 bg-gradient-to-r from-black/45 via-black/30 to-primary/10 text-on-surface-variant'
-                    }`}
-                  >
-                    <span className="font-semibold">{item}</span>
-                    <span className="flex items-center gap-1.5">
-                      <span
-                        className={`rounded-full border px-1.5 py-0.5 text-[8px] font-black uppercase tracking-[0.12em] ${
-                          hasSeries
-                            ? 'border-emerald-300/45 bg-emerald-400/12 text-emerald-200'
-                            : 'border-primary/20 bg-black/30 text-on-surface-variant/70'
+                    <div key={`${grupo.id}-${item}`} className="rounded-md border border-transparent">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (hasSeries) {
+                            openParabolaFromGroupItem(grupo.id, item);
+                            return;
+                          }
+                          setActiveGroupItem(item);
+                          setActiveGroupId(grupo.id);
+                        }}
+                        className={`group flex w-full items-center justify-between rounded-md border px-2 py-1.5 text-left text-[9px] sm:text-[10px] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:text-on-surface hover:shadow-[0_0_14px_rgba(242,192,141,0.18)] active:scale-[0.99] ${
+                          isExpanded
+                            ? 'border-primary/60 bg-gradient-to-r from-primary/20 via-black/35 to-primary/20 text-on-surface'
+                            : 'border-primary/20 bg-gradient-to-r from-black/45 via-black/30 to-primary/10 text-on-surface-variant'
                         }`}
                       >
-                        {hasSeries ? 'Ler' : 'Em preparação'}
-                      </span>
-                      <ChevronRight size={12} className="text-primary/75 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-primary" />
-                    </span>
-                  </button>
+                        <span className="font-semibold">{item}</span>
+                        <span className="flex items-center gap-1.5">
+                          <span
+                            className={`rounded-full border px-1.5 py-0.5 text-[8px] font-black uppercase tracking-[0.12em] ${
+                              hasSeries
+                                ? 'border-emerald-300/45 bg-emerald-400/12 text-emerald-200'
+                                : 'border-primary/20 bg-black/30 text-on-surface-variant/70'
+                            }`}
+                          >
+                            {hasSeries ? 'Ler' : 'Em preparação'}
+                          </span>
+                          <ChevronRight
+                            size={12}
+                            className={`text-primary/75 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-primary ${
+                              isExpanded ? 'rotate-90' : ''
+                            }`}
+                          />
+                        </span>
+                      </button>
+
+                      {isExpanded && (
+                        <div className="mt-1.5 rounded-md border border-primary/25 bg-black/25 px-2 py-2">
+                          {itemStudyList.length > 0 ? (
+                            <>
+                              {itemSummary && (
+                                <p className="mb-2 text-[9px] sm:text-[10px] leading-relaxed text-on-surface-variant/80">
+                                  {itemSummary}
+                                </p>
+                              )}
+                              <div className="flex flex-col gap-1.5">
+                                {itemStudyList.map((study) => (
+                                  (() => {
+                                    const clamped = pm.getProgress('ensinos', study.slug);
+                                    const isCompleted = pm.isRead('ensinos', study.slug);
+                                    const readsCount = pm.getReadCount('ensinos', study.slug);
+                                    const isReading = clamped > 0 && !isCompleted;
+
+                                    return (
+                                      <button
+                                        type="button"
+                                        onClick={() => setSelectedStudy(study)}
+                                        key={study.id}
+                                        className="group flex items-center gap-2 rounded-md border border-primary/20 bg-gradient-to-r from-black/40 via-black/20 to-primary/5 px-2 py-1.5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_0_14px_rgba(242,192,141,0.18)]"
+                                      >
+                                        <div className="relative h-12 w-9 shrink-0 overflow-hidden rounded-sm border border-primary/25 bg-black/35">
+                                          {study.image ? (
+                                            <AppImage src={study.image} alt={study.title} className="h-full w-full object-cover" />
+                                          ) : (
+                                            <div className="h-full w-full bg-gradient-to-b from-[#31261b] to-[#18130f]" />
+                                          )}
+                                          {isCompleted && (
+                                            <div className="absolute right-0.5 top-0.5 rounded-full border border-[#D4AF37]/70 bg-black/70 px-1 py-[1px] text-[6px] font-black uppercase tracking-widest text-[#D4AF37]">
+                                              Lido
+                                            </div>
+                                          )}
+                                        </div>
+                                        <span className="shrink-0 w-7 text-center font-mono text-[8px] font-black uppercase tracking-widest text-primary/80">
+                                          {String(study.volume).padStart(2, '0')}
+                                        </span>
+                                        <div className="flex-1 min-w-0">
+                                          <p className="text-[10px] sm:text-[11px] font-black text-on-surface group-hover:text-primary transition-colors leading-snug line-clamp-2">
+                                            {study.title}
+                                          </p>
+                                          {study.description && (
+                                            <p className="mt-0.5 text-[8px] sm:text-[9px] text-on-surface-variant/70 leading-snug line-clamp-1">
+                                              {study.description}
+                                            </p>
+                                          )}
+                                          <div className="mt-1 flex items-center gap-1.5">
+                                            <div className="h-1 flex-1 bg-outline-variant/20 rounded-full overflow-hidden">
+                                              <div
+                                                className={
+                                                  isCompleted
+                                                    ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_6px_rgba(212,175,55,0.4)]'
+                                                    : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_5px_rgba(249,115,22,0.3)]'
+                                                }
+                                                style={{ width: `${isReading ? clamped : isCompleted ? 100 : 0}%` }}
+                                              />
+                                            </div>
+                                            {(isReading || isCompleted) && (
+                                              <span className={`text-[8px] font-black leading-none shrink-0 ${isCompleted ? 'text-[#D4AF37]' : 'text-orange-400'}`}>
+                                                {isCompleted ? '100' : clamped}%
+                                              </span>
+                                            )}
+                                          </div>
+                                          {readsCount > 0 && (
+                                            <p className="mt-0.5 text-[8px] font-black uppercase tracking-widest text-[#D4AF37]/80">
+                                              Lido {readsCount}×
+                                            </p>
+                                          )}
+                                        </div>
+                                        <ChevronRight size={13} className="shrink-0 text-primary/50 group-hover:text-primary transition-colors" />
+                                      </button>
+                                    );
+                                  })()
+                                ))}
+                              </div>
+                            </>
+                          ) : (
+                            <p className="text-[9px] sm:text-[10px] leading-relaxed text-on-surface-variant/80">
+                              Ainda não há série publicada para <strong>{item}</strong>.
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
               </div>
@@ -727,58 +800,6 @@ function ParabolasInventory() {
           ))}
         </div>
       </article>
-
-      {activeStudyList.length > 0 && (
-        <article ref={updatesPanelRef} className="rounded-2xl border border-primary/25 bg-black/20 p-3 sm:p-4">
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">
-              {activeGroupItem ?? activeGroupLabel ?? 'Série'}
-            </h3>
-            <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[8px] font-semibold text-primary">
-              {activeStudyList.length} {activeStudyList.length === 1 ? 'volume' : 'volumes'}
-            </span>
-          </div>
-          {activeSeriesSummary && (
-            <p className="mb-3 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80 line-clamp-3">
-              {activeSeriesSummary}
-            </p>
-          )}
-          <div className="flex flex-col gap-2">
-            {activeStudyList.map((study) => (
-              <button
-                type="button"
-                onClick={() => setSelectedStudy(study)}
-                key={study.id}
-                className="group flex items-center gap-3 rounded-xl border border-primary/20 bg-gradient-to-r from-black/40 via-black/25 to-primary/5 px-3 py-2.5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-[0_0_14px_rgba(242,192,141,0.18)]"
-              >
-                <span className="shrink-0 w-8 text-center font-mono text-[9px] font-black uppercase tracking-widest text-primary/80">
-                  Vol.<br />{String(study.volume).padStart(2, '0')}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[11px] sm:text-xs font-black text-on-surface group-hover:text-primary transition-colors leading-snug line-clamp-2">
-                    {study.title}
-                  </p>
-                  {study.description && (
-                    <p className="mt-0.5 text-[9px] sm:text-[10px] text-on-surface-variant/70 leading-snug line-clamp-1">
-                      {study.description}
-                    </p>
-                  )}
-                </div>
-                <ChevronRight size={14} className="shrink-0 text-primary/50 group-hover:text-primary transition-colors" />
-              </button>
-            ))}
-          </div>
-        </article>
-      )}
-
-      {activeGroupItem && activeStudyList.length === 0 && (
-        <article className="rounded-2xl border border-primary/20 bg-black/20 p-3 sm:p-4">
-          <h3 className="text-xs sm:text-sm font-black uppercase tracking-wide text-primary/95">Em preparação</h3>
-          <p className="mt-1 text-[10px] sm:text-[11px] leading-relaxed text-on-surface-variant/80">
-            Ainda não há série publicada para <strong>{activeGroupItem}</strong>. Assim que sair conteúdo novo, ele aparece aqui.
-          </p>
-        </article>
-      )}
 
     </div>
   );

@@ -1854,8 +1854,8 @@ function BookCard({
           src={item.image}
           alt={item.title}
         />
-        {!isSelahMode && isCompleted && (
-          <div className="absolute top-1.5 right-1.5 flex items-center gap-1 rounded-full bg-black/70 border border-[#D4AF37]/60 px-1.5 py-0.5">
+        {isCompleted && (
+          <div className={`absolute top-1.5 right-1.5 flex items-center gap-1 rounded-full bg-black/70 border border-[#D4AF37]/60 ${isSelahMode ? 'px-2 py-0.5' : 'px-1.5 py-0.5'}`}>
             <Check size={8} className="text-[#D4AF37]" />
             <span className="text-[7px] font-black uppercase tracking-widest text-[#D4AF37]">Lido</span>
           </div>
@@ -1876,28 +1876,26 @@ function BookCard({
         )}
 
         {/* Progress bar + % */}
-        {!isSelahMode && (
-          <div className="flex items-center gap-1.5 mt-0.5">
-            <div className="h-1 flex-1 bg-outline-variant/20 rounded-full overflow-hidden">
-              <div
-                className={
-                  isCompleted
-                    ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_6px_rgba(212,175,55,0.4)]'
-                    : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_5px_rgba(249,115,22,0.3)]'
-                }
-                style={{ width: `${isReading ? clamped : isCompleted ? 100 : 0}%` }}
-              />
-            </div>
-            {(isReading || isCompleted) && (
-              <span className={`text-[8px] font-black leading-none shrink-0 ${isCompleted ? 'text-[#D4AF37]' : 'text-orange-400'}`}>
-                {isCompleted ? '100' : clamped}%
-              </span>
-            )}
+        <div className={`flex items-center gap-1.5 ${isSelahMode ? 'mt-0' : 'mt-0.5'}`}>
+          <div className="h-1 flex-1 bg-outline-variant/20 rounded-full overflow-hidden">
+            <div
+              className={
+                isCompleted
+                  ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_6px_rgba(212,175,55,0.4)]'
+                  : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_5px_rgba(249,115,22,0.3)]'
+              }
+              style={{ width: `${isReading ? clamped : isCompleted ? 100 : 0}%` }}
+            />
           </div>
-        )}
+          {(isReading || isCompleted) && (
+            <span className={`text-[8px] font-black leading-none shrink-0 ${isCompleted ? 'text-[#D4AF37]' : 'text-orange-400'}`}>
+              {isCompleted ? '100' : clamped}%
+            </span>
+          )}
+        </div>
 
         {/* Lido badge */}
-        {!isSelahMode && readsCount > 0 && (
+        {readsCount > 0 && (
           <span className="text-[8px] font-black uppercase tracking-widest text-[#D4AF37]/80">
             Lido {readsCount}×
           </span>

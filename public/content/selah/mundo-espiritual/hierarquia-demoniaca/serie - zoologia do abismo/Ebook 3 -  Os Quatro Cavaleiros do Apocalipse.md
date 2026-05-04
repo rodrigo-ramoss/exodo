@@ -81,7 +81,7 @@ No centro da visão, João vê quatro seres viventes (*zōa*) que ocupam uma pos
 
 *"E diante do trono havia um mar de vidro, semelhante ao cristal. E no meio do trono, e ao redor do trono, quatro seres viventes cheios de olhos, por diante e por detrás. E o primeiro ser vivente era semelhante a um leão; e o segundo ser vivente, semelhante a um bezerro; e o terceiro ser vivente tinha o rosto como de homem; e o quarto ser vivente era semelhante a uma águia voando. E os quatro seres viventes tinham, cada um, seis asas, e ao redor, e por dentro, estavam cheios de olhos; e não descansam nem de dia nem de noite, dizendo: Santo, Santo, Santo é o Senhor Deus, o Todo-Poderoso, que era, e que é, e que há de vir."* (Ap 4:6-8)
 
-A descrição combina elementos querúbicos (as quatro faces de Ezequiel 1:10 — homem, leão, boi, águia) e seráficos (as seis asas de Isaías 6:2, o clamor tríplice "Santo, Santo, Santo"). Os seres viventes são uma fusão das duas ordens angélicas superiores — querubins e serafins — ou uma classe própria que combina suas características. A Biblioteca Mental do Mundo Espacial os classifica como querúbicos, com função de guardiões do trono e proclamadores da santidade divina.
+A descrição combina elementos querúbicos (as quatro faces de Ezequiel 1:10 — homem, leão, boi, águia) e seráficos (as seis asas de Isaías 6:2, o clamor tríplice "Santo, Santo, Santo"). Os seres viventes são uma fusão das duas ordens angélicas superiores — querubins e serafins — ou uma classe própria que combina suas características. A Biblioteca Mental do Mundo Espiritual os classifica como querúbicos, com função de guardiões do trono e proclamadores da santidade divina.
 
 Seus "muitos olhos" (Ap 4:6, 8) ecoam as rodas de Ezequiel (Ez 1:18) e simbolizam percepção e conhecimento totais. Eles veem tudo o que ocorre no cosmos. Sua adoração perpétua ("não descansam nem de dia nem de noite") indica que sua função primária é **litúrgica**: são os líderes da adoração celestial.
 
@@ -340,6 +340,7 @@ Prepare-se para descer ao santuário violado.
 **Fim do Volume 3 — Série: Zoologia do Abismo**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+
 
 
 

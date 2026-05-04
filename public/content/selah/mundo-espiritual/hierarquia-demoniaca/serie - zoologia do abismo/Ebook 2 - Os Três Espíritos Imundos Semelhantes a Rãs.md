@@ -176,7 +176,7 @@ Três diferenças principais os distinguem dos *daimonia* comuns:
 
 **Método:** Os *daimonia* comuns tipicamente entram em indivíduos e causam possessão. Os três espíritos-rãs operam **sinais** e vão "aos reis de toda a terra" — uma operação de relações internacionais, não de possessão pessoal.
 
-Na hierarquia demoníaca esboçada pela Biblioteca Mental do Mundo Espacial, os três espíritos-rãs se encaixam como **agentes de ligação entre a cúpula (Dragão, Besta, Falso Profeta) e a liderança humana (reis da terra)**. São emissários diplomáticos do mal, especializados em sedução geopolítica.
+Na hierarquia demoníaca esboçada pela Biblioteca Mental do Mundo Espiritual, os três espíritos-rãs se encaixam como **agentes de ligação entre a cúpula (Dragão, Besta, Falso Profeta) e a liderança humana (reis da terra)**. São emissários diplomáticos do mal, especializados em sedução geopolítica.
 
 ### 3.3 A Operação de Sinais e a Congregação para a Batalha
 
@@ -297,6 +297,7 @@ Quem são esses cavaleiros? Anjos de juízo? Forças espirituais impessoais? Dem
 **Fim do Volume 2 — Série: Zoologia do Abismo**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+
 
 
 
