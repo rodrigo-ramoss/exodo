@@ -1,5 +1,6 @@
 export type SelahThemeTitle =
   | 'ANTISSISTEMA'
+  | 'ANTROPOLOGIA DO REINO'
   | 'HISTÓRIA DA IGREJA'
   | 'JESUS CRISTO'
   | 'IA & APOCALIPSE'
@@ -14,6 +15,7 @@ export type SelahThemeTitle =
 
 export type SelahThemeSlug =
   | 'antissistema'
+  | 'antropologia-do-reino'
   | 'historia-da-igreja'
   | 'jesus-cristo'
   | 'ia-e-apocalipse'
@@ -79,6 +81,14 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     description: 'Estudos que usam a Escritura para discernir as estruturas, narrativas e poderes que moldam o sistema deste século.',
     order: 13,
     subsections: [],
+  },
+  {
+    id: 'antropologia-do-reino',
+    slug: 'antropologia-do-reino',
+    title: 'ANTROPOLOGIA DO REINO',
+    description: 'Estudos sobre identidade humana, vocação e propósito no Reino de Deus.',
+    order: 14,
+    subsections: buildSubsections('antropologia-do-reino', ['Alimentação', 'Corpo Homuno']),
   },
   {
     id: 'historia-da-igreja',
@@ -210,7 +220,18 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     title: 'FIM DOS TEMPOS',
     description: 'Escatologia bíblica, juízo, restauração e consumação.',
     order: 8,
-    subsections: buildSubsections('fim-dos-tempos', ['Anticristo', 'Tribulação', 'Arrebatamento', 'Trombetas', 'Bestas', 'Babilônia', 'Armagedom', 'Restauração', 'Tempo']),
+    subsections: buildSubsections('fim-dos-tempos', [
+      'Anticristo',
+      'Tribulação',
+      'Arrebatamento',
+      'Trombetas',
+      'Bestas',
+      'Babilônia',
+      'Armagedom',
+      'Restauração',
+      'Tempo',
+      'Sinais do Fim',
+    ]),
   },
 ];
 

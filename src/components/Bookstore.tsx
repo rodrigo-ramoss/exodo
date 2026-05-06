@@ -26,6 +26,9 @@ interface BookItem {
   subsecao?: string;
   time: string;
   image?: string;
+  seriesFolder?: string;
+  sourcePath?: string;
+  rawContent?: string;
 }
 
 interface SubsecaoAuditEntry {
@@ -278,6 +281,62 @@ const CEIA_TITLE_TO_COVER_STEM: Record<string, string> = {
   'o banquete da alianca': 'a mesa do rei o banquete das bodas do cordeiro',
 };
 
+const PT_ACCENT_REPLACEMENTS: Record<string, string> = {
+  acao: 'ação',
+  alianca: 'aliança',
+  angulos: 'ângulos',
+  angustia: 'angústia',
+  apocalipse: 'apocalipse',
+  armagedom: 'armagedom',
+  aspersao: 'aspersão',
+  atribuicao: 'atribuição',
+  bencao: 'bênção',
+  bestiario: 'bestiário',
+  biblica: 'bíblica',
+  biblico: 'bíblico',
+  canone: 'cânone',
+  ceus: 'céus',
+  conclusao: 'conclusão',
+  consumacao: 'consumação',
+  coracao: 'coração',
+  criacao: 'criação',
+  devocao: 'devoção',
+  dimensao: 'dimensão',
+  edificacao: 'edificação',
+  eleicao: 'eleição',
+  encerramento: 'encerramento',
+  epilogo: 'epílogo',
+  escatologico: 'escatológico',
+  espirito: 'espírito',
+  exposicao: 'exposição',
+  glorificacao: 'glorificação',
+  historia: 'história',
+  imersao: 'imersão',
+  intercessao: 'intercessão',
+  introducao: 'introdução',
+  joao: 'joão',
+  juizos: 'juízos',
+  nao: 'não',
+  oracao: 'oração',
+  orgao: 'órgão',
+  paes: 'pães',
+  profecias: 'profecias',
+  profetico: 'profético',
+  redencao: 'redenção',
+  reflexao: 'reflexão',
+  relogio: 'relógio',
+  restauracao: 'restauração',
+  revelacao: 'revelação',
+  santuario: 'santuário',
+  secao: 'seção',
+  seculo: 'século',
+  sintese: 'síntese',
+  tabernaculo: 'tabernáculo',
+  teologica: 'teológica',
+  teologico: 'teológico',
+  tribulacao: 'tribulação',
+};
+
 function buildCoverStemVariants(stem: string): string[] {
   const normalized = normalizeTitlePreservingPunctuation(stem);
   const variants = new Set<string>([normalized]);
@@ -335,8 +394,80 @@ function normalizeTitlePreservingPunctuation(raw: string): string {
     .trim();
 }
 
+function applyPtAccents(raw: string): string {
+  return raw.replace(/\b[a-z0-9]+\b/gi, (token) => {
+    const mapped = PT_ACCENT_REPLACEMENTS[token.toLowerCase()];
+    return mapped ?? token;
+  });
+}
+
+function normalizeLooseText(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function toTitleCasePt(raw: string): string {
+  return raw
+    .split(' ')
+    .filter(Boolean)
+    .map((word) => {
+      const lower = word.toLowerCase();
+      if (['de', 'do', 'da', 'dos', 'das', 'e'].includes(lower)) return lower;
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join(' ');
+}
+
+function formatSeriesCategoryFromFolder(folder: string): string {
+  const normalized = normalizeLooseText(folder).replace(/\s+/g, ' ').trim();
+  const match = normalized.match(/^(serie|trilogia)\s+(.+)$/i);
+  if (!match) return folder;
+
+  const kind = match[1].toLowerCase() === 'trilogia' ? 'Trilogia' : 'Série';
+  const cleanedName = match[2]
+    .replace(/^-\s*/, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (!cleanedName) return folder;
+  return `${kind} — ${toTitleCasePt(applyPtAccents(cleanedName))}`;
+}
+
+function extractSeriesCategoryFromContent(markdown: string): string | null {
+  const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
+  const withoutFrontmatter = normalized.replace(/^---\s*[\r\n]+[\s\S]*?[\r\n]+---\s*/m, '');
+  const headerWindow = withoutFrontmatter.split(/\r?\n/).slice(0, 80);
+
+  for (const line of headerWindow) {
+    const cleaned = line
+      .replace(/^[*_>\-\s]+/, '')
+      .replace(/[*_]+$/, '')
+      .trim();
+    if (!cleaned) continue;
+
+    const match = cleaned.match(/^(s[ée]rie|trilogia)\s*:\s*(.+)$/i);
+    if (!match) continue;
+
+    const kind = match[1].toLowerCase().includes('trilogia') ? 'Trilogia' : 'Série';
+    const label = match[2]
+      .replace(/\s+[—-]\s*(?:volume|livro|ebook|parte)\s*[\w.-]+.*$/i, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (!label) continue;
+    return `${kind} — ${toTitleCasePt(applyPtAccents(label))}`;
+  }
+
+  return null;
+}
+
 function pickCategoryByFolder(folder: string): string {
-  const key = folder.toLowerCase();
+  const key = normalizeLooseText(folder);
   const dynamicMap: Array<[string, string]> = [
     ['tabernaculo', 'TABERNACULO'],
     ['serie - o codigo dos arquetipos', 'TIPOLOGIA BÍBLICA'],
@@ -383,7 +514,7 @@ function pickCategoryByFolder(folder: string): string {
     if (key.includes(matchFolder)) return category;
   }
 
-  return folder;
+  return formatSeriesCategoryFromFolder(folder);
 }
 
 const SECTION_CATEGORY_ALIASES = new Set<string>([
@@ -409,6 +540,15 @@ const SECTION_CATEGORY_ALIASES = new Set<string>([
   'ferramentas espirituais',
   'livraria',
 ]);
+
+const SUBSECTION_CATEGORY_ALIASES = new Set<string>(
+  Object.values(SELAH_SUBSECTIONS_BY_THEME_TITLE)
+    .flatMap((subsections) => subsections)
+    .flatMap((entry) => [
+      slugify(entry.title).replace(/-/g, ' '),
+      slugify(entry.slug).replace(/-/g, ' '),
+    ]),
+);
 
 function normalizeBookCategory(rawCategory: string | undefined, seriesFolder: string): string {
   const normalizedSeriesFolder = normalizeSlugLookupKey(seriesFolder).replace(/-/g, ' ');
@@ -441,8 +581,9 @@ function normalizeBookCategory(rawCategory: string | undefined, seriesFolder: st
   const normalizedCategory = slugify(category).replace(/-/g, ' ');
   if (normalizedCategory.includes('tabernaculo')) return 'TABERNACULO';
   if (SECTION_CATEGORY_ALIASES.has(normalizedCategory)) return categoryFromFolder;
+  if (SUBSECTION_CATEGORY_ALIASES.has(normalizedCategory)) return categoryFromFolder;
 
-  return category;
+  return toTitleCasePt(applyPtAccents(category));
 }
 
 function toContentRelativePath(pathKey: string): string {
@@ -642,18 +783,6 @@ function extractTypologyDivisionRelativePath(pathKey: string): string | null {
     return normalized.slice(normalized.indexOf(marker) + marker.length);
   }
   return null;
-}
-
-function toTitleCasePt(raw: string): string {
-  return raw
-    .split(' ')
-    .filter(Boolean)
-    .map((word) => {
-      const lower = word.toLowerCase();
-      if (['de', 'do', 'da', 'dos', 'das', 'e'].includes(lower)) return lower;
-      return lower.charAt(0).toUpperCase() + lower.slice(1);
-    })
-    .join(' ');
 }
 
 function resolveTypologySeriesCategory(seriesFolder: string): string {
@@ -1125,6 +1254,7 @@ function discoverBooksFromMarkdown(): BookItem[] {
     const fileStem = fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
     const slug = `${seriesFolder}/${fileStem}`;
     const frontmatter = parseFrontmatter(content);
+    const extractedSeriesCategory = extractSeriesCategoryFromContent(content);
     const firstHeading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
     const title = frontmatter.title || firstHeading || fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
     const frontmatterSubsection = extractFrontmatterSubsectionCandidate(frontmatter);
@@ -1146,11 +1276,14 @@ function discoverBooksFromMarkdown(): BookItem[] {
       slug,
       description: frontmatter.description || '',
       date: frontmatter.date || '2026-04-18',
-      category: normalizeBookCategory(frontmatter.category, seriesFolder),
+      category: normalizeBookCategory(extractedSeriesCategory || frontmatter.category, seriesFolder),
       tema: themeTitle ?? undefined,
       subsecao: inferredSubsection,
       time: frontmatter.time || 'LIVRO',
       image: cover,
+      seriesFolder,
+      sourcePath: pathKey,
+      rawContent: content,
     };
   });
 }
@@ -1634,15 +1767,6 @@ function FireflyLayer() {
   );
 }
 
-const SERIES_SUMMARY_STOPWORDS = new Set([
-  'a', 'o', 'os', 'as', 'de', 'da', 'do', 'das', 'dos', 'e', 'em', 'na', 'no', 'nas', 'nos',
-  'um', 'uma', 'uns', 'umas', 'para', 'por', 'com', 'sem', 'ao', 'aos', 'a', 'as', 'que', 'como',
-  'mais', 'menos', 'sobre', 'entre', 'ser', 'sao', 'foi', 'era', 'seu', 'sua', 'seus', 'suas',
-  'nosso', 'nossa', 'nossos', 'nossas', 'ele', 'ela', 'eles', 'elas', 'isso', 'isto', 'esta', 'este',
-  'essas', 'esses', 'aquele', 'aquela', 'aqueles', 'aquelas', 'tambem', 'ja',
-  'primeiro', 'primeira', 'segundo', 'segunda', 'terceiro', 'terceira', 'volume', 'volumes', 'ebook', 'livro',
-]);
-
 function normalizeSeriesSummaryText(raw: string): string {
   return raw
     .normalize('NFD')
@@ -1654,56 +1778,112 @@ function normalizeSeriesSummaryText(raw: string): string {
 }
 
 function toReadableSeriesLabel(raw: string): string {
-  const normalized = raw
+  const normalized = applyPtAccents(raw)
     .replace(/[-_]+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
     .toLowerCase();
   if (!normalized) return 'o tema';
-  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+  return toTitleCasePt(normalized);
 }
 
-function collectSeriesSummaryKeywords(items: BookItem[], limit = 4): string[] {
-  const counts = new Map<string, number>();
+function stripFrontmatter(markdown: string): string {
+  return markdown
+    .replace(/^\uFEFF/, '')
+    .replace(/^---\s*[\r\n]+[\s\S]*?[\r\n]+---\s*/m, '')
+    .trim();
+}
 
-  for (const item of items) {
-    const raw = `${item.title || ''} ${item.description || ''}`
-      .replace(/(?:ebook|livro|volume|vol\.)\s*0*\d{1,3}/gi, ' ')
-      .replace(/\s+/g, ' ');
+function markdownToPlainText(markdown: string): string {
+  return markdown
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/`[^`]*`/g, ' ')
+    .replace(/!\[[^\]]*]\([^)]+\)/g, ' ')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/^>\s?/gm, '')
+    .replace(/[*_~]/g, '')
+    .replace(/\r?\n+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
-    const tokens = normalizeSeriesSummaryText(raw).split(' ').filter(Boolean);
-    const uniqueTokens = new Set(tokens);
-    for (const token of uniqueTokens) {
-      if (token.length < 4) continue;
-      if (SERIES_SUMMARY_STOPWORDS.has(token)) continue;
-      counts.set(token, (counts.get(token) || 0) + 1);
-    }
-  }
-
-  return [...counts.entries()]
-    .sort((a, b) => {
-      if (b[1] !== a[1]) return b[1] - a[1];
-      if (b[0].length !== a[0].length) return b[0].length - a[0].length;
-      return a[0].localeCompare(b[0], 'pt-BR');
+function extractSeriesClosingSection(markdown: string): string | null {
+  const lines = stripFrontmatter(markdown).split(/\r?\n/);
+  const headings = lines
+    .map((line, index) => {
+      const match = line.match(/^(#{1,6})\s+(.+)$/);
+      if (!match) return null;
+      return {
+        index,
+        level: match[1].length,
+        normalized: normalizeSeriesSummaryText(match[2]),
+      };
     })
-    .slice(0, limit)
-    .map(([token]) => token);
+    .filter((entry): entry is { index: number; level: number; normalized: string } => Boolean(entry));
+
+  const closingHeading = headings
+    .filter(({ normalized }) =>
+      normalized.includes('epilogo')
+      || normalized.includes('encerramento da serie')
+      || normalized.includes('encerramento da trilogia')
+      || (normalized.includes('conclusao') && normalized.includes('encerramento da serie'))
+      || (normalized.includes('sintese') && normalized.includes('encerramento da serie')),
+    )
+    .pop();
+
+  if (!closingHeading) return null;
+  const nextHeading = headings.find((entry) => entry.index > closingHeading.index && entry.level <= closingHeading.level);
+  const endIndex = nextHeading ? nextHeading.index : lines.length;
+  return lines.slice(closingHeading.index + 1, endIndex).join('\n').trim() || null;
+}
+
+function buildSeriesSummaryFromClosing(items: BookItem[]): string | null {
+  if (!items.length) return null;
+
+  const ordered = [...items].sort((a, b) => {
+    const va = extractVolumeFromBook(a);
+    const vb = extractVolumeFromBook(b);
+    if (va !== null && vb !== null && va !== vb) return va - vb;
+    if (va !== null && vb === null) return -1;
+    if (va === null && vb !== null) return 1;
+    return a.title.localeCompare(b.title, 'pt-BR');
+  });
+  const lastBook = ordered[ordered.length - 1];
+  const markdown = lastBook?.rawContent;
+  if (!markdown) return null;
+
+  const section = extractSeriesClosingSection(markdown);
+  if (!section) return null;
+
+  const plain = markdownToPlainText(section);
+  if (!plain) return null;
+
+  const sentences = plain
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter((sentence) => sentence.length >= 45);
+
+  if (sentences.length === 0) return null;
+
+  const summarySentences = sentences.slice(0, Math.min(3, Math.max(2, sentences.length)));
+  const summary = summarySentences.join(' ');
+  if (summary.length <= 420) return summary;
+  return `${summary.slice(0, 417).replace(/\s+\S*$/, '')}...`;
 }
 
 function buildGeneratedSeriesDescription(category: string, items: BookItem[]): string {
   if (!items.length) return '';
 
-  const keywords = collectSeriesSummaryKeywords(items);
   const seriesLabel = toReadableSeriesLabel(toSeriesDisplayLabel(category));
   const volumesText = `${items.length} ${items.length === 1 ? 'volume' : 'volumes'}`;
-  const focus = keywords.length > 0
-    ? keywords.join(', ')
-    : 'fundamentos bíblicos, discernimento e aplicação prática';
-
-  return `Série em ${volumesText} sobre ${seriesLabel}: panorama de ${focus}, com leitura progressiva e aplicação espiritual.`;
+  return `Série em ${volumesText} sobre ${seriesLabel}. Leitura progressiva com fundamento bíblico, contexto histórico e aplicação espiritual para a vida prática.`;
 }
 
 function buildAutoSeriesDescription(category: string, items: BookItem[]): string {
+  const closingSummary = buildSeriesSummaryFromClosing(items);
+  if (closingSummary) return closingSummary;
+
   const curated = SERIES_DESCRIPTION[category];
   if (curated) return curated;
 
@@ -1716,7 +1896,11 @@ function buildAutoSeriesDescription(category: string, items: BookItem[]): string
 
 function toSeriesDisplayLabel(category: string): string {
   const mapped = SERIES_LABEL[category] ?? category;
-  return mapped.replace(/^s[ée]rie\s*[—-]\s*/i, '').trim();
+  const cleaned = mapped
+    .replace(/^s[ée]rie\s*[—-]\s*/i, '')
+    .replace(/^trilogia\s*[—-]\s*/i, '')
+    .trim();
+  return toTitleCasePt(applyPtAccents(cleaned));
 }
 
 function extractVolumeFromBook(item: BookItem): number | null {
@@ -2385,6 +2569,9 @@ export default function Bookstore({
         image: existing.image || normalized.image,
         tema: existing.tema || normalized.tema,
         subsecao: existing.subsecao || normalized.subsecao,
+        seriesFolder: existing.seriesFolder || normalized.seriesFolder,
+        sourcePath: existing.sourcePath || normalized.sourcePath,
+        rawContent: existing.rawContent || normalized.rawContent,
       } : normalized);
     }
     const scoreForDisplay = (book: BookItem): number => {
@@ -3123,7 +3310,7 @@ export default function Bookstore({
                           )}
                         </div>
                         {seriesDescription && (
-                          <p className="mt-1 text-[11px] sm:text-sm text-on-surface-variant/70 leading-snug font-medium max-w-2xl">
+                          <p className="mt-1 text-[11px] sm:text-sm text-on-surface-variant/70 leading-snug font-medium max-w-2xl line-clamp-3">
                             {seriesDescription}
                           </p>
                         )}
@@ -3281,7 +3468,7 @@ export default function Bookstore({
                             )}
                           </div>
                           {seriesDescription && (
-                            <p className="mt-1 text-[9px] sm:text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm">
+                            <p className="mt-1 text-[9px] sm:text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm line-clamp-3">
                               {seriesDescription}
                             </p>
                           )}
@@ -3367,7 +3554,7 @@ export default function Bookstore({
                             )}
                           </div>
                           {seriesDescription && (
-                            <p className="mt-1 text-[9px] sm:text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm">
+                            <p className="mt-1 text-[9px] sm:text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm line-clamp-3">
                               {seriesDescription}
                             </p>
                           )}
@@ -3487,7 +3674,7 @@ export default function Bookstore({
                       )}
                     </div>
                     {seriesDescription && (
-                      <p className="mt-1 text-[9px] sm:text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm">
+                      <p className="mt-1 text-[9px] sm:text-[10px] text-on-surface-variant/60 leading-snug font-medium max-w-sm line-clamp-3">
                         {seriesDescription}
                       </p>
                     )}

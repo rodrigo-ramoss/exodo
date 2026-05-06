@@ -3,7 +3,7 @@ title: "O Clamor dos Mártires — O Sangue que Clama por Justiça"
 description: "Quarto volume da série 'Os Dias de Angústia'. Uma exegese sobre o sofrimento dos santos durante a Grande Tribulação, a selagem dos 144.000, a visão da multidão incontável e a teologia do martírio como semente de glória."
 seção: fim dos tempos
 category: tribulacao
-image: /image/selah/a queda de babilonia o colapso do sistema mundial.webp
+image: /image/selah/o sangue dos martires.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*
@@ -246,3 +246,4 @@ Preparemo-nos para a escolha final: o Selo de Deus ou a Marca da Besta.
 *Série: Os Dias de Angústia — O Triunfo do Cordeiro na Grande Tribulação*
 *Próximo volume: Volume 5 — A Marca da Besta*
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+
