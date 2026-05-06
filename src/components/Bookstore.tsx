@@ -1299,6 +1299,7 @@ type SectionKey =
   | 'ESPÍRITO SANTO'
   | 'REINO DE DEUS'
   | 'ANTISSISTEMA'
+  | 'ANTROPOLOGIA DO REINO'
   | 'IA & APOCALIPSE'
   | 'FIM DOS TEMPOS'
   | 'BATALHA ESPIRITUAL'
@@ -1389,6 +1390,13 @@ const SECTIONS: Record<SectionKey, {
     Icon: Zap,
     accent: 'from-emerald-900/70 to-emerald-800/10',
   },
+  'ANTROPOLOGIA DO REINO': {
+    numero: '14',
+    label: 'Antropologia do Reino',
+    description: 'Estudos sobre identidade humana, vocação e propósito no Reino de Deus.',
+    Icon: BookOpen,
+    accent: 'from-lime-900/70 to-emerald-800/10',
+  },
   'IA & APOCALIPSE': {
     numero: '12',
     label: 'IA & Apocalipse',
@@ -1411,6 +1419,42 @@ const SECTIONS: Record<SectionKey, {
     accent: 'from-red-900/70 to-red-800/10',
   },
 };
+
+function getSectionMeta(sectionKey: string): {
+  numero: string;
+  label: string;
+  description: string;
+  Icon: React.ElementType;
+  accent: string;
+} {
+  const sectionMeta = (SECTIONS as Record<string, {
+    numero: string;
+    label: string;
+    description: string;
+    Icon: React.ElementType;
+    accent: string;
+  }>)[sectionKey];
+  if (sectionMeta) return sectionMeta;
+
+  const fallbackTheme = SELAH_THEME_BY_TITLE[sectionKey];
+  if (fallbackTheme) {
+    return {
+      numero: String(fallbackTheme.order).padStart(2, '0'),
+      label: toTitleCasePt(fallbackTheme.title.toLowerCase()),
+      description: fallbackTheme.description,
+      Icon: BookOpen,
+      accent: 'from-stone-900/70 to-stone-800/10',
+    };
+  }
+
+  return {
+    numero: '--',
+    label: sectionKey,
+    description: 'Seção em preparação.',
+    Icon: BookOpen,
+    accent: 'from-stone-900/70 to-stone-800/10',
+  };
+}
 
 const SECTION_ORDER: SectionKey[] = [
   ...SELAH_THEME_TITLES_IN_ORDER,
@@ -2418,7 +2462,7 @@ function SectionCard({ sectionKey, books, onSelect }: {
   books: BookItem[];
   onSelect: () => void;
 }) {
-  const { label, description, Icon, accent, numero } = SECTIONS[sectionKey];
+  const { label, description, Icon, accent, numero } = getSectionMeta(sectionKey);
   const cover = books.find((book) => Boolean(book.image))?.image;
   const totalRead = pm.countRead('livraria', books.map((b) => b.slug));
 
@@ -3208,8 +3252,9 @@ export default function Bookstore({
   if (selectedSection) {
     const selectedTheme = SELAH_THEME_BY_SECTION[selectedSection];
     if (selectedTheme) {
-      const themeLabel = SECTIONS[selectedSection].label;
-      const themeDescription = SECTIONS[selectedSection].description;
+      const sectionMeta = getSectionMeta(selectedSection);
+      const themeLabel = sectionMeta.label;
+      const themeDescription = sectionMeta.description;
       const themeSubsections = SELAH_SUBSECTIONS_BY_THEME_TITLE[selectedTheme];
       const subsectionCounts = subsecaoAvailabilityByName ?? new Map<string, number>();
       const filteredSubsecaoBooks = selectedSubsecao
@@ -3593,7 +3638,7 @@ export default function Bookstore({
       );
     }
 
-    const { label, description, Icon, numero } = SECTIONS[selectedSection];
+    const { label, description, Icon, numero } = getSectionMeta(selectedSection);
     return (
       <div className="pt-4 sm:pt-6 pb-24 sm:pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
         <section className="relative overflow-hidden rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-4 sm:p-6">
