@@ -1921,21 +1921,113 @@ function buildGeneratedSeriesDescription(category: string, items: BookItem[]): s
 
   const seriesLabel = toReadableSeriesLabel(toSeriesDisplayLabel(category));
   const volumesText = `${items.length} ${items.length === 1 ? 'volume' : 'volumes'}`;
-  return `Série em ${volumesText} sobre ${seriesLabel}. Leitura progressiva com fundamento bíblico, contexto histórico e aplicação espiritual para a vida prática.`;
+  return `Você vai encontrar uma leitura progressiva sobre ${seriesLabel}, em ${volumesText}, com fundamento bíblico e aplicação prática para a vida espiritual.`;
+}
+
+function escapeRegExp(raw: string): string {
+  return raw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function normalizeSeriesDescriptionCandidate(raw: string, seriesLabel: string): string {
+  let text = raw
+    .replace(/\s+/g, ' ')
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .trim();
+
+  // Remove prefixos editoriais de volume para manter foco no tema da série.
+  text = text
+    .replace(/^[^.]{0,140}\bvolume\b[^.]{0,200}\.\s*/i, '')
+    .replace(/^neste\s+(?:primeiro|segundo|terceiro|quarto|quinto|sexto|s[eé]timo|oitavo|nono|d[eé]cimo)\s+volume[,:\s-]*/i, '')
+    .replace(/^neste\s+volume[,:\s-]*/i, '')
+    .replace(/^e-?book\s*\d+\s*[-:]\s*/i, '');
+
+  if (seriesLabel) {
+    const escaped = escapeRegExp(seriesLabel);
+    text = text
+      .replace(new RegExp(`\\bda\\s+s[ée]rie\\s+['"]?${escaped}['"]?\\b`, 'i'), '')
+      .replace(new RegExp(`\\bs[ée]rie\\s+['"]?${escaped}['"]?\\b`, 'i'), '')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+  }
+
+  text = text
+    .replace(/^uma\s+(?:exegese|an[aá]lise|investiga[cç][aã]o|leitura|imers[aã]o|jornada)\s+(?:profunda|detalhada|b[ií]blica|escatol[oó]gica|teol[oó]gica)?\s*(?:sobre|de|da|do|dos|das)\s+/i, 'Estudos sobre ')
+    .replace(/^uma\s+s[ée]rie\s+(?:sobre|de|da|do|dos|das)\s+/i, 'Estudos sobre ')
+    .replace(/^estudos?\s+(?:e\s+s[ée]ries?\s+)?(?:sobre|de|da|do|dos|das)\s+/i, 'Estudos sobre ')
+    .replace(/\s+([,.;:!?])/g, '$1')
+    .trim();
+
+  if (!text) return '';
+  if (!/[.!?]$/.test(text)) text += '.';
+  return text;
+}
+
+function scoreSeriesDescriptionCandidate(raw: string): number {
+  const words = raw.split(/\s+/).filter(Boolean);
+  if (words.length < 8) return -10;
+
+  let score = 0;
+  if (words.length >= 12 && words.length <= 45) score += 4;
+  if (words.length > 45 && words.length <= 65) score += 2;
+  if (raw.length >= 90 && raw.length <= 260) score += 3;
+  if (/\bsobre\b/i.test(raw)) score += 2;
+  if (/[,:;]/.test(raw)) score += 1;
+  if (/\b(?:introdu[cç][aã]o|fundamentos?|panorama|exegese|leitura|discernimento|aplica[cç][aã]o)\b/i.test(raw)) score += 1;
+  return score;
+}
+
+function buildSeriesSummaryFromDescriptions(category: string, items: BookItem[]): string | null {
+  if (!items.length) return null;
+
+  const ordered = sortBooksInSeries(category, items);
+  const seriesLabel = toSeriesDisplayLabel(category);
+  const candidates = ordered
+    .map((item, index) => ({
+      index,
+      text: normalizeSeriesDescriptionCandidate((item.description || '').trim(), seriesLabel),
+    }))
+    .filter((entry) => entry.text.length > 0);
+
+  if (!candidates.length) return null;
+
+  const ranked = candidates
+    .map((entry) => ({
+      text: entry.text,
+      score: scoreSeriesDescriptionCandidate(entry.text) - (entry.index * 0.15), // privilegia volumes iniciais
+    }))
+    .sort((a, b) => b.score - a.score);
+
+  let summary = ranked[0]?.text ?? '';
+  if (!summary) return null;
+
+  if (summary.length > 240) {
+    const truncated = summary.slice(0, 240);
+    const cut = truncated.lastIndexOf('.');
+    summary = cut > 120 ? truncated.slice(0, cut + 1) : `${truncated.replace(/\s+\S*$/, '')}...`;
+  }
+
+  const words = summary.split(/\s+/).filter(Boolean).length;
+  if (words < 18) {
+    const volumesText = `${items.length} ${items.length === 1 ? 'volume' : 'volumes'}`;
+    summary = `${summary} Você vai encontrar uma leitura progressiva em ${volumesText}, com contexto bíblico e aplicação prática.`;
+  }
+
+  return summary;
 }
 
 function buildAutoSeriesDescription(category: string, items: BookItem[]): string {
-  const closingSummary = buildSeriesSummaryFromClosing(items);
-  if (closingSummary) return closingSummary;
-
   const curated = SERIES_DESCRIPTION[category];
   if (curated) return curated;
+
+  const fromDescriptions = buildSeriesSummaryFromDescriptions(category, items);
+  if (fromDescriptions) return fromDescriptions;
 
   const generated = buildGeneratedSeriesDescription(category, items);
   if (generated) return generated;
 
   const seriesLabel = toSeriesDisplayLabel(category);
-  return `${seriesLabel}: coleção de estudos e livros com análise bíblica, histórica e aplicação prática.`;
+  return `Você vai encontrar estudos sobre ${seriesLabel}, com leitura bíblica, clareza doutrinária e aplicação prática.`;
 }
 
 function toSeriesDisplayLabel(category: string): string {

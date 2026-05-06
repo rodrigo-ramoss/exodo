@@ -4,7 +4,7 @@ description: "A pureza bíblica não era mero ritual, mas um mapa teológico par
 seção: Selah
 category: Antropologia do Reino
 subseção: Alimentação
-image: As Cercas do Santuário
+image: /image/selah/as cercas do santuario.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*
