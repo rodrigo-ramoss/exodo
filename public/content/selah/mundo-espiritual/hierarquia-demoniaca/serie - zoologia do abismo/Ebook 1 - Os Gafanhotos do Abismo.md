@@ -4,7 +4,7 @@ description: "Uma investigação taxonômica e teológica sobre os seres que eme
 seção: selah
 category: mundo-espiritual
 subseção: hierarquia-demoniaca
-image: https://vozdodeserto.com/wp-content/uploads/2026/05/zoologia-abismo-vol1-capa.jpg
+image: "/image/selah/os gafanhotos do abismo.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

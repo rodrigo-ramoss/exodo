@@ -1,12 +1,21 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X, Highlighter, Trash2 } from 'lucide-react';
+import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X, Highlighter, Trash2, Pencil, FileText, PenLine } from 'lucide-react';
 import type { Components } from 'react-markdown';
 import { pm, type Category } from '../lib/progressManager';
 
 // ── Highlight helpers ─────────────────────────────────────────────────────────
 const HL_KEY = (slug: string) => `exodo_hl_${slug}`;
+const NOTES_KEY = (slug: string) => `exodo_notes_${slug}`;
+
+type ReaderNote = {
+  id: string;
+  text: string;
+  note: string;
+  createdAt: number;
+  updatedAt: number;
+};
 
 function loadHighlights(slug: string): string[] {
   try {
@@ -17,6 +26,34 @@ function loadHighlights(slug: string): string[] {
 
 function saveHighlights(slug: string, list: string[]): void {
   try { localStorage.setItem(HL_KEY(slug), JSON.stringify(list)); } catch { /* noop */ }
+}
+
+function loadNotes(slug: string): ReaderNote[] {
+  try {
+    const raw = localStorage.getItem(NOTES_KEY(slug));
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter((item) => item && typeof item.id === 'string' && typeof item.text === 'string')
+      .map((item) => ({
+        id: item.id,
+        text: item.text,
+        note: typeof item.note === 'string' ? item.note : '',
+        createdAt: Number.isFinite(item.createdAt) ? item.createdAt : Date.now(),
+        updatedAt: Number.isFinite(item.updatedAt) ? item.updatedAt : Date.now(),
+      }));
+  } catch {
+    return [];
+  }
+}
+
+function saveNotes(slug: string, notes: ReaderNote[]): void {
+  try {
+    localStorage.setItem(NOTES_KEY(slug), JSON.stringify(notes));
+  } catch {
+    // noop
+  }
 }
 
 /**
@@ -212,11 +249,47 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
   const didFinalizeRef = useRef(false);
   const reachedEndRef = useRef(false);
   const completionCountedRef = useRef(false);
+  const isCoarsePointer = useMemo(
+    () => (typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+      ? window.matchMedia('(pointer: coarse)').matches
+      : false),
+    [],
+  );
 
   // ── Highlight state ────────────────────────────────────────────────────────
   const [highlights, setHighlights] = useState<string[]>(() => loadHighlights(slug));
+  const [notes, setNotes] = useState<ReaderNote[]>(() => loadNotes(slug));
   const [selPopup, setSelPopup] = useState<{ x: number; y: number; text: string } | null>(null);
   const [rmPopup, setRmPopup] = useState<{ x: number; y: number; text: string } | null>(null);
+  const [isMarkupMode, setIsMarkupMode] = useState(false);
+  const [selectionText, setSelectionText] = useState<string | null>(null);
+  const [isNotesPanelOpen, setIsNotesPanelOpen] = useState(false);
+  const [isNoteEditorOpen, setIsNoteEditorOpen] = useState(false);
+  const [noteDraft, setNoteDraft] = useState('');
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [showMarkupHint, setShowMarkupHint] = useState(false);
+  const markupHintTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    setHighlights(loadHighlights(slug));
+    setNotes(loadNotes(slug));
+    setSelPopup(null);
+    setRmPopup(null);
+    setSelectionText(null);
+    setIsNoteEditorOpen(false);
+    setNoteDraft('');
+    setEditingNoteId(null);
+    setIsNotesPanelOpen(false);
+    setShowMarkupHint(false);
+  }, [slug]);
+
+  useEffect(() => {
+    return () => {
+      if (markupHintTimerRef.current !== null) {
+        window.clearTimeout(markupHintTimerRef.current);
+      }
+    };
+  }, []);
 
   /**
    * Marca a leitura como concluída (via progressManager).
@@ -419,6 +492,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
       const text = sel?.toString().trim() ?? '';
       if (!text || text.length < 3 || text.length > 400 || !sel || sel.rangeCount === 0) {
         setSelPopup(null);
+        setSelectionText(null);
         return;
       }
 
@@ -427,16 +501,31 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
       const commonElement = common.nodeType === Node.TEXT_NODE ? common.parentElement : (common as HTMLElement);
       if (!commonElement || !root.contains(commonElement)) {
         setSelPopup(null);
+        setSelectionText(null);
         return;
       }
 
       const rect = range.getBoundingClientRect();
       if (!rect || (rect.width === 0 && rect.height === 0)) return;
-
-      setSelPopup({ x: rect.left + rect.width / 2, y: rect.top - 8, text });
+      setSelectionText(text);
+      if (isMarkupMode || isCoarsePointer) {
+        setSelPopup(null);
+        if (isCoarsePointer && !isMarkupMode) {
+          setShowMarkupHint(true);
+          if (markupHintTimerRef.current !== null) {
+            window.clearTimeout(markupHintTimerRef.current);
+          }
+          markupHintTimerRef.current = window.setTimeout(() => {
+            setShowMarkupHint(false);
+            markupHintTimerRef.current = null;
+          }, 2000);
+        }
+      } else {
+        setSelPopup({ x: rect.left + rect.width / 2, y: rect.top - 8, text });
+      }
       setRmPopup(null);
     }, 0);
-  }, []);
+  }, [isCoarsePointer, isMarkupMode]);
 
   const handleContentMouseUp = useCallback(() => {
     showSelectionPopup();
@@ -470,8 +559,8 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
 
   // ── Add / remove highlight helpers ─────────────────────────────────────────
   const addHighlight = useCallback(() => {
-    if (!selPopup) return;
-    const { text } = selPopup;
+    const text = selectionText || selPopup?.text;
+    if (!text) return;
     setHighlights((prev) => {
       if (prev.includes(text)) return prev;
       const next = [...prev, text];
@@ -479,8 +568,69 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
       return next;
     });
     setSelPopup(null);
+    setSelectionText(null);
     window.getSelection()?.removeAllRanges();
-  }, [selPopup, slug]);
+  }, [selectionText, selPopup, slug]);
+
+  const startNoteEditor = useCallback(() => {
+    const text = selectionText || selPopup?.text;
+    if (!text) return;
+    setEditingNoteId(null);
+    setNoteDraft('');
+    setIsNoteEditorOpen(true);
+  }, [selectionText, selPopup]);
+
+  const openNoteForEdit = useCallback((note: ReaderNote) => {
+    setEditingNoteId(note.id);
+    setSelectionText(note.text);
+    setNoteDraft(note.note);
+    setIsNoteEditorOpen(true);
+    setIsNotesPanelOpen(false);
+  }, []);
+
+  const saveNoteFromSelection = useCallback(() => {
+    const text = (selectionText || selPopup?.text || '').trim();
+    const noteText = noteDraft.trim();
+    if (!text || !noteText) return;
+
+    setHighlights((prev) => {
+      if (prev.includes(text)) return prev;
+      const next = [...prev, text];
+      saveHighlights(slug, next);
+      return next;
+    });
+
+    setNotes((prev) => {
+      const now = Date.now();
+      const existingIndex = editingNoteId ? prev.findIndex((item) => item.id === editingNoteId) : -1;
+      let next: ReaderNote[];
+      if (existingIndex >= 0) {
+        next = prev.map((item, index) => (
+          index === existingIndex
+            ? { ...item, text, note: noteText, updatedAt: now }
+            : item
+        ));
+      } else {
+        const item: ReaderNote = {
+          id: `${now}-${Math.random().toString(36).slice(2, 8)}`,
+          text,
+          note: noteText,
+          createdAt: now,
+          updatedAt: now,
+        };
+        next = [item, ...prev];
+      }
+      saveNotes(slug, next);
+      return next;
+    });
+
+    setIsNoteEditorOpen(false);
+    setEditingNoteId(null);
+    setNoteDraft('');
+    setSelPopup(null);
+    setSelectionText(null);
+    window.getSelection()?.removeAllRanges();
+  }, [editingNoteId, noteDraft, selectionText, selPopup, slug]);
 
   const removeHighlight = useCallback((text: string) => {
     setHighlights((prev) => {
@@ -490,6 +640,25 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
     });
     setRmPopup(null);
   }, [slug]);
+
+  const removeNote = useCallback((id: string) => {
+    setNotes((prev) => {
+      const next = prev.filter((item) => item.id !== id);
+      saveNotes(slug, next);
+      return next;
+    });
+  }, [slug]);
+
+  const jumpToHighlightedText = useCallback((text: string) => {
+    const root = contentBodyRef.current;
+    if (!root) return;
+    const target = Array.from(root.querySelectorAll('mark[data-hl]')).find(
+      (item) => (item as HTMLElement).getAttribute('data-hl') === text,
+    ) as HTMLElement | undefined;
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setIsNotesPanelOpen(false);
+  }, []);
 
   // Close popups on scroll
   useEffect(() => {
@@ -575,6 +744,52 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
           <div className={`px-2 py-1 rounded-lg text-[9px] font-black tracking-widest uppercase ${theme === 'dark' ? 'bg-primary/10 text-primary' : theme === 'sepia' ? 'bg-[#433422]/10 text-[#433422]' : 'bg-slate-100 text-slate-900'}`}>
             {progress}% Lido
           </div>
+
+          <button
+            onClick={() => {
+              setIsMarkupMode((prev) => !prev);
+              if (isMarkupMode) {
+                setSelectionText(null);
+                setSelPopup(null);
+                setRmPopup(null);
+                window.getSelection()?.removeAllRanges();
+                setShowMarkupHint(false);
+              }
+            }}
+            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all active:scale-90 ${
+              isMarkupMode
+                ? 'bg-primary text-on-primary'
+                : theme === 'dark'
+                  ? 'bg-surface-container-highest text-primary'
+                  : theme === 'sepia'
+                    ? 'bg-[#e8dfc8] text-[#433422]'
+                    : 'bg-slate-100 text-slate-900 shadow-sm border border-slate-200'
+            }`}
+            aria-label={isMarkupMode ? 'Desativar marcação' : 'Ativar marcação'}
+            title={isMarkupMode ? 'Desativar marcação' : 'Ativar marcação'}
+          >
+            <Pencil size={18} />
+          </button>
+
+          <button
+            onClick={() => setIsNotesPanelOpen(true)}
+            className={`relative w-10 h-10 rounded-xl flex items-center justify-center transition-all active:scale-90 ${
+              theme === 'dark'
+                ? 'bg-surface-container-highest text-primary'
+                : theme === 'sepia'
+                  ? 'bg-[#e8dfc8] text-[#433422]'
+                  : 'bg-slate-100 text-slate-900 shadow-sm border border-slate-200'
+            }`}
+            aria-label="Abrir notas do ebook"
+            title="Abrir notas do ebook"
+          >
+            <FileText size={18} />
+            {notes.length > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-primary text-[9px] leading-4 font-black text-on-primary">
+                {notes.length > 99 ? '99+' : notes.length}
+              </span>
+            )}
+          </button>
           
           {/* Settings Button moved here */}
           <button 
@@ -585,6 +800,57 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
           </button>
         </div>
       </div>
+
+      {isMarkupMode && (
+        <div className={`sticky top-16 z-[10004] px-4 py-2 border-b backdrop-blur-md ${
+          theme === 'dark'
+            ? 'bg-coal/92 border-white/10'
+            : theme === 'sepia'
+              ? 'bg-[#f4ecd8]/92 border-[#433422]/10'
+              : 'bg-white/92 border-slate-200'
+        }`}>
+          <div className="max-w-2xl mx-auto flex flex-wrap items-center gap-2">
+            <button
+              onClick={addHighlight}
+              disabled={!selectionText}
+              className="inline-flex items-center gap-1.5 bg-[#D4AF37] text-black text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-full border border-[#F5D76E]/50 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Highlighter size={12} />
+              Destacar
+            </button>
+            <button
+              onClick={startNoteEditor}
+              disabled={!selectionText}
+              className={`inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-full border disabled:opacity-40 disabled:cursor-not-allowed ${
+                theme === 'dark'
+                  ? 'bg-surface-container-high text-on-surface border-white/15'
+                  : theme === 'sepia'
+                    ? 'bg-[#e8dfc8] text-[#433422] border-[#433422]/20'
+                    : 'bg-slate-100 text-slate-900 border-slate-300'
+              }`}
+            >
+              <PenLine size={12} />
+              Destacar + Nota
+            </button>
+            <button
+              onClick={() => setIsNotesPanelOpen(true)}
+              className={`inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-full border ${
+                theme === 'dark'
+                  ? 'bg-surface-container-high text-on-surface border-white/15'
+                  : theme === 'sepia'
+                    ? 'bg-[#e8dfc8] text-[#433422] border-[#433422]/20'
+                    : 'bg-slate-100 text-slate-900 border-slate-300'
+              }`}
+            >
+              <FileText size={12} />
+              Notas ({notes.length})
+            </button>
+            <span className={`text-[10px] font-semibold ${theme === 'dark' ? 'text-on-surface-variant' : 'text-current/70'}`}>
+              {selectionText ? 'Texto selecionado pronto para marcar.' : 'Selecione um trecho para marcar.'}
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Settings Menu (Relative to the Top Bar or absolute) */}
       {isMenuOpen && (
@@ -742,6 +1008,160 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
         </div>
       )}
 
+      {isNoteEditorOpen && (
+        <div className="fixed inset-0 z-[10012] bg-black/60 backdrop-blur-[2px] flex items-center justify-center px-4">
+          <div className={`w-full max-w-lg rounded-2xl border p-4 sm:p-5 ${
+            theme === 'dark'
+              ? 'bg-surface-container border-white/10'
+              : theme === 'sepia'
+                ? 'bg-[#f4ecd8] border-[#433422]/20'
+                : 'bg-white border-slate-200'
+          }`}>
+            <h3 className="font-headline text-lg font-black tracking-tight">Nota da Marcação</h3>
+            <p className={`mt-1 text-xs ${theme === 'dark' ? 'text-on-surface-variant' : 'text-current/70'}`}>
+              Trecho selecionado:
+            </p>
+            <div className={`mt-2 rounded-xl border px-3 py-2 text-xs leading-relaxed max-h-24 overflow-y-auto ${
+              theme === 'dark'
+                ? 'border-white/10 bg-black/25 text-on-surface'
+                : theme === 'sepia'
+                  ? 'border-[#433422]/20 bg-[#efe4cb] text-[#433422]'
+                  : 'border-slate-200 bg-slate-50 text-slate-900'
+            }`}>
+              {(selectionText || selPopup?.text || '').trim() || 'Nenhum trecho selecionado.'}
+            </div>
+
+            <textarea
+              value={noteDraft}
+              onChange={(e) => setNoteDraft(e.target.value)}
+              placeholder="Escreva sua observação aqui..."
+              className={`mt-3 w-full min-h-[130px] rounded-xl border px-3 py-2 text-sm resize-y focus:outline-none focus:ring-2 ${
+                theme === 'dark'
+                  ? 'bg-black/30 border-white/15 text-on-surface placeholder:text-on-surface-variant/60 focus:ring-primary/45'
+                  : theme === 'sepia'
+                    ? 'bg-[#efe4cb] border-[#433422]/20 text-[#433422] placeholder:text-[#433422]/55 focus:ring-[#433422]/40'
+                    : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-500 focus:ring-primary/35'
+              }`}
+            />
+
+            <div className="mt-4 flex items-center justify-end gap-2">
+              <button
+                onClick={() => {
+                  setIsNoteEditorOpen(false);
+                  setEditingNoteId(null);
+                  setNoteDraft('');
+                }}
+                className={`px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider ${
+                  theme === 'dark'
+                    ? 'bg-surface-container-high text-on-surface-variant'
+                    : theme === 'sepia'
+                      ? 'bg-[#e8dfc8] text-[#433422]'
+                      : 'bg-slate-100 text-slate-700'
+                }`}
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={saveNoteFromSelection}
+                disabled={!noteDraft.trim() || !(selectionText || selPopup?.text)}
+                className="px-3 py-2 rounded-xl text-xs font-black uppercase tracking-wider bg-primary text-on-primary disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Salvar nota
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isNotesPanelOpen && (
+        <div className="fixed inset-0 z-[10011] bg-black/55 backdrop-blur-[2px] flex justify-end">
+          <div className={`h-full w-full max-w-md border-l px-4 py-4 overflow-y-auto ${
+            theme === 'dark'
+              ? 'bg-surface-container border-white/10'
+              : theme === 'sepia'
+                ? 'bg-[#f4ecd8] border-[#433422]/20'
+                : 'bg-white border-slate-200'
+          }`}>
+            <div className="flex items-center justify-between">
+              <h3 className="font-headline text-xl font-black tracking-tight">Notas do Ebook</h3>
+              <button
+                onClick={() => setIsNotesPanelOpen(false)}
+                className={`w-9 h-9 rounded-xl flex items-center justify-center ${
+                  theme === 'dark'
+                    ? 'bg-surface-container-high text-on-surface-variant'
+                    : theme === 'sepia'
+                      ? 'bg-[#e8dfc8] text-[#433422]'
+                      : 'bg-slate-100 text-slate-700'
+                }`}
+                aria-label="Fechar notas"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {notes.length === 0 ? (
+              <div className={`mt-6 rounded-2xl border px-4 py-4 text-sm ${
+                theme === 'dark'
+                  ? 'border-white/10 bg-black/20 text-on-surface-variant'
+                  : theme === 'sepia'
+                    ? 'border-[#433422]/20 bg-[#efe4cb] text-[#433422]/80'
+                    : 'border-slate-200 bg-slate-50 text-slate-600'
+              }`}>
+                Nenhuma nota ainda neste ebook.
+              </div>
+            ) : (
+              <div className="mt-4 space-y-3">
+                {notes.map((item) => (
+                  <article
+                    key={item.id}
+                    className={`rounded-2xl border p-3 ${
+                      theme === 'dark'
+                        ? 'border-white/10 bg-black/20'
+                        : theme === 'sepia'
+                          ? 'border-[#433422]/20 bg-[#efe4cb]'
+                          : 'border-slate-200 bg-slate-50'
+                    }`}
+                  >
+                    <button
+                      onClick={() => jumpToHighlightedText(item.text)}
+                      className={`w-full text-left text-xs font-semibold leading-relaxed line-clamp-3 ${
+                        theme === 'dark' ? 'text-on-surface-variant hover:text-primary' : 'hover:text-primary'
+                      }`}
+                    >
+                      “{item.text}”
+                    </button>
+                    <p className="mt-2 text-sm leading-relaxed whitespace-pre-wrap">{item.note}</p>
+                    <div className={`mt-3 text-[10px] ${theme === 'dark' ? 'text-on-surface-variant/70' : 'text-current/60'}`}>
+                      {new Date(item.updatedAt).toLocaleString('pt-BR')}
+                    </div>
+                    <div className="mt-2 flex items-center gap-2">
+                      <button
+                        onClick={() => openNoteForEdit(item)}
+                        className={`px-2.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider ${
+                          theme === 'dark'
+                            ? 'bg-surface-container-high text-on-surface'
+                            : theme === 'sepia'
+                              ? 'bg-[#e1d4b8] text-[#433422]'
+                              : 'bg-slate-200 text-slate-800'
+                        }`}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        onClick={() => removeNote(item.id)}
+                        className="px-2.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider bg-red-600/90 text-white"
+                      >
+                        Excluir
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Continue Reading Button */}
       {showToast && savedScrollPos !== null && (
         <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[10003] animate-in fade-in slide-in-from-bottom-4 duration-500 flex items-center gap-2">
@@ -764,6 +1184,14 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
           >
             <X size={14} />
           </button>
+        </div>
+      )}
+
+      {showMarkupHint && !isMarkupMode && (
+        <div className="fixed bottom-16 left-1/2 -translate-x-1/2 z-[10009] px-4">
+          <div className="bg-black/85 text-white text-[11px] font-bold px-3 py-2 rounded-xl border border-white/15 shadow-xl">
+            Ative o lápis para marcar
+          </div>
         </div>
       )}
     </div>
