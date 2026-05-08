@@ -6,6 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
   HeartPulse,
+  Search,
   Sparkles,
   Sword,
   Tent,
@@ -14,6 +15,7 @@ import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
 import { AppImage } from './AppImage';
+import { buildStudySearchIndex, searchStudyIndex, type StudySearchResult } from '../lib/studySearch';
 
 type TendaId = 'vida-espiritual' | 'vida-interior' | 'vida-exterior';
 
@@ -46,6 +48,12 @@ interface ManaStudyItem {
   time?: string;
   image?: string;
   file?: string;
+}
+
+interface ManaSearchHit {
+  tema: ManaTema;
+  tendaId: TendaId;
+  result: StudySearchResult;
 }
 
 const MANA_TENDAS_META: Omit<ManaTenda, 'temas'>[] = [
@@ -422,6 +430,7 @@ export default function Studies({ openSlug }: StudiesProps) {
   const [activeTendaId, setActiveTendaId] = useState<TendaId | null>(null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
+  const [manaSearchQuery, setManaSearchQuery] = useState('');
 
   const { data: fetchedStudies } = useFetch<ManaStudyItem[]>('/content/mana/index.json');
 
@@ -441,6 +450,7 @@ export default function Studies({ openSlug }: StudiesProps) {
 
     return map;
   }, []);
+  const manaSearchIndex = useMemo(() => buildStudySearchIndex(manaMarkdownModules, 'mana'), []);
 
   const temasFromContent = useMemo(() => {
     const items: ManaStudyItem[] = fetchedStudies?.length
@@ -508,6 +518,43 @@ export default function Studies({ openSlug }: StudiesProps) {
     () => tendas.find((tenda) => tenda.id === activeTendaId) || null,
     [activeTendaId, tendas],
   );
+  const allTemas = useMemo(() => tendas.flatMap((tenda) => tenda.temas), [tendas]);
+
+  const manaSearchHits = useMemo<ManaSearchHit[]>(() => {
+    const query = manaSearchQuery.trim();
+    if (!query) return [];
+
+    const results = searchStudyIndex([manaSearchIndex], query, { limit: 80 });
+    const temasBySourcePath = new Map<string, ManaTema>();
+    const temasByNormalizedTitle = new Map<string, ManaTema>();
+
+    for (const tema of allTemas) {
+      if (tema.file) {
+        const sourcePath = `/public/content/mana/${tema.file}`.replace(/\\/g, '/');
+        temasBySourcePath.set(normalizeText(sourcePath), tema);
+      }
+      temasByNormalizedTitle.set(normalizeText(tema.title), tema);
+    }
+
+    const hits: ManaSearchHit[] = [];
+    for (const result of results) {
+      const byPath = temasBySourcePath.get(normalizeText(result.document.sourcePath || ''));
+      const byTitle = temasByNormalizedTitle.get(normalizeText(result.document.title || ''));
+      const tema = byPath || byTitle;
+      if (!tema) continue;
+      const tendaId = resolveTendaFromSlugOrFolder(tema.slug, tema.file);
+      hits.push({ tema, tendaId, result });
+    }
+
+    const deduped = new Map<string, ManaSearchHit>();
+    for (const hit of hits) {
+      if (!deduped.has(hit.tema.slug)) {
+        deduped.set(hit.tema.slug, hit);
+      }
+    }
+
+    return Array.from(deduped.values()).slice(0, 30);
+  }, [allTemas, manaSearchIndex, manaSearchQuery]);
 
   useEffect(() => {
     if (!openSlug || selectedSlug) return;
@@ -640,13 +687,93 @@ export default function Studies({ openSlug }: StudiesProps) {
           <p className="text-xs text-on-surface-variant mt-1">
             Cada tenda conduz uma área da sua jornada. Escolha por onde deseja ser alimentado hoje.
           </p>
+
+          <div className="mt-3 rounded-2xl border border-primary/25 bg-black/20 px-3 py-3">
+            <label htmlFor="mana-search" className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/90">
+              Busca Maná
+            </label>
+            <div className="mt-2 flex items-center gap-2 rounded-xl border border-outline-variant/35 bg-black/25 px-3">
+              <Search size={14} className="text-primary/80 shrink-0" />
+              <input
+                id="mana-search"
+                value={manaSearchQuery}
+                onChange={(event) => setManaSearchQuery(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key !== 'Enter') return;
+                  const first = manaSearchHits[0];
+                  if (!first) return;
+                  event.preventDefault();
+                  void handleOpenTema(first.tema);
+                }}
+                placeholder="Buscar por tema, título ou conteúdo (ex: depressão)"
+                className="w-full bg-transparent py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none"
+              />
+              {manaSearchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setManaSearchQuery('')}
+                  className="text-[11px] font-black uppercase tracking-wider text-on-surface-variant/70 hover:text-primary transition-colors"
+                >
+                  Limpar
+                </button>
+              )}
+            </div>
+            <p className="mt-1 text-[10px] text-on-surface-variant/70">
+              Busca em títulos e no conteúdo dos estudos de Maná.
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 sm:gap-4">
-          {tendas.map((tenda) => (
-            <TendaCard key={tenda.id} tenda={tenda} onEnter={() => setActiveTendaId(tenda.id)} onSelectTema={handleOpenTema} />
-          ))}
-        </div>
+        {manaSearchQuery.trim() ? (
+          <div className="space-y-2.5">
+            {manaSearchHits.length === 0 ? (
+              <div className="rounded-2xl border border-outline-variant/35 bg-black/15 px-4 py-5">
+                <p className="text-xs font-semibold text-on-surface-variant">
+                  Nenhum estudo encontrado para <span className="text-primary">"{manaSearchQuery.trim()}"</span>.
+                </p>
+              </div>
+            ) : (
+              <>
+                <p className="text-[11px] font-semibold text-on-surface-variant">
+                  {manaSearchHits.length} resultado{manaSearchHits.length > 1 ? 's' : ''} encontrado{manaSearchHits.length > 1 ? 's' : ''}.
+                </p>
+                {manaSearchHits.map((hit) => (
+                  <button
+                    key={`mana-search-${hit.tema.slug}`}
+                    type="button"
+                    onClick={() => void handleOpenTema(hit.tema)}
+                    className="w-full text-left rounded-2xl border border-primary/20 bg-black/20 px-4 py-3 hover:border-primary/45 hover:bg-black/30 transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-headline text-base sm:text-lg font-black tracking-tight text-on-surface">
+                          {hit.tema.title}
+                        </p>
+                        <p className="mt-0.5 text-[10px] sm:text-xs text-primary/90 font-semibold">
+                          {MANA_TENDAS_META.find((meta) => meta.id === hit.tendaId)?.titulo || 'Maná'}
+                        </p>
+                      </div>
+                      <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-on-surface-variant/70">
+                        Score {hit.result.score}
+                      </span>
+                    </div>
+                    {hit.result.excerpt && (
+                      <p className="mt-2 text-[11px] sm:text-xs text-on-surface-variant/85 leading-relaxed line-clamp-2">
+                        {hit.result.excerpt}
+                      </p>
+                    )}
+                  </button>
+                ))}
+              </>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 sm:gap-4">
+            {tendas.map((tenda) => (
+              <TendaCard key={tenda.id} tenda={tenda} onEnter={() => setActiveTendaId(tenda.id)} onSelectTema={handleOpenTema} />
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

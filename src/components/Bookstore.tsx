@@ -1,9 +1,10 @@
 import { useState, useRef, useMemo, useEffect, type ReactNode } from 'react';
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Hourglass, Tent, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Hourglass, Tent, Sparkles, Search } from 'lucide-react';
 import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
 import { AppImage } from './AppImage';
+import { buildStudySearchIndex, searchStudyIndex, type StudySearchResult } from '../lib/studySearch';
 import {
   SELAH_SUBSECTIONS_BY_THEME_TITLE,
   SELAH_THEME_BY_TITLE,
@@ -39,6 +40,11 @@ interface SubsecaoAuditEntry {
   subsecao?: string;
   reason: 'missing' | 'invalid';
   validSubsecoes: readonly string[];
+}
+
+interface SelahSearchHit {
+  book: BookItem;
+  result: StudySearchResult;
 }
 
 type TypologyDivisionId =
@@ -2654,6 +2660,7 @@ export default function Bookstore({
   const [activeTypeId, setActiveTypeId] = useState<TypologyDivisionId | null>(null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
+  const [selahSearchQuery, setSelahSearchQuery] = useState('');
   const [activeObjectalTopicId, setActiveObjectalTopicId] = useState<string | null>(null);
   const [activeEscatologicalTopicId, setActiveEscatologicalTopicId] = useState<string | null>(null);
   const typologyTopicPanelRef = useRef<HTMLDivElement | null>(null);
@@ -2663,6 +2670,10 @@ export default function Bookstore({
   const typologyEntries = useMemo(() => discoverTypologyContentEntries(), []);
   const markdownBySlug = useMemo(() => buildMarkdownBySlugIndex(), []);
   const typologyMarkdownBySlug = useMemo(() => buildTypologyMarkdownBySlugIndex(), []);
+  const selahSearchIndex = useMemo(
+    () => buildStudySearchIndex(livrariaEspitirualMarkdownModules, 'selah'),
+    [],
+  );
   const normalizeMergedBookCategory = (book: BookItem): BookItem => {
     const seriesFolder = book.slug.split('/')[0] ?? '';
     const normalizedCategory = normalizeBookCategory(book.category, seriesFolder);
@@ -2758,6 +2769,39 @@ export default function Bookstore({
 
     return Array.from(deduped.values());
   }, [books, discoveredBooks, markdownBySlug]);
+
+  const selahSourcePathToBookSlug = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const book of mergedBooks) {
+      if (!book.sourcePath) continue;
+      map.set(normalizeSlugLookupKey(book.sourcePath), book.slug);
+    }
+    return map;
+  }, [mergedBooks]);
+
+  const selahSearchHits = useMemo<SelahSearchHit[]>(() => {
+    const query = selahSearchQuery.trim();
+    if (!query) return [];
+
+    const rawResults = searchStudyIndex([selahSearchIndex], query, { limit: 80 });
+    const hits: SelahSearchHit[] = [];
+
+    for (const result of rawResults) {
+      const slugFromSource = selahSourcePathToBookSlug.get(normalizeSlugLookupKey(result.document.sourcePath || ''));
+      if (!slugFromSource) continue;
+      const book = mergedBooks.find((item) => item.slug === slugFromSource);
+      if (!book) continue;
+      hits.push({ book, result });
+    }
+
+    const deduped = new Map<string, SelahSearchHit>();
+    for (const hit of hits) {
+      if (!deduped.has(hit.book.slug)) {
+        deduped.set(hit.book.slug, hit);
+      }
+    }
+    return Array.from(deduped.values()).slice(0, 30);
+  }, [mergedBooks, selahSearchIndex, selahSearchQuery, selahSourcePathToBookSlug]);
 
   const booksWithoutValidSubsecao = useMemo<SubsecaoAuditEntry[]>(() => {
     return mergedBooks.flatMap((book): SubsecaoAuditEntry[] => {
@@ -3854,6 +3898,8 @@ export default function Bookstore({
     );
   }
 
+  const hasSelahSearchQuery = selahSearchQuery.trim().length > 0;
+
   // ── Main grid ──────────────────────────────────────────────────────────────
   return (
     <div className="pb-20 sm:pb-24 min-h-screen bg-surface-container-lowest">
@@ -3885,11 +3931,89 @@ export default function Bookstore({
           <p className="text-xs text-on-surface-variant mt-1">
             Selecione a frente editorial que deseja explorar dentro da biblioteca Selah.
           </p>
+
+          <div className="mt-3 rounded-2xl border border-primary/25 bg-black/20 px-3 py-3">
+            <label htmlFor="selah-search" className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/90">
+              Busca Selah
+            </label>
+            <div className="mt-2 flex items-center gap-2 rounded-xl border border-outline-variant/35 bg-black/25 px-3">
+              <Search size={14} className="text-primary/80 shrink-0" />
+              <input
+                id="selah-search"
+                value={selahSearchQuery}
+                onChange={(event) => setSelahSearchQuery(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key !== 'Enter') return;
+                  const first = selahSearchHits[0];
+                  if (!first) return;
+                  event.preventDefault();
+                  void handleSelectBook(first.book.slug);
+                }}
+                placeholder="Buscar por tema, série, título ou conteúdo (ex: pecado)"
+                className="w-full bg-transparent py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none"
+              />
+              {selahSearchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSelahSearchQuery('')}
+                  className="text-[11px] font-black uppercase tracking-wider text-on-surface-variant/70 hover:text-primary transition-colors"
+                >
+                  Limpar
+                </button>
+              )}
+            </div>
+            <p className="mt-1 text-[10px] text-on-surface-variant/70">
+              Busca em títulos, séries e dentro do conteúdo dos ebooks de Selah.
+            </p>
+          </div>
         </div>
 
         {loading ? (
           <div className="py-8 sm:py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">
             Carregando SELAH...
+          </div>
+        ) : hasSelahSearchQuery ? (
+          <div className="space-y-2.5">
+            {selahSearchHits.length === 0 ? (
+              <div className="rounded-2xl border border-outline-variant/35 bg-black/15 px-4 py-5">
+                <p className="text-xs font-semibold text-on-surface-variant">
+                  Nenhum ebook encontrado para <span className="text-primary">"{selahSearchQuery.trim()}"</span>.
+                </p>
+              </div>
+            ) : (
+              <>
+                <p className="text-[11px] font-semibold text-on-surface-variant">
+                  {selahSearchHits.length} resultado{selahSearchHits.length > 1 ? 's' : ''} encontrado{selahSearchHits.length > 1 ? 's' : ''}.
+                </p>
+                {selahSearchHits.map((hit) => (
+                  <button
+                    key={`selah-search-${hit.book.slug}`}
+                    type="button"
+                    onClick={() => void handleSelectBook(hit.book.slug)}
+                    className="w-full text-left rounded-2xl border border-primary/20 bg-black/20 px-4 py-3 hover:border-primary/45 hover:bg-black/30 transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-headline text-base sm:text-lg font-black tracking-tight text-on-surface">
+                          {hit.book.title}
+                        </p>
+                        <p className="mt-0.5 text-[10px] sm:text-xs text-primary/90 font-semibold">
+                          {toSeriesDisplayLabel(hit.book.category)} {hit.book.subsecao ? `• ${hit.book.subsecao}` : ''}
+                        </p>
+                      </div>
+                      <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-on-surface-variant/70">
+                        Score {hit.result.score}
+                      </span>
+                    </div>
+                    {hit.result.excerpt && (
+                      <p className="mt-2 text-[11px] sm:text-xs text-on-surface-variant/85 leading-relaxed line-clamp-2">
+                        {hit.result.excerpt}
+                      </p>
+                    )}
+                  </button>
+                ))}
+              </>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4">
