@@ -183,6 +183,9 @@ function loadReaderHighlights(slugActivityMap: Map<string, number>): ReaderHighl
 }
 
 export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
+  const [myStudiesQuery, setMyStudiesQuery] = useState('');
+  const [showAllNotes, setShowAllNotes] = useState(false);
+  const [showAllHighlights, setShowAllHighlights] = useState(false);
   const { name } = useProfile();
   const {
     lastReadings,
@@ -552,6 +555,3 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     </div>
   );
 }
-  const [myStudiesQuery, setMyStudiesQuery] = useState('');
-  const [showAllNotes, setShowAllNotes] = useState(false);
-  const [showAllHighlights, setShowAllHighlights] = useState(false);
