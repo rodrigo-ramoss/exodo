@@ -827,8 +827,17 @@ export default function Ensinos({ openSlug }: EnsinosProps) {
 
   useEffect(() => {
     if (!openSlug || activeTemaId) return;
+    const normalizedOpenSlug = normalizeEnsinosToken(openSlug);
     const matchedTema = ENSINOS_TEMAS.find(
-      (tema) => openSlug === tema.id || openSlug.startsWith(`${tema.id}/`) || openSlug.includes(tema.id),
+      (tema) => {
+        const normalizedTemaId = normalizeEnsinosToken(tema.id.replace(/-/g, ' '));
+        return (
+          openSlug === tema.id
+          || openSlug.startsWith(`${tema.id}/`)
+          || openSlug.includes(tema.id)
+          || normalizedOpenSlug.includes(normalizedTemaId)
+        );
+      },
     );
     if (!matchedTema) return;
     setActiveTemaId(matchedTema.id);
