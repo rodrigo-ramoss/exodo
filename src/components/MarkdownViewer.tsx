@@ -265,10 +265,26 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
   const [selectionText, setSelectionText] = useState<string | null>(null);
   const [isNotesPanelOpen, setIsNotesPanelOpen] = useState(false);
   const [isNoteEditorOpen, setIsNoteEditorOpen] = useState(false);
+  const [noteSelectionText, setNoteSelectionText] = useState<string | null>(null);
   const [noteDraft, setNoteDraft] = useState('');
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [showMarkupHint, setShowMarkupHint] = useState(false);
   const markupHintTimerRef = useRef<number | null>(null);
+
+  const clearMarkupSelection = useCallback(() => {
+    setSelPopup(null);
+    setRmPopup(null);
+    setSelectionText(null);
+    window.getSelection()?.removeAllRanges();
+  }, []);
+
+  const closeNoteEditor = useCallback(() => {
+    setIsNoteEditorOpen(false);
+    setEditingNoteId(null);
+    setNoteSelectionText(null);
+    setNoteDraft('');
+    clearMarkupSelection();
+  }, [clearMarkupSelection]);
 
   useEffect(() => {
     setHighlights(loadHighlights(slug));
@@ -277,6 +293,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
     setRmPopup(null);
     setSelectionText(null);
     setIsNoteEditorOpen(false);
+    setNoteSelectionText(null);
     setNoteDraft('');
     setEditingNoteId(null);
     setIsNotesPanelOpen(false);
@@ -483,6 +500,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
 
   // ── Selection → popup ──────────────────────────────────────────────────────
   const showSelectionPopup = useCallback(() => {
+    if (isNoteEditorOpen) return;
     const root = contentBodyRef.current;
     if (!root) return;
 
@@ -525,7 +543,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
       }
       setRmPopup(null);
     }, 0);
-  }, [isCoarsePointer, isMarkupMode]);
+  }, [isCoarsePointer, isMarkupMode, isNoteEditorOpen]);
 
   const handleContentMouseUp = useCallback(() => {
     showSelectionPopup();
@@ -577,19 +595,21 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
     if (!text) return;
     setEditingNoteId(null);
     setNoteDraft('');
+    setNoteSelectionText(text);
     setIsNoteEditorOpen(true);
   }, [selectionText, selPopup]);
 
   const openNoteForEdit = useCallback((note: ReaderNote) => {
     setEditingNoteId(note.id);
     setSelectionText(note.text);
+    setNoteSelectionText(note.text);
     setNoteDraft(note.note);
     setIsNoteEditorOpen(true);
     setIsNotesPanelOpen(false);
   }, []);
 
   const saveNoteFromSelection = useCallback(() => {
-    const text = (selectionText || selPopup?.text || '').trim();
+    const text = (noteSelectionText || selectionText || selPopup?.text || '').trim();
     const noteText = noteDraft.trim();
     if (!text || !noteText) return;
 
@@ -624,13 +644,8 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
       return next;
     });
 
-    setIsNoteEditorOpen(false);
-    setEditingNoteId(null);
-    setNoteDraft('');
-    setSelPopup(null);
-    setSelectionText(null);
-    window.getSelection()?.removeAllRanges();
-  }, [editingNoteId, noteDraft, selectionText, selPopup, slug]);
+    closeNoteEditor();
+  }, [closeNoteEditor, editingNoteId, noteDraft, noteSelectionText, selectionText, selPopup, slug]);
 
   const removeHighlight = useCallback((text: string) => {
     setHighlights((prev) => {
@@ -748,11 +763,8 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
           <button
             onClick={() => {
               setIsMarkupMode((prev) => !prev);
+              clearMarkupSelection();
               if (isMarkupMode) {
-                setSelectionText(null);
-                setSelPopup(null);
-                setRmPopup(null);
-                window.getSelection()?.removeAllRanges();
                 setShowMarkupHint(false);
               }
             }}
@@ -1028,7 +1040,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
                   ? 'border-[#433422]/20 bg-[#efe4cb] text-[#433422]'
                   : 'border-slate-200 bg-slate-50 text-slate-900'
             }`}>
-              {(selectionText || selPopup?.text || '').trim() || 'Nenhum trecho selecionado.'}
+              {(noteSelectionText || selectionText || selPopup?.text || '').trim() || 'Nenhum trecho selecionado.'}
             </div>
 
             <textarea
@@ -1046,11 +1058,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
 
             <div className="mt-4 flex items-center justify-end gap-2">
               <button
-                onClick={() => {
-                  setIsNoteEditorOpen(false);
-                  setEditingNoteId(null);
-                  setNoteDraft('');
-                }}
+                onClick={closeNoteEditor}
                 className={`px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider ${
                   theme === 'dark'
                     ? 'bg-surface-container-high text-on-surface-variant'
@@ -1063,7 +1071,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
               </button>
               <button
                 onClick={saveNoteFromSelection}
-                disabled={!noteDraft.trim() || !(selectionText || selPopup?.text)}
+                disabled={!noteDraft.trim() || !(noteSelectionText || selectionText || selPopup?.text)}
                 className="px-3 py-2 rounded-xl text-xs font-black uppercase tracking-wider bg-primary text-on-primary disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Salvar nota

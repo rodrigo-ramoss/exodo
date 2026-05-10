@@ -136,6 +136,10 @@ const allLivrariaModules = {
 };
 
 const ensinosModules = {
+  ...import.meta.glob('/public/content/Ensinos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/Ensinos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/Ensinos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/Ensinos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/ensinos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/ensinos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/ensinos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
@@ -462,8 +466,9 @@ const livrariaModuleSlugs = livrariaModuleEntries.map((entry) => entry.slug);
 
 const ensinosEntries: EnsinosEntry[] = Object.entries(ensinosModules).map(([path, markdown]) => {
   const normalizedPath = path.replace(/\\/g, '/');
-  const marker = '/public/content/ensinos/';
-  const relative = normalizedPath.includes(marker)
+  const markerMatch = normalizedPath.match(/\/public\/content\/ensinos\//i);
+  const marker = markerMatch?.[0] ?? '';
+  const relative = marker
     ? normalizedPath.slice(normalizedPath.indexOf(marker) + marker.length)
     : normalizedPath;
   const withoutExt = relative.replace(CONTENT_FILE_EXTENSION_REGEX, '');
@@ -475,7 +480,7 @@ const ensinosEntries: EnsinosEntry[] = Object.entries(ensinosModules).map(([path
   const title = frontmatter.title || firstHeading || fileStem || 'Estudo';
   const seriesLabel = frontmatter.category || titleCase(seriesFolder);
   return {
-    slug: `${seriesFolder}/${fileStem}`,
+    slug: withoutExt,
     title,
     image: frontmatter.image,
     seriesKey: normalizeKey(seriesLabel),
