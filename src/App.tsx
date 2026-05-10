@@ -17,6 +17,10 @@ import Refutation from './components/Refutation';
 import Protocol from './components/Protocol';
 import Settings from './components/Settings';
 import Ensinos from './components/Ensinos';
+import LandingPage from './components/LandingPage';
+import { useAuth } from './state/AuthContext';
+
+const HIDE_LOGIN_GATE = true;
 
 const PATH_BY_SCREEN: Record<Screen, string> = {
   [Screen.HOME]: '/inicio',
@@ -85,6 +89,7 @@ const resolveScreenFromPath = (path: string) => {
 };
 
 export default function App() {
+  const { isSubscriber } = useAuth();
   const [currentScreen, setCurrentScreen] = useState<Screen>(() => resolveScreenFromPath(window.location.pathname));
   const [transitionType, setTransitionType] = useState<'push' | 'none'>('none');
 
@@ -171,6 +176,11 @@ export default function App() {
         return <HomeDashboard onNavigate={handleNavigate} />;
     }
   };
+
+  // Ocultamento temporário da tela de login sem remover a implementação.
+  if (!HIDE_LOGIN_GATE && !isSubscriber) {
+    return <LandingPage onEnter={() => {}} />;
+  }
 
   return (
     <Layout currentScreen={currentScreen} setScreen={(s) => handleNavigate(s, 'none')}>
