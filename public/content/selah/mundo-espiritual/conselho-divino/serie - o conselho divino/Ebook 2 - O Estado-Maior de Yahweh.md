@@ -1,6 +1,6 @@
 ---
 title: "O Estado-Maior de Yahweh – Micaías e as Decisões do Conselho"
-description: "Quatrocentos profetas garantiam vitória. Apenas um discordou. O terceiro ebook da série O Conselho Divino mergulha em 1 Reis 22 para revelar a face deliberativa da corte celestial — onde Deus consulta Sua assembleia, espíritos recebem missões e o destino de reis é selado. Como discernir a voz do trono em meio ao coro unânime do engano?"
+description: "Quatrocentos profetas garantiam vitória. Apenas um discordou. O segundo ebook da série O Conselho Divino mergulha em 1 Reis 22 para revelar a face deliberativa da corte celestial — onde Deus consulta Sua assembleia, espíritos recebem missões e o destino de reis é selado. Como discernir a voz do trono em meio ao coro unânime do engano?"
 seção: mundo espiritual
 subseção: conselho divino
 category: mundo-espiritual
@@ -9,7 +9,7 @@ image: /image/selah/o estado maior de yahwe.webp
 
 *Rodrigo Ramos — Voz do Deserto*
 
-*Série: O Conselho Divino — Ebook 3 de 10*
+*Série: O Conselho Divino — Ebook 2 de 10*
 
 # O ESTADO-MAIOR DE YAHWEH
 ## Micaías e as Decisões do Conselho

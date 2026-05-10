@@ -1,6 +1,6 @@
 ---
 title: "O Trono e os Serafins – Isaías 6 e a Liturgia da Corte Celestial"
-description: "No ano em que o rei Uzias morreu, Isaías viu o Senhor assentado sobre um alto e sublime trono, com serafins de seis asas clamando Santo, Santo, Santo. O segundo ebook da série O Conselho Divino destrincha a visão mais majestosa do Antigo Testamento, revelando a liturgia perpétua do céu e o que ela significa para a adoração e a missão da Igreja."
+description: "No ano em que o rei Uzias morreu, Isaías viu o Senhor assentado sobre um alto e sublime trono, com serafins de seis asas clamando Santo, Santo, Santo. O terceiro ebook da série O Conselho Divino destrincha a visão mais majestosa do Antigo Testamento, revelando a liturgia perpétua do céu e o que ela significa para a adoração e a missão da Igreja."
 seção: mundo espiritual
 subseção: conselho divino
 category: mundo-espiritual
@@ -9,7 +9,7 @@ image: /image/selah/o trono e os serafins.webp
 
 *Rodrigo Ramos — Voz do Deserto*
 
-*Série: O Conselho Divino — Ebook 2 de 10*
+*Série: O Conselho Divino — Ebook 3 de 10*
 
 # O TRONO E OS SERAFINS
 ## Isaías 6 e a Liturgia da Corte Celestial
