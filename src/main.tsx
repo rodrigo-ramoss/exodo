@@ -3,6 +3,7 @@ import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { ProfileProvider } from './state/ProfileContext.tsx';
+import { AuthProvider } from './state/AuthContext.tsx';
 
 // Register Service Worker
 if ('serviceWorker' in navigator) {
@@ -21,8 +22,10 @@ if ('serviceWorker' in navigator) {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ProfileProvider>
-      <App />
-    </ProfileProvider>
+    <AuthProvider>
+      <ProfileProvider>
+        <App />
+      </ProfileProvider>
+    </AuthProvider>
   </StrictMode>,
 );
