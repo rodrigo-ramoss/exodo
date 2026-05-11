@@ -37,6 +37,14 @@ interface JourneyMeta {
   descricao: string;
 }
 
+interface TestimonyEntry {
+  slug: string;
+  title: string;
+  description: string;
+  image?: string;
+  content: string;
+}
+
 interface DisciplesProps {
   openSlug?: string;
 }
@@ -243,7 +251,7 @@ function discoverDisciplesSteps() {
     const relativePath = normalizedPath.slice(normalizedPath.indexOf(marker) + marker.length);
     const withoutExt = relativePath.replace(CONTENT_FILE_EXTENSION_REGEX, '');
     const parts = withoutExt.split('/').filter(Boolean);
-    if (!parts.length) continue;
+    if (parts.length < 2) continue;
 
     const fileStem = parts[parts.length - 1] ?? '';
     if (!fileStem) continue;
@@ -294,6 +302,37 @@ function discoverDisciplesSteps() {
   }
 
   return withPlaceholders;
+}
+
+function discoverTestimonyEntry(): TestimonyEntry | null {
+  for (const [pathKey, content] of Object.entries(disciplesMarkdownModules)) {
+    const normalizedPath = pathKey.replace(/\\/g, '/');
+    const marker = '/public/content/discipulos/';
+    if (!normalizedPath.includes(marker)) continue;
+
+    const relativePath = normalizedPath.slice(normalizedPath.indexOf(marker) + marker.length);
+    const withoutExt = relativePath.replace(CONTENT_FILE_EXTENSION_REGEX, '');
+    const parts = withoutExt.split('/').filter(Boolean);
+    if (parts.length !== 1) continue;
+
+    const frontmatter = parseFrontmatter(content);
+    const title = (frontmatter.title || titleCase(withoutExt)).trim();
+    const normalizedTitle = normalizeText(title);
+    const normalizedPathLabel = normalizeText(withoutExt);
+    if (!normalizedTitle.includes('a ferida e o ficar') && !normalizedPathLabel.includes('a ferida e o ficar')) {
+      continue;
+    }
+
+    return {
+      slug: toPathSlug(withoutExt),
+      title,
+      description: (frontmatter.description || '').trim(),
+      image: resolveCover(frontmatter, title, withoutExt),
+      content,
+    };
+  }
+
+  return null;
 }
 
 function clearOpenSlugFromUrl() {
@@ -400,6 +439,17 @@ function StepCoverCard({
       }}
       className={`${compact ? 'w-[132px] sm:w-[148px]' : 'w-[156px] sm:w-[198px]'} shrink-0 snap-start text-left ${isPublished ? '' : 'cursor-default'}`}
     >
+      <div className="mb-1.5 flex items-center justify-between gap-2">
+        <span className="rounded-full border border-primary/30 bg-black/45 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.18em] text-primary">
+          {step.badge}
+        </span>
+        {!isPublished && (
+          <span className="rounded-full border border-outline-variant/35 bg-black/45 p-1 text-on-surface-variant/80">
+            <Lock size={10} />
+          </span>
+        )}
+      </div>
+
       <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-primary/25">
         <div className={`absolute inset-0 bg-gradient-to-br ${JOURNEY_BG[journeyId]}`} />
         {step.image && (
@@ -412,33 +462,16 @@ function StepCoverCard({
         )}
         <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_16%_16%,rgba(242,192,141,0.22),transparent_46%)]" />
         <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(242,192,141,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.08)_1px,transparent_1px)] [background-size:18px_18px]" />
-
-        <div className="absolute top-2 left-2 rounded-full border border-primary/30 bg-black/45 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.18em] text-primary">
-          {step.badge}
-        </div>
-
-        {!isPublished && (
-          <div className="absolute top-2 right-2 rounded-full border border-outline-variant/35 bg-black/45 p-1 text-on-surface-variant/80">
-            <Lock size={10} />
-          </div>
-        )}
-
-        <div className="absolute left-2.5 right-2.5 top-9 rounded-lg border border-primary/15 bg-black/55 p-2">
-          <p className="text-[10px] font-black uppercase tracking-[0.08em] text-on-surface leading-snug line-clamp-3">
-            {step.title}
-          </p>
-        </div>
-
-        {!isPublished && (
-          <p className="absolute left-2.5 right-2.5 bottom-2.5 text-center text-[8px] font-bold uppercase tracking-[0.14em] text-primary/90">
-            Em preparação
-          </p>
-        )}
       </div>
 
       <p className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-on-surface-variant leading-relaxed line-clamp-3">
         {step.description}
       </p>
+      {!isPublished && (
+        <p className="mt-1 text-[8px] font-bold uppercase tracking-[0.14em] text-primary/90">
+          Em preparação
+        </p>
+      )}
       <StepProgress slug={step.slug} published={isPublished} />
     </button>
   );
@@ -457,7 +490,7 @@ function JourneyCard({
 }) {
   const Icon = JOURNEY_ICON[journey.id];
   const rowRef = useRef<HTMLDivElement | null>(null);
-  const previewSteps = steps.slice(0, 3);
+  const previewSteps = steps;
 
   const scrollByAmount = (delta: number) => {
     rowRef.current?.scrollBy({ left: delta, behavior: 'smooth' });
@@ -528,6 +561,7 @@ export default function Disciples({ openSlug }: DisciplesProps) {
 
   const stepsByJourney = useMemo(() => discoverDisciplesSteps(), []);
   const allSteps = useMemo(() => Array.from(stepsByJourney.values()).flat(), [stepsByJourney]);
+  const testimony = useMemo(() => discoverTestimonyEntry(), []);
 
   const activeJourney = useMemo(
     () => JOURNEY_META.find((journey) => journey.id === activeJourneyId) || null,
@@ -540,15 +574,13 @@ export default function Disciples({ openSlug }: DisciplesProps) {
     setMarkdownContent(step.content);
   };
 
-  const testimonyCover = useMemo(() => {
-    const candidates = ['a ferida e o ficar', 'meu testemunho', 'o universo e um templo'];
-    for (const candidate of candidates) {
-      for (const [stem, path] of DISCIPLES_IMAGE_LOOKUP.entries()) {
-        if (stem.includes(candidate) || candidate.includes(stem)) return path;
-      }
-    }
-    return undefined;
-  }, []);
+  const testimonyCover = testimony?.image;
+
+  const handleOpenTestimony = () => {
+    if (!testimony) return;
+    setSelectedSlug(testimony.slug);
+    setMarkdownContent(testimony.content);
+  };
 
   useEffect(() => {
     if (!openSlug || selectedSlug) return;
@@ -663,7 +695,11 @@ export default function Disciples({ openSlug }: DisciplesProps) {
             Meu testemunho
           </span>
 
-          <div className="grid grid-cols-1 md:grid-cols-[168px_1fr] gap-3 sm:gap-4 items-start">
+          <button
+            type="button"
+            onClick={handleOpenTestimony}
+            className="w-full text-left grid grid-cols-1 md:grid-cols-[168px_1fr] gap-3 sm:gap-4 items-start"
+          >
             <div className="w-full max-w-[168px]">
               <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-primary/25 bg-black/45">
                 {testimonyCover ? (
@@ -677,13 +713,13 @@ export default function Disciples({ openSlug }: DisciplesProps) {
             <div>
               <p className="text-[10px] sm:text-xs uppercase tracking-[0.16em] text-primary/90 font-black">Meu testemunho de vida, de discipulado e minha missão</p>
               <h3 className="mt-1 font-headline text-lg sm:text-2xl leading-tight font-black text-on-surface">
-                A Ferida e o Ficar — Um Chamado à Resistência no Corpo de Cristo
+                {testimony?.title || 'A Ferida e o Ficar — Um Chamado à Resistência no Corpo de Cristo'}
               </h3>
               <p className="mt-2 text-[11px] sm:text-sm text-on-surface-variant/90 leading-relaxed">
-                Um testemunho pessoal de Rodrigo Ramos sobre depressão, crise institucional, e a decisão radical de permanecer congregando sem se curvar ao sistema religioso. Um manifesto pelo Corpo, contra o isolamento, ancorado na teologia paulina.
+                {testimony?.description || 'Um testemunho pessoal de Rodrigo Ramos sobre depressão, crise institucional, e a decisão radical de permanecer congregando sem se curvar ao sistema religioso. Um manifesto pelo Corpo, contra o isolamento, ancorado na teologia paulina.'}
               </p>
             </div>
-          </div>
+          </button>
         </article>
       </section>
     </div>
