@@ -1,4 +1,4 @@
-import { BookMarked, BookOpenText, GraduationCap, Library, Target, TrendingUp } from 'lucide-react';
+import { BookMarked, BookOpenText, Library, Target, TrendingUp, Wheat } from 'lucide-react';
 import { useUserProgress } from '../hooks/useUserProgress';
 
 function statusLabel(status: 'idle' | 'active' | 'done'): string {
@@ -9,7 +9,7 @@ function statusLabel(status: 'idle' | 'active' | 'done'): string {
 
 const GOAL_ICON = {
   biblia: BookOpenText,
-  mana: GraduationCap,
+  mana: Wheat,
   matrix: BookMarked,
   livraria: Library,
 };

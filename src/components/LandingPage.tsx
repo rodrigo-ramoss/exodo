@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, Library, GraduationCap, BookMarked, Scroll, Check, Star, Lock } from 'lucide-react';
+import { BookOpen, Library, Wheat, BookMarked, Scroll, Check, Star, Lock, UserRound } from 'lucide-react';
 import LoginModal from './LoginModal';
 
 interface LandingPageProps {
@@ -7,7 +7,8 @@ interface LandingPageProps {
 }
 
 const FEATURES = [
-  { icon: GraduationCap, label: 'Maná',        desc: 'Estudos diários e séries bíblicas profundas' },
+  { icon: Wheat,        label: 'Maná',         desc: 'Estudos diários e séries bíblicas profundas' },
+  { icon: UserRound,   label: 'Discípulos',    desc: 'Jornadas guiadas de discipulado e formação' },
   { icon: BookOpen,     label: 'Ensinos',      desc: 'Parábolas, doutrinas e formação interior' },
   { icon: Library,      label: 'Selah',        desc: 'Livraria completa de e-books e séries' },
   { icon: BookMarked,   label: 'Babel',        desc: 'Refutações e análise crítica de doutrinas' },

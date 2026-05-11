@@ -1,4 +1,4 @@
-import { BookMarked, BookOpen, CheckCircle2, Flag, GraduationCap, Highlighter, Library, NotebookPen, Search, TrendingUp } from 'lucide-react';
+import { BookMarked, BookOpen, CheckCircle2, Flag, Highlighter, Library, NotebookPen, Search, TrendingUp, Wheat } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Screen } from '../types';
 import { useProfile } from '../state/ProfileContext';
@@ -21,7 +21,7 @@ const SECTION_NAVIGATION = {
 };
 
 const SECTION_ICON = {
-  MANÁ: GraduationCap,
+  MANÁ: Wheat,
   ENSINOS: BookOpen,
   SELAH: Library,
   BABEL: BookMarked,

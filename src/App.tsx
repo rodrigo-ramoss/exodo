@@ -11,6 +11,7 @@ import ScreenWrapper from './components/ScreenWrapper';
 import HomeDashboard from './components/HomeDashboard';
 import Bible from './components/Bible';
 import Studies from './components/Studies';
+import Disciples from './components/Disciples';
 import EBD from './components/EBD';
 import Bookstore from './components/Bookstore';
 import Refutation from './components/Refutation';
@@ -26,6 +27,7 @@ const PATH_BY_SCREEN: Record<Screen, string> = {
   [Screen.HOME]: '/inicio',
   [Screen.BIBLE]: '/biblia',
   [Screen.MANA]: '/mana',
+  [Screen.DISCIPULOS]: '/discipulos',
   [Screen.ENSINOS]: '/ensinos',
   [Screen.EBD]: '/ebd',
   [Screen.BOOKSTORE]: '/selah',
@@ -41,6 +43,7 @@ const SCREEN_BY_PATH: Record<string, Screen> = {
   '/home': Screen.HOME,
   '/biblia': Screen.BIBLE,
   '/mana': Screen.MANA,
+  '/discipulos': Screen.DISCIPULOS,
   '/ensinos': Screen.ENSINOS,
   '/ebd': Screen.EBD,
   '/selah': Screen.BOOKSTORE,
@@ -153,6 +156,8 @@ export default function App() {
         return <Bible />;
       case Screen.MANA:
         return <Studies openSlug={openSlug} />;
+      case Screen.DISCIPULOS:
+        return <Disciples />;
       case Screen.ENSINOS:
         return <Ensinos openSlug={openSlug} />;
       case Screen.EBD:
