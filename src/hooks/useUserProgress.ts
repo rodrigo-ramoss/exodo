@@ -76,8 +76,8 @@ interface GroupActivity {
 }
 
 export interface LastReadingCard {
-  section: 'mana' | 'selah' | 'babel' | 'ensinos';
-  label: 'MANÁ' | 'SELAH' | 'BABEL' | 'ENSINOS';
+  section: 'mana' | 'selah' | 'babel' | 'ensinos' | 'discipulos';
+  label: 'MANÁ' | 'SELAH' | 'BABEL' | 'ENSINOS' | 'DISCÍPULOS';
   category: Category;
   title: string;
   slug: string;
@@ -94,6 +94,7 @@ export interface UserProgressSnapshot {
   goals: GoalProgress[];
   lastReadings: {
     mana: LastReadingCard;
+    discipulos: LastReadingCard;
     selah: LastReadingCard;
     babel: LastReadingCard;
     ensinos: LastReadingCard;
@@ -145,6 +146,12 @@ const ensinosModules = {
   ...import.meta.glob('/public/content/ensinos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/ensinos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
+const ensinosCoverModules = {
+  ...import.meta.glob('/public/image/ensinos/**/*.webp'),
+  ...import.meta.glob('/public/image/ensinos/**/*.png'),
+  ...import.meta.glob('/public/image/ensinos/**/*.jpg'),
+  ...import.meta.glob('/public/image/ensinos/**/*.jpeg'),
+} as Record<string, unknown>;
 
 const bibleStudyModules = {
   ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.md', { eager: true, query: '?raw', import: 'default' }),
@@ -177,6 +184,17 @@ function normalizeKey(raw: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
+}
+
+function normalizeImageStem(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/\.[a-z0-9]+$/i, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function titleCase(raw: string): string {
@@ -227,6 +245,47 @@ function normalizeMatrixSeriesName(folder: string, fallbackCategory?: string): s
 function clampPct(value: number): number {
   return Math.max(0, Math.min(100, Math.round(value)));
 }
+
+function buildEnsinosCoverLookup(): Map<string, string> {
+  const lookup = new Map<string, string>();
+  for (const pathKey of Object.keys(ensinosCoverModules)) {
+    const normalized = pathKey.replace(/\\/g, '/');
+    if (!normalized.startsWith('/public/image/ensinos/')) continue;
+    const fileName = normalized.split('/').pop();
+    if (!fileName) continue;
+    lookup.set(normalizeImageStem(fileName), normalized.slice('/public'.length));
+  }
+  return lookup;
+}
+
+const ENSINOS_COVER_LOOKUP = buildEnsinosCoverLookup();
+
+function resolveEnsinosProgressCover(title: string, fileStem: string): string | undefined {
+  const titleStem = normalizeImageStem(title.split('—')[0] || title);
+  const fileStemNormalized = normalizeImageStem(fileStem.replace(/^ebook\s*\d+\s*-\s*/i, '').trim());
+
+  const directByTitle = ENSINOS_COVER_LOOKUP.get(titleStem);
+  if (directByTitle) return directByTitle;
+
+  const directByFile = ENSINOS_COVER_LOOKUP.get(fileStemNormalized);
+  if (directByFile) return directByFile;
+
+  for (const [stem, imagePath] of ENSINOS_COVER_LOOKUP.entries()) {
+    if (titleStem.includes(stem) || stem.includes(titleStem) || fileStemNormalized.includes(stem) || stem.includes(fileStemNormalized)) {
+      return imagePath;
+    }
+  }
+
+  return undefined;
+}
+
+const DISCIPULOS_CARDS = [
+  { title: 'Passo 1 - O Universo é um Templo', slug: 'discipulos/passo-1-o-universo-e-um-templo' },
+  { title: 'Passo 2 - O Conselho Celestial', slug: 'discipulos/passo-2-o-conselho-celestial' },
+  { title: 'Passo 3 - Guerra no Invisível', slug: 'discipulos/passo-3-guerra-no-invisivel' },
+  { title: 'Passo 4 - Sacerdócio do Discípulo', slug: 'discipulos/passo-4-sacerdocio-do-discipulo' },
+  { title: 'Passo 5 - Visão e Perseverança', slug: 'discipulos/passo-5-visao-e-perseveranca' },
+] as const;
 
 function resolveItemPct(category: Category, slug: string): number {
   if (pm.isRead(category, slug)) return 100;
@@ -289,6 +348,34 @@ function evaluateGroupActivity(category: Category, group: GoalGroup, weekStartMs
   };
 }
 
+function evaluateGroupLifetime(category: Category, group: GoalGroup): GroupActivity {
+  let completed = 0;
+  let inProgress = 0;
+  let latestActivityMs = 0;
+
+  for (const slug of group.slugs) {
+    const readAtMs = toMs(pm.getLastReadAt(category, slug));
+    const activityMs = Math.max(toMs(pm.getLastActivity(category, slug)), readAtMs);
+    const progress = resolveItemPct(category, slug);
+
+    if (progress >= 100) {
+      completed += 1;
+    } else if (progress > 0) {
+      inProgress += 1;
+    }
+
+    latestActivityMs = Math.max(latestActivityMs, activityMs);
+  }
+
+  return {
+    label: group.label,
+    total: group.slugs.length,
+    completed,
+    inProgress,
+    latestActivityMs,
+  };
+}
+
 function computeWeeklyGoal(
   category: Category,
   groups: GoalGroup[],
@@ -310,6 +397,38 @@ function computeWeeklyGoal(
     .sort((a, b) => b.latestActivityMs - a.latestActivityMs)[0];
 
   if (!active) {
+    const lifetimeActive = groups
+      .map((group) => evaluateGroupLifetime(category, group))
+      .filter((group) => group.total > 0 && (group.completed > 0 || group.inProgress > 0))
+      .sort((a, b) => b.latestActivityMs - a.latestActivityMs)[0];
+
+    if (lifetimeActive) {
+      const lifetimeDone = lifetimeActive.completed >= lifetimeActive.total && lifetimeActive.total > 0;
+      const lifetimeWeighted = clampPct(((lifetimeActive.completed + lifetimeActive.inProgress * 0.35) / lifetimeActive.total) * 100);
+
+      if (lifetimeDone) {
+        return {
+          key: options.key,
+          label: options.label,
+          target: options.target,
+          status: 'done',
+          progressPct: 100,
+          summary: `Meta concluída em ${lifetimeActive.label}.`,
+          hint: `${lifetimeActive.completed}/${lifetimeActive.total} ${options.unitName} concluídas no histórico.`,
+        };
+      }
+
+      return {
+        key: options.key,
+        label: options.label,
+        target: options.target,
+        status: 'active',
+        progressPct: lifetimeWeighted,
+        summary: `Sem avanço nesta semana em ${lifetimeActive.label}.`,
+        hint: `${lifetimeActive.completed}/${lifetimeActive.total} ${options.unitName} concluídas no histórico.`,
+      };
+    }
+
     return {
       key: options.key,
       label: options.label,
@@ -479,10 +598,17 @@ const ensinosEntries: EnsinosEntry[] = Object.entries(ensinosModules).map(([path
   const firstHeading = markdown.match(/^#\s+(.+)$/m)?.[1]?.trim();
   const title = frontmatter.title || firstHeading || fileStem || 'Estudo';
   const seriesLabel = frontmatter.category || titleCase(seriesFolder);
+  const imageFromMeta = (frontmatter.image || frontmatter.cover || frontmatter.capa || '').trim();
+  const image =
+    imageFromMeta.startsWith('/')
+      ? imageFromMeta.startsWith('/public/')
+        ? imageFromMeta.slice('/public'.length)
+        : imageFromMeta
+      : resolveEnsinosProgressCover(title, fileStem);
   return {
     slug: withoutExt,
     title,
-    image: frontmatter.image,
+    image,
     seriesKey: normalizeKey(seriesLabel),
     seriesLabel,
   };
@@ -570,6 +696,10 @@ export function useUserProgress(): UserProgressSnapshot {
     () => ensinosEntries.map((item) => ({ title: item.title, slug: item.slug, image: item.image })),
     [],
   );
+  const discipulosCards = useMemo(
+    () => DISCIPULOS_CARDS.map((item) => ({ title: item.title, slug: item.slug })),
+    [],
+  );
 
   const groupedSelahSeries = useMemo(() => {
     const grouped = new Map<string, GoalGroup>();
@@ -613,6 +743,11 @@ export function useUserProgress(): UserProgressSnapshot {
     [manaCards],
   );
 
+  const groupedDiscipulosEbooks = useMemo(
+    () => discipulosCards.map((item) => ({ label: item.title, slugs: [item.slug] })),
+    [discipulosCards],
+  );
+
   const goals = useMemo(
     () => [
       computeWeeklyGoal('livraria', groupedSelahSeries, weekStartMs, {
@@ -643,8 +778,16 @@ export function useUserProgress(): UserProgressSnapshot {
         itemName: 'série',
         unitName: 'volumes',
       }),
+      computeWeeklyGoal('discipulos', groupedDiscipulosEbooks, weekStartMs, {
+        key: 'meta-discipulos',
+        label: '1 e-book em Discípulos',
+        target: '1 e-book em Discípulos',
+        itemName: 'e-book',
+        unitName: 'e-books',
+      }),
     ],
     [
+      groupedDiscipulosEbooks,
       groupedBabelSeries,
       groupedEnsinosSeries,
       groupedManaEbooks,
@@ -722,11 +865,12 @@ export function useUserProgress(): UserProgressSnapshot {
   const lastReadings = useMemo(
     () => ({
       mana: pickLastReading('mana', 'MANÁ', 'mana', manaCards),
+      discipulos: pickLastReading('discipulos', 'DISCÍPULOS', 'discipulos', discipulosCards),
       selah: pickLastReading('selah', 'SELAH', 'livraria', selahCards),
       babel: pickLastReading('babel', 'BABEL', 'refutacao', babelCards),
       ensinos: pickLastReading('ensinos', 'ENSINOS', 'ensinos', ensinosCards),
     }),
-    [babelCards, ensinosCards, manaCards, selahCards],
+    [babelCards, discipulosCards, ensinosCards, manaCards, selahCards],
   );
 
   const countsByCategory = (category: Category, slugs: string[]) => {
@@ -748,11 +892,12 @@ export function useUserProgress(): UserProgressSnapshot {
     const livraria = countsByCategory('livraria', selahCards.map((item) => item.slug));
     const babel = countsByCategory('refutacao', babelCards.map((item) => item.slug));
     const ensinos = countsByCategory('ensinos', ensinosCards.map((item) => item.slug));
-    const completed = mana.completed + livraria.completed + babel.completed + ensinos.completed;
-    const inProgress = mana.inProgress + livraria.inProgress + babel.inProgress + ensinos.inProgress;
+    const discipulos = countsByCategory('discipulos', discipulosCards.map((item) => item.slug));
+    const completed = mana.completed + livraria.completed + babel.completed + ensinos.completed + discipulos.completed;
+    const inProgress = mana.inProgress + livraria.inProgress + babel.inProgress + ensinos.inProgress + discipulos.inProgress;
     const startedSeries = Object.values(lastReadings).filter((item) => item.status !== 'Aguardando').length;
     return { completed, inProgress, startedSeries };
-  }, [babelCards, ensinosCards, lastReadings, manaCards, selahCards]);
+  }, [babelCards, discipulosCards, ensinosCards, lastReadings, manaCards, selahCards]);
 
   const hasAnyReadingStarted = totals.completed > 0 || totals.inProgress > 0;
 

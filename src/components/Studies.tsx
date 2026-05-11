@@ -688,12 +688,9 @@ export default function Studies({ openSlug }: StudiesProps) {
             Cada tenda conduz uma área da sua jornada. Escolha por onde deseja ser alimentado hoje.
           </p>
 
-          <div className="mt-3 rounded-2xl border border-primary/25 bg-black/20 px-3 py-3">
-            <label htmlFor="mana-search" className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/90">
-              Busca Maná
-            </label>
-            <div className="mt-2 flex items-center gap-2 rounded-xl border border-outline-variant/35 bg-black/25 px-3">
-              <Search size={14} className="text-primary/80 shrink-0" />
+          <div className="mt-3 rounded-2xl border border-primary/40 bg-gradient-to-br from-[#201912] via-[#161310] to-[#0f0f0f] px-3 py-3 shadow-[0_0_0_1px_rgba(242,192,141,0.12),0_12px_28px_rgba(0,0,0,0.32)] animate-[pulse_3.4s_ease-in-out_infinite]">
+            <div className="flex items-center gap-2 rounded-xl border border-primary/35 bg-black/35 px-3 transition-all duration-300 focus-within:border-primary/70 focus-within:shadow-[0_0_0_1px_rgba(242,192,141,0.45),0_0_16px_rgba(242,192,141,0.2)]">
+              <Search size={14} className="text-primary/85 shrink-0" />
               <input
                 id="mana-search"
                 value={manaSearchQuery}
@@ -705,8 +702,8 @@ export default function Studies({ openSlug }: StudiesProps) {
                   event.preventDefault();
                   void handleOpenTema(first.tema);
                 }}
-                placeholder="Buscar por tema, título ou conteúdo (ex: depressão)"
-                className="w-full bg-transparent py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none"
+                placeholder="Busque por palavra (ex: oração, jejum, fortalezas)"
+                className="w-full bg-transparent py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant/70 focus:outline-none"
               />
               {manaSearchQuery && (
                 <button
@@ -718,9 +715,6 @@ export default function Studies({ openSlug }: StudiesProps) {
                 </button>
               )}
             </div>
-            <p className="mt-1 text-[10px] text-on-surface-variant/70">
-              Busca em títulos e no conteúdo dos estudos de Maná.
-            </p>
           </div>
         </div>
 

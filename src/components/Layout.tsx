@@ -15,10 +15,10 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
 
   const navItems = [
     { id: Screen.HOME, label: 'INÍCIO', icon: House },
-    { id: Screen.MANA, label: 'MANÁ', icon: Wheat },
     { id: Screen.DISCIPULOS, label: 'DISCÍP.', icon: UserRound },
-    { id: Screen.ENSINOS, label: 'ENSINOS', icon: BookOpen },
+    { id: Screen.MANA, label: 'MANÁ', icon: Wheat },
     { id: Screen.BOOKSTORE, label: 'SELAH', icon: Library },
+    { id: Screen.ENSINOS, label: 'ENSINOS', icon: BookOpen },
     { id: Screen.REFUTACAO, label: 'BABEL', icon: BookMarked },
   ];
 

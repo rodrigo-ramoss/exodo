@@ -1,4 +1,4 @@
-import { BookMarked, BookOpen, CheckCircle2, Flag, Highlighter, Library, NotebookPen, Search, TrendingUp, Wheat } from 'lucide-react';
+import { BookMarked, BookOpen, CheckCircle2, Flag, Highlighter, Library, NotebookPen, Search, TrendingUp, UserRound, Wheat } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Screen } from '../types';
 import { useProfile } from '../state/ProfileContext';
@@ -15,6 +15,7 @@ interface HomeDashboardProps {
 
 const SECTION_NAVIGATION = {
   MANÁ: Screen.MANA,
+  'DISCÍPULOS': Screen.DISCIPULOS,
   ENSINOS: Screen.ENSINOS,
   SELAH: Screen.BOOKSTORE,
   BABEL: Screen.REFUTACAO,
@@ -22,6 +23,7 @@ const SECTION_NAVIGATION = {
 
 const SECTION_ICON = {
   MANÁ: Wheat,
+  'DISCÍPULOS': UserRound,
   ENSINOS: BookOpen,
   SELAH: Library,
   BABEL: BookMarked,
@@ -49,6 +51,7 @@ type ReaderHighlightEntry = {
 
 const CATEGORY_TO_SCREEN: Record<string, Screen> = {
   mana: Screen.MANA,
+  discipulos: Screen.DISCIPULOS,
   livraria: Screen.BOOKSTORE,
   refutacao: Screen.REFUTACAO,
   ensinos: Screen.ENSINOS,
@@ -59,6 +62,7 @@ const CATEGORY_TO_SCREEN: Record<string, Screen> = {
 
 function inferScreenBySlug(slug: string): Screen {
   const lower = slug.toLowerCase();
+  if (lower.includes('discipulos/')) return Screen.DISCIPULOS;
   if (lower.includes('vida-espiritual') || lower.includes('vida-interior') || lower.includes('vida-exterior')) return Screen.MANA;
   if (lower.includes('eixo-')) return Screen.BIBLE;
   if (lower.includes('matrix') || lower.includes('quem-controla')) return Screen.REFUTACAO;
@@ -198,6 +202,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
 
   const continueCards = [
     lastReadings.mana,
+    lastReadings.discipulos,
     lastReadings.ensinos,
     lastReadings.selah,
     lastReadings.babel,

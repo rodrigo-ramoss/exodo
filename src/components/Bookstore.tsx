@@ -3918,10 +3918,10 @@ export default function Bookstore({
               SELAH
             </h1>
             <p className="text-xs sm:text-base text-on-surface font-semibold mb-1.5 sm:mb-2">
-              Biblioteca editorial para discernimento, formação doutrinária e leitura profética.
+              Biblioteca para discernir os tempos, ler o invisível e firmar a escatologia bíblica.
             </p>
             <p className="text-[11px] sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
-              Navegue por subseções temáticas com séries e trilogias aprofundadas. Cada frente organiza os conteúdos para facilitar progresso e leitura contínua.
+              Em Selah, você encontra séries sobre mundo espiritual, céus, guerra invisível e governo do Reino. Cada trilha aprofunda o entendimento profético para interpretar a história à luz da Palavra.
             </p>
           </div>
         </header>
@@ -3929,17 +3929,9 @@ export default function Bookstore({
 
       <section className="px-4 sm:px-6 pb-8 sm:pb-10">
         <div className="mb-3 sm:mb-4">
-          <h2 className="font-headline text-xl sm:text-3xl font-black tracking-tight text-on-surface">Escolha sua seção</h2>
-          <p className="text-xs text-on-surface-variant mt-1">
-            Selecione a frente editorial que deseja explorar dentro da biblioteca Selah.
-          </p>
-
-          <div className="mt-3 rounded-2xl border border-primary/25 bg-black/20 px-3 py-3">
-            <label htmlFor="selah-search" className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/90">
-              Busca Selah
-            </label>
-            <div className="mt-2 flex items-center gap-2 rounded-xl border border-outline-variant/35 bg-black/25 px-3">
-              <Search size={14} className="text-primary/80 shrink-0" />
+          <div className="rounded-2xl border border-primary/40 bg-gradient-to-br from-[#201912] via-[#161310] to-[#0f0f0f] px-3 py-3 shadow-[0_0_0_1px_rgba(242,192,141,0.12),0_12px_28px_rgba(0,0,0,0.32)] animate-[pulse_3.4s_ease-in-out_infinite]">
+            <div className="flex items-center gap-2 rounded-xl border border-primary/35 bg-black/35 px-3 transition-all duration-300 focus-within:border-primary/70 focus-within:shadow-[0_0_0_1px_rgba(242,192,141,0.45),0_0_16px_rgba(242,192,141,0.2)]">
+              <Search size={14} className="text-primary/85 shrink-0" />
               <input
                 id="selah-search"
                 value={selahSearchQuery}
@@ -3951,8 +3943,8 @@ export default function Bookstore({
                   event.preventDefault();
                   void handleSelectBook(first.book.slug);
                 }}
-                placeholder="Buscar por tema, série, título ou conteúdo (ex: pecado)"
-                className="w-full bg-transparent py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none"
+                placeholder="Busque por palavra (ex: pecado, belial, demônios)"
+                className="w-full bg-transparent py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant/70 focus:outline-none"
               />
               {selahSearchQuery && (
                 <button
@@ -3964,9 +3956,6 @@ export default function Bookstore({
                 </button>
               )}
             </div>
-            <p className="mt-1 text-[10px] text-on-surface-variant/70">
-              Busca em títulos, séries e dentro do conteúdo dos ebooks de Selah.
-            </p>
           </div>
         </div>
 
