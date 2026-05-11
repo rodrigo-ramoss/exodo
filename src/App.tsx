@@ -157,7 +157,7 @@ export default function App() {
       case Screen.MANA:
         return <Studies openSlug={openSlug} />;
       case Screen.DISCIPULOS:
-        return <Disciples />;
+        return <Disciples openSlug={openSlug} />;
       case Screen.ENSINOS:
         return <Ensinos openSlug={openSlug} />;
       case Screen.EBD:

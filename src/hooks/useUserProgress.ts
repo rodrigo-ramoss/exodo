@@ -152,6 +152,18 @@ const ensinosCoverModules = {
   ...import.meta.glob('/public/image/ensinos/**/*.jpg'),
   ...import.meta.glob('/public/image/ensinos/**/*.jpeg'),
 } as Record<string, unknown>;
+const discipulosModules = {
+  ...import.meta.glob('/public/content/discipulos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/discipulos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/discipulos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/discipulos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+const discipulosCoverModules = {
+  ...import.meta.glob('/public/image/discipulos/**/*.webp'),
+  ...import.meta.glob('/public/image/discipulos/**/*.png'),
+  ...import.meta.glob('/public/image/discipulos/**/*.jpg'),
+  ...import.meta.glob('/public/image/discipulos/**/*.jpeg'),
+} as Record<string, unknown>;
 
 const bibleStudyModules = {
   ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.md', { eager: true, query: '?raw', import: 'default' }),
@@ -195,6 +207,22 @@ function normalizeImageStem(raw: string): string {
     .replace(/[^a-z0-9]+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function toPathSlug(raw: string): string {
+  const normalized = raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9/]+/g, '-')
+    .replace(/\/+/g, '/')
+    .replace(/-+/g, '-')
+    .replace(/(^-|-$)/g, '');
+  return normalized
+    .split('/')
+    .map((part) => part.replace(/(^-|-$)/g, ''))
+    .filter(Boolean)
+    .join('/');
 }
 
 function titleCase(raw: string): string {
@@ -259,6 +287,18 @@ function buildEnsinosCoverLookup(): Map<string, string> {
 }
 
 const ENSINOS_COVER_LOOKUP = buildEnsinosCoverLookup();
+const DISCIPULOS_COVER_LOOKUP = (() => {
+  const lookup = new Map<string, string>();
+  for (const pathKey of Object.keys(discipulosCoverModules)) {
+    const normalized = pathKey.replace(/\\/g, '/');
+    if (!normalized.startsWith('/public/image/discipulos/')) continue;
+    const fileName = normalized.split('/').pop();
+    if (!fileName) continue;
+    lookup.set(normalizeImageStem(fileName), normalized.slice('/public'.length));
+  }
+  return lookup;
+})();
+const DISCIPULOS_COVER_PATHS = new Set(Array.from(DISCIPULOS_COVER_LOOKUP.values()));
 
 function resolveEnsinosProgressCover(title: string, fileStem: string): string | undefined {
   const titleStem = normalizeImageStem(title.split('—')[0] || title);
@@ -279,13 +319,33 @@ function resolveEnsinosProgressCover(title: string, fileStem: string): string | 
   return undefined;
 }
 
-const DISCIPULOS_CARDS = [
-  { title: 'Passo 1 - O Universo é um Templo', slug: 'discipulos/passo-1-o-universo-e-um-templo' },
-  { title: 'Passo 2 - O Conselho Celestial', slug: 'discipulos/passo-2-o-conselho-celestial' },
-  { title: 'Passo 3 - Guerra no Invisível', slug: 'discipulos/passo-3-guerra-no-invisivel' },
-  { title: 'Passo 4 - Sacerdócio do Discípulo', slug: 'discipulos/passo-4-sacerdocio-do-discipulo' },
-  { title: 'Passo 5 - Visão e Perseverança', slug: 'discipulos/passo-5-visao-e-perseveranca' },
-] as const;
+function resolveDiscipulosProgressCover(frontmatter: Record<string, string>, title: string, fileStem: string): string | undefined {
+  const fromMeta = (frontmatter.image || frontmatter.cover || frontmatter.capa || '').trim();
+  if (fromMeta.startsWith('/')) {
+    const normalizedMeta = fromMeta.startsWith('/public/') ? fromMeta.slice('/public'.length) : fromMeta;
+    if (DISCIPULOS_COVER_PATHS.has(normalizedMeta)) return normalizedMeta;
+    const metaStem = normalizeImageStem(normalizedMeta.split('/').pop() || normalizedMeta);
+    const mappedFromMeta = DISCIPULOS_COVER_LOOKUP.get(metaStem);
+    if (mappedFromMeta) return mappedFromMeta;
+  }
+
+  const titleStem = normalizeImageStem(title.split('—')[0] || title);
+  const fileStemNormalized = normalizeImageStem(fileStem.replace(/^passo\s*\d+\s*-\s*/i, '').trim());
+
+  const directByTitle = DISCIPULOS_COVER_LOOKUP.get(titleStem);
+  if (directByTitle) return directByTitle;
+
+  const directByFile = DISCIPULOS_COVER_LOOKUP.get(fileStemNormalized);
+  if (directByFile) return directByFile;
+
+  for (const [stem, imagePath] of DISCIPULOS_COVER_LOOKUP.entries()) {
+    if (titleStem.includes(stem) || stem.includes(titleStem) || fileStemNormalized.includes(stem) || stem.includes(fileStemNormalized)) {
+      return imagePath;
+    }
+  }
+
+  return undefined;
+}
 
 function resolveItemPct(category: Category, slug: string): number {
   if (pm.isRead(category, slug)) return 100;
@@ -615,6 +675,24 @@ const ensinosEntries: EnsinosEntry[] = Object.entries(ensinosModules).map(([path
 });
 
 const ensinosSlugs = ensinosEntries.map((entry) => entry.slug);
+const discipulosEntries = Object.entries(discipulosModules)
+  .map(([path, markdown]) => {
+    const normalizedPath = path.replace(/\\/g, '/');
+    const marker = '/public/content/discipulos/';
+    if (!normalizedPath.includes(marker)) return null;
+    const relative = normalizedPath.slice(normalizedPath.indexOf(marker) + marker.length);
+    const withoutExt = relative.replace(CONTENT_FILE_EXTENSION_REGEX, '');
+    const parts = withoutExt.split('/').filter(Boolean);
+    const fileStem = parts[parts.length - 1] ?? '';
+    if (!fileStem) return null;
+
+    const frontmatter = parseFrontmatter(markdown);
+    const title = (frontmatter.title || titleCase(fileStem)).trim();
+    const slug = toPathSlug(withoutExt);
+    const image = resolveDiscipulosProgressCover(frontmatter, title, fileStem);
+    return { title, slug, image };
+  })
+  .filter(Boolean) as Array<{ title: string; slug: string; image?: string }>;
 
 export function useUserProgress(): UserProgressSnapshot {
   const weekStartMs = useMemo(() => getWeekStartMs(), []);
@@ -697,7 +775,7 @@ export function useUserProgress(): UserProgressSnapshot {
     [],
   );
   const discipulosCards = useMemo(
-    () => DISCIPULOS_CARDS.map((item) => ({ title: item.title, slug: item.slug })),
+    () => discipulosEntries.map((item) => ({ title: item.title, slug: item.slug, image: item.image })),
     [],
   );
 
