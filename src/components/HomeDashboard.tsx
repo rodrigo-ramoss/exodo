@@ -352,6 +352,16 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
   } = useUserProgress();
 
   const updatesCards = useMemo<SectionUpdatesCard[]>(() => {
+    const fallbackCards = HOME_UPDATES_SECTIONS_META.map((meta) => ({
+      ...meta,
+      items: [
+        { key: `${meta.id}-fallback-1`, label: 'Atualização em preparação', updatedAt: 0, updatedLabel: 'Em breve', isPlaceholder: true },
+        { key: `${meta.id}-fallback-2`, label: 'Atualização em preparação', updatedAt: 0, updatedLabel: 'Em breve', isPlaceholder: true },
+        { key: `${meta.id}-fallback-3`, label: 'Atualização em preparação', updatedAt: 0, updatedLabel: 'Em breve', isPlaceholder: true },
+      ],
+    }));
+
+    try {
     const sectionMaps: Record<UpdatesSectionId, Map<string, SeriesUpdateItem>> = {
       mana: new Map(),
       discipulos: new Map(),
@@ -395,18 +405,21 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
       }
     };
 
-    for (const item of manaIndexData || []) {
-      const title = (item.title || '').trim();
+    const manaItems = Array.isArray(manaIndexData) ? manaIndexData : [];
+    const selahItems = Array.isArray(selahIndexData) ? selahIndexData : [];
+
+    for (const item of manaItems) {
+      const title = String(item?.title || '').trim();
       const prefix = title.split(' - ')[0]?.trim() || '';
       const seriesLabel = normalizeLookupText(prefix) === 'vida com deus'
         ? 'Trilogia — O Caminho do Véu Rasgado'
-        : (item.category?.trim() ? `Coleção — ${item.category.trim()}` : (prefix || 'Coleção Maná'));
-      upsertSeries('mana', seriesLabel, parseDateMs(item.date), item.slug, item.image);
+        : (String(item?.category || '').trim() ? `Coleção — ${String(item?.category || '').trim()}` : (prefix || 'Coleção Maná'));
+      upsertSeries('mana', seriesLabel, parseDateMs(String(item?.date || '')), String(item?.slug || ''), String(item?.image || ''));
     }
 
-    for (const item of selahIndexData || []) {
-      const seriesLabel = (item.category || '').trim() || 'Coleção Selah';
-      upsertSeries('selah', seriesLabel, parseDateMs(item.date), item.slug, item.image);
+    for (const item of selahItems) {
+      const seriesLabel = String(item?.category || '').trim() || 'Coleção Selah';
+      upsertSeries('selah', seriesLabel, parseDateMs(String(item?.date || '')), String(item?.slug || ''), String(item?.image || ''));
     }
 
     const moduleSources: Array<{ section: UpdatesSectionId; modules: Record<string, string>; marker: string }> = [
@@ -439,7 +452,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
       }
     }
 
-    return HOME_UPDATES_SECTIONS_META.map((meta) => {
+      return HOME_UPDATES_SECTIONS_META.map((meta) => {
       const sorted = Array.from(sectionMaps[meta.id].values())
         .sort((a, b) => {
           if (b.updatedAt !== a.updatedAt) return b.updatedAt - a.updatedAt;
@@ -462,6 +475,9 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
         items: sorted,
       };
     });
+    } catch {
+      return fallbackCards;
+    }
   }, [manaIndexData, selahIndexData]);
 
   const continueCards = [

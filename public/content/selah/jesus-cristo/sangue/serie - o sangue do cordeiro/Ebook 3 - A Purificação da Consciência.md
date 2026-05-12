@@ -4,7 +4,7 @@ description: "O sangue de Jesus não apenas perdoa: ele limpa o tribunal interio
 seção: selah
 category: jesus cristo
 subcategory: sangue
-image: https://via.placeholder.com/1600x2400?text=O+Sangue+do+Cordeiro+Vol+3
+image: /image/selah/a purificacao da consciencia.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

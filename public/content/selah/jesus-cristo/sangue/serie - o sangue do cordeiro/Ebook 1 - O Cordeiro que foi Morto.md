@@ -4,7 +4,7 @@ description: "A sombra do cordeiro pascal, o carneiro de Isaque e os sacrifício
 seção: selah
 category: jesus cristo
 subcategory: sangue
-image: https://via.placeholder.com/1600x2400?text=Capa+O+Sangue+do+Cordeiro+Vol+1
+image: /image/selah/o cordeiro que foi morto.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

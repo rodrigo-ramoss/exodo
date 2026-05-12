@@ -4,7 +4,7 @@ description: "Não é a quantidade, mas a qualidade. O sangue de Cristo é preci
 seção: selah
 category: jesus cristo
 subcategory: sangue
-image: https://via.placeholder.com/1600x2400?text=O+Sangue+do+Cordeiro+Vol+2
+image: /image/selah/a natureza do sangue  derramada.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

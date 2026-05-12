@@ -4,7 +4,7 @@ description: "Se as coisas da terra são sombras das celestiais, o corpo humano 
 seção: Selah
 category: Antropologia do Reino
 subseção: Corpo Humano
-image: A Sombra do Trono
+image: /image/selah/a sombra do trono.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

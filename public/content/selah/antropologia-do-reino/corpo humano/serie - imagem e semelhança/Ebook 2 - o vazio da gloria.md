@@ -4,7 +4,7 @@ description: "O que aconteceu com o corpo humano quando Adão pecou? A troca tr�
 seção: Selah
 category: Antropologia do Reino
 subseção: Corpo Humano
-image: O Vazio da Glória
+image: /image/selah/o vazio da gloria.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

@@ -4,7 +4,7 @@ description: "A humanidade não foi criada como uma alma prisioneira, mas como a
 seção: Selah
 category: Antropologia do Reino
 subseção: Corpo Humano
-image: O Projeto Original
+image: /image/selah/o projeto original.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*
