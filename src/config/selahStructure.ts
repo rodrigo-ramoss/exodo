@@ -86,9 +86,9 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     id: 'antropologia-do-reino',
     slug: 'antropologia-do-reino',
     title: 'ANTROPOLOGIA DO REINO',
-    description: 'Estudos sobre identidade humana, vocação e propósito no Reino de Deus.',
+    description: 'Estudos sobre a identidade humana à luz do Reino: corpo, alma, espírito, vocação, limites e propósito segundo as Escrituras.',
     order: 14,
-    subsections: buildSubsections('antropologia-do-reino', ['Alimentação', 'Corpo Homuno']),
+    subsections: buildSubsections('antropologia-do-reino', ['Alimentação', 'Corpo Humano', 'Sexo']),
   },
   {
     id: 'historia-da-igreja',
@@ -204,7 +204,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     id: 'mundo-espiritual',
     slug: 'mundo-espiritual',
     title: 'MUNDO ESPIRITUAL',
-    description: 'Conselho celestial, hierarquias e geografia invisível.',
+    description: 'Conselho celestial, hierarquias e geografia invisível, incluindo uma frente dedicada a expor conhecimentos ocultos, ocultismo e esoterismo como instrumentos de engano e controle espiritual.',
     order: 6,
     subsections: buildSubsections('mundo-espiritual', [
       'Vigilantes',
@@ -217,6 +217,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
       'Sheol/Tártaro/Inferno',
       'Hierarquia angelical',
       'Hierarquia demoníaca',
+      'Ensinos Demoníacos',
       'Céus/Mundos',
     ]),
   },
@@ -329,6 +330,10 @@ export function resolveSelahSubsectionTitle(themeTitle: SelahThemeTitle, value: 
       derrota: 'Hierarquia demoníaca',
       'hierarquia-demoniaca': 'Hierarquia demoníaca',
       'hierarquia-angelical': 'Hierarquia angelical',
+      ocultismo: 'Ensinos Demoníacos',
+      esoterismo: 'Ensinos Demoníacos',
+      'conhecimentos-ocultos': 'Ensinos Demoníacos',
+      'ensinos-demoniacos': 'Ensinos Demoníacos',
     };
     const aliasTitle = mundoAliases[normalized];
     if (aliasTitle) return aliasTitle;
@@ -396,6 +401,10 @@ export function resolveSelahSubsectionSlug(themeTitle: SelahThemeTitle, value: s
       derrota: 'hierarquia-demoniaca',
       'hierarquia-demoniaca': 'hierarquia-demoniaca',
       'hierarquia-angelical': 'hierarquia-angelical',
+      ocultismo: 'ensinos-demoniacos',
+      esoterismo: 'ensinos-demoniacos',
+      'conhecimentos-ocultos': 'ensinos-demoniacos',
+      'ensinos-demoniacos': 'ensinos-demoniacos',
     };
     const aliasSlug = mundoAliasSlugs[normalized];
     if (aliasSlug) return aliasSlug;

@@ -499,6 +499,7 @@ function pickCategoryByFolder(folder: string): string {
     ['serie - a refeicao que virou missa', 'Série — A Refeição que Virou Missa'],
     ['serie - a imersao que virou aspersao', 'Série — A Imersão que Virou Aspersão'],
     ['serie - o corpo que virou empresa', 'Série — O Corpo que Virou Empresa'],
+    ['serie - teologia cosmica do sexo', 'Série — O Jardim e a Serpente'],
     ['serie - o codigo das eras', 'Série — O Código das Eras'],
     ['serie - parabolas de jesus', 'Série — Parábolas de Jesus'],
     ['serie - ruah - a pessoa esquecida da divindade', 'Série — Ruah — A Pessoa Esquecida da Divindade'],
@@ -566,6 +567,7 @@ function normalizeBookCategory(rawCategory: string | undefined, seriesFolder: st
   if (normalizedSeriesFolder === 'a refeicao que virou missa') return 'Série — A Refeição que Virou Missa';
   if (normalizedSeriesFolder === 'a imersao que virou aspersao') return 'Série — A Imersão que Virou Aspersão';
   if (normalizedSeriesFolder === 'o corpo que virou empresa') return 'Série — O Corpo que Virou Empresa';
+  if (normalizedSeriesFolder === 'teologia cosmica do sexo') return 'Série — O Jardim e a Serpente';
   if (normalizedSeriesFolder === 'a verdadeira historia da igreja') return 'Série — A Verdadeira História da Igreja';
   if (normalizedSeriesFolder === 'o canon oculto') return 'Série — O Cânon Oculto';
   if (normalizedSeriesFolder === 'o veu rasgado') return 'Trilogia — O Véu Rasgado';
@@ -1498,6 +1500,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Série — Como nos Dias de Noé':             'ESPÍRITO SANTO',
   'Série — Ruah — A Pessoa Esquecida da Divindade': 'ESPÍRITO SANTO',
   'Série — A Blasfêmia contra o Ruah':        'ESPÍRITO SANTO',
+  'Série — O Jardim e a Serpente':            'ANTROPOLOGIA DO REINO',
   'Trilogia — O Mapa da Tempestade':          'ANTISSISTEMA',
   'Trilogia — O Estrangeiro Próspero':        'ANTISSISTEMA',
   'Trilogia — A Ciência dos Tempos':          'ANTISSISTEMA',
@@ -1638,6 +1641,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — Ruah — A Pessoa Esquecida da Divindade': 'Ruah',
   'Série — A Blasfêmia contra o Ruah':        'A Blasfêmia contra o Ruah',
   'Série — O Conselho Divino':                'O Conselho Divino',
+  'Série — O Jardim e a Serpente':            'O Jardim e a Serpente',
   'Série — A Verdadeira História da Igreja':  'A Verdadeira História da Igreja',
   'Série — O Código das Eras':                'O Código das Eras',
   'Série — Parábolas de Jesus':               'Parábolas de Jesus',
@@ -1673,6 +1677,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Série — Ruah — A Pessoa Esquecida da Divindade': 'Uma série sobre a pessoa e a obra do Espírito Santo: criação, selo, guia, santificação e nova criação em Cristo.',
   'Série — A Blasfêmia contra o Ruah': 'Estudos sobre o ensino de Jesus a respeito da blasfêmia contra o Espírito e o discernimento bíblico desse tema.',
   'Série — O Conselho Divino': 'Uma série bíblica sobre a assembleia celestial de Yahweh: estrutura da corte do céu, juízo sobre os poderes das nações e participação dos santos no governo do Reino em Cristo.',
+  'Série — O Jardim e a Serpente': 'Uma série sobre a teologia bíblica do sexo: projeto original de Deus, corrupção espiritual do desejo e restauração da aliança no corpo.',
   'Série — A Verdadeira História da Igreja': 'Uma arqueologia da fé cristã primitiva, revelando o caminho entre a ekklesia viva e a institucionalização religiosa ao longo dos séculos.',
   'Série — O Cânon Oculto': 'Uma imersão nos bastidores da formação bíblica, nos textos suprimidos e nas leituras que ficaram fora da narrativa oficial.',
   'Trilogia — O Mapa da Tempestade': 'Um diagnóstico de ruptura civilizacional e um mapa prático para atravessar colapsos sistêmicos com lucidez, preparo e fé.',
