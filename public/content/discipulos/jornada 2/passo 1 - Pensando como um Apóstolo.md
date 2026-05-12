@@ -4,7 +4,7 @@ description: "Primeiro passo da Jornada 2 do discipulado Voz do Deserto: aprenda
 seção: discipulos
 category: mundo-espiritual
 tema: AS REGRAS DO ENGAJAMENTO
-image: /image/discipulos/jornada2-passo1-pensando-como-apostolo.webp
+image: /image/discipulos/pesando como um apostolo.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

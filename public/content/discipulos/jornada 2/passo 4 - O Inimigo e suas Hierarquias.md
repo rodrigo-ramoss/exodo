@@ -4,7 +4,7 @@ description: "Quarto passo da Jornada 2 do discipulado Voz do Deserto: conheça 
 seção: discipulos
 category: mundo-espiritual
 tema: AS REGRAS DO ENGAJAMENTO
-image: /image/discipulos/jornada2-passo4-inimigo-e-hierarquias.webp
+image: /image/discipulos/o inimigo e suas hierarquias.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

@@ -120,6 +120,17 @@ const FALLBACK_TEMAS: ManaTema[] = [
     file: 'tenda 1 vida espiritual/Jejum — A Arma Esquecida que Quebra Cadeias.md',
   },
   {
+    id: 'vida-com-deus-o-veu-rasgado',
+    slug: 'vida-espiritual/vida-com-deus-o-veu-rasgado',
+    badge: 'E-BOOK 04',
+    title: 'Vida com Deus - O Véu Rasgado',
+    description:
+      'Por que você não precisa de um intermediário humano para se encontrar com o Pai, com base no véu rasgado e no acesso direto a Deus em Cristo.',
+    status: 'published',
+    image: '/image/mana/o veu rasgado.webp',
+    file: 'tenda 1 vida espiritual/Vida com Deus - O Véu Rasgado.md',
+  },
+  {
     id: 'o-vale-da-sombra',
     slug: 'vida-interior/o-vale-da-sombra',
     badge: 'E-BOOK 01',
@@ -147,6 +158,17 @@ const FALLBACK_TEMAS: ManaTema[] = [
     file: 'tenda 2 vida interior/Namoro e Solteirice — Princípios do Reino para Relacionamentos Santos.md',
   },
   {
+    id: 'vida-com-deus-coragem-para-se-aproximar',
+    slug: 'vida-interior/vida-com-deus-coragem-para-se-aproximar',
+    badge: 'E-BOOK 04',
+    title: 'Vida com Deus - Coragem para se Aproximar',
+    description:
+      'A cura das feridas emocionais que mantêm distância de Deus: medo, culpa, perfeccionismo religioso e síndrome da indignidade.',
+    status: 'published',
+    image: '/image/mana/coragem para se aproximar.webp',
+    file: 'tenda 2 vida interior/vida com Deus - Coragem para se Aproximar.md',
+  },
+  {
     id: 'trabalho-como-adoracao',
     slug: 'vida-exterior/trabalho-como-adoracao',
     badge: 'E-BOOK 01',
@@ -172,6 +194,17 @@ const FALLBACK_TEMAS: ManaTema[] = [
     status: 'published',
     image: '/image/mana/financas do reino.webp',
     file: 'tenda 3 vida exterior/Finanças do Reino — Mordomia, Dívidas e Generosidade.md',
+  },
+  {
+    id: 'vida-com-deus-filhos-nao-escravos',
+    slug: 'vida-exterior/vida-com-deus-filhos-nao-escravos',
+    badge: 'E-BOOK 04',
+    title: 'Vida com Deus - Filhos, Não Escravos',
+    description:
+      'Como viver no dia a dia a identidade de filho amado, livre da aprovação humana, com relacionamentos curados e missão com ousadia.',
+    status: 'published',
+    image: '/image/mana/filhos não escravos.webp',
+    file: 'tenda 3 vida exterior/Vida com Deus - Filhos, Não Escravos.md',
   },
 ];
 

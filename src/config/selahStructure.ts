@@ -1,7 +1,7 @@
 export type SelahThemeTitle =
   | 'ANTISSISTEMA'
   | 'ANTROPOLOGIA DO REINO'
-  | 'HISTÓRIA DA IGREJA'
+  | 'EKKLESIA'
   | 'JESUS CRISTO'
   | 'IA & APOCALIPSE'
   | 'DEUS PAI'
@@ -93,7 +93,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
   {
     id: 'historia-da-igreja',
     slug: 'historia-da-igreja',
-    title: 'HISTÓRIA DA IGREJA',
+    title: 'EKKLESIA',
     description: 'Estudos sobre a formação, os desvios, os conflitos e os fundamentos da igreja ao longo da história.',
     order: 10,
     subsections: buildSubsectionsWithCustomSlugs('historia-da-igreja', [
@@ -137,7 +137,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     title: 'JESUS CRISTO',
     description: 'Pessoa, obra, autoridade e missão de Cristo.',
     order: 1,
-    subsections: buildSubsections('jesus-cristo', ['Ressurreição', 'Morte', 'Sangue', 'Cruz', 'Batalha', 'Salvador', 'Sumo Sacerdote', 'Logos', 'Cordeiro']),
+    subsections: buildSubsections('jesus-cristo', ['Ressurreição', 'Morte', 'Sangue', 'Cruz', 'Batalha', 'Salvador', 'Sumo Sacerdote', 'Logos', 'Cordeiro', 'O Nome']),
   },
   {
     id: 'ia-e-apocalipse',
@@ -177,7 +177,20 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     title: 'BATALHA ESPIRITUAL',
     description: 'Discernimento, resistência e estratégias de guerra espiritual.',
     order: 5,
-    subsections: buildSubsections('batalha-espiritual', ['Armadura', 'Oração', 'Jejum', 'Discernimento', 'Autoridade', 'Libertação', 'Vitória', 'Resistência']),
+    subsections: buildSubsections('batalha-espiritual', [
+      'Armadura',
+      'Oração',
+      'Jejum',
+      'Discernimento',
+      'Autoridade',
+      'Libertação',
+      'Vitória',
+      'Resistência',
+      'Santidade',
+      'Arrependimento',
+      'Escritura',
+      'Lingua',
+    ]),
   },
   {
     id: 'cosmologia-biblica',
@@ -197,6 +210,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
       'Vigilantes',
       'Sarim territoriais',
       'Conselho divino',
+      'Tribunal divino',
       'Satanás/Belial',
       'Possessão demoníaca',
       'Nefilim/Demônios',
@@ -323,7 +337,7 @@ export function resolveSelahSubsectionTitle(themeTitle: SelahThemeTitle, value: 
   if (themeTitle === 'ESPÍRITO SANTO' && normalized === 'conviccao') {
     return 'Blasfêmia';
   }
-  if (themeTitle === 'HISTÓRIA DA IGREJA') {
+  if (themeTitle === 'EKKLESIA') {
     const historiaAliases: Record<string, string> = {
       ceia: 'Ceia do Senhor',
       'ceia-do-senhor': 'Ceia do Senhor',
@@ -390,7 +404,7 @@ export function resolveSelahSubsectionSlug(themeTitle: SelahThemeTitle, value: s
   if (themeTitle === 'ESPÍRITO SANTO' && normalized === 'conviccao') {
     return 'blasfemia';
   }
-  if (themeTitle === 'HISTÓRIA DA IGREJA') {
+  if (themeTitle === 'EKKLESIA') {
     const historiaAliases: Record<string, string> = {
       ceia: 'ceia-do-senhor-a-refeicao-que-virou-sacrificio',
       'ceia-do-senhor': 'ceia-do-senhor-a-refeicao-que-virou-sacrificio',
@@ -419,3 +433,4 @@ export function resolveSelahSubsectionSlug(themeTitle: SelahThemeTitle, value: s
   );
   return subsection?.slug ?? null;
 }
+

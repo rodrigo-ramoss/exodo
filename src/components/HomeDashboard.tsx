@@ -1,9 +1,10 @@
-import { BookMarked, BookOpen, CheckCircle2, Flag, Highlighter, Library, NotebookPen, Search, TrendingUp, UserRound, Wheat } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { BookMarked, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Flag, Highlighter, Library, NotebookPen, Search, TrendingUp, UserRound, Wheat } from 'lucide-react';
+import { useMemo, useRef, useState } from 'react';
 import { Screen } from '../types';
 import { useProfile } from '../state/ProfileContext';
 import { AppImage } from './AppImage';
 import { useUserProgress } from '../hooks/useUserProgress';
+import { useFetch } from '../hooks/useFetch';
 
 interface HomeDashboardProps {
   onNavigate: (
@@ -49,6 +50,34 @@ type ReaderHighlightEntry = {
   updatedAt: number;
 };
 
+type UpdatesSectionId = 'mana' | 'discipulos' | 'ensinos' | 'selah' | 'babel';
+
+type ContentIndexItem = {
+  title?: string;
+  slug?: string;
+  date?: string;
+  category?: string;
+  image?: string;
+};
+
+type SeriesUpdateItem = {
+  key: string;
+  label: string;
+  updatedAt: number;
+  updatedLabel: string;
+  slug?: string;
+  image?: string;
+  isPlaceholder?: boolean;
+};
+
+type SectionUpdatesCard = {
+  id: UpdatesSectionId;
+  label: 'MANÁ' | 'DISCÍPULOS' | 'ENSINOS' | 'SELAH' | 'BABEL';
+  subtitle: string;
+  target: Screen;
+  items: SeriesUpdateItem[];
+};
+
 const CATEGORY_TO_SCREEN: Record<string, Screen> = {
   mana: Screen.MANA,
   discipulos: Screen.DISCIPULOS,
@@ -59,6 +88,39 @@ const CATEGORY_TO_SCREEN: Record<string, Screen> = {
   apocrifos: Screen.APOCRYPHA,
   ebd: Screen.EBD,
 };
+
+const HOME_UPDATES_SECTIONS_META: Array<Omit<SectionUpdatesCard, 'items'>> = [
+  { id: 'mana', label: 'MANÁ', subtitle: 'Vida devocional e prática diária', target: Screen.MANA },
+  { id: 'discipulos', label: 'DISCÍPULOS', subtitle: 'Jornadas de formação', target: Screen.DISCIPULOS },
+  { id: 'ensinos', label: 'ENSINOS', subtitle: 'Séries expositivas e temáticas', target: Screen.ENSINOS },
+  { id: 'selah', label: 'SELAH', subtitle: 'Biblioteca de séries e trilogias', target: Screen.BOOKSTORE },
+  { id: 'babel', label: 'BABEL', subtitle: 'Discernimento da matrix', target: Screen.REFUTACAO },
+];
+
+const homeDiscipulosModules = {
+  ...import.meta.glob('/public/content/discipulos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/discipulos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/discipulos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/discipulos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+
+const homeEnsinosModules = {
+  ...import.meta.glob('/public/content/Ensinos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/Ensinos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/Ensinos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/Ensinos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/ensinos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/ensinos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/ensinos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/ensinos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+
+const homeBabelModules = {
+  ...import.meta.glob('/public/content/babel/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/babel/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/babel/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/babel/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
 
 function inferScreenBySlug(slug: string): Screen {
   const lower = slug.toLowerCase();
@@ -119,6 +181,92 @@ function normalizeLookupText(raw: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, ' ')
     .trim();
+}
+
+function parseFrontmatter(markdown: string): Record<string, string> {
+  const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
+  const match = normalized.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---/);
+  if (!match) return {};
+
+  const result: Record<string, string> = {};
+  for (const line of match[1].split(/\r?\n/)) {
+    const entry = line.match(/^\s*([A-Za-z_][\w-]*)\s*:\s*(.*?)\s*$/);
+    if (!entry) continue;
+    result[entry[1].toLowerCase()] = entry[2].replace(/^["']|["']$/g, '');
+  }
+  return result;
+}
+
+function humanizeToken(raw: string): string {
+  return raw
+    .replace(/^serie\s*-\s*/i, '')
+    .replace(/^trilogia\s*-\s*/i, '')
+    .replace(/[-_]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
+function parseDateMs(raw?: string): number {
+  if (!raw) return 0;
+  const ms = new Date(raw).getTime();
+  return Number.isFinite(ms) ? ms : 0;
+}
+
+function formatUpdateDate(ms: number): string {
+  if (!ms) return 'Sem data';
+  return new Date(ms).toLocaleDateString('pt-BR');
+}
+
+function extractSeriesLine(content: string): string | null {
+  const line = content.match(/^\s*\*?\s*S[ée]rie:\s*([^\n*]+)\*?\s*$/im);
+  if (!line?.[1]) return null;
+  return line[1]
+    .replace(/\s+[—-]\s+(Livro|Volume|Passo).*/i, '')
+    .replace(/,\s*Passo\s*\d+.*/i, '')
+    .trim();
+}
+
+function deriveSeriesLabelFromMarkdown(
+  section: UpdatesSectionId,
+  relativePath: string,
+  frontmatter: Record<string, string>,
+  content: string,
+): string {
+  const normalizedPath = relativePath.replace(/\\/g, '/');
+  const parts = normalizedPath.split('/').filter(Boolean);
+  const fromSeriesLine = extractSeriesLine(content);
+  if (fromSeriesLine) return fromSeriesLine;
+
+  if (section === 'discipulos') {
+    const tema = (frontmatter.tema || '').trim();
+    if (tema) return humanizeToken(tema);
+    const jornada = parts.find((part) => /^jornada\s+\d+/i.test(part));
+    if (jornada) return humanizeToken(jornada);
+    return 'Trilhas do Deserto';
+  }
+
+  if (section === 'ensinos') {
+    const tema = (frontmatter.tema || '').trim();
+    if (tema) return humanizeToken(tema);
+    const seriesFolder = parts.find((part) => /^serie\s*-/i.test(part));
+    if (seriesFolder) return humanizeToken(seriesFolder);
+    const groupFolder = parts.find((part) => /^grupo\s+\d+/i.test(part));
+    if (groupFolder) return humanizeToken(groupFolder);
+    return 'Ensinos';
+  }
+
+  if (section === 'babel') {
+    const parentFolder = parts.length > 1 ? parts[parts.length - 2] : '';
+    if (parentFolder) return humanizeToken(parentFolder);
+    const category = (frontmatter.category || '').split(',')[0]?.trim();
+    if (category) return humanizeToken(category);
+    return 'Discernimento da Matrix';
+  }
+
+  return 'Série';
 }
 
 function loadReaderNotes(): ReaderNoteEntry[] {
@@ -190,7 +338,10 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
   const [myStudiesQuery, setMyStudiesQuery] = useState('');
   const [showAllNotes, setShowAllNotes] = useState(false);
   const [showAllHighlights, setShowAllHighlights] = useState(false);
+  const updatesCarouselRef = useRef<HTMLDivElement | null>(null);
   const { name } = useProfile();
+  const { data: manaIndexData } = useFetch<ContentIndexItem[]>('/content/mana/index.json');
+  const { data: selahIndexData } = useFetch<ContentIndexItem[]>('/content/selah/index.json');
   const {
     lastReadings,
     totals,
@@ -199,6 +350,119 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     weeklyGoal,
     hasAnyReadingStarted,
   } = useUserProgress();
+
+  const updatesCards = useMemo<SectionUpdatesCard[]>(() => {
+    const sectionMaps: Record<UpdatesSectionId, Map<string, SeriesUpdateItem>> = {
+      mana: new Map(),
+      discipulos: new Map(),
+      ensinos: new Map(),
+      selah: new Map(),
+      babel: new Map(),
+    };
+
+    const upsertSeries = (
+      section: UpdatesSectionId,
+      seriesLabel: string,
+      updatedAt: number,
+      slug?: string,
+      image?: string,
+    ) => {
+      const normalizedLabel = seriesLabel.trim() || 'Série';
+      const key = normalizeLookupText(normalizedLabel).replace(/\s+/g, '-');
+      const map = sectionMaps[section];
+      const previous = map.get(key);
+
+      if (!previous) {
+        map.set(key, {
+          key,
+          label: normalizedLabel,
+          updatedAt,
+          updatedLabel: formatUpdateDate(updatedAt),
+          slug,
+          image,
+        });
+        return;
+      }
+
+      if (updatedAt > previous.updatedAt) {
+        map.set(key, {
+          ...previous,
+          updatedAt,
+          updatedLabel: formatUpdateDate(updatedAt),
+          slug: slug || previous.slug,
+          image: image || previous.image,
+        });
+      }
+    };
+
+    for (const item of manaIndexData || []) {
+      const title = (item.title || '').trim();
+      const prefix = title.split(' - ')[0]?.trim() || '';
+      const seriesLabel = normalizeLookupText(prefix) === 'vida com deus'
+        ? 'Trilogia — O Caminho do Véu Rasgado'
+        : (item.category?.trim() ? `Coleção — ${item.category.trim()}` : (prefix || 'Coleção Maná'));
+      upsertSeries('mana', seriesLabel, parseDateMs(item.date), item.slug, item.image);
+    }
+
+    for (const item of selahIndexData || []) {
+      const seriesLabel = (item.category || '').trim() || 'Coleção Selah';
+      upsertSeries('selah', seriesLabel, parseDateMs(item.date), item.slug, item.image);
+    }
+
+    const moduleSources: Array<{ section: UpdatesSectionId; modules: Record<string, string>; marker: string }> = [
+      { section: 'discipulos', modules: homeDiscipulosModules, marker: '/public/content/discipulos/' },
+      { section: 'ensinos', modules: homeEnsinosModules, marker: '/public/content/' },
+      { section: 'babel', modules: homeBabelModules, marker: '/public/content/babel/' },
+    ];
+
+    for (const source of moduleSources) {
+      for (const [pathKey, content] of Object.entries(source.modules)) {
+        if (!content || typeof content !== 'string') continue;
+        const normalizedPath = pathKey.replace(/\\/g, '/');
+        const markerIndex = normalizedPath.indexOf(source.marker);
+        const relativePath = markerIndex >= 0
+          ? normalizedPath.slice(markerIndex + source.marker.length)
+          : normalizedPath;
+
+        const frontmatter = parseFrontmatter(content);
+        const seriesLabel = deriveSeriesLabelFromMarkdown(source.section, relativePath, frontmatter, content);
+        const updatedAt = parseDateMs(
+          frontmatter.date
+          || frontmatter.updated_at
+          || frontmatter.updatedat
+          || frontmatter.atualizado_em
+          || frontmatter.atualizado
+          || frontmatter.data,
+        );
+        const image = (frontmatter.image || '').startsWith('/') ? frontmatter.image : undefined;
+        upsertSeries(source.section, seriesLabel, updatedAt, undefined, image);
+      }
+    }
+
+    return HOME_UPDATES_SECTIONS_META.map((meta) => {
+      const sorted = Array.from(sectionMaps[meta.id].values())
+        .sort((a, b) => {
+          if (b.updatedAt !== a.updatedAt) return b.updatedAt - a.updatedAt;
+          return a.label.localeCompare(b.label, 'pt-BR');
+        })
+        .slice(0, 3);
+
+      while (sorted.length < 3) {
+        sorted.push({
+          key: `${meta.id}-placeholder-${sorted.length + 1}`,
+          label: 'Nova série em preparação',
+          updatedAt: 0,
+          updatedLabel: 'Em breve',
+          isPlaceholder: true,
+        });
+      }
+
+      return {
+        ...meta,
+        items: sorted,
+      };
+    });
+  }, [manaIndexData, selahIndexData]);
 
   const continueCards = [
     lastReadings.mana,
@@ -232,6 +496,12 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     return showAllHighlights ? filteredHighlights : filteredHighlights.slice(0, 4);
   }, [filteredHighlights, normalizedMyStudiesQuery, showAllHighlights]);
 
+  const scrollUpdatesCarousel = (delta: number) => {
+    const carousel = updatesCarouselRef.current;
+    if (!carousel) return;
+    carousel.scrollBy({ left: delta, behavior: 'smooth' });
+  };
+
   return (
     <div className="pb-24 sm:pb-28 min-h-[calc(100vh-3.5rem)] bg-surface-container-lowest">
       <section className="relative px-4 sm:px-6 pt-4 sm:pt-5 pb-2.5 overflow-hidden">
@@ -241,6 +511,109 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           <h2 className="mt-1 font-headline text-xl sm:text-2xl font-black tracking-tight text-on-surface leading-none">
             Continue sua travessia{name ? `, ${name}` : ''}.
           </h2>
+        </div>
+      </section>
+
+      <section className="px-4 sm:px-6 pb-4">
+        <div className="rounded-2xl border border-[#D4AF37]/24 bg-gradient-to-br from-[#1b1714] via-surface-container-low to-[#111111] p-3 sm:p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-[10px] font-black tracking-[0.18em] uppercase text-primary">Painel de atualizações</p>
+              <h3 className="mt-1 font-headline text-base sm:text-lg font-black tracking-tight text-on-surface">
+                Últimas séries atualizadas por seção
+              </h3>
+              <p className="mt-1 text-[11px] text-on-surface-variant leading-relaxed">
+                O app é atualizado com novos conteúdos toda semana.
+              </p>
+            </div>
+            <div className="hidden sm:flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => scrollUpdatesCarousel(-360)}
+                className="h-8 w-8 rounded-full border border-outline-variant/40 bg-surface-container-high text-on-surface hover:border-primary/45 hover:text-primary transition-colors grid place-items-center"
+                aria-label="Voltar carrossel de atualizações"
+              >
+                <ChevronLeft size={14} />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollUpdatesCarousel(360)}
+                className="h-8 w-8 rounded-full border border-outline-variant/40 bg-surface-container-high text-on-surface hover:border-primary/45 hover:text-primary transition-colors grid place-items-center"
+                aria-label="Avançar carrossel de atualizações"
+              >
+                <ChevronRight size={14} />
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={updatesCarouselRef}
+            className="mt-3 flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {updatesCards.map((card) => {
+              const Icon = SECTION_ICON[card.label];
+              return (
+                <article
+                  key={`updates-${card.id}`}
+                  className="snap-start shrink-0 w-[92%] sm:w-[420px] rounded-xl border border-outline-variant/22 bg-surface-container-low/95 p-3"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-[9px] font-black uppercase tracking-[0.16em] text-primary/90 inline-flex items-center gap-1">
+                        <Icon size={11} />
+                        {card.label}
+                      </p>
+                      <p className="mt-1 text-[10px] text-on-surface-variant/80 leading-snug">{card.subtitle}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => onNavigate(card.target, 'push')}
+                      className="shrink-0 rounded-full border border-primary/35 bg-primary/12 px-2 py-0.5 text-[8px] font-black uppercase tracking-wider text-primary hover:bg-primary/18 transition-colors"
+                    >
+                      Abrir
+                    </button>
+                  </div>
+
+                  <div className="mt-2.5 space-y-1.5">
+                    {card.items.map((item, index) => (
+                      <div
+                        key={`${card.id}-${item.key}`}
+                        className={`rounded-lg border px-2 py-1.5 ${item.isPlaceholder ? 'border-outline-variant/20 bg-surface-container text-on-surface-variant/70' : 'border-outline-variant/25 bg-surface-container-high/60'}`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-[10px] font-semibold text-on-surface line-clamp-1">
+                            {index + 1}. {item.label}
+                          </p>
+                          <span className={`text-[8px] font-black uppercase tracking-[0.12em] ${item.isPlaceholder ? 'text-on-surface-variant/60' : 'text-primary/90'}`}>
+                            {item.updatedLabel}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          <div className="mt-1 sm:hidden flex items-center justify-end gap-1.5">
+            <button
+              type="button"
+              onClick={() => scrollUpdatesCarousel(-280)}
+              className="h-7 w-7 rounded-full border border-outline-variant/35 bg-surface-container-high text-on-surface/90 grid place-items-center"
+              aria-label="Voltar carrossel de atualizações"
+            >
+              <ChevronLeft size={13} />
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollUpdatesCarousel(280)}
+              className="h-7 w-7 rounded-full border border-outline-variant/35 bg-surface-container-high text-on-surface/90 grid place-items-center"
+              aria-label="Avançar carrossel de atualizações"
+            >
+              <ChevronRight size={13} />
+            </button>
+          </div>
         </div>
       </section>
 

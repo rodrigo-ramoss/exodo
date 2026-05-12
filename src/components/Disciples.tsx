@@ -70,12 +70,12 @@ const JOURNEY_META: JourneyMeta[] = [
   },
   {
     id: 'missao-e-multiplicacao',
-    label: 'JORNADA 3 - MISSÃO E MULTIPLICAÇÃO',
+    label: 'JORNADA 3 - A VITÓRIA DO CORDEIRO E O SISTEMA DA BESTA',
     numero: '03',
-    titulo: 'Missão e Multiplicação',
-    subtitulo: 'Discípulos que formam discípulos',
+    titulo: 'A Vitória do Cordeiro e o Sistema da Besta',
+    subtitulo: 'Discernimento escatológico e identidade do remanescente',
     descricao:
-      'A última jornada prepara você para sair da formação para a missão, com visão de Reino, serviço e multiplicação. O foco é transformar conhecimento em prática, presença e legado no Corpo de Cristo. Cada passo será liberado para consolidar chamada, direção e responsabilidade ministerial.',
+      'Esta jornada consolida a leitura escatológica do discipulado, confronta a arquitetura da Besta e firma a identidade do remanescente em Cristo. O foco é transformar discernimento em posicionamento, fidelidade e missão até a volta do Rei.',
   },
 ];
 

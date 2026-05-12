@@ -4,7 +4,7 @@ description: "Quinto e último passo da Jornada 2 do discipulado Voz do Deserto:
 seção: discipulos
 category: mundo-espiritual
 tema: AS REGRAS DO ENGAJAMENTO
-image: /image/discipulos/jornada2-passo5-guerra-na-pratica.webp
+image: /image/discipulos/a guerra na pratica.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

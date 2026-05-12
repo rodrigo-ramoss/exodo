@@ -1093,7 +1093,7 @@ const SELAH_SUBSECTION_FALLBACK_RULES: Partial<Record<SelahThemeTitle, Array<{ s
     { subsection: 'Enoque', matchers: ['serie - 1 enoque', '1 enoque'] },
     { subsection: 'Jubileus', matchers: ['serie - jubileus', 'jubileus'] },
   ],
-  'HISTÓRIA DA IGREJA': [
+  'EKKLESIA': [
     { subsection: 'Ceia do Senhor', matchers: ['serie - a refeicao que virou missa', 'ceia-do-senhor'] },
     { subsection: 'Ekkelsia', matchers: ['eclesia-a-comunidade-que-virou-hierarquia', 'serie - o corpo que virou empresa'] },
     { subsection: 'Templo', matchers: ['verdade-sobre-a-igreja', 'serie - a verdadeira historia da igreja', 'trilogia - o canon oculto', 'serie - o veu rasgado'] },
@@ -1296,7 +1296,7 @@ function discoverBooksFromMarkdown(): BookItem[] {
 
 type SectionKey =
   | 'APÓCRIFOS'
-  | 'HISTÓRIA DA IGREJA'
+  | 'EKKLESIA'
   | 'COSMOLOGIA BÍBLICA'
   | 'MUNDO ESPIRITUAL'
   | 'SATANÁS E DEMÔNIOS'
@@ -1326,10 +1326,10 @@ const SECTIONS: Record<SectionKey, {
     Icon: Shield,
     accent: 'from-amber-900/70 to-amber-800/10',
   },
-  'HISTÓRIA DA IGREJA': {
+  'EKKLESIA': {
     numero: '10',
-    label: 'História da Igreja',
-    description: 'A anatomia do dogma e os bastidores do poder. Uma análise sobre a verdadeira história da igreja, a formação de suas doutrinas e como a estrutura religiosa foi utilizada como ferramenta de manipulação e controle sistêmico.',
+    label: 'EKKLESIA',
+    description: 'A anatomia do dogma e os bastidores do poder. Uma análise sobre a verdadeira EKKLESIA, a formação de suas doutrinas e como a estrutura religiosa foi utilizada como ferramenta de manipulação e controle sistêmico.',
     Icon: BookOpen,
     accent: 'from-sky-900/70 to-sky-800/10',
   },
@@ -1470,9 +1470,9 @@ const SECTION_ORDER: SectionKey[] = [
 const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'A REVELAÇÃO DE ENOQUE':                   'APÓCRIFOS',
   'SÉRIE — JUBILEUS':                        'APÓCRIFOS',
-  'Série — O Cânon Oculto':                   'HISTÓRIA DA IGREJA',
-  'Trilogia — O Cânon Oculto':                'HISTÓRIA DA IGREJA',
-  'Série — A Verdadeira História da Igreja':  'HISTÓRIA DA IGREJA',
+  'Série — O Cânon Oculto':                   'EKKLESIA',
+  'Trilogia — O Cânon Oculto':                'EKKLESIA',
+  'Série — A Verdadeira História da Igreja':  'EKKLESIA',
   'COSMOLOGIA BÍBLICA':                       'COSMOLOGIA BÍBLICA',
   'cosmologia biblica':                       'COSMOLOGIA BÍBLICA',
   'cosmologia-biblica':                       'COSMOLOGIA BÍBLICA',
@@ -1502,7 +1502,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Trilogia — O Estrangeiro Próspero':        'ANTISSISTEMA',
   'Trilogia — A Ciência dos Tempos':          'ANTISSISTEMA',
   'antissistema':                             'ANTISSISTEMA',
-  'historia-da-igreja':                       'HISTÓRIA DA IGREJA',
+  'historia-da-igreja':                       'EKKLESIA',
   'Trilogia — A Marca':                       'IA & APOCALIPSE',
   'Trilogia — O Véu Rasgado':                 'IA & APOCALIPSE',
   'Trilogia — A Coroa Roubada':               'MUNDO ESPIRITUAL',
@@ -1599,7 +1599,7 @@ function resolveSubsecaoFromSlug(theme: SelahThemeTitle, subsecaoSlug: string): 
 }
 
 function getSubsectionButtonLabel(theme: SelahThemeTitle, subsectionTitle: string): string {
-  if (theme !== 'HISTÓRIA DA IGREJA') return subsectionTitle;
+  if (theme !== 'EKKLESIA') return subsectionTitle;
 
   const shortLabel = subsectionTitle.split(':')[0]?.trim() || subsectionTitle;
   const normalizedShort = shortLabel
@@ -3578,7 +3578,7 @@ export default function Bookstore({
                   const subsecao = subsecaoEntry.title;
                   const subsecaoButtonLabel = getSubsectionButtonLabel(selectedTheme, subsecao);
                   const count = subsectionCounts.get(subsecao) || 0;
-                  const isHistoriaDaIgreja = selectedTheme === 'HISTÓRIA DA IGREJA';
+                  const isHistoriaDaIgreja = selectedTheme === 'EKKLESIA';
                   const discoveredSubsecaoCover = booksBySection[selectedSection]
                     .find((book) => (
                       resolveSelahSubsectionTitle(selectedTheme, (book.subsecao || '').trim()) === subsecao
@@ -3684,7 +3684,7 @@ export default function Bookstore({
                 </>
               )}
 
-              {themeSubsections.length > 0 && seriesWithoutSubsecao.length > 0 && selectedTheme !== 'HISTÓRIA DA IGREJA' && (
+              {themeSubsections.length > 0 && seriesWithoutSubsecao.length > 0 && selectedTheme !== 'EKKLESIA' && (
                 <div className="mt-6 border-t border-amber-300/25 pt-4 sm:pt-5">
                   <h4 className="font-headline text-base sm:text-lg font-black tracking-tight text-amber-100 mb-2">
                     Sem subseção definida
@@ -4058,3 +4058,4 @@ export default function Bookstore({
     </div>
   );
 }
+

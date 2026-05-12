@@ -4,7 +4,7 @@ description: "Terceiro passo da Jornada 2 do discipulado Voz do Deserto: entenda
 seção: discipulos
 category: mundo-espiritual
 tema: AS REGRAS DO ENGAJAMENTO
-image: /image/discipulos/jornada2-passo3-anatomia-da-alma.webp
+image: /image/discipulos/a anatomia da alma.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

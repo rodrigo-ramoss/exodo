@@ -4,7 +4,7 @@ description: "Segundo passo da Jornada 2 do discipulado Voz do Deserto: aprenda 
 seção: discipulos
 category: mundo-espiritual
 tema: AS REGRAS DO ENGAJAMENTO
-image: /image/discipulos/jornada2-passo2-metodo-pardes.webp
+image: /image/discipulos/lendo a biblia em 4 dimenseos.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*
