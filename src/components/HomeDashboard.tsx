@@ -215,6 +215,12 @@ function parseDateMs(raw?: string): number {
   return Number.isFinite(ms) ? ms : 0;
 }
 
+function parseDateMsOrToday(raw?: string): number {
+  const parsed = parseDateMs(raw);
+  if (parsed > 0) return parsed;
+  return Date.now();
+}
+
 function formatUpdateDate(ms: number): string {
   if (!ms) return 'Sem data';
   return new Date(ms).toLocaleDateString('pt-BR');
@@ -414,12 +420,12 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
       const seriesLabel = normalizeLookupText(prefix) === 'vida com deus'
         ? 'Trilogia — O Caminho do Véu Rasgado'
         : (String(item?.category || '').trim() ? `Coleção — ${String(item?.category || '').trim()}` : (prefix || 'Coleção Maná'));
-      upsertSeries('mana', seriesLabel, parseDateMs(String(item?.date || '')), String(item?.slug || ''), String(item?.image || ''));
+      upsertSeries('mana', seriesLabel, parseDateMsOrToday(String(item?.date || '')), String(item?.slug || ''), String(item?.image || ''));
     }
 
     for (const item of selahItems) {
       const seriesLabel = String(item?.category || '').trim() || 'Coleção Selah';
-      upsertSeries('selah', seriesLabel, parseDateMs(String(item?.date || '')), String(item?.slug || ''), String(item?.image || ''));
+      upsertSeries('selah', seriesLabel, parseDateMsOrToday(String(item?.date || '')), String(item?.slug || ''), String(item?.image || ''));
     }
 
     const moduleSources: Array<{ section: UpdatesSectionId; modules: Record<string, string>; marker: string }> = [
@@ -439,7 +445,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
 
         const frontmatter = parseFrontmatter(content);
         const seriesLabel = deriveSeriesLabelFromMarkdown(source.section, relativePath, frontmatter, content);
-        const updatedAt = parseDateMs(
+        const updatedAt = parseDateMsOrToday(
           frontmatter.date
           || frontmatter.updated_at
           || frontmatter.updatedat
