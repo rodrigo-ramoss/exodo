@@ -234,7 +234,7 @@ A defesa do leito conjugal não é feita apenas com boas intenções. É feita c
 
 A **oração em conjunto** é a primeira linha de defesa. O marido e a esposa que oram juntos, que intercedem um pelo outro, que cobrem o seu leito com o sangue de Cristo, estão a erguer uma cerca espiritual que o inimigo tem dificuldade em transpor. A oração antes do ato sexual não é um momento constrangedor; é um convite ao Senhor para estar presente no altar.
 
-O **jejum** é uma arma de guerra. Jesus disse que certos demónios só saem "com oração e jejum" (Marcos 9:29). Quando um casal enfrenta ataques persistentes à sua vida sexual — fantasias intrusivas, falta de desejo, conflitos inexplicáveis —, o jejum conjunto pode quebrar fortalezas espirituais.
+O **jejum** é uma arma de guerra. Jesus disse que certos demônios só saem "com oração e jejum" (Marcos 9:29). Quando um casal enfrenta ataques persistentes à sua vida sexual — fantasias intrusivas, falta de desejo, conflitos inexplicáveis —, o jejum conjunto pode quebrar fortalezas espirituais.
 
 A **Palavra** é a espada do Espírito. Meditar em Cantares de Salomão, em Provérbios 5, em Efésios 5. Ler em voz alta as promessas de Deus sobre o casamento. Declarar que o leito é santo e que o inimigo não tem autoridade sobre ele.
 

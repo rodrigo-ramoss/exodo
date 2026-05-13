@@ -168,21 +168,21 @@ Por isso Paulo insiste que é impossível participar das duas mesas. Não há co
 
 ### 3.1 Isaías 34:14 e a criatura da noite
 
-Há uma passagem misteriosa no livro de Isaías que a tradição judaica sempre associou a um demónio feminino da noite:
+Há uma passagem misteriosa no livro de Isaías que a tradição judaica sempre associou a um demônio feminino da noite:
 
 *"E as feras do deserto se encontrarão com os animais selvagens; e o sátiro clamará ao seu companheiro; e Lilith descansará ali, e achará para si lugar de repouso."* (Isaías 34:14, tradução literal)
 
 A palavra hebraica é **לִּילִית (*Lilith*)**. A maioria das traduções modernas verte como "criatura noturna", "coruja" ou "animal noturno". Mas a tradição judaica preservou consistentemente *Lilith* como o nome próprio de uma entidade espiritual feminina que ataca durante a noite.
 
-A Septuaginta traduziu a palavra para o grego como *onokentauros*, uma criatura híbrida mitológica. A Vulgata Latina traduziu como *Lamia*, um demónio feminino que devorava crianças na mitologia grega. Ambas as traduções indicam que os antigos entendiam Lilith como algo mais do que um animal.
+A Septuaginta traduziu a palavra para o grego como *onokentauros*, uma criatura híbrida mitológica. A Vulgata Latina traduziu como *Lamia*, um demônio feminino que devorava crianças na mitologia grega. Ambas as traduções indicam que os antigos entendiam Lilith como algo mais do que um animal.
 
-O contexto de Isaías 34 é o julgamento sobre Edom. O profeta descreve uma terra devastada, transformada em deserto, habitada por criaturas impuras: pelicanos, ouriços, corvos, serpentes, abutres. E, no meio delas, *Lilith*. É a terra que se tornou morada de demónios — um eco da sentença de Apocalipse 18:2 sobre Babilônia: *"tornou-se morada de demónios, e guarida de todo o espírito imundo."*
+O contexto de Isaías 34 é o julgamento sobre Edom. O profeta descreve uma terra devastada, transformada em deserto, habitada por criaturas impuras: pelicanos, ouriços, corvos, serpentes, abutres. E, no meio delas, *Lilith*. É a terra que se tornou morada de demônios — um eco da sentença de Apocalipse 18:2 sobre Babilônia: *"tornou-se morada de demônios, e guarida de todo o espírito imundo."*
 
 ### 3.2 A tradição judaica sobre Lilith
 
-A tradição rabínica expandiu a figura de Lilith para uma personagem complexa e aterradora. Segundo o *Alfabeto de Ben Sira* (um texto judaico medieval que preserva tradições muito mais antigas), Lilith foi a primeira esposa de Adão, criada do pó como ele, e que se recusou a submeter-se a ele. Ela fugiu do Éden, foi amaldiçoada e tornou-se um demónio que ataca mulheres grávidas e recém-nascidos e que seduz homens durante o sono.
+A tradição rabínica expandiu a figura de Lilith para uma personagem complexa e aterradora. Segundo o *Alfabeto de Ben Sira* (um texto judaico medieval que preserva tradições muito mais antigas), Lilith foi a primeira esposa de Adão, criada do pó como ele, e que se recusou a submeter-se a ele. Ela fugiu do Éden, foi amaldiçoada e tornou-se um demônio que ataca mulheres grávidas e recém-nascidos e que seduz homens durante o sono.
 
-Esta tradição, embora medieval na sua forma escrita, preserva ecos de crenças muito mais antigas. Amuletos de proteção contra Lilith foram encontrados em contextos judaicos que remontam ao período do exílio babilónico e ao Segundo Templo. A figura de um demónio feminino noturno que ataca a sexualidade e a procriação é uma constante nas culturas do antigo Oriente Próximo.
+Esta tradição, embora medieval na sua forma escrita, preserva ecos de crenças muito mais antigas. Amuletos de proteção contra Lilith foram encontrados em contextos judaicos que remontam ao período do exílio babilónico e ao Segundo Templo. A figura de um demônio feminino noturno que ataca a sexualidade e a procriação é uma constante nas culturas do antigo Oriente Próximo.
 
 Na Mesopotâmia, havia *Lilitu*, um espírito feminino do vento e da noite. Em textos sumérios e acádicos, ela aparece como uma entidade que seduz homens e mata crianças. O nome é tão antigo quanto a civilização.
 
@@ -190,16 +190,16 @@ O que a Bíblia faz não é endossar essas tradições, mas **subverter a sua au
 
 ### 3.3 Súcubos, íncubos e a coleta da semente
 
-A tradição cristã medieval, baseando-se em Agostinho e Tomás de Aquino, desenvolveu a demonologia dos súcubos e íncubos. Um **súcubo** (do latim *succubus*, "a que jaz debaixo") é um demónio feminino que seduz homens durante o sono para recolher a sua semente. Um **íncubo** (do latim *incubus*, "o que jaz sobre") é um demónio masculino que usa essa semente para engravidar mulheres.
+A tradição cristã medieval, baseando-se em Agostinho e Tomás de Aquino, desenvolveu a demonologia dos súcubos e íncubos. Um **súcubo** (do latim *succubus*, "a que jaz debaixo") é um demônio feminino que seduz homens durante o sono para recolher a sua semente. Um **íncubo** (do latim *incubus*, "o que jaz sobre") é um demônio masculino que usa essa semente para engravidar mulheres.
 
 Embora estas descrições soem como superstição medieval, elas representam uma tentativa de explicar fenómenos reais: a opressão sexual noturna, os sonhos eróticos involuntários, a experiência de "paralisia do sono" acompanhada de sensações sexuais, descrita em quase todas as culturas humanas.
 
-A teologia bíblica não afirma que Lilith, súcubos e íncubos são entidades com existência independente fora do controlo de Deus. Mas afirma que há espíritos imundos que operam na esfera da sexualidade. O Novo Testamento chama-os de *pneumata plana* (espíritos enganadores, 1 Timóteo 4:1) e *pneumata akatharta* (espíritos imundos).
+A teologia bíblica não afirma que Lilith, súcubos e íncubos são entidades com existência independente fora do controle de Deus. Mas afirma que há espíritos imundos que operam na esfera da sexualidade. O Novo Testamento chama-os de *pneumata plana* (espíritos enganadores, 1 Timóteo 4:1) e *pneumata akatharta* (espíritos imundos).
 
 O que estes espíritos fazem com a semente humana recolhida é um mistério que a Escritura não revela completamente. Mas a conexão entre o derramamento da semente e a atividade demoníaca é sugerida em várias frentes:
 
 - O pecado de Onã foi "mau aos olhos do Senhor" precisamente porque a semente foi derramada na terra (Gênesis 38:10).
-- Os demónios são espíritos que buscam corpos, e o sêmen é o veículo da vida corporal.
+- Os demônios são espíritos que buscam corpos, e o sêmen é o veículo da vida corporal.
 - A semente humana contém o potencial da imagem de Deus — e o adversário sempre desejou corromper essa imagem.
 
 A pornografia e a masturbação compulsiva são os equivalentes modernos da mesa de Lilith. O homem que se senta diante de um ecrã e derrama a sua semente está a participar, sem o saber, de um ritual que alimenta espíritos imundos. Não há mulher presente, mas há uma comunhão espiritual. É o sexo com os mortos.
@@ -228,7 +228,7 @@ A pornografia é, neste sentido, uma forma de **necromancia**. Na necromancia an
 
 O consumidor de pornografia está a ter "relações" com fantasmas. Ele está a unir o seu corpo, que é membro de Cristo, a uma projeção de luz num ecrã. Ele está a derramar a sua semente, que é o veículo da vida, diante de uma imagem que não pode gerar vida.
 
-Os demónios, que são espíritos desencarnados, encontram nesse ato um portal de acesso. A energia sexual gerada pela pornografia — a excitação, o prazer, o clímax, a vergonha subsequente — é um banquete para eles. Eles não podem comer, mas podem alimentar-se da "fumaça" dessa liturgia.
+Os demônios, que são espíritos desencarnados, encontram nesse ato um portal de acesso. A energia sexual gerada pela pornografia — a excitação, o prazer, o clímax, a vergonha subsequente — é um banquete para eles. Eles não podem comer, mas podem alimentar-se da "fumaça" dessa liturgia.
 
 Cada sessão de pornografia é, espiritualmente, uma visita ao templo de Afrodite. O ecrã é o altar. O corpo do espectador é a oferta. E a semente derramada é o incenso que sobe para os principados do ar.
 

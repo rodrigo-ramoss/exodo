@@ -257,6 +257,23 @@ const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
     4: 'qumran e a guerra dos calendario',
     5: 'o tempo restaurado',
   },
+  'o testemunho das estrelas': {
+    1: 'o relogio de deus no ceu',
+    2: 'o mapa celestial',
+    3: 'as estrelas como anjos',
+    4: 'o ciclo das festas e os eclipses',
+    5: 'a estrela de belem e os alinhamentos planetarios',
+    6: 'os sinais do fim nos ceus',
+    7: 'contemplando o cordeiro nos ceus',
+  },
+  'o filtro e o feitico': {
+    1: 'o filtro e o feitico',
+    2: 'o corpo alterado',
+    3: 'a legiao farmaceutica',
+    4: 'a besta que sobe da terra',
+    5: 'o holocausto do corpo',
+    6: 'a folha da arvore da vida',
+  },
   'o fio do trono': {
     1: 'o fundamento da oracao',
     2: 'a oracao no segundo templo',
@@ -1033,6 +1050,8 @@ function inferSeriesVolumeCoverStem(title: string, slug: string, category?: stri
   if (haystack.includes('arquitetura da guerra invisivel')) return SERIES_VOLUME_COVER_STEMS['a arquitetura da guerra invisivel'][volume] ?? null;
   if (haystack.includes('armadura do remanescente')) return SERIES_VOLUME_COVER_STEMS['a armadura do remanescente'][volume] ?? null;
   if (haystack.includes('revelacao do seculo')) return SERIES_VOLUME_COVER_STEMS['a revelacao do seculo'][volume] ?? null;
+  if (haystack.includes('testemunho das estrelas')) return SERIES_VOLUME_COVER_STEMS['o testemunho das estrelas'][volume] ?? null;
+  if (haystack.includes('filtro e o feitico')) return SERIES_VOLUME_COVER_STEMS['o filtro e o feitico'][volume] ?? null;
   if (haystack.includes('relogio de deus')) return SERIES_VOLUME_COVER_STEMS['o relogio de deus'][volume] ?? null;
   if (haystack.includes('fio do trono')) return SERIES_VOLUME_COVER_STEMS['o fio do trono'][volume] ?? null;
   if (haystack.includes('refeicao que virou missa')) return SERIES_VOLUME_COVER_STEMS['a refeicao que virou missa'][volume] ?? null;

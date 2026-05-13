@@ -52,7 +52,7 @@ image: A Consumação dos Séculos
 
 Durante cinco volumes, percorremos a história do fogo que Deus acendeu no Jardim do Éden.
 
-Vimos o projeto original: o sexo como liturgia de adoração, o *yada’* como conhecimento íntimo, a nudez sem vergonha como estado primordial da humanidade (Volume 1). Vimos a serpente desviar esse fogo através dos cultos de fertilidade, da prostituição sagrada e da falsa ascensão espiritual — a Kundalini que sobe pela coluna como paródia da Shekinah que desce do trono (Volume 2). Vimos a invasão cósmica: os Vigilantes que desceram ao Monte Hermom, geraram os Nefilim e deram origem aos demónios — espíritos desencarnados que buscam corpos para experimentar as sensações que perderam (Volume 3). Vimos o sexo ilícito como uma eucaristia invertida, uma mesa de demónios onde a semente derramada alimenta os espíritos imundos (Volume 4). E vimos o casamento como o Jardim reaberto, o leito sem mácula onde a nudez pode ser recuperada e o prazer pode voltar a ser adoração (Volume 5).
+Vimos o projeto original: o sexo como liturgia de adoração, o *yada’* como conhecimento íntimo, a nudez sem vergonha como estado primordial da humanidade (Volume 1). Vimos a serpente desviar esse fogo através dos cultos de fertilidade, da prostituição sagrada e da falsa ascensão espiritual — a Kundalini que sobe pela coluna como paródia da Shekinah que desce do trono (Volume 2). Vimos a invasão cósmica: os Vigilantes que desceram ao Monte Hermom, geraram os Nefilim e deram origem aos demônios — espíritos desencarnados que buscam corpos para experimentar as sensações que perderam (Volume 3). Vimos o sexo ilícito como uma eucaristia invertida, uma mesa de demônios onde a semente derramada alimenta os espíritos imundos (Volume 4). E vimos o casamento como o Jardim reaberto, o leito sem mácula onde a nudez pode ser recuperada e o prazer pode voltar a ser adoração (Volume 5).
 
 Agora, neste volume final, perguntamos: para onde aponta todo este fogo? Qual é o destino escatológico da sexualidade humana?
 
@@ -204,7 +204,7 @@ E quando a realidade chegar, a sombra poderá desaparecer — não porque era m�
 
 Antes das bodas, há o julgamento. O Apocalipse não esconde a face severa da consumação. A besta e o falso profeta são lançados vivos no lago de fogo (Apocalipse 19:20). Satanás é preso por mil anos e, depois, lançado no mesmo lago (Apocalipse 20:10). A morte e o Hades são lançados no lago de fogo (Apocalipse 20:14). E, por fim, todos aqueles cujos nomes não estão escritos no Livro da Vida são lançados no lago de fogo (Apocalipse 20:15).
 
-O que significa este lago de fogo? Não é o inferno do imaginário popular — um lugar de tortura administrado por demónios com tridentes. É a **Geena**, o lugar de destruição, o fogo que consome e purifica a criação de toda a impureza.
+O que significa este lago de fogo? Não é o inferno do imaginário popular — um lugar de tortura administrado por demônios com tridentes. É a **Geena**, o lugar de destruição, o fogo que consome e purifica a criação de toda a impureza.
 
 Em Apocalipse 21:8, os que são lançados no lago de fogo são descritos como *"os tímidos, os incrédulos, os abomináveis, os homicidas, os fornicadores, os feiticeiros, os idólatras e todos os mentirosos."*
 
@@ -218,7 +218,7 @@ A "segunda morte" (Apocalipse 20:14) não é a aniquilação, mas a **separaçã
 
 O que é lançado no lago de fogo é, essencialmente, **tudo o que a Queda introduziu**. A luxúria, a cobiça, a vergonha, a violência sexual, a perversão, o abuso — tudo o que os Vigilantes trouxeram, tudo o que os Nefilim espalharam, tudo o que a pornografia alimenta — é consumido pelo fogo.
 
-O lago de fogo é a resposta de Deus a Belial. A serpente que comeu do pó durante milénios será finalmente comida pelo fogo. A energia sexual que foi desviada para o abismo será consumida no abismo. A fome dos demónios cessará, porque os demónios deixarão de existir.
+O lago de fogo é a resposta de Deus a Belial. A serpente que comeu do pó durante milénios será finalmente comida pelo fogo. A energia sexual que foi desviada para o abismo será consumida no abismo. A fome dos demônios cessará, porque os demônios deixarão de existir.
 
 E com eles, deixará de existir a possibilidade de profanação. Na Nova Jerusalém, não haverá tentação, não haverá pensamento impuro, não haverá memória traumática a assombrar a intimidade. O fogo do lago não é apenas punição; é purificação cósmica. É a cauterização da ferida que a Queda abriu na criação.
 

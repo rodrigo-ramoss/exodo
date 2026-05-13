@@ -88,7 +88,16 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     title: 'ANTROPOLOGIA DO REINO',
     description: 'Estudos sobre a identidade humana à luz do Reino: corpo, alma, espírito, vocação, limites e propósito segundo as Escrituras.',
     order: 14,
-    subsections: buildSubsections('antropologia-do-reino', ['Alimentação', 'Corpo Humano', 'Sexo']),
+    subsections: buildSubsections('antropologia-do-reino', [
+      'Alimentação',
+      'Corpo Humano',
+      'Sexo',
+      'Pharmakeia',
+      'Cura Divina',
+      'Novo Nascimento',
+      'Metanoia',
+      'Doenças Espirituais',
+    ]),
   },
   {
     id: 'historia-da-igreja',
