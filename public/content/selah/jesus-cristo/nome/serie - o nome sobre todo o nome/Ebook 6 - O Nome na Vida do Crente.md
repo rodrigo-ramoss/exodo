@@ -3,7 +3,7 @@ title: "O Nome na Vida do Crente — A autoridade do Nome de Jesus em todas as e
 description: "O Nome de Jesus não é apenas para a salvação; é para a vida. Como o Nome opera no trabalho, na santificação, no sofrimento, na unidade, na presença de Cristo e na perseverança final."
 seção: selah
 category: jesus cristo
-subcategory: nome
+subsecao: O Nome
 image: /image/selah/o nome na vida do crente.webp
 ---
 
@@ -307,3 +307,4 @@ Para o remanescente desigrejado, esta verdade é um bálsamo. Você não precisa
 **Fim do Volume 6 — Série: O Nome Sobre Todo Nome**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

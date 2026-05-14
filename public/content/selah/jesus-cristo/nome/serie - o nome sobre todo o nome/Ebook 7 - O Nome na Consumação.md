@@ -3,7 +3,7 @@ title: "O Nome na Consumação — A exaltação final do Nome de Jesus"
 description: "O dia virá em que todo joelho se dobrará e toda língua confessará que Jesus Cristo é o Senhor. Uma investigação sobre o Nome na consumação final, na Nova Jerusalém e no cântico eterno dos remidos."
 seção: selah
 category: jesus cristo
-subcategory: nome
+subsecao: O Nome
 image: /image/selah/o nome na consumacao.webp
 ---
 
@@ -349,3 +349,4 @@ A Voz do Deserto entrega esta série ao remanescente fiel com a oração de que 
 **Fim do Volume 7 — Série: O Nome Sobre Todo Nome**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

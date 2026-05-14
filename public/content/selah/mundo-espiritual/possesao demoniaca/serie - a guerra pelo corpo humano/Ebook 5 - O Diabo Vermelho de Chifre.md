@@ -1,6 +1,6 @@
 ---
 title: "O Diabo Vermelho de Chifres – Como a Demonologia Foi Distorcida"
-description: "A imagem popular do diabo — vermelho, com chifres, tridente e rabo pontudo — não está na Bíblia. O sexto ebook da série ‘Possessão Demoníaca’ traça a genealogia das distorções na demonologia cristã: de Agostinho à arte medieval, do folclore pagão ao movimento neopentecostal. Uma jornada iconoclasta para recuperar a sobriedade bíblica."
+description: "A imagem popular do diabo — vermelho, com chifres, tridente e rabo pontudo — não está na Bíblia. O quinto ebook da série ‘Possessão Demoníaca’ traça a genealogia das distorções na demonologia cristã: de Agostinho à arte medieval, do folclore pagão ao movimento neopentecostal. Uma jornada iconoclasta para recuperar a sobriedade bíblica."
 seção: mundo espiritual
 subsecao: possessao-demoniaca
 category: mundo-espiritual
@@ -9,7 +9,7 @@ image: /image/selah/o diabo vermelho de chifres.webp
 
 *Rodrigo Ramos — Voz do Deserto*
 
-*Série: Possessão Demoníaca — A Guerra pelo Corpo Humano — Ebook 6 de 8*
+*Série: Possessão Demoníaca — A Guerra pelo Corpo Humano — Ebook 5 de 8*
 
 # O DIABO VERMELHO DE CHIFRES
 ## Como a Demonologia Foi Distorcida

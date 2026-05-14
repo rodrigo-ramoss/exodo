@@ -3,7 +3,7 @@ title: "Em Meu Nome — A Oração e o Poder do Nome"
 description: "O que significa orar em nome de Jesus? O Nome não é uma fórmula mágica, mas o canal da autoridade do Mediador. Uma investigação sobre o Nome como fundamento, veículo e garantia da oração cristã."
 seção: selah
 category: jesus cristo
-subcategory: nome
+subsecao: O Nome
 image: /image/selah/em meu nome.webp
 ---
 
@@ -283,3 +283,4 @@ A oração em nome de Jesus não é um tiro no escuro; é um pedido que o Filho 
 **Fim do Volume 2 — Série: O Nome Sobre Todo Nome**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

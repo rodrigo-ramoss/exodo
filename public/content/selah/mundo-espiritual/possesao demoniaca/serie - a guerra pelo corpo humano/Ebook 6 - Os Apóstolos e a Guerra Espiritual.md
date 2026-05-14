@@ -1,6 +1,6 @@
 ---
 title: "Os Apóstolos e a Guerra Espiritual – De Atos a Apocalipse"
-description: "Jesus subiu ao céu, mas a guerra continuou. O quinto ebook da série ‘Possessão Demoníaca’ revela como a Igreja Primitiva enfrentou demônios, como Paulo estruturou a teologia da batalha cósmica e como Pedro e João nos ensinaram a resistir ao adversário. De Atos ao Apocalipse, a continuidade do ministério de libertação."
+description: "Jesus subiu ao céu, mas a guerra continuou. O sexto ebook da série ‘Possessão Demoníaca’ revela como a Igreja Primitiva enfrentou demônios, como Paulo estruturou a teologia da batalha cósmica e como Pedro e João nos ensinaram a resistir ao adversário. De Atos ao Apocalipse, a continuidade do ministério de libertação."
 seção: mundo espiritual
 subsecao: possessao-demoniaca
 category: mundo-espiritual
@@ -9,7 +9,7 @@ image: /image/selah/os apostolos ea guerra espiritual.webp
 
 *Rodrigo Ramos — Voz do Deserto*
 
-*Série: Possessão Demoníaca — A Guerra pelo Corpo Humano — Ebook 5 de 8*
+*Série: Possessão Demoníaca — A Guerra pelo Corpo Humano — Ebook 6 de 8*
 
 # OS APÓSTOLOS E A GUERRA ESPIRITUAL
 ## De Atos a Apocalipse

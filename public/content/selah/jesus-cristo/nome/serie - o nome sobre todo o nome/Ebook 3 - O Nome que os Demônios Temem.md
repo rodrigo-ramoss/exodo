@@ -3,7 +3,7 @@ title: "O Nome que os Demônios Temem — A autoridade do Nome de Jesus sobre as
 description: "Os demônios não temem fórmulas, rituais ou objetos. Mas eles reconhecem e temem o Nome de Jesus. O que acontece no mundo espiritual quando o Nome é invocado com fé?"
 seção: selah
 category: jesus cristo
-subcategory: nome
+subsecao: O Nome
 image: /image/selah/o nome que os demonios temem.webp
 ---
 
@@ -315,3 +315,4 @@ O Nome de Jesus é suficiente. O Nome de Jesus é poderoso. O Nome de Jesus é a
 **Fim do Volume 3 — Série: O Nome Sobre Todo Nome**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

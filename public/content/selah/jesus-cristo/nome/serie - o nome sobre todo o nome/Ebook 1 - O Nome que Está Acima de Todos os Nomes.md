@@ -3,7 +3,7 @@ title: "O Nome que Está Acima de Todos os Nomes — A teologia do Nome na Bíbl
 description: "O Nome de Jesus não é um título entre outros. É o Nome que estava oculto no Sinai, que habitava no Templo, que foi dado ao Filho na encarnação e exaltado acima de todo principado na ascensão."
 seção: selah
 category: jesus cristo
-subcategory: nome
+subsecao: O Nome
 image: /image/selah/o nome que está acima de todos os nomes.webp
 ---
 
@@ -319,3 +319,4 @@ Este é o fundamento. Nos próximos volumes, veremos como esse Nome opera na ora
 **Fim do Volume 1 — Série: O Nome Sobre Todo Nome**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

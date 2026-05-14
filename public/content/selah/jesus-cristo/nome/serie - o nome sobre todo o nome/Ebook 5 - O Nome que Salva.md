@@ -3,7 +3,7 @@ title: "O Nome que Salva — A exclusividade do Nome de Jesus para a redenção"
 description: "Não há salvação em nenhum outro nome. O Nome de Jesus é o único dado entre os homens pelo qual devamos ser salvos. Uma investigação sobre o Nome, o batismo, a remissão dos pecados e o livro da vida."
 seção: selah
 category: jesus cristo
-subcategory: nome
+subsecao: O Nome
 image: /image/selah/o nome que salva.webp
 ---
 
@@ -285,3 +285,4 @@ O Nome de Jesus é o início, o meio e o fim da nossa salvação. Ele nos chamou
 **Fim do Volume 5 — Série: O Nome Sobre Todo Nome**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

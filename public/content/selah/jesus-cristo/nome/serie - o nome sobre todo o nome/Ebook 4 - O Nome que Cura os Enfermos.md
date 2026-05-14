@@ -3,7 +3,7 @@ title: "O Nome que Cura os Enfermos — A autoridade do Nome de Jesus sobre a do
 description: "O Nome de Jesus não é apenas para a alma; é para o corpo. Cada cura realizada em seu Nome é uma seta apontando para a ressurreição final. Uma investigação sobre o poder do Nome sobre a enfermidade e a criação."
 seção: selah
 category: jesus cristo
-subcategory: nome
+subsecao: O Nome
 image: /image/selah/o nome que cura.webp
 ---
 
@@ -313,3 +313,4 @@ O Nome de Jesus é para o corpo. Não há dicotomia entre o espiritual e o físi
 **Fim do Volume 4 — Série: O Nome Sobre Todo Nome**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+
