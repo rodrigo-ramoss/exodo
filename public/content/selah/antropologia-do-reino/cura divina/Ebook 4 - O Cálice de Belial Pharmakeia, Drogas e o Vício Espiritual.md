@@ -4,7 +4,7 @@ description: "Até que ponto um remédio deixa de ser cura e se torna feitiçari
 seção: Selah
 category: Antropologia do Reino
 subseção: Cura Divina
-image: O Cálice de Belial
+image: /image/selah/a farmacoepia do ceu.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

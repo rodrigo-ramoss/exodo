@@ -563,13 +563,21 @@ function getReadingStatus(
   const isDone = pm.isRead(category, slug);
   const progressPct = isDone ? 100 : clampPct(pm.getProgress(category, slug));
   const lastActivity = Math.max(toMs(pm.getLastActivity(category, slug)), toMs(pm.getLastReadAt(category, slug)));
-  const statusWeight = isDone ? 2 : progressPct > 0 ? 3 : 1;
-  const status: LastReadingCard['status'] = isDone ? 'Concluído' : progressPct > 0 ? 'Em andamento' : 'Aguardando';
-  const whereStopped = isDone ? 'Leitura concluída' : progressPct > 0 ? `Parou em ${progressPct}%` : 'Pronto para começar';
+  const hasRecentActivity = lastActivity > 0;
+  const isStarted = isDone || progressPct > 0 || hasRecentActivity;
+  const statusWeight = isDone ? 2 : isStarted ? 3 : 1;
+  const status: LastReadingCard['status'] = isDone ? 'Concluído' : isStarted ? 'Em andamento' : 'Aguardando';
+  const whereStopped = isDone
+    ? 'Leitura concluída'
+    : progressPct > 0
+      ? `Parou em ${progressPct}%`
+      : hasRecentActivity
+        ? 'Parou no início'
+        : 'Pronto para começar';
   return {
     status,
     progressPct,
-    score: statusWeight * 10_000_000 + lastActivity + progressPct,
+    score: lastActivity * 1000 + statusWeight * 100 + progressPct,
     whereStopped,
   };
 }

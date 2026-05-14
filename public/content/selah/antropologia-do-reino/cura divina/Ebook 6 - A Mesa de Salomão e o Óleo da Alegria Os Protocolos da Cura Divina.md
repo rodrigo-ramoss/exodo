@@ -4,7 +4,7 @@ description: "Como o cristão deve agir quando fica doente? A unção com óleo,
 seção: Selah
 category: Antropologia do Reino
 subseção: Cura Divina
-image: A Mesa de Salomão e o Óleo da Alegria
+image: /image/selah/a mesa de salomao e o oleo da alegria.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

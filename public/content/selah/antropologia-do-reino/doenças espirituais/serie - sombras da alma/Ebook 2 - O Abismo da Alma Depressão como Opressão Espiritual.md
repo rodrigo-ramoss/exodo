@@ -4,7 +4,7 @@ description: "A depressão pode ser um ataque demoníaco? O espírito de peso, a
 seção: Selah
 category: Antropologia do Reino
 subseção: Doenças Espirituais
-image: O Abismo da Alma
+image: /image/selah/o abismo da alma.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

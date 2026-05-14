@@ -4,7 +4,7 @@ description: "Como discernir se um problema da alma é psicológico ou demoníac
 seção: Selah
 category: Antropologia do Reino
 subseção: Doenças Espirituais
-image: O Espectro da Mente
+image: /image/selah/o espectro da mente.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

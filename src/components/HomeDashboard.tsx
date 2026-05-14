@@ -122,6 +122,20 @@ const homeBabelModules = {
   ...import.meta.glob('/public/content/babel/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 
+const homeSelahModules = {
+  ...import.meta.glob('/public/content/selah/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+
+const homeManaModules = {
+  ...import.meta.glob('/public/content/mana/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/mana/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/mana/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/mana/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+
 function inferScreenBySlug(slug: string): Screen {
   const lower = slug.toLowerCase();
   if (lower.includes('discipulos/')) return Screen.DISCIPULOS;
@@ -262,6 +276,44 @@ function deriveSeriesLabelFromMarkdown(
     const groupFolder = parts.find((part) => /^grupo\s+\d+/i.test(part));
     if (groupFolder) return humanizeToken(groupFolder);
     return 'Ensinos';
+  }
+
+  if (section === 'mana') {
+    const category = (frontmatter.category || '').trim();
+    if (category) return humanizeToken(category);
+    const parentFolder = parts.length > 1 ? parts[parts.length - 2] : '';
+    if (parentFolder) return humanizeToken(parentFolder);
+    return 'Coleção Maná';
+  }
+
+  if (section === 'selah') {
+    const category = (frontmatter.category || '').trim();
+    const normalizedCategory = normalizeLookupText(category);
+    const genericSelahCategories = new Set([
+      'selah',
+      'livraria',
+      'mundo espiritual',
+      'satanas e demonios',
+      'jesus cristo',
+      'deus pai',
+      'espirito santo',
+      'antropologia do reino',
+      'cosmologia biblica',
+      'apocrifos',
+      'batalha espiritual',
+      'ia e apocalipse',
+      'historia da igreja',
+      'antissistema',
+      'reino de deus',
+      'fim dos tempos',
+      'tipologia biblica',
+    ]);
+    const seriesFolder = [...parts].reverse().find((part) => /^(serie|trilogia)\s*-/i.test(part));
+    if (seriesFolder) return humanizeToken(seriesFolder);
+    if (category && !genericSelahCategories.has(normalizedCategory)) return humanizeToken(category);
+    const parentFolder = parts.length > 1 ? parts[parts.length - 2] : '';
+    if (parentFolder) return humanizeToken(parentFolder);
+    return 'Coleção Selah';
   }
 
   if (section === 'babel') {
@@ -429,8 +481,10 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     }
 
     const moduleSources: Array<{ section: UpdatesSectionId; modules: Record<string, string>; marker: string }> = [
+      { section: 'mana', modules: homeManaModules, marker: '/public/content/mana/' },
       { section: 'discipulos', modules: homeDiscipulosModules, marker: '/public/content/discipulos/' },
       { section: 'ensinos', modules: homeEnsinosModules, marker: '/public/content/' },
+      { section: 'selah', modules: homeSelahModules, marker: '/public/content/selah/' },
       { section: 'babel', modules: homeBabelModules, marker: '/public/content/babel/' },
     ];
 

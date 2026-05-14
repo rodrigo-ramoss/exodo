@@ -4,7 +4,7 @@ description: "Como discernir quando a enfermidade é um ataque direto do inimigo
 seção: Selah
 category: Antropologia do Reino
 subseção: Cura Divina
-image: O Dedo de Belial
+image: /image/selah/o dedo do diabo.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

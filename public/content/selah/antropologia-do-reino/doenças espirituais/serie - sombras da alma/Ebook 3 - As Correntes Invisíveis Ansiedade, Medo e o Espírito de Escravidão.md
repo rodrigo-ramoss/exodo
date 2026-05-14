@@ -4,7 +4,7 @@ description: "A ansiedade pode ser um espírito? O medo que paralisa, a inquieta
 seção: Selah
 category: Antropologia do Reino
 subseção: Doenças Espirituais
-image: As Correntes Invisíveis
+image: /image/selah/as correntes invisiveis.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

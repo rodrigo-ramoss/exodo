@@ -967,7 +967,21 @@ function buildFallbackContentUrls(slug: string): string[] {
   const normalizedBase = configuredBase.endsWith('/') ? configuredBase : `${configuredBase}/`;
   const runtimeBase = window.location.protocol === 'file:' && normalizedBase === '/' ? './' : normalizedBase;
   const sectionFolders = [
+    'antropologia-do-reino',
     'apocrifos',
+    'batalha-espiritual',
+    'cosmologia-biblica',
+    'deus-pai',
+    'espirito-santo',
+    'fim-dos-tempos',
+    'historia-da-igreja',
+    'ia-e-apocalipse',
+    'jesus-cristo',
+    'mundo-espiritual',
+    'reino-de-deus',
+    'satanas-e-demonios',
+  ];
+  const legacyLivrariaFolders = [
     'historia-da-igreja',
     'tipologia-biblica',
     'mundo-espiritual',
@@ -986,13 +1000,22 @@ function buildFallbackContentUrls(slug: string): string[] {
     `${runtimeBase}content/livraria/${slug}.md`,
     `./content/livraria/${encodedSlug}.md`,
     `/content/livraria/${encodedSlug}.md`,
-    ...sectionFolders.map((section) => `${runtimeBase}content/livraria/${section}/${encodedSlug}.md`),
-    ...sectionFolders.map((section) => `/content/livraria/${section}/${encodedSlug}.md`),
+    `${runtimeBase}content/selah/${encodedSlug}.md`,
+    `/content/selah/${encodedSlug}.md`,
+    ...sectionFolders.map((section) => `${runtimeBase}content/selah/${section}/${encodedSlug}.md`),
+    ...sectionFolders.map((section) => `/content/selah/${section}/${encodedSlug}.md`),
+    ...legacyLivrariaFolders.map((section) => `${runtimeBase}content/livraria/${section}/${encodedSlug}.md`),
+    ...legacyLivrariaFolders.map((section) => `/content/livraria/${section}/${encodedSlug}.md`),
     `${runtimeBase}content/ferramentas-espirituais/${encodedSlug}.md`,
     `/content/ferramentas-espirituais/${encodedSlug}.md`,
   ];
 
   return Array.from(new Set(candidates));
+}
+
+function isLikelyHtmlPayload(raw: string): boolean {
+  const normalized = raw.trimStart().toLowerCase();
+  return normalized.startsWith('<!doctype html') || normalized.startsWith('<html');
 }
 
 function extractVolumeFromText(raw: string): number | null {
@@ -1316,6 +1339,7 @@ function discoverBooksFromMarkdown(): BookItem[] {
 }
 
 type SectionKey =
+  | 'BÍBLIA'
   | 'APÓCRIFOS'
   | 'EKKLESIA'
   | 'COSMOLOGIA BÍBLICA'
@@ -1340,6 +1364,13 @@ const SECTIONS: Record<SectionKey, {
   Icon: React.ElementType;
   accent: string;
 }> = {
+  'BÍBLIA': {
+    numero: '00',
+    label: 'Bíblia',
+    description: 'Comentários espirituais da Bíblia. Em preparação.',
+    Icon: BookOpen,
+    accent: 'from-amber-900/70 to-yellow-800/10',
+  },
   'APÓCRIFOS': {
     numero: '09',
     label: 'Apócrifos',
@@ -1484,6 +1515,7 @@ function getSectionMeta(sectionKey: string): {
 }
 
 const SECTION_ORDER: SectionKey[] = [
+  'BÍBLIA',
   ...SELAH_THEME_TITLES_IN_ORDER,
 ];
 
@@ -2620,11 +2652,9 @@ function SectionCard({ sectionKey, books, onSelect }: {
         {/* Top row */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
-            <div className="rounded-lg p-1.5 transition-all bg-black/40 border border-white/10 group-hover:border-primary/30 group-hover:bg-primary/10">
-              <Icon size={14} className="text-primary/80 group-hover:text-primary transition-colors" />
-            </div>
-            <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] transition-colors text-white/40 group-hover:text-primary/70">
-              {books.length} volume{books.length !== 1 ? 's' : ''}
+            <Icon size={15} className="text-primary/90 group-hover:text-primary transition-colors shrink-0" />
+            <span className="inline-flex rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary">
+              Seção com {books.length} volume{books.length !== 1 ? 's' : ''}
             </span>
           </div>
           {totalRead > 0 && (
@@ -2641,15 +2671,18 @@ function SectionCard({ sectionKey, books, onSelect }: {
 
         {/* Bottom text */}
         <div>
-          <span className="inline-flex rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.18em] text-primary mb-1">
-            Seção Selah
-          </span>
           <h3 className="font-headline font-black text-[18px] sm:text-[22px] text-white tracking-tight leading-none mb-1 sm:mb-1.5 group-hover:text-primary transition-colors duration-300">
             {label.toUpperCase()}
           </h3>
           <p className="text-[9px] sm:text-[10px] text-white/45 leading-snug font-medium line-clamp-2 group-hover:text-white/65 transition-colors duration-300 max-w-[260px]">
             {description}
           </p>
+          <button
+            type="button"
+            className="mt-2 inline-flex items-center rounded-full border border-amber-300/60 bg-gradient-to-r from-amber-500/30 via-yellow-300/25 to-amber-500/30 px-2.5 py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.16em] text-amber-100 transition-all duration-300 animate-[pulse_2.6s_ease-in-out_infinite] group-hover:border-amber-200 group-hover:text-amber-50"
+          >
+            Clique aqui
+          </button>
         </div>
       </div>
     </div>
@@ -3158,6 +3191,8 @@ export default function Bookstore({
         if (!res.ok) continue;
         const text = await res.text();
         if (!text.trim()) continue;
+        // Ignore SPA HTML fallback pages that would render as "code" in the reader.
+        if (isLikelyHtmlPayload(text)) continue;
         setMarkdownContent(text);
         return;
       } catch {
@@ -3461,7 +3496,7 @@ export default function Bookstore({
 
               <div className="relative z-10 mt-3 sm:mt-4 mb-4 sm:mb-5">
                 <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
-                  Seção Selah
+                  Seção
                 </span>
                 <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
                   {selectedSubsecao}
@@ -3582,7 +3617,7 @@ export default function Bookstore({
 
             <div className="relative z-10 mt-3 sm:mt-4 mb-4 sm:mb-5">
               <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
-                Seção Selah
+                Seção
               </span>
               <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
                 {themeLabel}
@@ -3822,12 +3857,10 @@ export default function Bookstore({
 
           <div className="relative z-10 mt-3 sm:mt-4 mb-4 sm:mb-5">
             <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
-              Seção Selah
+              Seção
             </span>
             <div className="flex items-center gap-2.5 sm:gap-3">
-              <div className="rounded-xl border border-primary/25 bg-primary/10 p-2">
-                <Icon size={16} className="text-primary" />
-              </div>
+              <Icon size={16} className="text-primary" />
               <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
                 {label}
               </h2>
@@ -3934,13 +3967,12 @@ export default function Bookstore({
           <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:radial-gradient(circle_at_18%_20%,rgba(242,192,141,0.26),transparent_42%),radial-gradient(circle_at_78%_88%,rgba(212,165,116,0.16),transparent_36%)]" />
           <div className="pointer-events-none absolute inset-0 opacity-10 [background-image:linear-gradient(rgba(242,192,141,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(242,192,141,0.05)_1px,transparent_1px)] [background-size:20px_20px]" />
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-2.5 sm:px-3 py-0.5 sm:py-1 mb-2.5 sm:mb-3">
-              <Tent size={12} className="text-primary" />
-              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.22em] text-primary">SEÇÃO SELAH</span>
+            <div className="mb-2.5 sm:mb-3 flex items-center gap-2">
+              <Tent size={14} className="text-primary" />
+              <h1 className="font-headline text-3xl sm:text-5xl font-black text-primary tracking-tighter text-shadow-glow">
+                SELAH
+              </h1>
             </div>
-            <h1 className="font-headline text-3xl sm:text-5xl font-black text-primary mb-1.5 sm:mb-2 tracking-tighter text-shadow-glow">
-              SELAH
-            </h1>
             <p className="text-xs sm:text-base text-on-surface font-semibold mb-1.5 sm:mb-2">
               Biblioteca para discernir os tempos, ler o invisível e firmar a escatologia bíblica.
             </p>

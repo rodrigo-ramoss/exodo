@@ -4,7 +4,7 @@ description: "Por que ficamos doentes se o corpo foi criado perfeito? Uma invest
 seção: Selah
 category: Antropologia do Reino
 subseção: Cura Divina
-image: O Corpo Quebrado
+image: /image/selah/o corpo quebrado.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

@@ -4,7 +4,7 @@ description: "A Bíblia manda ir ao médico? Como conciliar fé e medicina sem c
 seção: Selah
 category: Antropologia do Reino
 subseção: Cura Divina
-image: Asa Ezequias e Lucas
+image: /image/selah/asa ezequias e lucas.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

@@ -4,7 +4,7 @@ description: "A imposição de tratamentos experimentais em massa como ensaio pa
 seção: Selah
 category: Antropologia do Reino
 subseção: Cura Divina
-image: A Agulha e a Marca
+image: /image/selah/a agulha e a marca.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*
