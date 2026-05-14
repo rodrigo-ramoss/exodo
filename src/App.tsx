@@ -19,12 +19,14 @@ import Protocol from './components/Protocol';
 import Settings from './components/Settings';
 import Ensinos from './components/Ensinos';
 import LandingPage from './components/LandingPage';
+import Preacher from './components/Preacher';
 import { useAuth } from './state/AuthContext';
 
 const HIDE_LOGIN_GATE = true;
 
 const PATH_BY_SCREEN: Record<Screen, string> = {
   [Screen.HOME]: '/inicio',
+  [Screen.PREACHER]: '/pregador',
   [Screen.BIBLE]: '/biblia',
   [Screen.MANA]: '/mana',
   [Screen.DISCIPULOS]: '/discipulos',
@@ -41,6 +43,7 @@ const SCREEN_BY_PATH: Record<string, Screen> = {
   '/inicio': Screen.HOME,
   '/dashboard': Screen.HOME,
   '/home': Screen.HOME,
+  '/pregador': Screen.PREACHER,
   '/biblia': Screen.BIBLE,
   '/mana': Screen.MANA,
   '/discipulos': Screen.DISCIPULOS,
@@ -154,6 +157,8 @@ export default function App() {
         return <HomeDashboard onNavigate={handleNavigate} />;
       case Screen.BIBLE:
         return <Bible />;
+      case Screen.PREACHER:
+        return <Preacher />;
       case Screen.MANA:
         return <Studies openSlug={openSlug} />;
       case Screen.DISCIPULOS:

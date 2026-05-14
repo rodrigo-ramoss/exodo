@@ -12,7 +12,7 @@
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-export type Category = 'mana' | 'apocrifos' | 'refutacao' | 'livraria' | 'biblica' | 'ebd' | 'ensinos' | 'discipulos';
+export type Category = 'mana' | 'apocrifos' | 'refutacao' | 'livraria' | 'biblica' | 'ebd' | 'ensinos' | 'discipulos' | 'pregador';
 
 export interface ContentEntry {
   readCount: number;
@@ -34,6 +34,7 @@ interface ProgressDB {
   ebd: CategoryStore;
   ensinos: CategoryStore;
   discipulos: CategoryStore;
+  pregador: CategoryStore;
 }
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -53,6 +54,7 @@ function emptyDB(): ProgressDB {
     ebd: {},
     ensinos: {},
     discipulos: {},
+    pregador: {},
   };
 }
 
@@ -72,6 +74,7 @@ function load(): ProgressDB {
       ebd: parsed.ebd ?? {},
       ensinos: parsed.ensinos ?? {},
       discipulos: parsed.discipulos ?? {},
+      pregador: parsed.pregador ?? {},
     };
   } catch {
     return emptyDB();

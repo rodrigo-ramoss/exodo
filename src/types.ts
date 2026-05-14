@@ -1,5 +1,6 @@
 export enum Screen {
   HOME = 'HOME',
+  PREACHER = 'PREACHER',
   BIBLE = 'BIBLE',
   MANA = 'MANA',
   DISCIPULOS = 'DISCIPULOS',
