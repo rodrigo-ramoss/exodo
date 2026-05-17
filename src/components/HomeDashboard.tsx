@@ -17,16 +17,14 @@ interface HomeDashboardProps {
 const SECTION_NAVIGATION = {
   MANÁ: Screen.MANA,
   'DISCÍPULOS': Screen.DISCIPULOS,
-  ENSINOS: Screen.ENSINOS,
-  SELAH: Screen.BOOKSTORE,
+  ROLOS: Screen.BOOKSTORE,
   BABEL: Screen.REFUTACAO,
 };
 
 const SECTION_ICON = {
   MANÁ: Wheat,
   'DISCÍPULOS': UserRound,
-  ENSINOS: BookOpen,
-  SELAH: Library,
+  ROLOS: Library,
   BABEL: BookMarked,
 };
 
@@ -50,7 +48,7 @@ type ReaderHighlightEntry = {
   updatedAt: number;
 };
 
-type UpdatesSectionId = 'mana' | 'discipulos' | 'ensinos' | 'selah' | 'babel';
+type UpdatesSectionId = 'mana' | 'discipulos' | 'selah' | 'babel';
 
 type ContentIndexItem = {
   title?: string;
@@ -72,7 +70,7 @@ type SeriesUpdateItem = {
 
 type SectionUpdatesCard = {
   id: UpdatesSectionId;
-  label: 'MANÁ' | 'DISCÍPULOS' | 'ENSINOS' | 'SELAH' | 'BABEL';
+  label: 'MANÁ' | 'DISCÍPULOS' | 'ROLOS' | 'BABEL';
   subtitle: string;
   target: Screen;
   items: SeriesUpdateItem[];
@@ -92,8 +90,7 @@ const CATEGORY_TO_SCREEN: Record<string, Screen> = {
 const HOME_UPDATES_SECTIONS_META: Array<Omit<SectionUpdatesCard, 'items'>> = [
   { id: 'mana', label: 'MANÁ', subtitle: 'Vida devocional e prática diária', target: Screen.MANA },
   { id: 'discipulos', label: 'DISCÍPULOS', subtitle: 'Jornadas de formação', target: Screen.DISCIPULOS },
-  { id: 'ensinos', label: 'ENSINOS', subtitle: 'Séries expositivas e temáticas', target: Screen.ENSINOS },
-  { id: 'selah', label: 'SELAH', subtitle: 'Biblioteca de séries e trilogias', target: Screen.BOOKSTORE },
+  { id: 'selah', label: 'ROLOS', subtitle: 'Biblioteca de séries e trilogias', target: Screen.BOOKSTORE },
   { id: 'babel', label: 'BABEL', subtitle: 'Discernimento da matrix', target: Screen.REFUTACAO },
 ];
 
@@ -102,17 +99,6 @@ const homeDiscipulosModules = {
   ...import.meta.glob('/public/content/discipulos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/discipulos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/discipulos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
-} as Record<string, string>;
-
-const homeEnsinosModules = {
-  ...import.meta.glob('/public/content/Ensinos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/Ensinos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/Ensinos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/Ensinos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/ensinos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/ensinos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/ensinos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/ensinos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 
 const homeBabelModules = {
@@ -268,16 +254,6 @@ function deriveSeriesLabelFromMarkdown(
     return 'Trilhas do Deserto';
   }
 
-  if (section === 'ensinos') {
-    const tema = (frontmatter.tema || '').trim();
-    if (tema) return humanizeToken(tema);
-    const seriesFolder = parts.find((part) => /^serie\s*-/i.test(part));
-    if (seriesFolder) return humanizeToken(seriesFolder);
-    const groupFolder = parts.find((part) => /^grupo\s+\d+/i.test(part));
-    if (groupFolder) return humanizeToken(groupFolder);
-    return 'Ensinos';
-  }
-
   if (section === 'mana') {
     const category = (frontmatter.category || '').trim();
     if (category) return humanizeToken(category);
@@ -313,7 +289,7 @@ function deriveSeriesLabelFromMarkdown(
     if (category && !genericSelahCategories.has(normalizedCategory)) return humanizeToken(category);
     const parentFolder = parts.length > 1 ? parts[parts.length - 2] : '';
     if (parentFolder) return humanizeToken(parentFolder);
-    return 'Coleção Selah';
+    return 'Coleção Rolos';
   }
 
   if (section === 'babel') {
@@ -423,7 +399,6 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     const sectionMaps: Record<UpdatesSectionId, Map<string, SeriesUpdateItem>> = {
       mana: new Map(),
       discipulos: new Map(),
-      ensinos: new Map(),
       selah: new Map(),
       babel: new Map(),
     };
@@ -476,14 +451,13 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     }
 
     for (const item of selahItems) {
-      const seriesLabel = String(item?.category || '').trim() || 'Coleção Selah';
+      const seriesLabel = String(item?.category || '').trim() || 'Coleção Rolos';
       upsertSeries('selah', seriesLabel, parseDateMsOrToday(String(item?.date || '')), String(item?.slug || ''), String(item?.image || ''));
     }
 
     const moduleSources: Array<{ section: UpdatesSectionId; modules: Record<string, string>; marker: string }> = [
       { section: 'mana', modules: homeManaModules, marker: '/public/content/mana/' },
       { section: 'discipulos', modules: homeDiscipulosModules, marker: '/public/content/discipulos/' },
-      { section: 'ensinos', modules: homeEnsinosModules, marker: '/public/content/' },
       { section: 'selah', modules: homeSelahModules, marker: '/public/content/selah/' },
       { section: 'babel', modules: homeBabelModules, marker: '/public/content/babel/' },
     ];
@@ -543,7 +517,6 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
   const continueCards = [
     lastReadings.mana,
     lastReadings.discipulos,
-    lastReadings.ensinos,
     lastReadings.selah,
     lastReadings.babel,
   ];

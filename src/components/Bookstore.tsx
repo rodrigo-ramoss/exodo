@@ -1357,6 +1357,82 @@ type SectionKey =
   | 'BATALHA ESPIRITUAL'
   | 'TIPOLOGIA BÍBLICA';
 
+const BIBLE_SUBSECTIONS = {
+  'VELHO TESTAMENTO': [
+    'Gênesis',
+    'Êxodo',
+    'Levítico',
+    'Números',
+    'Deuteronômio',
+    'Josué',
+    'Juízes',
+    'Rute',
+    '1 Samuel',
+    '2 Samuel',
+    '1 Reis',
+    '2 Reis',
+    '1 Crônicas',
+    '2 Crônicas',
+    'Esdras',
+    'Neemias',
+    'Ester',
+    'Jó',
+    'Salmos',
+    'Provérbios',
+    'Eclesiastes',
+    'Cânticos',
+    'Isaías',
+    'Jeremias',
+    'Lamentações',
+    'Ezequiel',
+    'Daniel',
+    'Oseias',
+    'Joel',
+    'Amós',
+    'Obadias',
+    'Jonas',
+    'Miqueias',
+    'Naum',
+    'Habacuque',
+    'Sofonias',
+    'Ageu',
+    'Zacarias',
+    'Malaquias',
+  ],
+  'NOVO TESTAMENTO': [
+    'Mateus',
+    'Marcos',
+    'Lucas',
+    'João',
+    'Atos',
+    'Romanos',
+    '1 Coríntios',
+    '2 Coríntios',
+    'Gálatas',
+    'Efésios',
+    'Filipenses',
+    'Colossenses',
+    '1 Tessalonicenses',
+    '2 Tessalonicenses',
+    '1 Timóteo',
+    '2 Timóteo',
+    'Tito',
+    'Filemom',
+    'Hebreus',
+    'Tiago',
+    '1 Pedro',
+    '2 Pedro',
+    '1 João',
+    '2 João',
+    '3 João',
+    'Judas',
+    'Apocalipse',
+  ],
+} as const;
+
+type BibleSubsectionKey = keyof typeof BIBLE_SUBSECTIONS;
+const BIBLE_SUBSECTION_KEYS = Object.keys(BIBLE_SUBSECTIONS) as BibleSubsectionKey[];
+
 // ── Section metadata ──────────────────────────────────────────────────────────
 const SECTIONS: Record<SectionKey, {
   numero: string;
@@ -3417,7 +3493,7 @@ export default function Bookstore({
                 A leitura tipológica organizada para explorar a Escritura com ordem e profundidade.
               </p>
               <p className="text-[11px] sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
-                A tipologia da SELAH está organizada em 8 tipos de leitura, para ajudar o leitor a reconhecer
+                A tipologia de ROLOS está organizada em 8 tipos de leitura, para ajudar o leitor a reconhecer
                 como pessoas, eventos, instituições, objetos, lugares, rituais, padrões históricos e consumação apontam para Cristo
                 e para o Reino.
               </p>
@@ -3616,7 +3692,7 @@ export default function Bookstore({
               className="relative z-10 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
             >
               <ArrowLeft size={12} />
-              Selah
+              Rolos
             </button>
 
             <div className="relative z-10 mt-3 sm:mt-4 mb-4 sm:mb-5">
@@ -3840,6 +3916,125 @@ export default function Bookstore({
     }
 
     const { label, description, Icon, numero } = getSectionMeta(selectedSection);
+    const isBibleSection = selectedSection === 'BÍBLIA';
+
+    if (isBibleSection) {
+      const selectedBibleSubsection = selectedSubsecao && BIBLE_SUBSECTION_KEYS.includes(selectedSubsecao as BibleSubsectionKey)
+        ? (selectedSubsecao as BibleSubsectionKey)
+        : null;
+
+      if (selectedBibleSubsection) {
+        const books = BIBLE_SUBSECTIONS[selectedBibleSubsection];
+
+        return (
+          <div className="pt-4 sm:pt-6 pb-24 sm:pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
+            <section className="relative overflow-hidden rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-4 sm:p-6">
+              <FireflyLayer />
+
+              <button
+                onClick={() => setSelectedSubsecao(null)}
+                className="relative z-10 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
+              >
+                <ArrowLeft size={12} />
+                Subseções
+              </button>
+
+              <div className="relative z-10 mt-3 sm:mt-4 mb-4 sm:mb-5">
+                <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
+                  Seção
+                </span>
+                <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
+                  {selectedBibleSubsection}
+                </h2>
+                <p className="text-[10px] sm:text-xs text-on-surface-variant/85 leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">
+                  {label} {'>'} {selectedBibleSubsection}
+                </p>
+                <p className="text-[10px] sm:text-xs uppercase tracking-[0.16em] font-black text-primary/85 mt-2">
+                  {books.length} livros
+                </p>
+              </div>
+
+              <div className="relative z-10 border-t border-primary/15 pt-4 sm:pt-5">
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
+                  {books.map((book) => (
+                    <div
+                      key={`${selectedBibleSubsection}-${slugify(book)}`}
+                      className="subsecao-botao relative overflow-hidden rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left bg-black/20"
+                    >
+                      <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-on-surface">
+                        {book}
+                      </span>
+                      <span className="relative mt-1 block text-[9px] sm:text-[10px] text-on-surface-variant/85">
+                        Em preparação
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          </div>
+        );
+      }
+
+      return (
+        <div className="pt-4 sm:pt-6 pb-24 sm:pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
+          <section className="relative overflow-hidden rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-4 sm:p-6">
+            <FireflyLayer />
+            <div className="pointer-events-none absolute right-3 top-1 text-[68px] sm:text-[90px] font-black tracking-tighter text-primary/10 select-none">
+              {numero}
+            </div>
+
+            <button
+              onClick={() => {
+                setSelectedSubsecao(null);
+                setSelectedSection(null);
+              }}
+              className="relative z-10 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
+            >
+              <ArrowLeft size={12} />
+              Rolos
+            </button>
+
+            <div className="relative z-10 mt-3 sm:mt-4 mb-4 sm:mb-5">
+              <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
+                Seção
+              </span>
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <Icon size={16} className="text-primary" />
+                <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
+                  {label}
+                </h2>
+              </div>
+              <p className="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">{description}</p>
+            </div>
+
+            <div className="relative z-10 border-t border-primary/15 pt-4 sm:pt-5">
+              <h3 className="font-headline text-lg sm:text-xl font-black tracking-tight text-on-surface mb-3">
+                Subseções
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                {BIBLE_SUBSECTION_KEYS.map((subsectionKey) => (
+                  <button
+                    key={subsectionKey}
+                    type="button"
+                    onClick={() => setSelectedSubsecao(subsectionKey)}
+                    className="subsecao-botao group relative overflow-hidden rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left bg-black/20 cursor-pointer"
+                  >
+                    <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-on-surface">
+                      {subsectionKey}
+                    </span>
+                    <span className="relative mt-1 block text-[9px] sm:text-[10px] text-primary/85">
+                      {BIBLE_SUBSECTIONS[subsectionKey].length} livros
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
     return (
       <div className="pt-4 sm:pt-6 pb-24 sm:pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
         <section className="relative overflow-hidden rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-4 sm:p-6">
@@ -3856,7 +4051,7 @@ export default function Bookstore({
             className="relative z-10 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
           >
             <ArrowLeft size={12} />
-            Selah
+            Rolos
           </button>
 
           <div className="relative z-10 mt-3 sm:mt-4 mb-4 sm:mb-5">
@@ -3974,14 +4169,14 @@ export default function Bookstore({
             <div className="mb-2.5 sm:mb-3 flex items-center gap-2">
               <Tent size={14} className="text-primary" />
               <h1 className="font-headline text-3xl sm:text-5xl font-black text-primary tracking-tighter text-shadow-glow">
-                SELAH
+                ROLOS
               </h1>
             </div>
             <p className="text-xs sm:text-base text-on-surface font-semibold mb-1.5 sm:mb-2">
               Biblioteca para discernir os tempos, ler o invisível e firmar a escatologia bíblica.
             </p>
             <p className="text-[11px] sm:text-sm text-on-surface-variant/90 leading-relaxed max-w-3xl">
-              Em Selah, você encontra séries sobre mundo espiritual, céus, guerra invisível e governo do Reino. Cada trilha aprofunda o entendimento profético para interpretar a história à luz da Palavra.
+              Em Rolos, você encontra séries sobre mundo espiritual, céus, guerra invisível e governo do Reino. Cada trilha aprofunda o entendimento profético para interpretar a história à luz da Palavra.
             </p>
           </div>
         </header>
@@ -4021,7 +4216,7 @@ export default function Bookstore({
 
         {loading ? (
           <div className="py-8 sm:py-10 text-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant opacity-50">
-            Carregando SELAH...
+            Carregando ROLOS...
           </div>
         ) : hasSelahSearchQuery ? (
           <div className="space-y-2.5">

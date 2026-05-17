@@ -9,8 +9,7 @@ interface LandingPageProps {
 const FEATURES = [
   { icon: Wheat,        label: 'Maná',         desc: 'Estudos diários e séries bíblicas profundas' },
   { icon: UserRound,   label: 'Discípulos',    desc: 'Jornadas guiadas de discipulado e formação' },
-  { icon: BookOpen,     label: 'Ensinos',      desc: 'Parábolas, doutrinas e formação interior' },
-  { icon: Library,      label: 'Selah',        desc: 'Livraria completa de e-books e séries' },
+  { icon: Library,      label: 'Rolos',        desc: 'Livraria completa de e-books e séries' },
   { icon: BookMarked,   label: 'Babel',        desc: 'Refutações e análise crítica de doutrinas' },
   { icon: Scroll,       label: 'Apócrifos',    desc: 'Textos deuterocanônicos e protocolo de leitura' },
   { icon: BookOpen,     label: 'Bíblia',       desc: 'Leitura bíblica com eixos temáticos' },
@@ -19,8 +18,7 @@ const FEATURES = [
 const PLAN_ITEMS = [
   'Acesso completo a todos os e-books',
   'Séries bíblicas exclusivas (Maná)',
-  'Ensinos e parábolas comentadas',
-  'Livraria Selah com novos conteúdos mensais',
+  'Rolos com novos conteúdos mensais',
   'Refutações e exegese aprofundada',
   'Textos apócrifos com protocolo de leitura',
   'Progresso de leitura salvo por e-mail',

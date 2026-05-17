@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Menu, Settings, Wheat, Library, House, UserCircle2, BookMarked, BookOpen, UserRound, NotebookPen } from 'lucide-react';
+import { Menu, Settings, Wheat, Library, House, UserCircle2, BookMarked, UserRound, NotebookPen } from 'lucide-react';
 import { Screen } from '../types';
 import { cn } from '../lib/utils';
 import { useProfile } from '../state/ProfileContext';
@@ -18,8 +18,7 @@ export default function Layout({ children, currentScreen, setScreen }: LayoutPro
     { id: Screen.PREACHER, label: 'PREG.', icon: NotebookPen },
     { id: Screen.DISCIPULOS, label: 'DISCÍP.', icon: UserRound },
     { id: Screen.MANA, label: 'MANÁ', icon: Wheat },
-    { id: Screen.BOOKSTORE, label: 'SELAH', icon: Library },
-    { id: Screen.ENSINOS, label: 'ENSINOS', icon: BookOpen },
+    { id: Screen.BOOKSTORE, label: 'ROLOS', icon: Library },
     { id: Screen.REFUTACAO, label: 'BABEL', icon: BookMarked },
   ];
 

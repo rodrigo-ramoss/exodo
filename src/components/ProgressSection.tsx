@@ -31,7 +31,7 @@ export default function ProgressSection() {
           <div>
             <p className="text-xs font-bold text-on-surface">Progresso Geral</p>
             <p className="text-[10px] text-on-surface-variant/60 mt-0.5">
-              Acompanhe o que você mais lê: Bíblia, BABEL, SELAH e MANÁ.
+              Acompanhe o que você mais lê: Bíblia, BABEL, ROLOS e MANÁ.
             </p>
           </div>
           <span className="font-headline text-2xl font-black text-primary tracking-tighter">
@@ -72,7 +72,7 @@ export default function ProgressSection() {
           </span>
         </div>
         <p className="text-[10px] text-on-surface-variant/65 mb-4 leading-relaxed">
-          Progresso com foco: 1 estudo bíblico por semana, 1 MANÁ por dia e 1 série por semana em SELAH e BABEL.
+          Progresso com foco: 1 estudo bíblico por semana, 1 MANÁ por dia e 1 série por semana em ROLOS e BABEL.
         </p>
 
         <div className="space-y-3">
