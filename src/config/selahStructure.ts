@@ -138,6 +138,10 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
         title: 'Pecado',
         slug: 'ceia-batismo-e-o-voto-de-pobreza-original',
       },
+      {
+        title: 'Missão',
+        slug: 'missao',
+      },
     ]),
   },
   {
@@ -204,6 +208,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     subsections: buildSubsections('batalha-espiritual', [
       'Armadura',
       'Oração',
+      'Inimigos',
       'Jejum',
       'Discernimento',
       'Autoridade',

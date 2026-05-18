@@ -75,6 +75,15 @@ interface TypologyObjectalTopicMeta {
   seriesMatchers?: string[];
 }
 
+interface BibleStudyEntry {
+  id: string;
+  testament: BibleSubsectionKey;
+  book: string;
+  chapter: number;
+  title: string;
+  content: string;
+}
+
 const livrariaMarkdownModules = {
   ...import.meta.glob('/public/content/livraria/**/*.md', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/livraria/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
@@ -86,6 +95,12 @@ const livrariaEspitirualMarkdownModules = {
   ...import.meta.glob('/public/content/selah/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/selah/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/selah/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
+const bibleMarkdownModules = {
+  ...import.meta.glob('/public/content/selah/biblia/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/biblia/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/biblia/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/biblia/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 const ferramentasMarkdownModules = {
   ...import.meta.glob('/public/content/ferramentas-espirituais/**/*.md', { eager: true, query: '?raw', import: 'default' }),
@@ -397,6 +412,11 @@ function parseFrontmatter(markdown: string): Record<string, string> {
     result[normalizedKey] = value;
   }
   return result;
+}
+
+function removeFrontmatter(markdown: string): string {
+  const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
+  return normalized.replace(/^---\s*[\r\n]+[\s\S]*?[\r\n]+---\s*[\r\n]*/m, '');
 }
 
 function slugify(raw: string): string {
@@ -1142,6 +1162,7 @@ const SELAH_SUBSECTION_FALLBACK_RULES: Partial<Record<SelahThemeTitle, Array<{ s
     { subsection: 'Ceia do Senhor', matchers: ['serie - a refeicao que virou missa', 'ceia-do-senhor'] },
     { subsection: 'Ekkelsia', matchers: ['eclesia-a-comunidade-que-virou-hierarquia', 'serie - o corpo que virou empresa'] },
     { subsection: 'Templo', matchers: ['verdade-sobre-a-igreja', 'serie - a verdadeira historia da igreja', 'trilogia - o canon oculto', 'serie - o veu rasgado'] },
+    { subsection: 'Missão', matchers: ['missao', 'serie - missao'] },
   ],
   'TIPOLOGIA BÍBLICA': [
     {
@@ -1433,6 +1454,60 @@ const BIBLE_SUBSECTIONS = {
 type BibleSubsectionKey = keyof typeof BIBLE_SUBSECTIONS;
 const BIBLE_SUBSECTION_KEYS = Object.keys(BIBLE_SUBSECTIONS) as BibleSubsectionKey[];
 
+const BIBLE_BOOK_TOTAL_CHAPTERS: Partial<Record<string, number>> = {
+  'juizes': 21,
+};
+
+function normalizeBibleBookKey(raw: string): string {
+  return slugify(raw || '').replace(/-/g, '');
+}
+
+function extractBibleBookFromPath(pathKey: string): string | null {
+  const normalized = pathKey.replace(/\\/g, '/');
+  const marker = '/public/content/selah/biblia/';
+  const idx = normalized.indexOf(marker);
+  if (idx < 0) return null;
+  const relative = normalized.slice(idx + marker.length);
+  const parts = relative.split('/').filter(Boolean);
+  if (parts.length < 2) return null;
+  const testamentFolder = parts[0]?.toLowerCase() || '';
+  if (testamentFolder !== 'antigo-testamento' && testamentFolder !== 'novo-testamento' && testamentFolder !== 'at' && testamentFolder !== 'nt') return null;
+  return parts[1] || null;
+}
+
+function discoverBibleStudies(): BibleStudyEntry[] {
+  const entries: BibleStudyEntry[] = [];
+
+  for (const [pathKey, content] of Object.entries(bibleMarkdownModules)) {
+    const normalized = pathKey.replace(/\\/g, '/').toLowerCase();
+    const testament: BibleSubsectionKey = normalized.includes('/novo-testamento/') || normalized.includes('/nt/')
+      ? 'NOVO TESTAMENTO'
+      : 'VELHO TESTAMENTO';
+    const frontmatter = parseFrontmatter(content);
+    const heading = removeFrontmatter(content).match(/^#\s+(.+)$/m)?.[1]?.trim() || '';
+    const bookCandidate = (frontmatter.livro || extractBibleBookFromPath(pathKey) || '').trim();
+    if (!bookCandidate) continue;
+    const chapterCandidate = (frontmatter.capitulo || '').trim();
+    const parsedChapter = Number(chapterCandidate || heading.match(/\b(\d{1,3})\b/)?.[1] || 0);
+    if (!Number.isFinite(parsedChapter) || parsedChapter <= 0) continue;
+
+    const title = (frontmatter.title || heading || `Capítulo ${parsedChapter}`).trim();
+    const bookDisplay = BIBLE_SUBSECTIONS[testament].find((book) => normalizeBibleBookKey(book) === normalizeBibleBookKey(bookCandidate));
+    if (!bookDisplay) continue;
+
+    entries.push({
+      id: `${testament}:${bookDisplay}:${parsedChapter}`,
+      testament,
+      book: bookDisplay,
+      chapter: parsedChapter,
+      title,
+      content: content.replace(/^\uFEFF/, ''),
+    });
+  }
+
+  return entries.sort((a, b) => a.chapter - b.chapter);
+}
+
 // ── Section metadata ──────────────────────────────────────────────────────────
 const SECTIONS: Record<SectionKey, {
   numero: string;
@@ -1444,7 +1519,7 @@ const SECTIONS: Record<SectionKey, {
   'BÍBLIA': {
     numero: '00',
     label: 'Bíblia',
-    description: 'Comentários espirituais da Bíblia. Em preparação.',
+    description: 'Estudos adicionados aos poucos por conta do grande volume que precisa ser analisado, relido e acrescentado no app; conforme vou ensinando na igreja, novos estudos são adicionados.',
     Icon: BookOpen,
     accent: 'from-amber-900/70 to-yellow-800/10',
   },
@@ -1643,7 +1718,11 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'Série — A Onisciência como Atributo Exclusivo': 'IA & APOCALIPSE',
   'Série — O Relógio de Deus':              'APÓCRIFOS',
   'Série — Invasão Legal':                    'JESUS CRISTO',
+  'Série — Invasão':                          'EKKLESIA',
   'série — invasão legal':                    'JESUS CRISTO',
+  'série — invasão':                          'EKKLESIA',
+  'Série — A Hierarquia do Inimigo':          'BATALHA ESPIRITUAL',
+  'série — a hierarquia do inimigo':          'BATALHA ESPIRITUAL',
   'Série — A Cruz no Mundo Espiritual':       'JESUS CRISTO',
   'Série — A Armadura do Remanescente':       'BATALHA ESPIRITUAL',
   'Série — A Arquitetura da Guerra Invisível': 'BATALHA ESPIRITUAL',
@@ -1779,6 +1858,8 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — A Onisciência como Atributo Exclusivo': 'A Onisciência como Atributo Exclusivo',
   'Série — O Relógio de Deus':               'O Relógio de Deus',
   'Série — Invasão Legal':                    'Invasão Legal',
+  'Série — Invasão':                          'Invasão',
+  'Série — A Hierarquia do Inimigo':          'A Hierarquia do Inimigo',
   'Série — A Cruz no Mundo Espiritual':       'A Cruz no Mundo Espiritual',
   'Série — A Armadura do Remanescente':       'A Armadura do Remanescente',
   'Série — A Arquitetura da Guerra Invisível': 'A Arquitetura da Guerra Invisível',
@@ -1823,6 +1904,8 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Série — A Onisciência como Atributo Exclusivo': 'Uma série sobre a diferença entre a onisciência absoluta de Deus e o conhecimento inferido do inimigo, conectando teologia bíblica, tecnologia e discernimento contemporâneo.',
   'Série — O Relógio de Deus': 'Uma série sobre o calendário divino, a guerra dos tempos e a restauração do relógio bíblico revelado em Jubileus, Enoque e Apocalipse.',
   'Série — Invasão Legal': 'Uma série sobre a ofensiva judicial do Reino contra os poderes das trevas: cruz, tribunal celestial, ocupação territorial e execução da sentença final.',
+  'Série — Invasão': 'Uma série sobre a missão da Igreja contra os poderes das trevas: avanço do Reino, discernimento espiritual e formação de comunidades fiéis.',
+  'Série — A Hierarquia do Inimigo': 'Uma série exegética sobre os escalões das trevas em Efésios 6:12 e as estratégias bíblicas para guerra espiritual com discernimento e autoridade em Cristo.',
   'Série — A Cruz no Mundo Espiritual': 'Uma série cristocêntrica sobre as operações invisíveis da cruz: trevas no Calvário, véu rasgado, descida ao Hades, despojamento dos principados e derrota do acusador.',
   'Série — A Armadura do Remanescente': 'Uma série prática sobre preparo espiritual do remanescente: verdade, justiça e permanência no dia mau.',
   'Série — A Arquitetura da Guerra Invisível': 'Uma série sobre a estrutura da guerra espiritual: hierarquia do adversário, atuação de Miguel, cartografia dos principados e estratégias de combate bíblico para o remanescente.',
@@ -2796,6 +2879,7 @@ export default function Bookstore({
   const isTypesMode = mode === 'types';
   const [selectedSection, setSelectedSection] = useState<SectionKey | null>(null);
   const [selectedSubsecao, setSelectedSubsecao] = useState<string | null>(null);
+  const [selectedBibleBook, setSelectedBibleBook] = useState<string | null>(null);
   const [activeTypeId, setActiveTypeId] = useState<TypologyDivisionId | null>(null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
@@ -2806,6 +2890,7 @@ export default function Bookstore({
   const sectionSeriesRowRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const { data: books, loading, error } = useFetch<BookItem[]>('/content/livraria/index.json');
   const discoveredBooks = useMemo(() => discoverBooksFromMarkdown(), []);
+  const bibleStudies = useMemo(() => discoverBibleStudies(), []);
   const typologyEntries = useMemo(() => discoverTypologyContentEntries(), []);
   const markdownBySlug = useMemo(() => buildMarkdownBySlugIndex(), []);
   const typologyMarkdownBySlug = useMemo(() => buildTypologyMarkdownBySlugIndex(), []);
@@ -3254,6 +3339,44 @@ export default function Bookstore({
     document.body.scrollTop = 0;
   }, [selectedSection, selectedSubsecao, activeTypeId, selectedSlug]);
 
+  useEffect(() => {
+    if (selectedSection !== 'BÍBLIA') {
+      setSelectedBibleBook(null);
+      return;
+    }
+    setSelectedBibleBook((current) => {
+      if (!selectedSubsecao) return null;
+      return current;
+    });
+  }, [selectedSection, selectedSubsecao]);
+
+  const bibleStudiesByBook = useMemo(() => {
+    const map = new Map<string, BibleStudyEntry[]>();
+    for (const study of bibleStudies) {
+      const key = `${study.testament}:${study.book}`;
+      const list = map.get(key) ?? [];
+      list.push(study);
+      map.set(key, list);
+    }
+    for (const [key, list] of map.entries()) {
+      map.set(key, list.slice().sort((a, b) => a.chapter - b.chapter));
+    }
+    return map;
+  }, [bibleStudies]);
+
+  const openBibleStudyByBookChapter = useMemo(() => {
+    const map = new Map<string, BibleStudyEntry>();
+    for (const study of bibleStudies) {
+      map.set(`${study.testament}:${study.book}:${study.chapter}`, study);
+    }
+    return map;
+  }, [bibleStudies]);
+
+  const handleOpenBibleStudy = (study: BibleStudyEntry) => {
+    setSelectedSlug(`biblia/${slugify(study.book)}-${study.chapter}`);
+    setMarkdownContent(study.content);
+  };
+
   const handleSelectBook = async (slug: string) => {
     setSelectedSlug(slug);
     const localContent = typologyMarkdownBySlug[slug]
@@ -3566,10 +3689,13 @@ export default function Bookstore({
             <section className="relative overflow-hidden rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-4 sm:p-6">
               <FireflyLayer />
 
-              <button
-                onClick={() => setSelectedSubsecao(null)}
-                className="relative z-10 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
-              >
+                <button
+                  onClick={() => {
+                    setSelectedBibleBook(null);
+                    setSelectedSubsecao(null);
+                  }}
+                  className="relative z-10 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
+                >
                 <ArrowLeft size={12} />
                 Subseções
               </button>
@@ -3925,6 +4051,93 @@ export default function Bookstore({
 
       if (selectedBibleSubsection) {
         const books = BIBLE_SUBSECTIONS[selectedBibleSubsection];
+        const selectedBookStudies = selectedBibleBook
+          ? (bibleStudiesByBook.get(`${selectedBibleSubsection}:${selectedBibleBook}`) ?? [])
+          : [];
+
+        if (selectedBibleBook) {
+          const totalChapters = BIBLE_BOOK_TOTAL_CHAPTERS[normalizeBibleBookKey(selectedBibleBook)] ?? 0;
+          const chapters = totalChapters > 0
+            ? Array.from({ length: totalChapters }, (_, index) => index + 1)
+            : [];
+          const readyChapters = new Set(selectedBookStudies.map((study) => study.chapter));
+          const hasJudgesReadyBlock = selectedBibleBook === 'Juízes'
+            && [19, 20, 21].every((chapter) => readyChapters.has(chapter));
+
+          return (
+            <div className="pt-4 sm:pt-6 pb-24 sm:pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
+              <section className="relative overflow-hidden rounded-3xl border border-outline-variant/25 bg-gradient-to-b from-surface-container-low to-surface-container p-4 sm:p-6">
+                <FireflyLayer />
+
+                <button
+                  onClick={() => setSelectedBibleBook(null)}
+                  className="relative z-10 inline-flex items-center gap-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-primary transition-colors"
+                >
+                  <ArrowLeft size={12} />
+                  Livros
+                </button>
+
+                <div className="relative z-10 mt-3 sm:mt-4 mb-4 sm:mb-5">
+                  <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
+                    Livro
+                  </span>
+                  <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
+                    {selectedBibleBook}
+                  </h2>
+                  <p className="text-[10px] sm:text-xs text-on-surface-variant/85 leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">
+                    {label} {'>'} {selectedBibleSubsection} {'>'} {selectedBibleBook}
+                  </p>
+                  {hasJudgesReadyBlock ? (
+                    <p className="text-[10px] sm:text-xs uppercase tracking-[0.16em] font-black text-[#D4AF37] mt-2">
+                      Estudos no 19 ao 21 prontos
+                    </p>
+                  ) : (
+                    <p className="text-[10px] sm:text-xs uppercase tracking-[0.16em] font-black text-primary/85 mt-2">
+                      {selectedBookStudies.length} estudo{selectedBookStudies.length === 1 ? '' : 's'} pronto{selectedBookStudies.length === 1 ? '' : 's'}
+                    </p>
+                  )}
+                </div>
+
+                <div className="relative z-10 border-t border-primary/15 pt-4 sm:pt-5">
+                  {chapters.length > 0 ? (
+                    <div className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2.5 sm:gap-3">
+                      {chapters.map((chapter) => {
+                        const isReady = readyChapters.has(chapter);
+                        const study = openBibleStudyByBookChapter.get(`${selectedBibleSubsection}:${selectedBibleBook}:${chapter}`);
+                        return (
+                          <button
+                            key={`${selectedBibleSubsection}-${selectedBibleBook}-${chapter}`}
+                            type="button"
+                            onClick={() => {
+                              if (!isReady || !study) return;
+                              handleOpenBibleStudy(study);
+                            }}
+                            className={`subsecao-botao relative overflow-hidden rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left transition-colors ${
+                              isReady
+                                ? 'cursor-pointer border border-[#D4AF37]/55 bg-[#D4AF37]/20 hover:bg-[#D4AF37]/28'
+                                : 'cursor-default border border-outline-variant/20 bg-black/20'
+                            }`}
+                          >
+                            <span className={`relative block text-[11px] sm:text-xs font-black tracking-wide ${isReady ? 'text-[#f7df9a]' : 'text-on-surface'}`}>
+                              Capítulo {chapter}
+                            </span>
+                            <span className={`relative mt-1 block text-[9px] sm:text-[10px] ${isReady ? 'text-[#f7df9a]/90' : 'text-on-surface-variant/85'}`}>
+                              {isReady ? 'Pronto' : 'Fechado'}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-[11px] sm:text-xs text-on-surface-variant/80">
+                      Capítulos ainda indisponíveis para este livro.
+                    </p>
+                  )}
+                </div>
+              </section>
+            </div>
+          );
+        }
 
         return (
           <div className="pt-4 sm:pt-6 pb-24 sm:pb-28 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen bg-surface-container-lowest">
@@ -3956,19 +4169,39 @@ export default function Bookstore({
 
               <div className="relative z-10 border-t border-primary/15 pt-4 sm:pt-5">
                 <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
-                  {books.map((book) => (
-                    <div
-                      key={`${selectedBibleSubsection}-${slugify(book)}`}
-                      className="subsecao-botao relative overflow-hidden rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left bg-black/20"
-                    >
-                      <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-on-surface">
-                        {book}
-                      </span>
-                      <span className="relative mt-1 block text-[9px] sm:text-[10px] text-on-surface-variant/85">
-                        Em preparação
-                      </span>
-                    </div>
-                  ))}
+                  {books.map((book) => {
+                    const studies = bibleStudiesByBook.get(`${selectedBibleSubsection}:${book}`) ?? [];
+                    const hasStudies = studies.length > 0;
+                    const canOpenBook = hasStudies || (BIBLE_BOOK_TOTAL_CHAPTERS[normalizeBibleBookKey(book)] ?? 0) > 0;
+                    const readyChapters = new Set(studies.map((study) => study.chapter));
+                    const hasJudgesReadyBlock = book === 'Juízes' && [19, 20, 21].every((chapter) => readyChapters.has(chapter));
+                    return (
+                      <button
+                        key={`${selectedBibleSubsection}-${slugify(book)}`}
+                        type="button"
+                        onClick={() => {
+                          if (!canOpenBook) return;
+                          setSelectedBibleBook(book);
+                        }}
+                        className={`subsecao-botao relative overflow-hidden rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left transition-colors ${
+                          hasStudies
+                            ? 'cursor-pointer border border-[#D4AF37]/55 bg-[#D4AF37]/20 hover:bg-[#D4AF37]/28'
+                            : 'cursor-default border border-outline-variant/20 bg-black/20'
+                        }`}
+                      >
+                        <span className={`relative block text-[11px] sm:text-xs font-black tracking-wide ${hasStudies ? 'text-[#f7df9a]' : 'text-on-surface'}`}>
+                          {book}
+                        </span>
+                        <span className={`relative mt-1 block text-[9px] sm:text-[10px] ${hasStudies ? 'text-[#f7df9a]/90' : 'text-on-surface-variant/85'}`}>
+                          {hasJudgesReadyBlock
+                            ? 'Estudos no 19 ao 21 prontos'
+                            : hasStudies
+                              ? `${studies.length} estudo${studies.length === 1 ? '' : 's'} pronto${studies.length === 1 ? '' : 's'}`
+                              : 'Sem estudos no momento'}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </section>
@@ -3986,6 +4219,7 @@ export default function Bookstore({
 
             <button
               onClick={() => {
+                setSelectedBibleBook(null);
                 setSelectedSubsecao(null);
                 setSelectedSection(null);
               }}
@@ -4017,7 +4251,10 @@ export default function Bookstore({
                   <button
                     key={subsectionKey}
                     type="button"
-                    onClick={() => setSelectedSubsecao(subsectionKey)}
+                    onClick={() => {
+                      setSelectedBibleBook(null);
+                      setSelectedSubsecao(subsectionKey);
+                    }}
                     className="subsecao-botao group relative overflow-hidden rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left bg-black/20 cursor-pointer"
                   >
                     <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-on-surface">
