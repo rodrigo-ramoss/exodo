@@ -3,6 +3,7 @@ import {
   Sparkles,
   Clock3,
   ChevronLeft,
+  ChevronDown,
   Orbit,
   Shield,
   Swords,
@@ -11,6 +12,7 @@ import {
   Cross,
   Flame,
   Check,
+  BookOpen,
 } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 import { AppImage } from './AppImage';
@@ -50,6 +52,34 @@ interface StudyGroup {
   subthemeLabel: string;
   subthemeDescription: string;
   studies: InterpretationStudy[];
+}
+
+type BibleBookId = 'efesios';
+
+interface ReaderStudy {
+  content: string;
+  slugKey: string;
+  category: 'biblica';
+}
+
+interface BibleBookMeta {
+  id: BibleBookId;
+  title: string;
+  subtitle: string;
+  chapters: number[];
+}
+
+interface BibleBookStudy {
+  id: string;
+  bookId: BibleBookId;
+  chapter: number;
+  verseRange: string;
+  listLabel: string;
+  title: string;
+  description?: string;
+  date?: string;
+  content: string;
+  slugKey: string;
 }
 
 const AXIS_METADATA: AxisMeta[] = [
@@ -138,7 +168,22 @@ const studyMarkdownModules = {
   ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
+const ntBibleModules = {
+  ...import.meta.glob('/public/content/selah/biblia/nt/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/biblia/nt/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/biblia/nt/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/selah/biblia/nt/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+} as Record<string, string>;
 const CONTENT_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml)$/i;
+
+const BIBLE_BOOKS: BibleBookMeta[] = [
+  {
+    id: 'efesios',
+    title: 'Efésios',
+    subtitle: 'Carta aos Efésios',
+    chapters: [1, 2, 3, 4, 5, 6],
+  },
+];
 
 function parseFrontmatter(markdown: string): Record<string, string> {
   const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
@@ -271,6 +316,85 @@ function loadInterpretationStudies(): InterpretationStudy[] {
     .sort(sortByNewest);
 }
 
+function normalizeVerseRange(raw: string): string {
+  return raw.replace(/\s+/g, '').replace(/[–—]/g, '-').trim();
+}
+
+function extractChapterFromPath(path: string): number {
+  const match = path.match(/capitulo\s*(\d+)/i);
+  return match ? Number(match[1]) : 0;
+}
+
+function extractVerseRange(chapter: number, fileStem: string, title: string): string {
+  const chapterPattern = new RegExp(`${chapter}\\.(\\d+(?:\\s*[-–]\\s*\\d+)?)`, 'i');
+  const fromTitle = title.match(chapterPattern)?.[1];
+  if (fromTitle) return normalizeVerseRange(fromTitle);
+
+  const fromFile = fileStem.match(chapterPattern)?.[1];
+  if (fromFile) return normalizeVerseRange(fromFile);
+
+  const generic = title.match(/(\d+(?:\s*[-–]\s*\d+)?)/)?.[1];
+  if (generic) return normalizeVerseRange(generic);
+
+  return '';
+}
+
+function stripBookPrefix(title: string, chapter: number, verseRange: string): string {
+  const escapedRange = verseRange.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace('-', '[-–]');
+  const withRange = new RegExp(`^ef[eé]sios\\s*${chapter}\\.${escapedRange}\\s*[-—:]?\\s*`, 'i');
+  const withoutRange = new RegExp(`^ef[eé]sios\\s*${chapter}\\s*[-—:]?\\s*`, 'i');
+  return title.replace(withRange, '').replace(withoutRange, '').trim();
+}
+
+function toVerseRangeLabel(verseRange: string): string {
+  if (!verseRange) return '';
+  if (!verseRange.includes('-')) return verseRange;
+  const [start, end] = verseRange.split('-');
+  return `${start} ao ${end}`;
+}
+
+function firstVerseFromRange(verseRange: string): number {
+  const parsed = Number(verseRange.split('-')[0]);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function loadEfesiosStudies(): BibleBookStudy[] {
+  return Object.entries(ntBibleModules)
+    .filter(([pathKey]) => pathKey.replace(/\\/g, '/').includes('/efesios/'))
+    .map(([pathKey, content]) => {
+      const normalizedPath = pathKey.replace(/\\/g, '/');
+      const parts = normalizedPath.split('/');
+      const fileName = parts[parts.length - 1] ?? '';
+      const fileStem = fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
+      const chapter = extractChapterFromPath(normalizedPath);
+      const frontmatter = parseFrontmatter(content);
+      const rawTitle = (frontmatter.title || fileStem).trim();
+      const verseRange = extractVerseRange(chapter, fileStem, rawTitle);
+      const cleanedTitle = stripBookPrefix(rawTitle, chapter, verseRange);
+      const verseLabel = toVerseRangeLabel(verseRange);
+      const listLabel = verseLabel
+        ? `Efésios ${chapter}, ${verseLabel} — ${cleanedTitle}`
+        : `Efésios ${chapter} — ${cleanedTitle}`;
+
+      return {
+        id: normalizedPath,
+        bookId: 'efesios' as const,
+        chapter,
+        verseRange,
+        listLabel,
+        title: cleanedTitle || rawTitle,
+        description: frontmatter.description,
+        date: frontmatter.date,
+        content,
+        slugKey: normalizedPath,
+      };
+    })
+    .sort((a, b) => {
+      if (a.chapter !== b.chapter) return a.chapter - b.chapter;
+      return firstVerseFromRange(a.verseRange) - firstVerseFromRange(b.verseRange);
+    });
+}
+
 function getProgress(slug: string): number {
   return pm.getProgress('biblica', slug);
 }
@@ -293,9 +417,12 @@ function DragScrollRow({ children }: { children: ReactNode }) {
 
 export default function Bible() {
   const [selectedAxisId, setSelectedAxisId] = useState<string | null>(null);
-  const [selectedStudy, setSelectedStudy] = useState<InterpretationStudy | null>(null);
+  const [selectedBookId, setSelectedBookId] = useState<BibleBookId | null>(null);
+  const [selectedStudy, setSelectedStudy] = useState<ReaderStudy | null>(null);
+  const [expandedEfesiosChapters, setExpandedEfesiosChapters] = useState<Record<number, boolean>>({ 6: true });
 
   const studies = useMemo(() => loadInterpretationStudies(), []);
+  const efesiosStudies = useMemo(() => loadEfesiosStudies(), []);
 
   const studiesByAxis = useMemo(() => {
     const map = new Map<string, InterpretationStudy[]>();
@@ -311,8 +438,18 @@ export default function Bible() {
   }, [studies]);
 
   const recentStudies = useMemo(() => studies.slice(0, 5), [studies]);
+  const efesiosByChapter = useMemo(() => {
+    const map = new Map<number, BibleBookStudy[]>();
+    for (const study of efesiosStudies) {
+      const list = map.get(study.chapter) ?? [];
+      list.push(study);
+      map.set(study.chapter, list);
+    }
+    return map;
+  }, [efesiosStudies]);
 
   const selectedAxis = selectedAxisId ? AXIS_BY_ID[selectedAxisId] : null;
+  const selectedBook = selectedBookId ? BIBLE_BOOKS.find((book) => book.id === selectedBookId) ?? null : null;
 
   const selectedAxisGroups = useMemo<StudyGroup[]>(() => {
     if (!selectedAxisId) return [];
@@ -342,9 +479,133 @@ export default function Bible() {
       <MarkdownViewer
         content={selectedStudy.content}
         slug={selectedStudy.slugKey}
-        category="biblica"
+        category={selectedStudy.category}
         onClose={() => setSelectedStudy(null)}
       />
+    );
+  }
+
+  if (selectedBook && selectedBook.id === 'efesios') {
+    const completed = efesiosStudies.filter((study) => pm.isRead('biblica', study.slugKey)).length;
+
+    return (
+      <div className="pt-6 pb-32 px-5 max-w-7xl mx-auto">
+        <div className="mb-6">
+          <button
+            onClick={() => setSelectedBookId(null)}
+            className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors mb-5 active:scale-95 text-[10px] font-black uppercase tracking-widest"
+          >
+            <ChevronLeft size={15} />
+            BÍBLIA
+          </button>
+
+          <article className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-r from-[#2a2118] via-[#1d1713] to-[#111012] p-5">
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-2.5 py-1">
+                <BookOpen size={12} className="text-primary" />
+                <span className="text-[9px] font-black uppercase tracking-[0.16em] text-primary">Novo Testamento</span>
+              </div>
+              <span className="text-[9px] uppercase tracking-widest font-black text-on-surface-variant/70">
+                {completed}/{efesiosStudies.length} concluídos
+              </span>
+            </div>
+            <h2 className="font-headline font-black text-2xl text-on-surface tracking-tight leading-none uppercase">
+              Efésios
+            </h2>
+            <p className="mt-1 text-[10px] text-on-surface-variant/75 font-medium leading-relaxed">
+              Selecione um capítulo e depois o estudo por faixa de versículos.
+            </p>
+          </article>
+        </div>
+
+        <AnimatedDivider />
+
+        <section className="space-y-3">
+          {selectedBook.chapters.map((chapter) => {
+            const chapterStudies = efesiosByChapter.get(chapter) ?? [];
+            const isOpen = Boolean(expandedEfesiosChapters[chapter]);
+
+            return (
+              <article key={`efesios-cap-${chapter}`} className="rounded-xl border border-outline-variant/20 bg-surface-container-low overflow-hidden">
+                <button
+                  onClick={() => setExpandedEfesiosChapters((prev) => ({ ...prev, [chapter]: !prev[chapter] }))}
+                  className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-surface-container-high/40 transition-colors"
+                >
+                  <div>
+                    <p className="text-[8px] uppercase tracking-[0.16em] font-black text-primary/85">Capítulo</p>
+                    <h3 className="font-headline text-base font-black tracking-tight text-on-surface uppercase">
+                      Efésios {chapter}
+                    </h3>
+                    <p className="text-[10px] text-on-surface-variant/65">
+                      {chapterStudies.length > 0 ? `${chapterStudies.length} estudo${chapterStudies.length > 1 ? 's' : ''}` : 'Sem estudos neste capítulo por enquanto'}
+                    </p>
+                  </div>
+                  <ChevronDown
+                    size={16}
+                    className={`text-primary transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+                  />
+                </button>
+
+                {isOpen && (
+                  <div className="px-3 pb-3 space-y-2">
+                    {chapterStudies.length === 0 && (
+                      <div className="rounded-lg border border-outline-variant/20 bg-surface-container px-3 py-2.5">
+                        <p className="text-[10px] text-on-surface-variant/70">
+                          Ainda não há estudos cadastrados para Efésios {chapter}.
+                        </p>
+                      </div>
+                    )}
+
+                    {chapterStudies.map((study) => {
+                      const progress = getProgress(study.slugKey);
+                      const reads = getReads(study.slugKey);
+                      const isCompleted = pm.isRead('biblica', study.slugKey);
+
+                      return (
+                        <button
+                          key={study.id}
+                          onClick={() => setSelectedStudy({ content: study.content, slugKey: study.slugKey, category: 'biblica' })}
+                          className="w-full rounded-lg border border-outline-variant/25 bg-surface-container-high/55 px-3 py-2.5 text-left hover:border-primary/45 hover:bg-surface-container-high transition-colors"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <h4 className="font-headline text-[11px] font-extrabold tracking-tight text-on-surface leading-snug">
+                              {study.listLabel}
+                            </h4>
+                            {isCompleted && (
+                              <span className="shrink-0 text-[7px] uppercase tracking-widest font-black text-[#D4AF37] border border-[#D4AF37]/45 rounded-full px-1.5 py-0.5">
+                                Lido
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-1 text-[9px] text-on-surface-variant/65 line-clamp-2">
+                            {study.description || 'Clique para abrir o estudo.'}
+                          </p>
+                          <div className="mt-2 h-1.5 bg-outline-variant/20 rounded-full overflow-hidden border border-outline-variant/20">
+                            <div
+                              className={isCompleted
+                                ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_8px_rgba(212,175,55,0.35)]'
+                                : 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E]'}
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                          <div className="mt-1.5 flex items-center justify-between">
+                            <span className={`text-[8px] uppercase tracking-wider font-black ${isCompleted ? 'text-[#D4AF37]' : 'text-on-surface-variant/55'}`}>
+                              {reads > 0 ? `Lido ${reads}x` : progress > 0 ? 'Em andamento' : 'Não iniciado'}
+                            </span>
+                            <span className="text-[8px] uppercase tracking-widest font-bold text-on-surface-variant/45">
+                              {study.date || 'sem data'}
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </article>
+            );
+          })}
+        </section>
+      </div>
     );
   }
 
@@ -432,7 +693,7 @@ export default function Bible() {
                 return (
                   <article
                     key={study.pathKey}
-                    onClick={() => setSelectedStudy(study)}
+                    onClick={() => setSelectedStudy({ content: study.content, slugKey: study.slugKey, category: 'biblica' })}
                     className="gold-glow-hover min-w-[220px] max-w-[220px] rounded-xl border border-outline-variant/20 bg-surface-container-low overflow-hidden cursor-pointer hover:scale-[1.03] transition-transform duration-300 snap-start"
                   >
                     <div className="relative h-24 w-full border-b border-outline-variant/10">
@@ -516,7 +777,7 @@ export default function Bible() {
           {recentStudies.map((study) => (
             <article
               key={study.pathKey}
-              onClick={() => setSelectedStudy(study)}
+              onClick={() => setSelectedStudy({ content: study.content, slugKey: study.slugKey, category: 'biblica' })}
               className="gold-glow-hover rounded-xl border border-outline-variant/15 bg-surface-container-low/80 backdrop-blur-sm px-2.5 py-2 flex items-center gap-2.5 cursor-pointer hover:scale-[1.01] transition-transform duration-300"
             >
               <div className="w-16 h-12 rounded-lg overflow-hidden border border-white/10 shrink-0">
@@ -550,6 +811,36 @@ export default function Bible() {
       </section>
 
       <AnimatedDivider />
+
+      <section className="mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <BookOpen size={14} className="text-primary" />
+          <h3 className="font-headline text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant">
+            NOVO TESTAMENTO
+          </h3>
+        </div>
+
+        {BIBLE_BOOKS.map((book) => {
+          const bookStudies = efesiosStudies;
+          const completed = bookStudies.filter((study) => pm.isRead('biblica', study.slugKey)).length;
+          return (
+            <button
+              key={book.id}
+              onClick={() => setSelectedBookId(book.id)}
+              className="gold-glow-hover w-full rounded-2xl border border-white/10 bg-gradient-to-r from-[#2a2118]/95 via-[#1e1712]/90 to-[#111012]/85 p-4 text-left"
+            >
+              <p className="text-[8px] uppercase tracking-[0.16em] font-black text-primary/85">Carta</p>
+              <h3 className="font-headline font-black text-[22px] text-on-surface tracking-tight uppercase leading-none mt-1">
+                {book.title}
+              </h3>
+              <p className="text-[10px] text-on-surface-variant/75 mt-1">{book.subtitle}</p>
+              <p className="mt-2 text-[9px] uppercase tracking-[0.14em] font-black text-primary/80">
+                Capítulos {book.chapters[0]}-{book.chapters[book.chapters.length - 1]} • {completed}/{bookStudies.length} concluídos
+              </p>
+            </button>
+          );
+        })}
+      </section>
 
       <section className="space-y-3">
         {AXIS_METADATA.map((axis) => {
