@@ -1456,6 +1456,7 @@ const BIBLE_SUBSECTION_KEYS = Object.keys(BIBLE_SUBSECTIONS) as BibleSubsectionK
 
 const BIBLE_BOOK_TOTAL_CHAPTERS: Partial<Record<string, number>> = {
   'juizes': 21,
+  'efesios': 6,
 };
 
 function normalizeBibleBookKey(raw: string): string {
@@ -1508,6 +1509,25 @@ function discoverBibleStudies(): BibleStudyEntry[] {
   return entries.sort((a, b) => a.chapter - b.chapter);
 }
 
+function extractBibleStudyVerseStart(study: BibleStudyEntry): number {
+  const chapterPattern = new RegExp(`${study.chapter}\\.(\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?`, 'i');
+  const fromTitle = study.title.match(chapterPattern)?.[1];
+  const parsed = Number(fromTitle);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function formatBibleStudyListLabel(study: BibleStudyEntry): string {
+  const chapterPattern = new RegExp(`${study.chapter}\\.(\\d{1,3}(?:\\s*[-–]\\s*\\d{1,3})?)`, 'i');
+  const rangeRaw = study.title.match(chapterPattern)?.[1] ?? '';
+  const normalizedRange = rangeRaw.replace(/\s+/g, '').replace(/[–—]/g, '-');
+  let label = study.title;
+  if (normalizedRange.includes('-')) {
+    const [start, end] = normalizedRange.split('-');
+    label = label.replace(normalizedRange, `${start} ao ${end}`);
+  }
+  return label.replace(new RegExp(`\\b${study.chapter}\\.`), `${study.chapter}, `);
+}
+
 // ── Section metadata ──────────────────────────────────────────────────────────
 const SECTIONS: Record<SectionKey, {
   numero: string;
@@ -1519,7 +1539,7 @@ const SECTIONS: Record<SectionKey, {
   'BÍBLIA': {
     numero: '00',
     label: 'Bíblia',
-    description: 'Estudos adicionados aos poucos por conta do grande volume que precisa ser analisado, relido e acrescentado no app; conforme vou ensinando na igreja, novos estudos são adicionados.',
+    description: 'Selecione o testamento e o livro.',
     Icon: BookOpen,
     accent: 'from-amber-900/70 to-yellow-800/10',
   },
@@ -2880,6 +2900,7 @@ export default function Bookstore({
   const [selectedSection, setSelectedSection] = useState<SectionKey | null>(null);
   const [selectedSubsecao, setSelectedSubsecao] = useState<string | null>(null);
   const [selectedBibleBook, setSelectedBibleBook] = useState<string | null>(null);
+  const [selectedBibleChapter, setSelectedBibleChapter] = useState<number | null>(null);
   const [activeTypeId, setActiveTypeId] = useState<TypologyDivisionId | null>(null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
@@ -3342,12 +3363,16 @@ export default function Bookstore({
   useEffect(() => {
     if (selectedSection !== 'BÍBLIA') {
       setSelectedBibleBook(null);
+      setSelectedBibleChapter(null);
       return;
     }
     setSelectedBibleBook((current) => {
       if (!selectedSubsecao) return null;
       return current;
     });
+    if (!selectedSubsecao) {
+      setSelectedBibleChapter(null);
+    }
   }, [selectedSection, selectedSubsecao]);
 
   const bibleStudiesByBook = useMemo(() => {
@@ -3364,13 +3389,20 @@ export default function Bookstore({
     return map;
   }, [bibleStudies]);
 
-  const openBibleStudyByBookChapter = useMemo(() => {
-    const map = new Map<string, BibleStudyEntry>();
-    for (const study of bibleStudies) {
-      map.set(`${study.testament}:${study.book}:${study.chapter}`, study);
+  useEffect(() => {
+    if (selectedSection !== 'BÍBLIA' || !selectedSubsecao || !selectedBibleBook) {
+      setSelectedBibleChapter(null);
+      return;
     }
-    return map;
-  }, [bibleStudies]);
+
+    const studies = bibleStudiesByBook.get(`${selectedSubsecao}:${selectedBibleBook}`) ?? [];
+    const readyChapters = Array.from(new Set(studies.map((study) => study.chapter))).sort((a, b) => a - b);
+
+    setSelectedBibleChapter((current) => {
+      if (current && (readyChapters.includes(current) || current > 0)) return current;
+      return readyChapters[0] ?? null;
+    });
+  }, [selectedSection, selectedSubsecao, selectedBibleBook, bibleStudiesByBook]);
 
   const handleOpenBibleStudy = (study: BibleStudyEntry) => {
     setSelectedSlug(`biblia/${slugify(study.book)}-${study.chapter}`);
@@ -4054,6 +4086,12 @@ export default function Bookstore({
         const selectedBookStudies = selectedBibleBook
           ? (bibleStudiesByBook.get(`${selectedBibleSubsection}:${selectedBibleBook}`) ?? [])
           : [];
+        const selectedChapterStudies = selectedBibleChapter
+          ? selectedBookStudies
+              .filter((study) => study.chapter === selectedBibleChapter)
+              .slice()
+              .sort((a, b) => extractBibleStudyVerseStart(a) - extractBibleStudyVerseStart(b))
+          : [];
 
         if (selectedBibleBook) {
           const totalChapters = BIBLE_BOOK_TOTAL_CHAPTERS[normalizeBibleBookKey(selectedBibleBook)] ?? 0;
@@ -4078,20 +4116,17 @@ export default function Bookstore({
                 </button>
 
                 <div className="relative z-10 mt-3 sm:mt-4 mb-4 sm:mb-5">
-                  <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
-                    Livro
-                  </span>
-                  <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
-                    {selectedBibleBook}
-                  </h2>
-                  <p className="text-[10px] sm:text-xs text-on-surface-variant/85 leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">
-                    {label} {'>'} {selectedBibleSubsection} {'>'} {selectedBibleBook}
+                <span className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary mb-1.5 sm:mb-2">
+                  Livro
+                </span>
+                <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
+                  {selectedBibleBook}
+                </h2>
+                {hasJudgesReadyBlock ? (
+                  <p className="text-[10px] sm:text-xs uppercase tracking-[0.16em] font-black text-[#D4AF37] mt-2">
+                    Estudos no 19 ao 21 prontos
                   </p>
-                  {hasJudgesReadyBlock ? (
-                    <p className="text-[10px] sm:text-xs uppercase tracking-[0.16em] font-black text-[#D4AF37] mt-2">
-                      Estudos no 19 ao 21 prontos
-                    </p>
-                  ) : (
+                ) : (
                     <p className="text-[10px] sm:text-xs uppercase tracking-[0.16em] font-black text-primary/85 mt-2">
                       {selectedBookStudies.length} estudo{selectedBookStudies.length === 1 ? '' : 's'} pronto{selectedBookStudies.length === 1 ? '' : 's'}
                     </p>
@@ -4103,16 +4138,18 @@ export default function Bookstore({
                     <div className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2.5 sm:gap-3">
                       {chapters.map((chapter) => {
                         const isReady = readyChapters.has(chapter);
-                        const study = openBibleStudyByBookChapter.get(`${selectedBibleSubsection}:${selectedBibleBook}:${chapter}`);
                         return (
                           <button
                             key={`${selectedBibleSubsection}-${selectedBibleBook}-${chapter}`}
                             type="button"
                             onClick={() => {
-                              if (!isReady || !study) return;
-                              handleOpenBibleStudy(study);
+                              setSelectedBibleChapter(chapter);
                             }}
                             className={`subsecao-botao relative overflow-hidden rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left transition-colors ${
+                              selectedBibleChapter === chapter
+                                ? 'ring-2 ring-[#D4AF37]/70'
+                                : ''
+                            } ${
                               isReady
                                 ? 'cursor-pointer border border-[#D4AF37]/55 bg-[#D4AF37]/20 hover:bg-[#D4AF37]/28'
                                 : 'cursor-default border border-outline-variant/20 bg-black/20'
@@ -4122,7 +4159,7 @@ export default function Bookstore({
                               Capítulo {chapter}
                             </span>
                             <span className={`relative mt-1 block text-[9px] sm:text-[10px] ${isReady ? 'text-[#f7df9a]/90' : 'text-on-surface-variant/85'}`}>
-                              {isReady ? 'Pronto' : 'Fechado'}
+                              {isReady ? 'Com estudos' : 'Sem estudos'}
                             </span>
                           </button>
                         );
@@ -4134,6 +4171,37 @@ export default function Bookstore({
                     </p>
                   )}
                 </div>
+
+                {selectedBibleChapter && (
+                  <div className="relative z-10 border-t border-primary/15 mt-4 pt-4 sm:pt-5">
+                    <h3 className="font-headline text-lg sm:text-xl font-black tracking-tight text-on-surface mb-3">
+                      {selectedBibleBook} {selectedBibleChapter}
+                    </h3>
+                    {selectedChapterStudies.length > 0 ? (
+                      <div className="space-y-2.5">
+                        {selectedChapterStudies.map((study) => (
+                          <button
+                            key={study.id}
+                            type="button"
+                            onClick={() => handleOpenBibleStudy(study)}
+                            className="subsecao-botao group relative w-full overflow-hidden rounded-xl border border-[#D4AF37]/45 bg-[#D4AF37]/15 px-3 sm:px-3.5 py-2.5 sm:py-3 text-left transition-colors hover:bg-[#D4AF37]/22"
+                          >
+                            <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-[#f7df9a]">
+                              {formatBibleStudyListLabel(study)}
+                            </span>
+                            <span className="relative mt-1 block text-[9px] sm:text-[10px] text-[#f7df9a]/85">
+                              Abrir estudo
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-[11px] sm:text-xs text-on-surface-variant/80">
+                        Sem estudos publicados para este capítulo.
+                      </p>
+                    )}
+                  </div>
+                )}
               </section>
             </div>
           );
@@ -4159,9 +4227,6 @@ export default function Bookstore({
                 <h2 className="font-headline text-2xl sm:text-4xl font-black tracking-tight text-on-surface uppercase">
                   {selectedBibleSubsection}
                 </h2>
-                <p className="text-[10px] sm:text-xs text-on-surface-variant/85 leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">
-                  {label} {'>'} {selectedBibleSubsection}
-                </p>
                 <p className="text-[10px] sm:text-xs uppercase tracking-[0.16em] font-black text-primary/85 mt-2">
                   {books.length} livros
                 </p>
@@ -4182,6 +4247,7 @@ export default function Bookstore({
                         onClick={() => {
                           if (!canOpenBook) return;
                           setSelectedBibleBook(book);
+                          setSelectedBibleChapter(null);
                         }}
                         className={`subsecao-botao relative overflow-hidden rounded-xl px-3 sm:px-3.5 py-2.5 sm:py-3 text-left transition-colors ${
                           hasStudies
