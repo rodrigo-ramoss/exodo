@@ -5,7 +5,7 @@ description: "Antes de ser uma instituição com CNPJ, templos e hierarquia, a i
 seção: selah
 tema: historia da igreja
 subseção: eclesia
-image: URL_da_capa_placeholder
+image: "/image/selah/a comunidade dos sacerdotes.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

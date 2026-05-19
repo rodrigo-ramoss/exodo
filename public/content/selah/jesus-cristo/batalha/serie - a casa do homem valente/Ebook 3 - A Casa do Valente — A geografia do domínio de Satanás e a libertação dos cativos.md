@@ -3,7 +3,6 @@ title: "A Casa do Valente — A geografia do domínio de Satanás e a libertaç�
 description: "O que é a casa do homem valente? Onde fica o território que ele guarda? Quais são os bens preciosos que o Mais Valente veio saquear? Uma investigação sobre a geografia do domínio do adversário."
 seção: selah
 category: batalha-espiritual
-image: https://via.placeholder.com/1600x2400?text=A+Casa+do+Homem+Valente+Vol+3
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

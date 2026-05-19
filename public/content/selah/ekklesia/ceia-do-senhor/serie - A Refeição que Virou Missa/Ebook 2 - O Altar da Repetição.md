@@ -4,7 +4,7 @@ subtitle: "Como a Missa Católica Ressuscitou o Sacrifício Levítico, Prendeu o
 description: "A Ceia do Senhor era uma refeição comunitária que proclamava a vitória do Cordeiro. Como foi que se transformou num sacrifício incruento oferecido por um sacerdote num altar? Este ebook traça a história da corrupção da Eucaristia — da transubstanciação à adoração da hóstia, do cálice confiscado à Missa privada. Uma anatomia do maior sequestro litúrgico da história da igreja."
 seção: selah
 category: ceia do senhor
-image: URL_da_capa_placeholder
+image: "/image/selah/arquetipo do sacrificio.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

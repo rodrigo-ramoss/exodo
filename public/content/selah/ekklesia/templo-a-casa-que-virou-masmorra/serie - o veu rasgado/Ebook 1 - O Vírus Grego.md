@@ -4,7 +4,7 @@ subtitle: "Como a Filosofia de Platão Matou a Esperança da Terra e Adoeceu a I
 description: "A Bíblia promete uma Terra restaurada. A igreja primitiva esperava a ressurreição do corpo. O que aconteceu? Este ebook desmascara a infiltração do platonismo no cristianismo ocidental, o sequestro da hermenêutica pela filosofia grega e a construção de uma escatologia da evasão que traiu a esperança hebraica dos profetas e apóstolos."
 seção: livraria
 category: historia-da-igreja
-image: URL_da_capa_placeholder
+image: "/image/selah/o virus grego.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

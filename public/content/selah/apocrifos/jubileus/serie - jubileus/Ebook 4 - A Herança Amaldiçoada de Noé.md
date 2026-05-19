@@ -1,6 +1,7 @@
 ---
 title: A Herança Amaldiçoada de Noé
 category: SÉRIE — JUBILEUS
+image: /image/selah/a herança amaldicoada de noe.webp
 time: LIVRO
 theme: apocrifos
 subsecao: jubileus

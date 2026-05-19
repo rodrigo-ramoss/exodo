@@ -137,7 +137,7 @@ const imageModules = {
 };
 
 const COVER_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg'] as const;
-const WEAK_REMOTE_IMAGE_HOSTS = ['placeholder-voz-do-deserto.com', 'images.unsplash.com'];
+const WEAK_REMOTE_IMAGE_HOSTS = ['placeholder-voz-do-deserto.com', 'images.unsplash.com', 'vozdodeserto.com/wp-content'];
 const CONTENT_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml)$/i;
 const TYPOLOGY_OBJECTAL_TOPIC_IMAGE_BASE_PATH = '/image/tipos/topicos';
 const TYPOLOGY_DIVISION_FOLDER_TO_ID: Record<string, TypologyDivisionId> = {
@@ -311,6 +311,24 @@ const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
     5: 'o santo dos santos',
     6: 'o cosmo e o templo',
   },
+  'hierarquia do inimigo': {
+    1: 'a ordem de batalha do inimigo',
+    2: 'principados',
+    3: 'potestades',
+    4: 'kosmokratoras',
+    5: 'hostes da maldade',
+    6: 'a ponoplia de deus',
+    7: 'a queda dos poderes',
+  },
+  'a consumacao e o juizo do reino': {
+    1: 'o campo e o mundo',
+    2: 'o inimigo que semeira',
+    3: 'a tatica do inimigo',
+    4: 'a paciencia escatologica',
+    5: 'os anjos ceifeiros',
+    6: 'o celeiro e o fogo',
+    7: 'o brilho dos justos',
+  },
 };
 
 const CEIA_TITLE_TO_COVER_STEM: Record<string, string> = {
@@ -385,6 +403,7 @@ function buildCoverStemVariants(stem: string): string[] {
     ['despertar', 'dspertar'],
     ['qumran', 'quram'],
     ['bronze', 'broze'],
+    ['panoplia', 'ponoplia'],
   ];
 
   for (const [from, to] of replacements) {
@@ -647,6 +666,40 @@ function stripMarkdownExtension(path: string): string {
   return path.replace(CONTENT_FILE_EXTENSION_REGEX, '');
 }
 
+interface ResolvedBookPathMetadata {
+  normalizedRelative: string;
+  parts: string[];
+  fileStem: string;
+  seriesFolder: string;
+  themeTitle: SelahThemeTitle | null;
+  pathSubsectionCandidate: string;
+}
+
+function resolveBookPathMetadata(relativePath: string): ResolvedBookPathMetadata {
+  const normalizedRelative = stripMarkdownExtension(relativePath);
+  const parts = normalizedRelative.split('/').filter(Boolean);
+  const fileStem = parts[parts.length - 1] ?? '';
+  const themeFolder = parts[0] ?? '';
+  const themeTitle = resolveSelahThemeTitleFromSlug(themeFolder);
+  const possibleSubsectionFromPath = parts.length >= 3 ? (parts[1] ?? '') : '';
+  const pathSubsectionCandidate = themeTitle && possibleSubsectionFromPath
+    ? (resolveSelahSubsectionTitle(themeTitle, possibleSubsectionFromPath) ? possibleSubsectionFromPath : '')
+    : '';
+
+  const seriesFolder = pathSubsectionCandidate
+    ? ((parts.slice(2, -1).at(-1)) ?? parts[1] ?? parts[0] ?? 'livraria')
+    : (parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? 'livraria'));
+
+  return {
+    normalizedRelative,
+    parts,
+    fileStem,
+    seriesFolder,
+    themeTitle: themeTitle ?? null,
+    pathSubsectionCandidate,
+  };
+}
+
 function normalizeSlugLookupKey(raw: string): string {
   return raw
     .normalize('NFD')
@@ -887,10 +940,11 @@ function buildMarkdownBySlugIndex(): Record<string, string> {
 
   for (const [pathKey, content] of Object.entries(contentMarkdownModules)) {
     const relativePath = toContentRelativePath(pathKey);
-    const normalizedRelative = stripMarkdownExtension(relativePath);
-    const parts = normalizedRelative.split('/').filter(Boolean);
-    const seriesFolder = parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? '');
-    const fileStem = parts[parts.length - 1] ?? '';
+    const {
+      normalizedRelative,
+      seriesFolder,
+      fileStem,
+    } = resolveBookPathMetadata(relativePath);
     const slug = seriesFolder && fileStem ? `${seriesFolder}/${fileStem}` : normalizedRelative;
     bySlug[slug] = content;
     bySlug[normalizeSlugLookupKey(slug)] = content;
@@ -1110,6 +1164,8 @@ function inferSeriesVolumeCoverStem(title: string, slug: string, category?: stri
     if (volume === 5) return 'ruach o sopro nos ossos secos a nova criacao';
   }
   if (haystack.includes('como nos dias de noe')) return SERIES_VOLUME_COVER_STEMS['como nos dias de noe'][volume] ?? null;
+  if (haystack.includes('hierarquia do inimigo')) return SERIES_VOLUME_COVER_STEMS['hierarquia do inimigo'][volume] ?? null;
+  if (haystack.includes('consumacao e o juizo do reino')) return SERIES_VOLUME_COVER_STEMS['a consumacao e o juizo do reino'][volume] ?? null;
   if (haystack.includes('tabernaculo')) return SERIES_VOLUME_COVER_STEMS['tabernaculo'][volume] ?? null;
 
   return null;
@@ -1294,6 +1350,7 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
     for (const variantStem of buildCoverStemVariants(stem)) {
       for (const extension of COVER_EXTENSIONS) {
         candidates.add(`/image/selah/${variantStem}.${extension}`);
+        candidates.add(`/image/ensinos/${variantStem}.${extension}`);
         if (seriesFolder) candidates.add(`/image/selah/${seriesFolder}/${variantStem}.${extension}`);
         if (usesTabernacleCovers) candidates.add(`/image/tipos/${variantStem}.${extension}`);
       }
@@ -1311,19 +1368,14 @@ function isRemovedAnthropologySeriesBook(book: BookItem): boolean {
 function discoverBooksFromMarkdown(): BookItem[] {
   return Object.entries(contentMarkdownModules).map(([pathKey, content]) => {
     const relative = toContentRelativePath(pathKey);
-
-    const parts = relative.split('/').filter(Boolean);
+    const {
+      parts,
+      seriesFolder,
+      fileStem,
+      themeTitle,
+      pathSubsectionCandidate,
+    } = resolveBookPathMetadata(relative);
     const fileName = parts[parts.length - 1] ?? '';
-    const themeFolder = parts[0] ?? '';
-    const themeTitle = resolveSelahThemeTitleFromSlug(themeFolder);
-    const possibleSubsectionFromPath = parts.length >= 3 ? (parts[1] ?? '') : '';
-    const pathSubsectionCandidate = themeTitle && possibleSubsectionFromPath
-      ? (resolveSelahSubsectionTitle(themeTitle, possibleSubsectionFromPath) ? possibleSubsectionFromPath : '')
-      : '';
-    const seriesFolder = pathSubsectionCandidate
-      ? (parts[2] ?? parts[parts.length - 2] ?? parts[0] ?? 'livraria')
-      : (parts.length > 1 ? parts[parts.length - 2] : (parts[0] ?? 'livraria'));
-    const fileStem = fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
     const slug = `${seriesFolder}/${fileStem}`;
     const frontmatter = parseFrontmatter(content);
     const extractedSeriesCategory = extractSeriesCategoryFromContent(content);
@@ -1497,7 +1549,7 @@ function discoverBibleStudies(): BibleStudyEntry[] {
     if (!bookDisplay) continue;
 
     entries.push({
-      id: `${testament}:${bookDisplay}:${parsedChapter}`,
+      id: `${testament}:${bookDisplay}:${parsedChapter}:${slugify(title)}`,
       testament,
       book: bookDisplay,
       chapter: parsedChapter,
@@ -1526,6 +1578,10 @@ function formatBibleStudyListLabel(study: BibleStudyEntry): string {
     label = label.replace(normalizedRange, `${start} ao ${end}`);
   }
   return label.replace(new RegExp(`\\b${study.chapter}\\.`), `${study.chapter}, `);
+}
+
+function buildBibleStudyReaderSlug(study: BibleStudyEntry): string {
+  return `biblia/${slugify(study.book)}-${study.chapter}-${slugify(study.title)}`;
 }
 
 // ── Section metadata ──────────────────────────────────────────────────────────
@@ -2286,6 +2342,39 @@ function toSeriesDisplayLabel(category: string): string {
   return toTitleCasePt(applyPtAccents(cleaned));
 }
 
+interface ParabolaSeriesPathMeta {
+  groupId: string;
+  groupTitle: string;
+  parableTitle: string;
+  seriesFolder: string;
+}
+
+function extractParabolaSeriesPathMeta(sourcePath?: string): ParabolaSeriesPathMeta | null {
+  if (!sourcePath) return null;
+  const normalized = sourcePath.replace(/\\/g, '/');
+  const marker = '/public/content/selah/jesus-cristo/parabolas-de-jesus/';
+  const markerIndex = normalized.indexOf(marker);
+  if (markerIndex < 0) return null;
+
+  const relative = normalized.slice(markerIndex + marker.length);
+  const parts = relative.split('/').filter(Boolean);
+  if (parts.length < 4) return null;
+
+  const groupFolder = parts[0] ?? '';
+  const parableTitle = parts[1] ?? '';
+  const seriesFolder = parts[parts.length - 2] ?? '';
+  const groupMatch = groupFolder.match(/grupo\s*(\d{1,2})/i);
+  const groupId = groupMatch ? groupMatch[1].padStart(2, '0') : '00';
+  const groupTitle = groupFolder.replace(/^grupo\s*\d{1,2}\s*[-–—]?\s*/i, '').trim() || groupFolder;
+
+  return {
+    groupId,
+    groupTitle,
+    parableTitle,
+    seriesFolder,
+  };
+}
+
 function extractVolumeFromBook(item: BookItem): number | null {
   const byTitle = item.title.match(/(?:ebook|livro|volume|vol\.)\s*0*(\d{1,3})/i);
   if (byTitle) return Number.parseInt(byTitle[1], 10);
@@ -2796,14 +2885,18 @@ function TypologySeriesShelf({
 }
 
 // ── Section Grid Card ─────────────────────────────────────────────────────────
-function SectionCard({ sectionKey, books, onSelect }: {
+function SectionCard({ sectionKey, books, onSelect, volumeCountOverride, readCountOverride, noCoverNotice }: {
   sectionKey: SectionKey;
   books: BookItem[];
   onSelect: () => void;
+  volumeCountOverride?: number;
+  readCountOverride?: number;
+  noCoverNotice?: string;
 }) {
   const { label, description, Icon, accent, numero } = getSectionMeta(sectionKey);
   const cover = books.find((book) => Boolean(book.image))?.image;
-  const totalRead = pm.countRead('livraria', books.map((b) => b.slug));
+  const volumeCount = Math.max(0, Math.trunc(volumeCountOverride ?? books.length));
+  const totalRead = Math.max(0, Math.trunc(readCountOverride ?? pm.countRead('livraria', books.map((b) => b.slug))));
 
   return (
     <div
@@ -2837,15 +2930,15 @@ function SectionCard({ sectionKey, books, onSelect }: {
           <div className="flex items-center gap-2">
             <Icon size={15} className="text-primary/90 group-hover:text-primary transition-colors shrink-0" />
             <span className="inline-flex rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary">
-              Seção com {books.length} volume{books.length !== 1 ? 's' : ''}
+              Seção com {volumeCount} volume{volumeCount !== 1 ? 's' : ''}
             </span>
           </div>
-          {totalRead > 0 && (
+          {totalRead > 0 && volumeCount > 0 && (
             <span className="text-[7px] sm:text-[8px] font-black uppercase tracking-widest text-white/40 bg-black/50 px-1.5 sm:px-2 py-0.5 rounded-full border border-white/5">
-              {totalRead}/{books.length} lidos
+              {totalRead}/{volumeCount} lidos
             </span>
           )}
-          {books.length === 0 && (
+          {volumeCount === 0 && (
             <span className="text-[7px] sm:text-[8px] font-black uppercase tracking-widest text-primary/90 bg-black/55 px-1.5 sm:px-2 py-0.5 rounded-full border border-primary/35">
               Em preparação
             </span>
@@ -2860,6 +2953,11 @@ function SectionCard({ sectionKey, books, onSelect }: {
           <p className="text-[9px] sm:text-[10px] text-white/45 leading-snug font-medium line-clamp-2 group-hover:text-white/65 transition-colors duration-300 max-w-[260px]">
             {description}
           </p>
+          {noCoverNotice && (
+            <p className="mt-1 text-[8px] sm:text-[9px] text-white/65 uppercase tracking-[0.12em] font-black">
+              {noCoverNotice}
+            </p>
+          )}
           <button
             type="button"
             className="mt-2 inline-flex items-center rounded-full border border-amber-300/60 bg-gradient-to-r from-amber-500/30 via-yellow-300/25 to-amber-500/30 px-2.5 py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.16em] text-amber-100 transition-all duration-300 animate-[pulse_2.6s_ease-in-out_infinite] group-hover:border-amber-200 group-hover:text-amber-50"
@@ -3014,6 +3112,11 @@ export default function Bookstore({
 
     return Array.from(deduped.values());
   }, [books, discoveredBooks, markdownBySlug]);
+  const bibleStudySlugs = useMemo(() => bibleStudies.map((study) => buildBibleStudyReaderSlug(study)), [bibleStudies]);
+  const bibleReadCount = useMemo(
+    () => bibleStudySlugs.reduce((count, slug) => count + (pm.isRead('livraria', slug) ? 1 : 0), 0),
+    [bibleStudySlugs],
+  );
 
   const selahSourcePathToBookSlug = useMemo(() => {
     const map = new Map<string, string>();
@@ -3405,7 +3508,7 @@ export default function Bookstore({
   }, [selectedSection, selectedSubsecao, selectedBibleBook, bibleStudiesByBook]);
 
   const handleOpenBibleStudy = (study: BibleStudyEntry) => {
-    setSelectedSlug(`biblia/${slugify(study.book)}-${study.chapter}`);
+    setSelectedSlug(buildBibleStudyReaderSlug(study));
     setMarkdownContent(study.content);
   };
 
@@ -3714,6 +3817,52 @@ export default function Bookstore({
           return acc;
         }, {} as Record<string, BookItem[]>),
       ).map(([category, items]) => [category, sortBooksInSeries(category, items)] as [string, BookItem[]]);
+      const isParabolasSubsecao = selectedTheme === 'JESUS CRISTO' && selectedSubsecao === 'Parábolas de Jesus';
+      const parabolasSeriesByGroup = isParabolasSubsecao
+        ? (() => {
+            const grouped = new Map<string, {
+              groupId: string;
+              groupTitle: string;
+              parables: Map<string, [string, BookItem[]][]>;
+            }>();
+
+            for (const book of filteredSubsecaoBooks) {
+              const meta = extractParabolaSeriesPathMeta(book.sourcePath);
+              if (!meta) continue;
+              const groupKey = `${meta.groupId}-${slugify(meta.groupTitle)}`;
+              const groupEntry = grouped.get(groupKey) ?? {
+                groupId: meta.groupId,
+                groupTitle: meta.groupTitle,
+                parables: new Map<string, [string, BookItem[]][]>(),
+              };
+
+              const currentParableSeries = groupEntry.parables.get(meta.parableTitle) ?? [];
+              const existingSeriesIndex = currentParableSeries.findIndex(([category]) => category === book.category);
+
+              if (existingSeriesIndex >= 0) {
+                const [category, existingItems] = currentParableSeries[existingSeriesIndex];
+                currentParableSeries[existingSeriesIndex] = [category, sortBooksInSeries(category, [...existingItems, book])];
+              } else {
+                currentParableSeries.push([book.category, [book]]);
+              }
+
+              groupEntry.parables.set(meta.parableTitle, currentParableSeries);
+              grouped.set(groupKey, groupEntry);
+            }
+
+            return Array.from(grouped.values())
+              .map((group) => ({
+                ...group,
+                parables: Array.from(group.parables.entries())
+                  .map(([parableTitle, series]) => ([
+                    parableTitle,
+                    series.map(([category, items]) => [category, sortBooksInSeries(category, items)] as [string, BookItem[]]),
+                  ] as [string, [string, BookItem[]][]]))
+                  .sort((a, b) => a[0].localeCompare(b[0], 'pt-BR')),
+              }))
+              .sort((a, b) => Number(a.groupId) - Number(b.groupId));
+          })()
+        : [];
 
       if (selectedSubsecao) {
         return (
@@ -3745,86 +3894,161 @@ export default function Bookstore({
               </div>
 
               <div className="relative z-10 border-t border-primary/15 pt-4 sm:pt-5">
-                {seriesInSubsecao.map(([cat, items], index) => {
-                  const reads = items.map((b) => pm.getReadCount('livraria', b.slug));
-                  const minReads = reads.length ? Math.min(...reads) : 0;
-                  const label = toSeriesDisplayLabel(cat);
-                  const seriesDescription = buildAutoSeriesDescription(cat, items);
-                  const badgeLabel = getSeriesBadgeLabel(selectedSection, cat);
-                  const seriesKey = `${selectedSection}-${slugify(selectedSubsecao)}-${slugify(cat)}`;
-
-                  return (
-                    <div key={cat} className="mb-5 sm:mb-6">
-                      <div className="mb-2">
-                        <div className="mb-1 flex items-center justify-between gap-2">
-                          <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-primary">
-                            {badgeLabel}
-                          </span>
-                          <div className="hidden sm:flex items-center gap-1">
-                            <button
-                              type="button"
-                              onClick={() => scrollSectionSeries(seriesKey, -240)}
-                              className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant/45 bg-black/35 text-on-surface-variant transition-colors hover:border-primary/55 hover:text-primary"
-                              aria-label={`Voltar ${label}`}
-                            >
-                              <ChevronLeft size={13} />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => scrollSectionSeries(seriesKey, 240)}
-                              className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant/45 bg-black/35 text-on-surface-variant transition-colors hover:border-primary/55 hover:text-primary"
-                              aria-label={`Avançar ${label}`}
-                            >
-                              <ChevronRight size={13} />
-                            </button>
-                          </div>
-                        </div>
-                        <div className="flex items-baseline gap-2 flex-wrap">
-                          <h4 className="font-headline font-extrabold text-xl sm:text-3xl text-on-surface tracking-tighter uppercase leading-none">
-                            {label}
-                          </h4>
-                          {minReads > 0 && (
-                            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">
-                              (Lido {minReads} vez{minReads > 1 ? 'es' : ''})
+                {isParabolasSubsecao ? (
+                  parabolasSeriesByGroup.length > 0 ? (
+                    <div className="space-y-4 sm:space-y-5">
+                      {parabolasSeriesByGroup.map((group) => (
+                        <section key={`grupo-${group.groupId}`} className="rounded-2xl border border-primary/20 bg-black/20 px-3 py-3 sm:px-4 sm:py-4">
+                          <div className="mb-2 sm:mb-3">
+                            <span className="inline-flex rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.16em] text-primary">
+                              Grupo {group.groupId}
                             </span>
+                            <h3 className="mt-1 font-headline text-base sm:text-xl font-black tracking-tight text-on-surface uppercase">
+                              {group.groupTitle}
+                            </h3>
+                          </div>
+
+                          <div className="space-y-3">
+                            {group.parables.map(([parableTitle, parableSeries]) => (
+                              <article key={`${group.groupId}-${slugify(parableTitle)}`} className="rounded-xl border border-primary/15 bg-black/25 px-2.5 py-2.5 sm:px-3 sm:py-3">
+                                <h4 className="font-headline text-sm sm:text-base font-black tracking-tight text-on-surface uppercase">
+                                  {parableTitle}
+                                </h4>
+                                <div className="mt-2 space-y-3">
+                                  {parableSeries.map(([cat, items]) => {
+                                    const label = toSeriesDisplayLabel(cat);
+                                    const seriesKey = `${selectedSection}-${slugify(selectedSubsecao)}-${group.groupId}-${slugify(parableTitle)}-${slugify(cat)}`;
+                                    const badgeLabel = getSeriesBadgeLabel(selectedSection, cat);
+                                    return (
+                                      <div key={`${group.groupId}-${slugify(parableTitle)}-${cat}`}>
+                                        <div className="mb-1.5 flex items-center justify-between gap-2">
+                                          <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-primary">
+                                            {badgeLabel}
+                                          </span>
+                                          <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.14em] text-on-surface-variant/60">
+                                            {label}
+                                          </p>
+                                        </div>
+                                        <div
+                                          ref={(element) => {
+                                            sectionSeriesRowRefs.current[seriesKey] = element;
+                                          }}
+                                          className="relative -mx-2 px-2 sm:-mx-3 sm:px-3"
+                                        >
+                                          <DragScrollRow>
+                                            {items.map((item, j) => (
+                                              <BookCard
+                                                key={item.slug}
+                                                item={item}
+                                                displayVolume={extractVolumeFromBook(item) ?? (j + 1)}
+                                                visualMode="selah"
+                                                onSelect={() => handleSelectBook(item.slug)}
+                                              />
+                                            ))}
+                                          </DragScrollRow>
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </article>
+                            ))}
+                          </div>
+                        </section>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-primary/20 bg-black/20 px-4 sm:px-5 py-4 sm:py-5">
+                      <p className="text-xs sm:text-sm font-semibold text-primary/95">
+                        Em preparação
+                      </p>
+                      <p className="mt-1 text-[11px] sm:text-xs text-on-surface-variant/80 leading-relaxed">
+                        Esta área será preenchida quando os estudos de parábolas forem adicionados.
+                      </p>
+                    </div>
+                  )
+                ) : (
+                  seriesInSubsecao.map(([cat, items], index) => {
+                    const reads = items.map((b) => pm.getReadCount('livraria', b.slug));
+                    const minReads = reads.length ? Math.min(...reads) : 0;
+                    const label = toSeriesDisplayLabel(cat);
+                    const seriesDescription = buildAutoSeriesDescription(cat, items);
+                    const badgeLabel = getSeriesBadgeLabel(selectedSection, cat);
+                    const seriesKey = `${selectedSection}-${slugify(selectedSubsecao)}-${slugify(cat)}`;
+
+                    return (
+                      <div key={cat} className="mb-5 sm:mb-6">
+                        <div className="mb-2">
+                          <div className="mb-1 flex items-center justify-between gap-2">
+                            <span className="inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-primary">
+                              {badgeLabel}
+                            </span>
+                            <div className="hidden sm:flex items-center gap-1">
+                              <button
+                                type="button"
+                                onClick={() => scrollSectionSeries(seriesKey, -240)}
+                                className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant/45 bg-black/35 text-on-surface-variant transition-colors hover:border-primary/55 hover:text-primary"
+                                aria-label={`Voltar ${label}`}
+                              >
+                                <ChevronLeft size={13} />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => scrollSectionSeries(seriesKey, 240)}
+                                className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant/45 bg-black/35 text-on-surface-variant transition-colors hover:border-primary/55 hover:text-primary"
+                                aria-label={`Avançar ${label}`}
+                              >
+                                <ChevronRight size={13} />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex items-baseline gap-2 flex-wrap">
+                            <h4 className="font-headline font-extrabold text-xl sm:text-3xl text-on-surface tracking-tighter uppercase leading-none">
+                              {label}
+                            </h4>
+                            {minReads > 0 && (
+                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">
+                                (Lido {minReads} vez{minReads > 1 ? 'es' : ''})
+                              </span>
+                            )}
+                          </div>
+                          {seriesDescription && (
+                            <p className="mt-1 text-[11px] sm:text-sm text-on-surface-variant/70 leading-snug font-medium max-w-2xl line-clamp-3">
+                              {seriesDescription}
+                            </p>
                           )}
                         </div>
-                        {seriesDescription && (
-                          <p className="mt-1 text-[11px] sm:text-sm text-on-surface-variant/70 leading-snug font-medium max-w-2xl line-clamp-3">
-                            {seriesDescription}
-                          </p>
+
+                        <div
+                          ref={(element) => {
+                            sectionSeriesRowRefs.current[seriesKey] = element;
+                          }}
+                          className="relative -mx-4 px-4 sm:-mx-6 sm:px-6"
+                        >
+                          <DragScrollRow>
+                            {items.map((item, j) => (
+                              <BookCard
+                                key={item.slug}
+                                item={item}
+                                displayVolume={extractVolumeFromBook(item) ?? (j + 1)}
+                                visualMode="selah"
+                                onSelect={() => handleSelectBook(item.slug)}
+                              />
+                            ))}
+                          </DragScrollRow>
+                        </div>
+
+                        {index < seriesInSubsecao.length - 1 && (
+                          <div className="mt-2.5 sm:mt-3 px-1">
+                            <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/55 to-transparent animate-[pulse_4.5s_ease-in-out_infinite]" />
+                          </div>
                         )}
                       </div>
+                    );
+                  })
+                )}
 
-                      <div
-                        ref={(element) => {
-                          sectionSeriesRowRefs.current[seriesKey] = element;
-                        }}
-                        className="relative -mx-4 px-4 sm:-mx-6 sm:px-6"
-                      >
-                        <DragScrollRow>
-                          {items.map((item, j) => (
-                            <BookCard
-                              key={item.slug}
-                              item={item}
-                              displayVolume={extractVolumeFromBook(item) ?? (j + 1)}
-                              visualMode="selah"
-                              onSelect={() => handleSelectBook(item.slug)}
-                            />
-                          ))}
-                        </DragScrollRow>
-                      </div>
-
-                      {index < seriesInSubsecao.length - 1 && (
-                        <div className="mt-2.5 sm:mt-3 px-1">
-                          <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/55 to-transparent animate-[pulse_4.5s_ease-in-out_infinite]" />
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-
-                {seriesInSubsecao.length === 0 && (
+                {!isParabolasSubsecao && seriesInSubsecao.length === 0 && (
                   <div className="rounded-2xl border border-primary/20 bg-black/20 px-4 sm:px-5 py-4 sm:py-5">
                     <p className="text-xs sm:text-sm font-semibold text-primary/95">
                       Em preparação
@@ -4179,21 +4403,50 @@ export default function Bookstore({
                     </h3>
                     {selectedChapterStudies.length > 0 ? (
                       <div className="space-y-2.5">
-                        {selectedChapterStudies.map((study) => (
-                          <button
-                            key={study.id}
-                            type="button"
-                            onClick={() => handleOpenBibleStudy(study)}
-                            className="subsecao-botao group relative w-full overflow-hidden rounded-xl border border-[#D4AF37]/45 bg-[#D4AF37]/15 px-3 sm:px-3.5 py-2.5 sm:py-3 text-left transition-colors hover:bg-[#D4AF37]/22"
-                          >
-                            <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-[#f7df9a]">
-                              {formatBibleStudyListLabel(study)}
-                            </span>
-                            <span className="relative mt-1 block text-[9px] sm:text-[10px] text-[#f7df9a]/85">
-                              Abrir estudo
-                            </span>
-                          </button>
-                        ))}
+                        {selectedChapterStudies.map((study) => {
+                          const readerSlug = buildBibleStudyReaderSlug(study);
+                          const progress = pm.getProgress('livraria', readerSlug);
+                          const isCompleted = pm.isRead('livraria', readerSlug);
+                          const reads = pm.getReadCount('livraria', readerSlug);
+                          const clampedProgress = Math.max(0, Math.min(100, Math.round(progress)));
+                          const isReading = clampedProgress > 0 && !isCompleted;
+
+                          return (
+                            <button
+                              key={study.id}
+                              type="button"
+                              onClick={() => handleOpenBibleStudy(study)}
+                              className="subsecao-botao group relative w-full overflow-hidden rounded-xl border border-[#D4AF37]/45 bg-[#D4AF37]/15 px-3 sm:px-3.5 py-2.5 sm:py-3 text-left transition-colors hover:bg-[#D4AF37]/22"
+                            >
+                              <span className="relative block text-[11px] sm:text-xs font-black tracking-wide text-[#f7df9a]">
+                                {formatBibleStudyListLabel(study)}
+                              </span>
+                              <span className="relative mt-1 block text-[9px] sm:text-[10px] text-[#f7df9a]/85">
+                                {isCompleted ? 'Concluído' : isReading ? 'Em leitura' : 'Abrir estudo'}
+                              </span>
+
+                              <div className="relative mt-2 h-1.5 w-full overflow-hidden rounded-full border border-[#D4AF37]/35 bg-black/35">
+                                <div
+                                  className={isCompleted
+                                    ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_8px_rgba(212,175,55,0.35)]'
+                                    : 'h-full bg-gradient-to-r from-orange-400 to-yellow-300 shadow-[0_0_6px_rgba(249,115,22,0.3)]'}
+                                  style={{ width: `${isCompleted ? 100 : isReading ? clampedProgress : 0}%` }}
+                                />
+                              </div>
+
+                              <div className="relative mt-1.5 flex items-center justify-between">
+                                <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.14em] text-[#f7df9a]/85">
+                                  {isCompleted ? '100% lido' : isReading ? `${clampedProgress}% lido` : 'Não iniciado'}
+                                </span>
+                                {reads > 0 && (
+                                  <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.14em] text-[#f7df9a]/70">
+                                    Lido {reads}x
+                                  </span>
+                                )}
+                              </div>
+                            </button>
+                          );
+                        })}
                       </div>
                     ) : (
                       <p className="text-[11px] sm:text-xs text-on-surface-variant/80">
@@ -4306,6 +4559,11 @@ export default function Bookstore({
                 </h2>
               </div>
               <p className="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">{description}</p>
+              {isBibleSection && (
+                <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.14em] font-black text-primary/80 mt-2">
+                  Comentários bíblicos sem capa.
+                </p>
+              )}
             </div>
 
             <div className="relative z-10 border-t border-primary/15 pt-4 sm:pt-5">
@@ -4571,6 +4829,9 @@ export default function Bookstore({
                 key={sec}
                 sectionKey={sec}
                 books={booksBySection[sec]}
+                volumeCountOverride={sec === 'BÍBLIA' ? bibleStudies.length : undefined}
+                readCountOverride={sec === 'BÍBLIA' ? bibleReadCount : undefined}
+                noCoverNotice={sec === 'BÍBLIA' ? 'Comentário bíblico sem capa' : undefined}
                 onSelect={() => {
                   setSelectedSubsecao(null);
                   setSelectedSection(sec);

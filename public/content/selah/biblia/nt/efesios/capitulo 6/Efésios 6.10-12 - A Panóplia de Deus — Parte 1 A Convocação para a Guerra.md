@@ -5,7 +5,6 @@ description: "Uma exegese profunda de Efésios 6:10-12 usando o método PaRDeS (
 seção: biblia
 livro: efesios
 capitulo: 6
-image: "/image/estudos/efesios6-p1.jpg"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

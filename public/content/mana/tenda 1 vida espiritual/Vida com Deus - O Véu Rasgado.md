@@ -6,7 +6,7 @@ tema: acesso-a-deus
 tenda: vida-espiritual
 trilogia: o-caminho-do-veu-rasgado
 ordem: 1
-image: https://placeholder-voz-do-deserto.com/capa-mana-veu-rasgado.jpg
+image: "/image/mana/o veu rasgado.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Maná — Tenda Vida Espiritual*

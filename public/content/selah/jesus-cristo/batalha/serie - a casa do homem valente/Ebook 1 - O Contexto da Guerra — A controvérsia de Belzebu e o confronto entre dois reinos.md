@@ -3,7 +3,6 @@ title: "O Contexto da Guerra — A controvérsia de Belzebu e o confronto entre 
 description: "Quando Jesus expulsou um demônio, os fariseus o acusaram de agir pelo príncipe dos demônios. A resposta de Jesus revelou a natureza da sua missão: invadir a casa do homem valente, amarrá-lo e saquear seus bens."
 seção: selah
 category: batalha-espiritual
-image: https://via.placeholder.com/1600x2400?text=A+Casa+do+Homem+Valente+Vol+1
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

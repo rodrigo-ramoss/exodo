@@ -3,7 +3,6 @@ title: "A Identidade do Valente e sua Derrota Progressiva — Quem é o adversá
 description: "Quem é o Homem Valente que guarda sua casa? Como ele adquiriu seu domínio? E como Cristo o derrotou — em fases progressivas que culminarão em sua destruição final?"
 seção: selah
 category: batalha-espiritual
-image: https://via.placeholder.com/1600x2400?text=A+Casa+do+Homem+Valente+Vol+2
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

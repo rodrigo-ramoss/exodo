@@ -5,7 +5,7 @@ description: "Depois de desmascarar a distorção da Missa, este volume restaura
 seção: selah
 tema: historia da igreja
 subseção: ceia do senhor
-image: URL_da_capa_placeholder
+image: "/image/selah/a mesa do rei o banquete das bodas do cordeiro.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

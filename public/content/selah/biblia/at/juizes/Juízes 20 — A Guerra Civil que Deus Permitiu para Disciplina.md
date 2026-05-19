@@ -5,7 +5,6 @@ description: "O capítulo 20 de Juízes narra a guerra civil contra Benjamim. Es
 seção: biblia
 livro: juizes
 capitulo: 20
-image: "/image/estudos/juizes20.jpg"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

@@ -7,7 +7,7 @@ sub: emoções
 tenda: vida-interior
 trilogia: o-caminho-do-veu-rasgado
 ordem: 2
-image: https://placeholder-voz-do-deserto.com/capa-mana-coragem-aproximar.jpg
+image: "/image/mana/coragem para se aproximar.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Maná — Tenda Vida Interior | Emoções*

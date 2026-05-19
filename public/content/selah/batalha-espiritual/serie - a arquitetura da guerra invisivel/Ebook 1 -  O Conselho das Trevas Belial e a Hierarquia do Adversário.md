@@ -3,7 +3,7 @@ title: A Arquitetura da Guerra Invisível — Volume 1 — O Conselho das Trevas
 description: Descubra a estrutura oculta do mundo espiritual caído. Entenda a diferença entre Belial, Gadreel, os Vigilantes e os Sarim territoriais. Uma jornada exegética baseada nos Rolos do Mar Morto e na literatura do Segundo Templo para equipar o remanescente.
 seção: livraria
 category: Série — A Arquitetura da Guerra Invisível
-image: /image/selah/arquitetura da guerra invisivl - o conselho das trevas.webp
+image: "/image/selah/arquitetura da guerra invisivel - o conselho das trevas.webp"
 theme: batalha-espiritual
 tema: batalha-espiritual
 subsecao: resistencia

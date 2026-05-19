@@ -4,7 +4,7 @@ description: "Na noite em que foi traído, Jesus tomou o cálice e declarou: 'Is
 seção: selah
 category: jesus cristo
 subcategory: ceia do senhor
-image: https://via.placeholder.com/1600x2400?text=A+Mesa+do+Cordeiro+Vol+1
+image: "/image/selah/a mesa do rei o banquete das bodas do cordeiro.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

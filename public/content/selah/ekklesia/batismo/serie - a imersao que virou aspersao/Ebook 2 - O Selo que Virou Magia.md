@@ -5,7 +5,7 @@ description: "A igreja apostólica batizava crentes por imersão. Como foi que e
 seção: selah
 tema: historia da igreja
 subseção: batismo
-image: URL_da_capa_placeholder
+image: "/image/selah/as aguas da alianca.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

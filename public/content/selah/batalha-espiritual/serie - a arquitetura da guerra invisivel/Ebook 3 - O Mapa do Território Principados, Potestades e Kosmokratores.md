@@ -3,7 +3,7 @@ title: A Arquitetura da Guerra Invisível — Volume 3 — O Mapa do Território
 description: Onde exatamente a guerra espiritual acontece? Uma cartografia completa do campo de batalha invisível baseada em Efésios 6, Testamento de Levi, Ascensão de Isaías e na geografia celestial do Segundo Templo.
 seção: livraria
 category: Série — A Arquitetura da Guerra Invisível
-image: /image/selah/arquitetura da guerra invisivl - o mapado territorio.webp
+image: "/image/selah/arquitetura da guerra invisivel - o mapa do territorio.webp"
 theme: batalha-espiritual
 tema: batalha-espiritual
 subsecao: resistencia

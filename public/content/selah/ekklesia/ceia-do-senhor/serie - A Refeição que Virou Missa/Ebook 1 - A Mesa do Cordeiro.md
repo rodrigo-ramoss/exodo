@@ -4,7 +4,7 @@ subtitle: "Como Jesus Instituiu a Ceia, como a Igreja Primitiva a Celebrava e co
 description: "A Ceia do Senhor não nasceu como um ritual silencioso com uma hóstia solitária. Nasceu como uma refeição comunitária, um banquete de aliança que proclamava a vitória do Cordeiro e antecipava a festa do Reino. Este ebook restaura o fundamento bíblico da Ceia — da Páscoa judaica à mesa de Jesus, da igreja primitiva às distorções que transformaram o pão em objeto de adoração e a refeição em sacrifício repetido."
 seção: livraria
 category: historia-da-igreja
-image: URL_da_capa_placeholder
+image: "/image/selah/a mesa do rei o banquete das bodas do cordeiro.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

@@ -5,7 +5,6 @@ description: "O capítulo 19 de Juízes narra o crime hediondo em Gibeá que des
 seção: biblia
 livro: juizes
 capitulo: 19
-image: "/image/estudos/juizes19.jpg"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

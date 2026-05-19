@@ -3,7 +3,7 @@ title: A Arquitetura da Guerra Invisível — Volume 4 — A Estratégia Qumrani
 description: Como os "Filhos da Luz" lutavam? Um mergulho no Rolo da Guerra de Qumran (1QM) para extrair as táticas de combate espiritual do remanescente do deserto e aplicá-las à batalha contemporânea.
 seção: livraria
 category: Série — A Arquitetura da Guerra Invisível
-image: /image/selah/arquitetura da guerra invisivl - a estrategia qumranita.webp
+image: "/image/selah/arquitetura da guerra invisivel - a estrategia qumranita.webp"
 theme: batalha-espiritual
 tema: batalha-espiritual
 subsecao: resistencia

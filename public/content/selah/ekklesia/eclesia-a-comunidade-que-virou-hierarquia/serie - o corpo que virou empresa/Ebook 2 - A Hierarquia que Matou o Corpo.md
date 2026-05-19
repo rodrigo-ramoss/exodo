@@ -5,7 +5,7 @@ description: "A igreja primitiva era uma comunidade de irmãos onde todos partic
 seção: selah
 tema: historia da igreja
 subseção: eclesia
-image: URL_da_capa_placeholder
+image: "/image/selah/a hierarquia que matou o corpo.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

@@ -62,7 +62,6 @@ type SeriesUpdateItem = {
   key: string;
   label: string;
   updatedAt: number;
-  updatedLabel: string;
   slug?: string;
   image?: string;
   isPlaceholder?: boolean;
@@ -218,12 +217,23 @@ function parseDateMs(raw?: string): number {
 function parseDateMsOrToday(raw?: string): number {
   const parsed = parseDateMs(raw);
   if (parsed > 0) return parsed;
-  return Date.now();
+  return 0;
 }
 
-function formatUpdateDate(ms: number): string {
-  if (!ms) return 'Sem data';
-  return new Date(ms).toLocaleDateString('pt-BR');
+function normalizeSeriesLabel(raw: string): string {
+  const clean = raw
+    .replace(/[*_`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!clean) return 'Série';
+  return clean
+    .split(' ')
+    .map((word) => {
+      if (!word) return word;
+      if (!/[A-Za-zÀ-ÿ]/.test(word)) return word;
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(' ');
 }
 
 function extractSeriesLine(content: string): string | null {
@@ -389,9 +399,9 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     const fallbackCards = HOME_UPDATES_SECTIONS_META.map((meta) => ({
       ...meta,
       items: [
-        { key: `${meta.id}-fallback-1`, label: 'Atualização em preparação', updatedAt: 0, updatedLabel: 'Em breve', isPlaceholder: true },
-        { key: `${meta.id}-fallback-2`, label: 'Atualização em preparação', updatedAt: 0, updatedLabel: 'Em breve', isPlaceholder: true },
-        { key: `${meta.id}-fallback-3`, label: 'Atualização em preparação', updatedAt: 0, updatedLabel: 'Em breve', isPlaceholder: true },
+        { key: `${meta.id}-fallback-1`, label: 'Atualização em preparação', updatedAt: 0, isPlaceholder: true },
+        { key: `${meta.id}-fallback-2`, label: 'Atualização em preparação', updatedAt: 0, isPlaceholder: true },
+        { key: `${meta.id}-fallback-3`, label: 'Atualização em preparação', updatedAt: 0, isPlaceholder: true },
       ],
     }));
 
@@ -410,7 +420,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
       slug?: string,
       image?: string,
     ) => {
-      const normalizedLabel = seriesLabel.trim() || 'Série';
+      const normalizedLabel = normalizeSeriesLabel(seriesLabel);
       const key = normalizeLookupText(normalizedLabel).replace(/\s+/g, '-');
       const map = sectionMaps[section];
       const previous = map.get(key);
@@ -420,7 +430,6 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           key,
           label: normalizedLabel,
           updatedAt,
-          updatedLabel: formatUpdateDate(updatedAt),
           slug,
           image,
         });
@@ -431,7 +440,6 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
         map.set(key, {
           ...previous,
           updatedAt,
-          updatedLabel: formatUpdateDate(updatedAt),
           slug: slug || previous.slug,
           image: image || previous.image,
         });
@@ -499,7 +507,6 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           key: `${meta.id}-placeholder-${sorted.length + 1}`,
           label: 'Nova série em preparação',
           updatedAt: 0,
-          updatedLabel: 'Em breve',
           isPlaceholder: true,
         });
       }
@@ -633,9 +640,6 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
                           <p className="text-[10px] font-semibold text-on-surface line-clamp-1">
                             {index + 1}. {item.label}
                           </p>
-                          <span className={`text-[8px] font-black uppercase tracking-[0.12em] ${item.isPlaceholder ? 'text-on-surface-variant/60' : 'text-primary/90'}`}>
-                            {item.updatedLabel}
-                          </span>
                         </div>
                       </div>
                     ))}

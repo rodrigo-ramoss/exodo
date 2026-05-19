@@ -4,7 +4,7 @@ subtitle: "Discipulando Nações, Não Evacuando Almas — A Missão do Remanesc
 description: "Se a terra será restaurada e não aniquilada, o que a igreja deve fazer agora? Este ebook desmascara a paralisia produzida pela escatologia da evasão e resgata a visão bíblica do trabalho, da cultura e da resistência — mostrando que a Grande Comissão não é um programa de evacuação de emergência, mas uma declaração de guerra para ocupar territórios do Reino até que Ele venha."
 seção: livraria
 category: batalha-espiritual
-image: URL_da_capa_placeholder
+image: "/image/selah/o reino do agora.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

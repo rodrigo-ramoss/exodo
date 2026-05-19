@@ -3,7 +3,7 @@ title: Qumran e a Guerra dos Calendários — A Comunidade que Preferiu o Desert
 description: No século II a.C., uma comunidade judaica se isolou no deserto da Judeia, rejeitou o Templo de Jerusalém e travou uma guerra santa... por causa do calendário. Este ebook revela a história dos essênios de Qumran e sua luta pelo tempo de Deus.
 seção: livraria
 category: Série — O Relógio de Deus
-image: /image/selah/quram e a guerra dos calendario.webp
+image: "/image/selah/qumran e a guerra dos calendario.webp"
 theme: apocrifos
 tema: apocrifos
 subsecao: jubileus

@@ -7,7 +7,7 @@ sub: identidade-e-missão
 tenda: vida-exterior
 trilogia: o-caminho-do-veu-rasgado
 ordem: 3
-image: https://placeholder-voz-do-deserto.com/capa-mana-filhos-nao-escravos.jpg
+image: "/image/mana/filhos não escravos.webp"
 ---
 *Rodrigo Ramos — Voz do Deserto*
 *Maná — Tenda Vida Exterior | Missão*

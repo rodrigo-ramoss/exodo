@@ -4,7 +4,7 @@ subtitle: "A Nova Jerusalém e a Consumação da Esperança — O Fim da Babilô
 description: "A Bíblia não termina com uma evacuação, mas com uma festa de casamento. A Nova Jerusalém desce do céu, Deus habita com os homens, e a história alcança seu clímax não na aniquilação do mundo, mas na sua transfiguração. Este volume final explora a visão de Apocalipse 21-22, o juízo sobre Babilônia, a ressurreição dos mortos, o lago de fogo e a vida eterna na criação restaurada — o destino final dos remidos e a recompensa dos mártires."
 seção: livraria
 category: tipologia-biblica
-image: URL_da_capa_placeholder
+image: "/image/selah/a cidade que desce.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

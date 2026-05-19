@@ -3,7 +3,6 @@ title: A Armadura do Remanescente — Volume 4 — O Escudo da Fé: Apagando os 
 description: Quarto volume da série sobre a Armadura de Deus. A fé como confiança ativa que neutraliza os ataques do inimigo. Uma leitura paulina de Efésios 6:16 à luz do Segundo Templo, de Habacuque e da teologia do apóstolo.
 seção: livraria
 category: batalha-espiritual
-image: https://placeholder-voz-do-deserto.com/capa-armadura-vol4-escudo.jpg
 theme: batalha-espiritual
 subsecao: armadura
 subsection: armadura

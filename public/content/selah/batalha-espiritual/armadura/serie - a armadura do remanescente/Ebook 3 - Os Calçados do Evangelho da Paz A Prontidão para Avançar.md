@@ -3,7 +3,6 @@ title: A Armadura do Remanescente — Volume 3 — Os Calçados do Evangelho da 
 description: Terceiro volume da série sobre a Armadura de Deus. A prontidão que vem do Evangelho da paz como fundamento para a mobilidade e o avanço do Reino. Uma leitura paulina de Efésios 6:15 à luz do Segundo Templo e do contexto imperial romano.
 seção: livraria
 category: batalha-espiritual
-image: https://placeholder-voz-do-deserto.com/capa-armadura-vol3-calcados.jpg
 theme: batalha-espiritual
 subsecao: armadura
 subsection: armadura

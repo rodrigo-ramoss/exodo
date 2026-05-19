@@ -4,7 +4,7 @@ description: "O destino final de cada escalão do exército das trevas. Do juíz
 seção: selah
 category: batalha-espiritual
 subseção: inimigos
-image: https://vozdodeserto.com/wp-content/uploads/2026/05/hierarquia-inimigo-vol7-capa.jpg
+image: "/image/selah/a queda dos poderes.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

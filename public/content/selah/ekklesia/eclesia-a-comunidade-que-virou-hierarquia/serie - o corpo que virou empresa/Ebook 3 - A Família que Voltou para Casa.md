@@ -5,7 +5,7 @@ description: "Depois de desmascarar a corrupção hierárquica, este volume rest
 seção: selah
 tema: historia da igreja
 subseção: eclesia
-image: URL_da_capa_placeholder
+image: "/image/selah/a familia que voltou para casa.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

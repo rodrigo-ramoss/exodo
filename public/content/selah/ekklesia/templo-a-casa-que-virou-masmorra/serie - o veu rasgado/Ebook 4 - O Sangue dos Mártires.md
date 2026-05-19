@@ -4,7 +4,7 @@ subtitle: "A Linhagem do Remanescente que a História Oficial Apagou — Dos Pai
 description: "A igreja institucional escreveu a história dos vencedores. Mas o verdadeiro cristianismo sobreviveu nos porões, nos desertos e nas fogueiras. Este ebook traça a linhagem oculta do remanescente fiel — os dissidentes, hereges e mártires que recusaram Constantino, rejeitaram o papado e mantiveram a fé pura, mesmo sob tortura. A nuvem de testemunhas que nos rodeia é maior do que nos contaram."
 seção: livraria
 category: historia-da-igreja
-image: URL_da_capa_placeholder
+image: "/image/selah/o sangue dos martires.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

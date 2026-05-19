@@ -5,7 +5,6 @@ description: "Uma exegese profunda de Efésios 6:1-9 usando o método PaRDeS (Pe
 seção: biblia
 livro: efesios
 capitulo: 6
-image: "/image/estudos/efesios6-p1-9.jpg"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

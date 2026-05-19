@@ -4,7 +4,7 @@ description: "Uma teologia bíblica da armadura de Deus. Como cada peça corresp
 seção: selah
 category: batalha-espiritual
 subseção: inimigos
-image: https://vozdodeserto.com/wp-content/uploads/2026/05/hierarquia-inimigo-vol6-capa.jpg
+image: "/image/selah/a ponoplia de deus.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

@@ -5,7 +5,6 @@ description: "O capítulo 21 de Juízes narra a tentativa desesperada de Israel 
 seção: biblia
 livro: juizes
 capitulo: 21
-image: "/image/estudos/juizes21.jpg"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

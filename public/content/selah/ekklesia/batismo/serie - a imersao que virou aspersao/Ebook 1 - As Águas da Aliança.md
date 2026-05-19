@@ -5,7 +5,7 @@ description: "Antes de ser um rito de entrada numa religião social, o batismo e
 seção: selah
 tema: historia da igreja
 subseção: batismo
-image: URL_da_capa_placeholder
+image: "/image/selah/as aguas da alianca.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

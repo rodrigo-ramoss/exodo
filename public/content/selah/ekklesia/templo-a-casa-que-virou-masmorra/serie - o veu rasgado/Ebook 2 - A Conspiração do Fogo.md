@@ -4,7 +4,7 @@ subtitle: "Por que Deus Não Vai Queimar Sua Casa — O Juízo como Purificaçã
 description: "A crença de que Deus vai destruir o mundo com fogo é popular, mas é bíblica? Este ebook expõe a má leitura de 2 Pedro 3, resgata o significado do fogo na narrativa bíblica (Dilúvio, Êxodo, Sodoma, Cruz) e restaura a visão do juízo divino como o ato final de purificação que prepara a criação para a glória, não como um ataque de fúria contra a matéria."
 seção: livraria
 category: tipologia-biblica
-image: URL_da_capa_placeholder
+image: "/image/selah/a conspiracao do fogo.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

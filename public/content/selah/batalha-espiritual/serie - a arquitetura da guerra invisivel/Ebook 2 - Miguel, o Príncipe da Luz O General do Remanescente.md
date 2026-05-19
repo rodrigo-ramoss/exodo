@@ -3,7 +3,7 @@ title: A Arquitetura da Guerra Invisível — Volume 2 — Miguel, o Príncipe d
 description: Quem é Miguel? Por que ele é chamado de Arcanjo e Príncipe de Israel? Descubra o papel do comandante dos exércitos celestiais na guerra contra Belial e os Sarim, baseado nos Rolos do Mar Morto, em Daniel e no Apocalipse.
 seção: livraria
 category: Série — A Arquitetura da Guerra Invisível
-image: /image/selah/arquitetura da guerra invisivl - miguel.webp
+image: "/image/selah/arquitetura da guerra invisivel - miguel.webp"
 theme: batalha-espiritual
 tema: batalha-espiritual
 subsecao: resistencia
