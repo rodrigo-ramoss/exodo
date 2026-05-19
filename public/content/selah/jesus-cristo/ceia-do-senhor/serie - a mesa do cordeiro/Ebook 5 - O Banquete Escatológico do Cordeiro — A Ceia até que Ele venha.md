@@ -3,8 +3,9 @@ title: "O Banquete Escatológico do Cordeiro — A Ceia até que Ele venha"
 description: "A cada Ceia, a Igreja anseia pelo quarto cálice que Jesus não bebeu. Uma investigação sobre as bodas do Cordeiro, o banquete em Isaías 25 e a consumação da comunhão."
 seção: selah
 category: jesus cristo
-subcategory: ceia do senhor
-image: https://via.placeholder.com/1600x2400?text=A+Mesa+do+Cordeiro+Vol+5
+
+date: 2026-05-19
+image: "/image/selah/o banquete escatologico do cordeiro.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

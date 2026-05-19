@@ -61,6 +61,7 @@ type ContentIndexItem = {
 type SeriesUpdateItem = {
   key: string;
   label: string;
+  context?: string;
   updatedAt: number;
   slug?: string;
   image?: string;
@@ -87,9 +88,9 @@ const CATEGORY_TO_SCREEN: Record<string, Screen> = {
 };
 
 const HOME_UPDATES_SECTIONS_META: Array<Omit<SectionUpdatesCard, 'items'>> = [
-  { id: 'mana', label: 'MANÁ', subtitle: 'Vida devocional e prática diária', target: Screen.MANA },
+  { id: 'selah', label: 'ROLOS', subtitle: 'Seção, subseção e série atualizadas', target: Screen.BOOKSTORE },
+  { id: 'mana', label: 'MANÁ', subtitle: 'Tenda e ebook atualizados', target: Screen.MANA },
   { id: 'discipulos', label: 'DISCÍPULOS', subtitle: 'Jornadas de formação', target: Screen.DISCIPULOS },
-  { id: 'selah', label: 'ROLOS', subtitle: 'Biblioteca de séries e trilogias', target: Screen.BOOKSTORE },
   { id: 'babel', label: 'BABEL', subtitle: 'Discernimento da matrix', target: Screen.REFUTACAO },
 ];
 
@@ -234,6 +235,54 @@ function normalizeSeriesLabel(raw: string): string {
       return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     })
     .join(' ');
+}
+
+function toDisplayPathParts(relativePath: string): string[] {
+  return relativePath.replace(/\\/g, '/').split('/').filter(Boolean);
+}
+
+function toTitleCaseLabel(raw: string): string {
+  if (!raw.trim()) return '';
+  return raw
+    .replace(/[-_]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
+function resolveUpdatedAt(frontmatter: Record<string, string>, fallbackDate?: string): number {
+  return parseDateMsOrToday(
+    frontmatter.date
+    || frontmatter.updated_at
+    || frontmatter.updatedat
+    || frontmatter.atualizado_em
+    || frontmatter.atualizado
+    || frontmatter.data
+    || fallbackDate
+    || '',
+  );
+}
+
+function deriveManaContext(relativePath: string, frontmatter: Record<string, string>): string {
+  const parts = toDisplayPathParts(relativePath);
+  const tendaRaw = (frontmatter.tenda || parts[0] || '').trim();
+  const normalized = normalizeLookupText(tendaRaw);
+  if (normalized.includes('vida espiritual')) return 'Tenda 1 - Vida Espiritual';
+  if (normalized.includes('vida interior')) return 'Tenda 2 - Vida Interior';
+  if (normalized.includes('vida exterior')) return 'Tenda 3 - Vida Exterior';
+  return toTitleCaseLabel(tendaRaw) || 'Tenda';
+}
+
+function deriveSelahSectionLabel(parts: string[], frontmatter: Record<string, string>): string {
+  const raw = (frontmatter.category || frontmatter.tema || frontmatter.theme || parts[0] || '').trim();
+  return toTitleCaseLabel(raw) || 'Rolos';
+}
+
+function deriveSelahSubsectionLabel(parts: string[], frontmatter: Record<string, string>): string {
+  const raw = (frontmatter.subsecao || frontmatter.subsection || frontmatter.subcategory || parts[1] || '').trim();
+  return toTitleCaseLabel(raw) || 'Sem Subseção';
 }
 
 function extractSeriesLine(content: string): string | null {
@@ -399,123 +448,142 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     const fallbackCards = HOME_UPDATES_SECTIONS_META.map((meta) => ({
       ...meta,
       items: [
-        { key: `${meta.id}-fallback-1`, label: 'Atualização em preparação', updatedAt: 0, isPlaceholder: true },
-        { key: `${meta.id}-fallback-2`, label: 'Atualização em preparação', updatedAt: 0, isPlaceholder: true },
-        { key: `${meta.id}-fallback-3`, label: 'Atualização em preparação', updatedAt: 0, isPlaceholder: true },
+        { key: `${meta.id}-fallback-1`, label: 'Atualização em preparação', context: 'Conteúdo em revisão', updatedAt: 0, isPlaceholder: true },
       ],
     }));
 
     try {
-    const sectionMaps: Record<UpdatesSectionId, Map<string, SeriesUpdateItem>> = {
-      mana: new Map(),
-      discipulos: new Map(),
-      selah: new Map(),
-      babel: new Map(),
-    };
-
-    const upsertSeries = (
-      section: UpdatesSectionId,
-      seriesLabel: string,
-      updatedAt: number,
-      slug?: string,
-      image?: string,
-    ) => {
-      const normalizedLabel = normalizeSeriesLabel(seriesLabel);
-      const key = normalizeLookupText(normalizedLabel).replace(/\s+/g, '-');
-      const map = sectionMaps[section];
-      const previous = map.get(key);
-
-      if (!previous) {
-        map.set(key, {
-          key,
-          label: normalizedLabel,
-          updatedAt,
-          slug,
-          image,
-        });
-        return;
+      const manaDateByTitle = new Map<string, string>();
+      const selahDateByTitle = new Map<string, string>();
+      for (const item of Array.isArray(manaIndexData) ? manaIndexData : []) {
+        const title = String(item?.title || '').trim();
+        const date = String(item?.date || '').trim();
+        if (!title || !date) continue;
+        manaDateByTitle.set(normalizeLookupText(title), date);
+      }
+      for (const item of Array.isArray(selahIndexData) ? selahIndexData : []) {
+        const title = String(item?.title || '').trim();
+        const date = String(item?.date || '').trim();
+        if (!title || !date) continue;
+        selahDateByTitle.set(normalizeLookupText(title), date);
       }
 
-      if (updatedAt > previous.updatedAt) {
-        map.set(key, {
-          ...previous,
-          updatedAt,
-          slug: slug || previous.slug,
-          image: image || previous.image,
-        });
+      const sectionItems: Record<UpdatesSectionId, SeriesUpdateItem[]> = {
+        mana: [],
+        discipulos: [],
+        selah: [],
+        babel: [],
+      };
+
+      const selahSeriesMap = new Map<string, SeriesUpdateItem>();
+      const moduleSources: Array<{ section: UpdatesSectionId; modules: Record<string, string>; marker: string }> = [
+        { section: 'mana', modules: homeManaModules, marker: '/public/content/mana/' },
+        { section: 'discipulos', modules: homeDiscipulosModules, marker: '/public/content/discipulos/' },
+        { section: 'selah', modules: homeSelahModules, marker: '/public/content/selah/' },
+        { section: 'babel', modules: homeBabelModules, marker: '/public/content/babel/' },
+      ];
+
+      for (const source of moduleSources) {
+        for (const [pathKey, content] of Object.entries(source.modules)) {
+          if (!content || typeof content !== 'string') continue;
+
+          const normalizedPath = pathKey.replace(/\\/g, '/');
+          const markerIndex = normalizedPath.indexOf(source.marker);
+          const relativePath = markerIndex >= 0
+            ? normalizedPath.slice(markerIndex + source.marker.length)
+            : normalizedPath;
+          const parts = toDisplayPathParts(relativePath);
+          const fileStem = (parts[parts.length - 1] || '').replace(/\.[^.]+$/, '');
+          const frontmatter = parseFrontmatter(content);
+          const title = normalizeSeriesLabel((frontmatter.title || '').trim() || toTitleCaseLabel(fileStem));
+          const image = (frontmatter.image || '').startsWith('/') ? frontmatter.image : undefined;
+
+          if (source.section === 'mana') {
+            const fallbackDate = manaDateByTitle.get(normalizeLookupText(title));
+            const updatedAt = resolveUpdatedAt(frontmatter, fallbackDate);
+            sectionItems.mana.push({
+              key: `mana-${normalizeLookupText(relativePath).replace(/\s+/g, '-')}`,
+              label: title,
+              context: deriveManaContext(relativePath, frontmatter),
+              updatedAt,
+              image,
+            });
+            continue;
+          }
+
+          if (source.section === 'selah') {
+            const fallbackDate = selahDateByTitle.get(normalizeLookupText(title));
+            const updatedAt = resolveUpdatedAt(frontmatter, fallbackDate);
+            const sectionLabel = deriveSelahSectionLabel(parts, frontmatter);
+            const subLabel = deriveSelahSubsectionLabel(parts, frontmatter);
+            const seriesLabel = normalizeSeriesLabel(deriveSeriesLabelFromMarkdown('selah', relativePath, frontmatter, content));
+            const context = `${sectionLabel} · ${subLabel}`;
+            const key = normalizeLookupText(`${context} ${seriesLabel}`).replace(/\s+/g, '-');
+            const previous = selahSeriesMap.get(key);
+            if (!previous || updatedAt > previous.updatedAt) {
+              selahSeriesMap.set(key, {
+                key,
+                label: seriesLabel,
+                context,
+                updatedAt,
+                image: image || previous?.image,
+              });
+            }
+            continue;
+          }
+
+          if (source.section === 'discipulos') {
+            const jornada = toTitleCaseLabel(parts[0] || 'Jornada');
+            sectionItems.discipulos.push({
+              key: `discipulos-${normalizeLookupText(relativePath).replace(/\s+/g, '-')}`,
+              label: title,
+              context: jornada,
+              updatedAt: resolveUpdatedAt(frontmatter),
+              image,
+            });
+            continue;
+          }
+
+          const trilha = toTitleCaseLabel(parts[0] || 'Babel');
+          sectionItems.babel.push({
+            key: `babel-${normalizeLookupText(relativePath).replace(/\s+/g, '-')}`,
+            label: title,
+            context: trilha,
+            updatedAt: resolveUpdatedAt(frontmatter),
+            image,
+          });
+        }
       }
-    };
 
-    const manaItems = Array.isArray(manaIndexData) ? manaIndexData : [];
-    const selahItems = Array.isArray(selahIndexData) ? selahIndexData : [];
-
-    for (const item of manaItems) {
-      const title = String(item?.title || '').trim();
-      const prefix = title.split(' - ')[0]?.trim() || '';
-      const seriesLabel = normalizeLookupText(prefix) === 'vida com deus'
-        ? 'Trilogia — O Caminho do Véu Rasgado'
-        : (String(item?.category || '').trim() ? `Coleção — ${String(item?.category || '').trim()}` : (prefix || 'Coleção Maná'));
-      upsertSeries('mana', seriesLabel, parseDateMsOrToday(String(item?.date || '')), String(item?.slug || ''), String(item?.image || ''));
-    }
-
-    for (const item of selahItems) {
-      const seriesLabel = String(item?.category || '').trim() || 'Coleção Rolos';
-      upsertSeries('selah', seriesLabel, parseDateMsOrToday(String(item?.date || '')), String(item?.slug || ''), String(item?.image || ''));
-    }
-
-    const moduleSources: Array<{ section: UpdatesSectionId; modules: Record<string, string>; marker: string }> = [
-      { section: 'mana', modules: homeManaModules, marker: '/public/content/mana/' },
-      { section: 'discipulos', modules: homeDiscipulosModules, marker: '/public/content/discipulos/' },
-      { section: 'selah', modules: homeSelahModules, marker: '/public/content/selah/' },
-      { section: 'babel', modules: homeBabelModules, marker: '/public/content/babel/' },
-    ];
-
-    for (const source of moduleSources) {
-      for (const [pathKey, content] of Object.entries(source.modules)) {
-        if (!content || typeof content !== 'string') continue;
-        const normalizedPath = pathKey.replace(/\\/g, '/');
-        const markerIndex = normalizedPath.indexOf(source.marker);
-        const relativePath = markerIndex >= 0
-          ? normalizedPath.slice(markerIndex + source.marker.length)
-          : normalizedPath;
-
-        const frontmatter = parseFrontmatter(content);
-        const seriesLabel = deriveSeriesLabelFromMarkdown(source.section, relativePath, frontmatter, content);
-        const updatedAt = parseDateMsOrToday(
-          frontmatter.date
-          || frontmatter.updated_at
-          || frontmatter.updatedat
-          || frontmatter.atualizado_em
-          || frontmatter.atualizado
-          || frontmatter.data,
-        );
-        const image = (frontmatter.image || '').startsWith('/') ? frontmatter.image : undefined;
-        upsertSeries(source.section, seriesLabel, updatedAt, undefined, image);
-      }
-    }
+      sectionItems.selah = Array.from(selahSeriesMap.values());
+      const weekStartMs = Date.now() - (7 * 24 * 60 * 60 * 1000);
+      const maxBySection: Record<UpdatesSectionId, number> = {
+        selah: 20,
+        mana: 20,
+        discipulos: 10,
+        babel: 10,
+      };
 
       return HOME_UPDATES_SECTIONS_META.map((meta) => {
-      const sorted = Array.from(sectionMaps[meta.id].values())
-        .sort((a, b) => {
+        const sorted = [...sectionItems[meta.id]].sort((a, b) => {
           if (b.updatedAt !== a.updatedAt) return b.updatedAt - a.updatedAt;
           return a.label.localeCompare(b.label, 'pt-BR');
-        })
-        .slice(0, 3);
-
-      while (sorted.length < 3) {
-        sorted.push({
-          key: `${meta.id}-placeholder-${sorted.length + 1}`,
-          label: 'Nova série em preparação',
-          updatedAt: 0,
-          isPlaceholder: true,
         });
-      }
+        const weekly = sorted.filter((item) => item.updatedAt >= weekStartMs);
+        const selected = (weekly.length > 0 ? weekly : sorted).slice(0, maxBySection[meta.id]);
 
-      return {
-        ...meta,
-        items: sorted,
-      };
-    });
+        if (selected.length === 0) {
+          return {
+            ...meta,
+            items: [{ key: `${meta.id}-fallback-empty`, label: 'Atualização em preparação', context: 'Sem itens com data recente', updatedAt: 0, isPlaceholder: true }],
+          };
+        }
+
+        return {
+          ...meta,
+          items: selected,
+        };
+      });
     } catch {
       return fallbackCards;
     }
@@ -631,6 +699,13 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
                   </div>
 
                   <div className="mt-2.5 space-y-1.5">
+                    {card.id === 'selah' && (
+                      <div className="rounded-lg border border-outline-variant/20 bg-black/20 px-2 py-1">
+                        <p className="text-[8px] font-black uppercase tracking-[0.14em] text-on-surface-variant/80">
+                          Série | Seção · Subseção
+                        </p>
+                      </div>
+                    )}
                     {card.items.map((item, index) => (
                       <div
                         key={`${card.id}-${item.key}`}
@@ -641,6 +716,11 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
                             {index + 1}. {item.label}
                           </p>
                         </div>
+                        {item.context && (
+                          <p className="mt-0.5 text-[9px] text-on-surface-variant/80 leading-snug line-clamp-2">
+                            {item.context}
+                          </p>
+                        )}
                       </div>
                     ))}
                   </div>

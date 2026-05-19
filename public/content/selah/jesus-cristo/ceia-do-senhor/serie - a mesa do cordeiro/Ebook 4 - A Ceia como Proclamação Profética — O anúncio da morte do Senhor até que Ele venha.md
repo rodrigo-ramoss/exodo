@@ -3,8 +3,9 @@ title: "A Ceia como Proclamação Profética — O anúncio da morte do Senhor a
 description: "A Ceia não é um sussurro devocional, mas um brado de guerra. Uma investigação sobre a proclamação da mesa do Senhor à Igreja, ao mundo visível e às hostes espirituais."
 seção: selah
 category: jesus cristo
-subcategory: ceia do senhor
-image: https://via.placeholder.com/1600x2400?text=A+Mesa+do+Cordeiro+Vol+4
+
+date: 2026-05-19
+image: "/image/selah/a ceia como proclamacao profetica.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

@@ -3,8 +3,9 @@ title: "Comunhão com o Cordeiro Imolado — A presença real de Cristo na Ceia"
 description: "O cálice que abençoamos é a comunhão do sangue de Cristo. O pão que partimos é a comunhão do corpo de Cristo. Uma investigação sobre a koinonia na Ceia do Senhor e a incompatibilidade com a mesa dos demônios."
 seção: selah
 category: jesus cristo
-subcategory: ceia do senhor
-image: "/image/selah/a mesa do rei o banquete das bodas do cordeiro.webp"
+
+date: 2026-05-19
+image: "/image/selah/comunhao com um cordeiro imolado.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

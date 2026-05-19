@@ -3,8 +3,9 @@ title: "O Cálice da Nova Aliança — O sangue que sela o pacto eterno"
 description: "Na noite em que foi traído, Jesus tomou o cálice e declarou: 'Isto é o meu sangue, o sangue da nova aliança'. Como a Ceia do Senhor substituiu a Páscoa judaica e cumpriu a promessa de Jeremias 31."
 seção: selah
 category: jesus cristo
-subcategory: ceia do senhor
-image: "/image/selah/a mesa do rei o banquete das bodas do cordeiro.webp"
+
+date: 2026-05-19
+image: "/image/selah/o calice da nova alianca.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

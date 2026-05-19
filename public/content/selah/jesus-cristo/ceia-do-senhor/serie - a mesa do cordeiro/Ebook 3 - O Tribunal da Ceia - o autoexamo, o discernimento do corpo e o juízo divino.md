@@ -3,8 +3,9 @@ title: "O Tribunal da Ceia — O autoexame, o discernimento do corpo e o juízo 
 description: "A mesa do Senhor alimenta, mas também julga. Como o autoexame, o discernimento do corpo de Cristo e a participação digna silenciam o acusador no tribunal celestial."
 seção: selah
 category: jesus cristo
-subcategory: ceia do senhor
-image: https://via.placeholder.com/1600x2400?text=A+Mesa+do+Cordeiro+Vol+3
+
+date: 2026-05-19
+image: "/image/selah/o tribunal da ceia.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*
