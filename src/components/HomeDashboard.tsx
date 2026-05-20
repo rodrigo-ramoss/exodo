@@ -564,7 +564,18 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           return a.label.localeCompare(b.label, 'pt-BR');
         });
         const weekly = sorted.filter((item) => item.updatedAt >= weekStartMs);
-        const selected = (weekly.length > 0 ? weekly : sorted).slice(0, maxBySection[meta.id]);
+        const selected: SeriesUpdateItem[] = [];
+        for (const item of weekly) {
+          if (selected.length >= maxBySection[meta.id]) break;
+          selected.push(item);
+        }
+        if (selected.length < maxBySection[meta.id]) {
+          for (const item of sorted) {
+            if (selected.length >= maxBySection[meta.id]) break;
+            if (selected.some((existing) => existing.key === item.key)) continue;
+            selected.push(item);
+          }
+        }
 
         if (selected.length === 0) {
           return {

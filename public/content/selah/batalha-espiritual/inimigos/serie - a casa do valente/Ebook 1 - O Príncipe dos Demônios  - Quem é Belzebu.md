@@ -4,7 +4,7 @@ description: "A origem do nome, a acusação contra Jesus e a hierarquia do mal.
 seção: selah
 category: batalha-espiritual
 subseção: inimigos
-image: https://vozdodeserto.com/wp-content/uploads/2026/05/casa-do-valente-vol1-capa.jpg
+image: /image/selah/o principe dos demonios quem é belzebu.webp
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

@@ -320,6 +320,13 @@ const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
     6: 'a ponoplia de deus',
     7: 'a queda dos poderes',
   },
+  'a casa do valente': {
+    1: 'o principe dos demonios quem e belzebu',
+    2: 'o templo o anel e o controle',
+    3: 'as claviculas de salomao',
+    4: '666 talentos de ouro',
+    5: 'falsos exorcistas',
+  },
   'a consumacao e o juizo do reino': {
     1: 'o campo e o mundo',
     2: 'o inimigo que semeira',
@@ -1165,6 +1172,7 @@ function inferSeriesVolumeCoverStem(title: string, slug: string, category?: stri
   }
   if (haystack.includes('como nos dias de noe')) return SERIES_VOLUME_COVER_STEMS['como nos dias de noe'][volume] ?? null;
   if (haystack.includes('hierarquia do inimigo')) return SERIES_VOLUME_COVER_STEMS['hierarquia do inimigo'][volume] ?? null;
+  if (haystack.includes('a casa do valente')) return SERIES_VOLUME_COVER_STEMS['a casa do valente'][volume] ?? null;
   if (haystack.includes('consumacao e o juizo do reino')) return SERIES_VOLUME_COVER_STEMS['a consumacao e o juizo do reino'][volume] ?? null;
   if (haystack.includes('tabernaculo')) return SERIES_VOLUME_COVER_STEMS['tabernaculo'][volume] ?? null;
 
@@ -1799,6 +1807,8 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'série — invasão':                          'EKKLESIA',
   'Série — A Hierarquia do Inimigo':          'BATALHA ESPIRITUAL',
   'série — a hierarquia do inimigo':          'BATALHA ESPIRITUAL',
+  'Série — A Casa do Valente':                'BATALHA ESPIRITUAL',
+  'série — a casa do valente':                'BATALHA ESPIRITUAL',
   'Série — A Cruz no Mundo Espiritual':       'JESUS CRISTO',
   'Série — A Armadura do Remanescente':       'BATALHA ESPIRITUAL',
   'Série — A Arquitetura da Guerra Invisível': 'BATALHA ESPIRITUAL',
@@ -1936,6 +1946,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — Invasão Legal':                    'Invasão Legal',
   'Série — Invasão':                          'Invasão',
   'Série — A Hierarquia do Inimigo':          'A Hierarquia do Inimigo',
+  'Série — A Casa do Valente':                'A Casa do Valente',
   'Série — A Cruz no Mundo Espiritual':       'A Cruz no Mundo Espiritual',
   'Série — A Armadura do Remanescente':       'A Armadura do Remanescente',
   'Série — A Arquitetura da Guerra Invisível': 'A Arquitetura da Guerra Invisível',
@@ -1982,6 +1993,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Série — Invasão Legal': 'Uma série sobre a ofensiva judicial do Reino contra os poderes das trevas: cruz, tribunal celestial, ocupação territorial e execução da sentença final.',
   'Série — Invasão': 'Uma série sobre a missão da Igreja contra os poderes das trevas: avanço do Reino, discernimento espiritual e formação de comunidades fiéis.',
   'Série — A Hierarquia do Inimigo': 'Uma série exegética sobre os escalões das trevas em Efésios 6:12 e as estratégias bíblicas para guerra espiritual com discernimento e autoridade em Cristo.',
+  'Série — A Casa do Valente': 'Uma série sobre Belzebu, tradição salomônica, ocultismo e autoridade de Cristo, com leitura bíblica e discernimento prático em batalha espiritual.',
   'Série — A Cruz no Mundo Espiritual': 'Uma série cristocêntrica sobre as operações invisíveis da cruz: trevas no Calvário, véu rasgado, descida ao Hades, despojamento dos principados e derrota do acusador.',
   'Série — A Armadura do Remanescente': 'Uma série prática sobre preparo espiritual do remanescente: verdade, justiça e permanência no dia mau.',
   'Série — A Arquitetura da Guerra Invisível': 'Uma série sobre a estrutura da guerra espiritual: hierarquia do adversário, atuação de Miguel, cartografia dos principados e estratégias de combate bíblico para o remanescente.',
