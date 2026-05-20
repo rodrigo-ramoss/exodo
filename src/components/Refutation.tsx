@@ -34,6 +34,14 @@ const REFUTATION_THEMES: RefutationTheme[] = [
     accent: 'from-[#0b2a1b]/92 via-[#071910]/86 to-[#030807]/90',
     signal: 'MATRIX::SCAN',
   },
+  {
+    id: 'eles-avisam',
+    label: 'Eles Avisam',
+    subtitle:
+      'Por que o sistema avisa: consentimento público, arrogância de poder, cobertura estratégica, preparação psicológica e oferta sacrificial como linguagem de controle.',
+    accent: 'from-[#0b1f2f]/92 via-[#091523]/86 to-[#03070f]/90',
+    signal: 'ALERTA::PADRAO',
+  },
 ];
 
 const THEME_BY_ID = Object.fromEntries(REFUTATION_THEMES.map((theme) => [theme.id, theme])) as Record<string, RefutationTheme>;
