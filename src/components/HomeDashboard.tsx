@@ -1,4 +1,4 @@
-import { BookMarked, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Flag, Highlighter, Library, NotebookPen, Search, TrendingUp, UserRound, Wheat } from 'lucide-react';
+import { BookMarked, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Flag, Highlighter, Library, NotebookPen, TrendingUp, UserRound, Wheat } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 import { Screen } from '../types';
 import { useProfile } from '../state/ProfileContext';
@@ -48,7 +48,7 @@ type ReaderHighlightEntry = {
   updatedAt: number;
 };
 
-type UpdatesSectionId = 'mana' | 'discipulos' | 'selah' | 'babel';
+type UpdatesSectionId = 'mana' | 'selah' | 'babel';
 
 type ContentIndexItem = {
   title?: string;
@@ -70,7 +70,7 @@ type SeriesUpdateItem = {
 
 type SectionUpdatesCard = {
   id: UpdatesSectionId;
-  label: 'MANÁ' | 'DISCÍPULOS' | 'ROLOS' | 'BABEL';
+  label: 'MANÁ' | 'ROLOS' | 'BABEL';
   subtitle: string;
   target: Screen;
   items: SeriesUpdateItem[];
@@ -88,18 +88,10 @@ const CATEGORY_TO_SCREEN: Record<string, Screen> = {
 };
 
 const HOME_UPDATES_SECTIONS_META: Array<Omit<SectionUpdatesCard, 'items'>> = [
-  { id: 'selah', label: 'ROLOS', subtitle: 'Seção, subseção e série atualizadas', target: Screen.BOOKSTORE },
-  { id: 'mana', label: 'MANÁ', subtitle: 'Tenda e ebook atualizados', target: Screen.MANA },
-  { id: 'discipulos', label: 'DISCÍPULOS', subtitle: 'Jornadas de formação', target: Screen.DISCIPULOS },
-  { id: 'babel', label: 'BABEL', subtitle: 'Discernimento da matrix', target: Screen.REFUTACAO },
+  { id: 'selah', label: 'ROLOS', subtitle: '4 séries atualizadas', target: Screen.BOOKSTORE },
+  { id: 'mana', label: 'MANÁ', subtitle: '5 e-books atualizados', target: Screen.MANA },
+  { id: 'babel', label: 'BABEL', subtitle: 'Séries atualizadas da sessão', target: Screen.REFUTACAO },
 ];
-
-const homeDiscipulosModules = {
-  ...import.meta.glob('/public/content/discipulos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/discipulos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/discipulos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/discipulos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
-} as Record<string, string>;
 
 const homeBabelModules = {
   ...import.meta.glob('/public/content/babel/**/*.md', { eager: true, query: '?raw', import: 'default' }),
@@ -285,6 +277,25 @@ function deriveSelahSubsectionLabel(parts: string[], frontmatter: Record<string,
   return toTitleCaseLabel(raw) || 'Sem Subseção';
 }
 
+function deriveBabelSessionLabel(parts: string[], frontmatter: Record<string, string>): string {
+  const raw = (frontmatter.sessao || frontmatter.session || parts[0] || 'quem-controla-a-matrix').trim();
+  return toTitleCaseLabel(raw) || 'Quem Controla A Matrix';
+}
+
+function deriveBabelSeriesLabel(parts: string[], frontmatter: Record<string, string>, content: string): string {
+  const fromMarkdown = normalizeSeriesLabel(deriveSeriesLabelFromMarkdown('babel', parts.join('/'), frontmatter, content));
+  const normalized = normalizeLookupText(fromMarkdown);
+  if (normalized.includes('arquitetura visivel')) return 'Arquitetura Invisível';
+  if (normalized.includes('fundamentos do discernimento')) return 'Fundamentos do Discernimento';
+
+  const fromFolder = normalizeSeriesLabel(toTitleCaseLabel(parts[1] || ''));
+  const normalizedFolder = normalizeLookupText(fromFolder);
+  if (normalizedFolder.includes('arquitetura visivel')) return 'Arquitetura Invisível';
+  if (normalizedFolder.includes('fundamentos do discernimento')) return 'Fundamentos do Discernimento';
+
+  return fromMarkdown || fromFolder || 'Discernimento da Matrix';
+}
+
 function extractSeriesLine(content: string): string | null {
   const line = content.match(/^\s*\*?\s*S[ée]rie:\s*([^\n*]+)\*?\s*$/im);
   if (!line?.[1]) return null;
@@ -304,14 +315,6 @@ function deriveSeriesLabelFromMarkdown(
   const parts = normalizedPath.split('/').filter(Boolean);
   const fromSeriesLine = extractSeriesLine(content);
   if (fromSeriesLine) return fromSeriesLine;
-
-  if (section === 'discipulos') {
-    const tema = (frontmatter.tema || '').trim();
-    if (tema) return humanizeToken(tema);
-    const jornada = parts.find((part) => /^jornada\s+\d+/i.test(part));
-    if (jornada) return humanizeToken(jornada);
-    return 'Trilhas do Deserto';
-  }
 
   if (section === 'mana') {
     const category = (frontmatter.category || '').trim();
@@ -428,7 +431,6 @@ function loadReaderHighlights(slugActivityMap: Map<string, number>): ReaderHighl
 }
 
 export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
-  const [myStudiesQuery, setMyStudiesQuery] = useState('');
   const [showAllNotes, setShowAllNotes] = useState(false);
   const [showAllHighlights, setShowAllHighlights] = useState(false);
   const updatesCarouselRef = useRef<HTMLDivElement | null>(null);
@@ -436,12 +438,11 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
   const { data: manaIndexData } = useFetch<ContentIndexItem[]>('/content/mana/index.json');
   const { data: selahIndexData } = useFetch<ContentIndexItem[]>('/content/selah/index.json');
   const {
-    lastReadings,
+    inProgressReadings,
     totals,
     overallPct,
     goals,
     weeklyGoal,
-    hasAnyReadingStarted,
   } = useUserProgress();
 
   const updatesCards = useMemo<SectionUpdatesCard[]>(() => {
@@ -470,15 +471,14 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
 
       const sectionItems: Record<UpdatesSectionId, SeriesUpdateItem[]> = {
         mana: [],
-        discipulos: [],
         selah: [],
         babel: [],
       };
 
       const selahSeriesMap = new Map<string, SeriesUpdateItem>();
+      const babelSeriesMap = new Map<string, SeriesUpdateItem>();
       const moduleSources: Array<{ section: UpdatesSectionId; modules: Record<string, string>; marker: string }> = [
         { section: 'mana', modules: homeManaModules, marker: '/public/content/mana/' },
-        { section: 'discipulos', modules: homeDiscipulosModules, marker: '/public/content/discipulos/' },
         { section: 'selah', modules: homeSelahModules, marker: '/public/content/selah/' },
         { section: 'babel', modules: homeBabelModules, marker: '/public/content/babel/' },
       ];
@@ -517,7 +517,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
             const sectionLabel = deriveSelahSectionLabel(parts, frontmatter);
             const subLabel = deriveSelahSubsectionLabel(parts, frontmatter);
             const seriesLabel = normalizeSeriesLabel(deriveSeriesLabelFromMarkdown('selah', relativePath, frontmatter, content));
-            const context = `${sectionLabel} · ${subLabel}`;
+            const context = `Sessão: ${sectionLabel} · Subseção: ${subLabel}`;
             const key = normalizeLookupText(`${context} ${seriesLabel}`).replace(/\s+/g, '-');
             const previous = selahSeriesMap.get(key);
             if (!previous || updatedAt > previous.updatedAt) {
@@ -532,36 +532,30 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
             continue;
           }
 
-          if (source.section === 'discipulos') {
-            const jornada = toTitleCaseLabel(parts[0] || 'Jornada');
-            sectionItems.discipulos.push({
-              key: `discipulos-${normalizeLookupText(relativePath).replace(/\s+/g, '-')}`,
-              label: title,
-              context: jornada,
-              updatedAt: resolveUpdatedAt(frontmatter),
-              image,
+          const updatedAt = resolveUpdatedAt(frontmatter);
+          const sessionLabel = deriveBabelSessionLabel(parts, frontmatter);
+          const seriesLabel = deriveBabelSeriesLabel(parts, frontmatter, content);
+          const key = normalizeLookupText(`${sessionLabel} ${seriesLabel}`).replace(/\s+/g, '-');
+          const previous = babelSeriesMap.get(key);
+          if (!previous || updatedAt > previous.updatedAt) {
+            babelSeriesMap.set(key, {
+              key,
+              label: seriesLabel,
+              context: `Sessão: ${sessionLabel}`,
+              updatedAt,
+              image: image || previous?.image,
             });
-            continue;
           }
-
-          const trilha = toTitleCaseLabel(parts[0] || 'Babel');
-          sectionItems.babel.push({
-            key: `babel-${normalizeLookupText(relativePath).replace(/\s+/g, '-')}`,
-            label: title,
-            context: trilha,
-            updatedAt: resolveUpdatedAt(frontmatter),
-            image,
-          });
         }
       }
 
       sectionItems.selah = Array.from(selahSeriesMap.values());
+      sectionItems.babel = Array.from(babelSeriesMap.values());
       const weekStartMs = Date.now() - (7 * 24 * 60 * 60 * 1000);
       const maxBySection: Record<UpdatesSectionId, number> = {
-        selah: 20,
-        mana: 20,
-        discipulos: 10,
-        babel: 10,
+        selah: 4,
+        mana: 5,
+        babel: 4,
       };
 
       return HOME_UPDATES_SECTIONS_META.map((meta) => {
@@ -589,36 +583,20 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     }
   }, [manaIndexData, selahIndexData]);
 
-  const continueCards = [
-    lastReadings.mana,
-    lastReadings.discipulos,
-    lastReadings.selah,
-    lastReadings.babel,
-  ];
-
   const totalTrackedReadings = totals.completed + totals.inProgress;
   const showViewAllProgress = totalTrackedReadings > 4;
   const slugScreenMap = useMemo(() => mapSlugToCategoryScreen(), []);
   const slugActivityMap = useMemo(() => mapSlugToLastActivityMs(), []);
   const allNotes = useMemo(() => loadReaderNotes(), []);
   const allHighlights = useMemo(() => loadReaderHighlights(slugActivityMap), [slugActivityMap]);
-  const normalizedMyStudiesQuery = normalizeLookupText(myStudiesQuery);
-  const filteredNotes = useMemo(() => {
-    if (!normalizedMyStudiesQuery) return allNotes;
-    return allNotes.filter((item) => normalizeLookupText(`${item.slug} ${item.text} ${item.note}`).includes(normalizedMyStudiesQuery));
-  }, [allNotes, normalizedMyStudiesQuery]);
-  const filteredHighlights = useMemo(() => {
-    if (!normalizedMyStudiesQuery) return allHighlights;
-    return allHighlights.filter((item) => normalizeLookupText(`${item.slug} ${item.text}`).includes(normalizedMyStudiesQuery));
-  }, [allHighlights, normalizedMyStudiesQuery]);
-  const visibleNotes = useMemo(() => {
-    if (normalizedMyStudiesQuery) return filteredNotes;
-    return showAllNotes ? filteredNotes : filteredNotes.slice(0, 4);
-  }, [filteredNotes, normalizedMyStudiesQuery, showAllNotes]);
-  const visibleHighlights = useMemo(() => {
-    if (normalizedMyStudiesQuery) return filteredHighlights;
-    return showAllHighlights ? filteredHighlights : filteredHighlights.slice(0, 4);
-  }, [filteredHighlights, normalizedMyStudiesQuery, showAllHighlights]);
+  const visibleNotes = useMemo(
+    () => (showAllNotes ? allNotes : allNotes.slice(0, 4)),
+    [allNotes, showAllNotes],
+  );
+  const visibleHighlights = useMemo(
+    () => (showAllHighlights ? allHighlights : allHighlights.slice(0, 4)),
+    [allHighlights, showAllHighlights],
+  );
 
   const scrollUpdatesCarousel = (delta: number) => {
     const carousel = updatesCarouselRef.current;
@@ -644,10 +622,10 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
             <div>
               <p className="text-[10px] font-black tracking-[0.18em] uppercase text-primary">Painel de atualizações</p>
               <h3 className="mt-1 font-headline text-base sm:text-lg font-black tracking-tight text-on-surface">
-                Últimas séries atualizadas por seção
+                Avisos de séries atualizadas
               </h3>
               <p className="mt-1 text-[11px] text-on-surface-variant leading-relaxed">
-                O app é atualizado com novos conteúdos toda semana.
+                Rolos, Maná e Babel organizados por série.
               </p>
             </div>
             <div className="hidden sm:flex items-center gap-1.5">
@@ -699,13 +677,6 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
                   </div>
 
                   <div className="mt-2.5 space-y-1.5">
-                    {card.id === 'selah' && (
-                      <div className="rounded-lg border border-outline-variant/20 bg-black/20 px-2 py-1">
-                        <p className="text-[8px] font-black uppercase tracking-[0.14em] text-on-surface-variant/80">
-                          Série | Seção · Subseção
-                        </p>
-                      </div>
-                    )}
                     {card.items.map((item, index) => (
                       <div
                         key={`${card.id}-${item.key}`}
@@ -750,14 +721,14 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
         </div>
       </section>
 
-      {!hasAnyReadingStarted ? (
+      {inProgressReadings.length === 0 ? (
         <section className="px-4 sm:px-6 pb-4">
           <div className="rounded-2xl border border-outline-variant/20 bg-surface-container-low p-4">
             <h3 className="font-headline text-base font-black tracking-tight text-on-surface">
-              Sua jornada ainda não começou
+              Nenhuma série em andamento
             </h3>
             <p className="mt-1.5 text-xs text-on-surface-variant leading-relaxed">
-              Abra uma seção, inicie uma leitura e ela aparecerá aqui para você continuar depois.
+              Quando você iniciar uma leitura e parar no meio, ela aparece aqui para continuar depois.
             </p>
           </div>
         </section>
@@ -778,12 +749,12 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           </div>
 
           <div className="space-y-2">
-            {continueCards.map((card) => {
+            {inProgressReadings.map((card) => {
               const Icon = SECTION_ICON[card.label];
               const target = SECTION_NAVIGATION[card.label];
               return (
                 <article
-                  key={card.section}
+                  key={`${card.section}-${card.slug}`}
                   className="rounded-xl border border-outline-variant/18 bg-surface-container-low/95 p-2.5"
                 >
                   <div className="flex gap-2.5">
@@ -914,49 +885,16 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
         <div className="rounded-xl border border-outline-variant/20 bg-surface-container-low p-3">
           <div className="flex items-center justify-between gap-2 mb-2">
             <h3 className="font-headline text-[13px] sm:text-sm font-black uppercase tracking-[0.08em] text-on-surface">
-              Meus estudos
-            </h3>
-          </div>
-          <div className="flex items-center gap-2 rounded-xl border border-outline-variant/35 bg-surface-container-high/60 px-3">
-            <Search size={14} className="text-primary/80 shrink-0" />
-            <input
-              value={myStudiesQuery}
-              onChange={(event) => setMyStudiesQuery(event.target.value)}
-              placeholder="Buscar em notas e destaques..."
-              className="w-full bg-transparent py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none"
-            />
-            {myStudiesQuery && (
-              <button
-                type="button"
-                onClick={() => setMyStudiesQuery('')}
-                className="text-[11px] font-black uppercase tracking-wider text-on-surface-variant/70 hover:text-primary transition-colors"
-              >
-                Limpar
-              </button>
-            )}
-          </div>
-          <p className="mt-1 text-[10px] text-on-surface-variant/75">
-            Busca local no seu histórico pessoal.
-          </p>
-        </div>
-      </section>
-
-      <section className="px-4 sm:px-6 pb-4">
-        <div className="rounded-xl border border-outline-variant/20 bg-surface-container-low p-3">
-          <div className="flex items-center justify-between gap-2 mb-2">
-            <h3 className="font-headline text-[13px] sm:text-sm font-black uppercase tracking-[0.08em] text-on-surface">
               Notas recentes
             </h3>
             <span className="text-[9px] uppercase tracking-widest text-primary font-black">
-              {filteredNotes.length}
+              {allNotes.length}
             </span>
           </div>
 
           {visibleNotes.length === 0 ? (
             <p className="text-[10px] text-on-surface-variant/75">
-              {normalizedMyStudiesQuery
-                ? 'Nenhuma nota encontrada para essa busca.'
-                : 'Nenhuma nota ainda. Marque um trecho e adicione observações no leitor.'}
+              Nenhuma nota ainda. Marque um trecho e adicione observações no leitor.
             </p>
           ) : (
             <div className="space-y-2">
@@ -985,14 +923,14 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
             </div>
           )}
 
-          {!normalizedMyStudiesQuery && filteredNotes.length > 4 && (
+          {allNotes.length > 4 && (
             <div className="mt-2 flex justify-end">
               <button
                 type="button"
                 onClick={() => setShowAllNotes((prev) => !prev)}
                 className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/80"
               >
-                {showAllNotes ? 'Mostrar menos' : `Ver todos (${filteredNotes.length})`}
+                {showAllNotes ? 'Mostrar menos' : `Ver todos (${allNotes.length})`}
               </button>
             </div>
           )}
@@ -1006,15 +944,13 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
               Destaques recentes
             </h3>
             <span className="text-[9px] uppercase tracking-widest text-primary font-black">
-              {filteredHighlights.length}
+              {allHighlights.length}
             </span>
           </div>
 
           {visibleHighlights.length === 0 ? (
             <p className="text-[10px] text-on-surface-variant/75">
-              {normalizedMyStudiesQuery
-                ? 'Nenhum destaque encontrado para essa busca.'
-                : 'Nenhum destaque ainda. Use o lápis no leitor para salvar trechos importantes.'}
+              Nenhum destaque ainda. Use o lápis no leitor para salvar trechos importantes.
             </p>
           ) : (
             <div className="space-y-2">
@@ -1037,14 +973,14 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
             </div>
           )}
 
-          {!normalizedMyStudiesQuery && filteredHighlights.length > 4 && (
+          {allHighlights.length > 4 && (
             <div className="mt-2 flex justify-end">
               <button
                 type="button"
                 onClick={() => setShowAllHighlights((prev) => !prev)}
                 className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/80"
               >
-                {showAllHighlights ? 'Mostrar menos' : `Ver todos (${filteredHighlights.length})`}
+                {showAllHighlights ? 'Mostrar menos' : `Ver todos (${allHighlights.length})`}
               </button>
             </div>
           )}

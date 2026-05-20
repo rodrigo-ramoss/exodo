@@ -98,6 +98,7 @@ export interface UserProgressSnapshot {
     selah: LastReadingCard;
     babel: LastReadingCard;
   };
+  inProgressReadings: LastReadingCard[];
   totals: {
     completed: number;
     inProgress: number;
@@ -934,6 +935,48 @@ export function useUserProgress(): UserProgressSnapshot {
     [babelCards, discipulosCards, manaCards, selahCards],
   );
 
+  const collectInProgressReadings = (
+    section: LastReadingCard['section'],
+    label: LastReadingCard['label'],
+    category: Category,
+    entries: Array<{ title: string; slug: string; image?: string }>,
+  ) =>
+    entries
+      .map((entry) => ({ entry, progress: getReadingStatus(category, entry.slug) }))
+      .filter((item) => item.progress.status === 'Em andamento')
+      .map((item) => ({
+        card: {
+          section,
+          label,
+          category,
+          title: item.entry.title,
+          slug: item.entry.slug,
+          image: item.entry.image,
+          status: item.progress.status,
+          progressPct: item.progress.progressPct,
+          whereStopped: item.progress.whereStopped,
+          isEmpty: false,
+        } as LastReadingCard,
+        score: item.progress.score,
+      }));
+
+  const inProgressReadings = useMemo(() => {
+    const all = [
+      ...collectInProgressReadings('mana', 'MANÁ', 'mana', manaCards),
+      ...collectInProgressReadings('discipulos', 'DISCÍPULOS', 'discipulos', discipulosCards),
+      ...collectInProgressReadings('selah', 'ROLOS', 'livraria', selahCards),
+      ...collectInProgressReadings('babel', 'BABEL', 'refutacao', babelCards),
+    ]
+      .sort((a, b) => b.score - a.score)
+      .map((item) => item.card);
+
+    const bySlug = new Map<string, LastReadingCard>();
+    for (const item of all) {
+      if (!bySlug.has(item.slug)) bySlug.set(item.slug, item);
+    }
+    return Array.from(bySlug.values());
+  }, [babelCards, discipulosCards, manaCards, selahCards]);
+
   const countsByCategory = (category: Category, slugs: string[]) => {
     const unique = Array.from(new Set(slugs.filter(Boolean)));
     let completed = 0;
@@ -978,6 +1021,7 @@ export function useUserProgress(): UserProgressSnapshot {
     pillars,
     goals,
     lastReadings,
+    inProgressReadings,
     totals,
     weeklyGoal,
     hasAnyReadingStarted,
