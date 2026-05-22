@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -227,6 +227,7 @@ const TENDA_BG: Record<TendaId, string> = {
   'vida-interior': 'from-[#241915] via-[#171312] to-[#101010]',
   'vida-exterior': 'from-[#201a13] via-[#151312] to-[#0f0f0f]',
 };
+const TEMA_ITEMS_PER_CAROUSEL = 6;
 
 function normalizeText(raw: string): string {
   return raw
@@ -260,6 +261,55 @@ function formatBadge(order: number): string {
   return `E-BOOK ${String(order).padStart(2, '0')}`;
 }
 
+function parseOrderHint(value?: string): number | null {
+  if (!value) return null;
+  const match = value.match(/\b(?:e-?book|ebook|livro|volume|vol\.?|parte)\s*0*(\d{1,3})\b/i)
+    || value.match(/\b0*(\d{1,3})\b/);
+  if (!match) return null;
+  const parsed = Number.parseInt(match[1], 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
+
+function parseFrontmatter(raw: string): Record<string, string> {
+  const match = raw.match(/^---\s*\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return {};
+
+  const parsed: Record<string, string> = {};
+  const lines = match[1].split(/\r?\n/);
+
+  lines.forEach((line) => {
+    const separator = line.indexOf(':');
+    if (separator <= 0) return;
+
+    const key = normalizeText(line.slice(0, separator)).replace(/\s+/g, '-');
+    const value = line.slice(separator + 1).trim().replace(/^['"]|['"]$/g, '');
+    if (!key || !value) return;
+    parsed[key] = value;
+  });
+
+  return parsed;
+}
+
+function toSlugToken(raw: string): string {
+  return normalizeText(raw).replace(/\s+/g, '-');
+}
+
+function toReadableTitleFromStem(raw: string): string {
+  return raw
+    .replace(/[_]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function chunkBySize<T>(items: T[], size: number): T[][] {
+  if (size <= 0) return [items];
+  const chunks: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    chunks.push(items.slice(i, i + size));
+  }
+  return chunks;
+}
+
 function TemaProgress({ slug }: { slug: string }) {
   const progress = pm.getProgress('mana', slug);
   const isCompleted = pm.isRead('mana', slug);
@@ -281,51 +331,6 @@ function TemaProgress({ slug }: { slug: string }) {
         />
       </div>
       <p className="mt-1 text-[9px] sm:text-[10px] font-semibold text-on-surface-variant/80">{status}</p>
-    </div>
-  );
-}
-
-function DragScrollRow({ children }: { children: ReactNode }) {
-  const rowRef = useRef<HTMLDivElement>(null);
-  const drag = useRef({ isDown: false, startX: 0, scrollLeft: 0, didDrag: false });
-
-  return (
-    <div
-      ref={rowRef}
-      className="flex gap-3 sm:gap-4 overflow-x-auto pb-3 sm:pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      onClickCapture={(e) => {
-        if (drag.current.didDrag) {
-          e.preventDefault();
-          e.stopPropagation();
-          drag.current.didDrag = false;
-        }
-      }}
-      onPointerDown={(e) => {
-        if (e.pointerType !== 'mouse') return;
-        const el = rowRef.current;
-        if (!el) return;
-        drag.current = { isDown: true, startX: e.clientX, scrollLeft: el.scrollLeft, didDrag: false };
-      }}
-      onPointerMove={(e) => {
-        if (e.pointerType !== 'mouse' || !drag.current.isDown) return;
-        const el = rowRef.current;
-        if (!el) return;
-        const walk = e.clientX - drag.current.startX;
-        if (Math.abs(walk) > 10) drag.current.didDrag = true;
-        el.scrollLeft = drag.current.scrollLeft - walk;
-      }}
-      onPointerUp={() => {
-        drag.current.isDown = false;
-        setTimeout(() => {
-          drag.current.didDrag = false;
-        }, 0);
-      }}
-      onPointerLeave={() => {
-        drag.current.isDown = false;
-        drag.current.didDrag = false;
-      }}
-    >
-      {children}
     </div>
   );
 }
@@ -382,7 +387,7 @@ function TendaCard({ tenda, onEnter, onSelectTema }: { tenda: ManaTenda; onEnter
         <div className="border-t border-primary/15 pt-2.5 sm:pt-3">
           <div className="mb-1.5 sm:mb-2 flex items-center justify-between">
             <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary/80">Temas desta tenda</p>
-            <div className="hidden sm:flex items-center gap-1">
+            <div className="flex items-center gap-1">
               <button
                 type="button"
                 onClick={() => scrollByAmount(-180)}
@@ -464,6 +469,7 @@ export default function Studies({ openSlug }: StudiesProps) {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const [manaSearchQuery, setManaSearchQuery] = useState('');
+  const activeTendaRowRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const { data: fetchedStudies } = useFetch<ManaStudyItem[]>('/content/mana/index.json');
 
@@ -484,9 +490,36 @@ export default function Studies({ openSlug }: StudiesProps) {
     return map;
   }, []);
   const manaSearchIndex = useMemo(() => buildStudySearchIndex(manaMarkdownModules, 'mana'), []);
+  const studiesFromMarkdown = useMemo<ManaStudyItem[]>(() => {
+    const discovered: ManaStudyItem[] = [];
+
+    Object.entries(manaMarkdownModules).forEach(([pathKey, content]) => {
+      const relativePath = toRelativeManaPath(pathKey);
+      if (!/\.(md|mdx|markdown)$/i.test(relativePath)) return;
+      if (!relativePath.includes('/')) return;
+
+      const fileName = relativePath.split('/').pop() ?? relativePath;
+      const fileStem = fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
+      const frontmatter = parseFrontmatter(content);
+      const tendaId = resolveTendaFromSlugOrFolder(relativePath, relativePath);
+      const generatedSlug = `${tendaId}/${toSlugToken(fileStem)}`;
+
+      discovered.push({
+        title: frontmatter.title || toReadableTitleFromStem(fileStem),
+        slug: generatedSlug,
+        description: frontmatter.description,
+        tenda: tendaId,
+        time: frontmatter.time,
+        image: frontmatter.image,
+        file: relativePath,
+      });
+    });
+
+    return discovered;
+  }, []);
 
   const temasFromContent = useMemo(() => {
-    const items: ManaStudyItem[] = fetchedStudies?.length
+    const indexedItems: ManaStudyItem[] = fetchedStudies?.length
       ? fetchedStudies
       : FALLBACK_TEMAS.map((tema) => ({
           title: tema.title,
@@ -496,6 +529,18 @@ export default function Studies({ openSlug }: StudiesProps) {
           image: tema.image,
           file: tema.file,
         }));
+    const indexedByFile = new Set(indexedItems.map((item) => normalizeText(item.file || '')));
+    const indexedBySlug = new Set(indexedItems.map((item) => normalizeText(item.slug)));
+    const mergedItems = [...indexedItems];
+
+    studiesFromMarkdown.forEach((item) => {
+      const fileKey = normalizeText(item.file || '');
+      const slugKey = normalizeText(item.slug);
+      const alreadyListedByFile = fileKey && indexedByFile.has(fileKey);
+      const alreadyListedBySlug = slugKey && indexedBySlug.has(slugKey);
+      if (alreadyListedByFile || alreadyListedBySlug) return;
+      mergedItems.push(item);
+    });
 
     const grouped = new Map<TendaId, ManaTema[]>([
       ['vida-espiritual', []],
@@ -509,11 +554,23 @@ export default function Studies({ openSlug }: StudiesProps) {
       'vida-exterior': 3,
     };
 
-    const sorted = [...items].sort((a, b) => {
+    const sorted = [...mergedItems].sort((a, b) => {
       const tendaA = resolveTendaFromSlugOrFolder(a.slug, a.file);
       const tendaB = resolveTendaFromSlugOrFolder(b.slug, b.file);
       if (sortOrder[tendaA] !== sortOrder[tendaB]) return sortOrder[tendaA] - sortOrder[tendaB];
-      return a.slug.localeCompare(b.slug);
+
+      const orderA = parseOrderHint(a.time)
+        ?? parseOrderHint(a.title)
+        ?? parseOrderHint(a.file?.split('/').pop());
+      const orderB = parseOrderHint(b.time)
+        ?? parseOrderHint(b.title)
+        ?? parseOrderHint(b.file?.split('/').pop());
+
+      if (orderA !== null && orderB !== null && orderA !== orderB) return orderA - orderB;
+      if (orderA !== null && orderB === null) return -1;
+      if (orderA === null && orderB !== null) return 1;
+
+      return a.title.localeCompare(b.title, 'pt-BR');
     });
 
     const tendaCounters: Record<TendaId, number> = {
@@ -528,7 +585,7 @@ export default function Studies({ openSlug }: StudiesProps) {
       grouped.get(tendaId)?.push({
         id: toTemaId(item.slug),
         slug: item.slug,
-        badge: item.time || formatBadge(tendaCounters[tendaId]),
+        badge: formatBadge(tendaCounters[tendaId]),
         title: item.title,
         description: item.description,
         status: 'published',
@@ -538,7 +595,7 @@ export default function Studies({ openSlug }: StudiesProps) {
     });
 
     return grouped;
-  }, [fetchedStudies]);
+  }, [fetchedStudies, studiesFromMarkdown]);
 
   const tendas = useMemo<ManaTenda[]>(() => {
     return MANA_TENDAS_META.map((meta) => ({
@@ -552,6 +609,10 @@ export default function Studies({ openSlug }: StudiesProps) {
     [activeTendaId, tendas],
   );
   const allTemas = useMemo(() => tendas.flatMap((tenda) => tenda.temas), [tendas]);
+  const activeTendaTemaChunks = useMemo(
+    () => (activeTenda ? chunkBySize(activeTenda.temas, TEMA_ITEMS_PER_CAROUSEL) : []),
+    [activeTenda],
+  );
 
   const manaSearchHits = useMemo<ManaSearchHit[]>(() => {
     const query = manaSearchQuery.trim();
@@ -678,11 +739,52 @@ export default function Studies({ openSlug }: StudiesProps) {
 
           <div className="relative -mx-4 px-4 sm:-mx-6 sm:px-6 mt-4 sm:mt-6">
             <div className="pointer-events-none absolute -bottom-1 left-5 right-5 sm:left-6 sm:right-6 h-1 bg-gradient-to-r from-primary/30 via-outline-variant/10 to-transparent opacity-20" />
-            <DragScrollRow>
-              {activeTenda.temas.map((tema) => (
-                <TendaShelfCard key={tema.id} tendaId={activeTenda.id} tema={tema} onSelect={() => void handleOpenTema(tema)} />
-              ))}
-            </DragScrollRow>
+            <div className="space-y-4 sm:space-y-5">
+              {activeTendaTemaChunks.map((temaChunk, chunkIndex) => {
+                const rowKey = `${activeTenda.id}-chunk-${chunkIndex}`;
+                const rowStart = chunkIndex * TEMA_ITEMS_PER_CAROUSEL + 1;
+                const rowEnd = rowStart + temaChunk.length - 1;
+
+                return (
+                  <div key={rowKey}>
+                    <div className="mb-2 flex items-center justify-between gap-2">
+                      <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.16em] text-primary/85">
+                        E-books {rowStart} a {rowEnd}
+                      </p>
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => activeTendaRowRefs.current[rowKey]?.scrollBy({ left: -220, behavior: 'smooth' })}
+                          className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-outline-variant/40 bg-black/40 text-on-surface-variant hover:border-primary/50 hover:text-primary transition-colors"
+                          aria-label="Voltar e-books"
+                        >
+                          <ChevronLeft size={12} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => activeTendaRowRefs.current[rowKey]?.scrollBy({ left: 220, behavior: 'smooth' })}
+                          className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-outline-variant/40 bg-black/40 text-on-surface-variant hover:border-primary/50 hover:text-primary transition-colors"
+                          aria-label="Avançar e-books"
+                        >
+                          <ChevronRight size={12} />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div
+                      ref={(element) => {
+                        activeTendaRowRefs.current[rowKey] = element;
+                      }}
+                      className="flex gap-2.5 sm:gap-3 overflow-x-auto snap-x snap-mandatory pb-1.5 sm:pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                    >
+                      {temaChunk.map((tema) => (
+                        <TendaShelfCard key={tema.id} tendaId={activeTenda.id} tema={tema} onSelect={() => void handleOpenTema(tema)} />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </section>
       </div>
