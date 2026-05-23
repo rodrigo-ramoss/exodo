@@ -164,6 +164,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
       'Ceia do Senhor',
       'Batismo',
       'Novo Nascimento',
+      'Vida de Jesus',
       'Parábolas de Jesus',
     ]),
   },

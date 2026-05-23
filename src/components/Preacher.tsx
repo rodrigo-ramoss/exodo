@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { BookOpen, NotebookPen } from 'lucide-react';
+import { ArrowLeft, BookOpen, NotebookPen } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 
 type SermonItem = {
@@ -8,15 +8,19 @@ type SermonItem = {
   title: string;
   description: string;
   content: string;
+  format: 'markdown' | 'html';
 };
 
-const CONTENT_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml)$/i;
+const CONTENT_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml|html?)$/i;
+const MARKDOWN_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml)$/i;
 
 const preacherMarkdownModules = {
   ...import.meta.glob('/public/content/pregador/**/*.md', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/pregador/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/pregador/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/pregador/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/pregador/**/*.html', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/pregador/**/*.htm', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 
 function titleCase(raw: string): string {
@@ -57,6 +61,14 @@ function toRelativePreacherPath(pathKey: string): string {
 }
 
 function detectTitle(pathKey: string, markdown: string): string {
+  const normalizedPath = pathKey.replace(/\\/g, '/').toLowerCase();
+  if (/\.html?$/.test(normalizedPath)) {
+    const htmlTitle = markdown.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.trim();
+    if (htmlTitle) return htmlTitle;
+    const h1Title = markdown.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1]?.replace(/<[^>]+>/g, '').trim();
+    if (h1Title) return h1Title;
+  }
+
   const fm = parseFrontmatter(markdown);
   const fromMeta = (fm.title || '').trim();
   if (fromMeta) return fromMeta;
@@ -73,6 +85,18 @@ function detectTitle(pathKey: string, markdown: string): string {
 }
 
 function buildDescription(markdown: string): string {
+  const htmlDescription = markdown.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["']/i)?.[1]?.trim();
+  if (htmlDescription) return htmlDescription;
+
+  const firstHtmlParagraph = markdown
+    .match(/<p[^>]*>([\s\S]*?)<\/p>/i)?.[1]
+    ?.replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (firstHtmlParagraph) {
+    return firstHtmlParagraph.length > 180 ? `${firstHtmlParagraph.slice(0, 177)}...` : firstHtmlParagraph;
+  }
+
   const fm = parseFrontmatter(markdown);
   const fromMeta = (fm.description || '').trim();
   if (fromMeta) return fromMeta;
@@ -91,12 +115,14 @@ function discoverSermons(): SermonItem[] {
   for (const [pathKey, content] of Object.entries(preacherMarkdownModules)) {
     const relativePath = toRelativePreacherPath(pathKey);
     const slug = relativePath.replace(CONTENT_FILE_EXTENSION_REGEX, '');
+    const format: SermonItem['format'] = MARKDOWN_FILE_EXTENSION_REGEX.test(relativePath) ? 'markdown' : 'html';
     list.push({
       id: slug,
       slug,
       title: detectTitle(pathKey, content),
       description: buildDescription(content),
       content: content.replace(/^\uFEFF/, ''),
+      format,
     });
   }
 
@@ -111,6 +137,34 @@ export default function Preacher() {
     () => sermons.find((item) => item.slug === selectedSlug) ?? null,
     [sermons, selectedSlug],
   );
+
+  if (selected?.format === 'html') {
+    return (
+      <div className="min-h-screen bg-surface-container-lowest pb-6">
+        <div className="sticky top-0 z-20 border-b border-primary/25 bg-[#11110f]/95 backdrop-blur px-4 sm:px-6 py-3">
+          <div className="mx-auto max-w-6xl flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setSelectedSlug(null)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[10px] sm:text-xs font-black uppercase tracking-[0.16em] text-primary hover:bg-primary/15 transition-colors"
+            >
+              <ArrowLeft size={12} />
+              Voltar
+            </button>
+            <p className="text-[11px] sm:text-sm font-semibold text-on-surface line-clamp-1">{selected.title}</p>
+          </div>
+        </div>
+
+        <div className="px-4 sm:px-6 pt-4">
+          <iframe
+            title={selected.title}
+            srcDoc={selected.content}
+            className="w-full h-[calc(100vh-130px)] rounded-2xl border border-primary/20 bg-white"
+          />
+        </div>
+      </div>
+    );
+  }
 
   if (selected) {
     return (
@@ -146,7 +200,7 @@ export default function Preacher() {
       <section className="px-4 sm:px-6 grid grid-cols-1 gap-3 sm:gap-4">
         <article className="rounded-2xl border border-outline-variant/20 bg-surface-container-low p-3 sm:p-4">
           <h2 className="font-headline text-lg sm:text-xl font-black tracking-tight text-on-surface">
-            Lista de sermões disponíveis
+            Sermões disponíveis para pregação
           </h2>
           <p className="mt-1 text-[11px] text-on-surface-variant/75">
             Selecione um sermão para abrir e estudar.
