@@ -119,6 +119,10 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
         slug: 'eclesia-a-comunidade-que-virou-hierarquia',
       },
       {
+        title: 'Congregação',
+        slug: 'congregacao',
+      },
+      {
         title: 'Dízimo',
         slug: 'dizimo-a-generosidade-que-virou-imposto',
       },

@@ -130,6 +130,10 @@ const livrariaEspitirualModules = {
   ...import.meta.glob('/public/content/selah/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/selah/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/selah/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 const allLivrariaModules = {
   ...livrariaModules,
@@ -625,10 +629,13 @@ const livrariaModuleEntries: LivrariaEntry[] = Object.entries(allLivrariaModules
     const normalizedPath = path.replace(/\\/g, '/');
     const markerLivraria = '/public/content/livraria/';
     const markerLivrariaEspitirual = '/public/content/selah/';
+    const markerRolos = '/public/content/rolos/';
     const relative = normalizedPath.includes(markerLivraria)
       ? normalizedPath.slice(normalizedPath.indexOf(markerLivraria) + markerLivraria.length)
       : normalizedPath.includes(markerLivrariaEspitirual)
       ? normalizedPath.slice(normalizedPath.indexOf(markerLivrariaEspitirual) + markerLivrariaEspitirual.length)
+      : normalizedPath.includes(markerRolos)
+      ? normalizedPath.slice(normalizedPath.indexOf(markerRolos) + markerRolos.length)
       : normalizedPath;
     const withoutExt = relative.replace(CONTENT_FILE_EXTENSION_REGEX, '');
     const parts = withoutExt.split('/').filter(Boolean);

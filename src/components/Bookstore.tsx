@@ -95,6 +95,10 @@ const livrariaEspitirualMarkdownModules = {
   ...import.meta.glob('/public/content/selah/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/selah/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/selah/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 const bibleMarkdownModules = {
   ...import.meta.glob('/public/content/selah/biblia/**/*.md', { eager: true, query: '?raw', import: 'default' }),
@@ -335,6 +339,14 @@ const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
     5: 'os anjos ceifeiros',
     6: 'o celeiro e o fogo',
     7: 'o brilho dos justos',
+  },
+  'o corpo e a sombra': {
+    1: 'a natureza organica da igreja',
+    2: 'a anatomia da amputacao',
+    3: 'o veu rasgado e a fuga do sistema',
+    4: 'o inimigo nas trincheiras',
+    5: 'nao abandonemos nossa congregacao',
+    6: 'o remanecente reunido',
   },
 };
 
@@ -667,6 +679,7 @@ function toContentRelativePath(pathKey: string): string {
   const relativeFromContent = normalized.slice(normalized.indexOf(marker) + marker.length);
   if (relativeFromContent.startsWith('livraria/')) return relativeFromContent.slice('livraria/'.length);
   if (relativeFromContent.startsWith('selah/')) return relativeFromContent.slice('selah/'.length);
+  if (relativeFromContent.startsWith('rolos/')) return relativeFromContent.slice('rolos/'.length);
   if (relativeFromContent.startsWith('ferramentas-espirituais/')) return relativeFromContent.slice('ferramentas-espirituais/'.length);
   return relativeFromContent;
 }
@@ -1086,8 +1099,12 @@ function buildFallbackContentUrls(slug: string): string[] {
     `/content/livraria/${encodedSlug}.md`,
     `${runtimeBase}content/selah/${encodedSlug}.md`,
     `/content/selah/${encodedSlug}.md`,
+    `${runtimeBase}content/rolos/${encodedSlug}.md`,
+    `/content/rolos/${encodedSlug}.md`,
     ...sectionFolders.map((section) => `${runtimeBase}content/selah/${section}/${encodedSlug}.md`),
     ...sectionFolders.map((section) => `/content/selah/${section}/${encodedSlug}.md`),
+    ...sectionFolders.map((section) => `${runtimeBase}content/rolos/${section}/${encodedSlug}.md`),
+    ...sectionFolders.map((section) => `/content/rolos/${section}/${encodedSlug}.md`),
     ...legacyLivrariaFolders.map((section) => `${runtimeBase}content/livraria/${section}/${encodedSlug}.md`),
     ...legacyLivrariaFolders.map((section) => `/content/livraria/${section}/${encodedSlug}.md`),
     `${runtimeBase}content/ferramentas-espirituais/${encodedSlug}.md`,
@@ -1162,6 +1179,7 @@ function inferSeriesVolumeCoverStem(title: string, slug: string, category?: stri
   if (haystack.includes('relogio de deus')) return SERIES_VOLUME_COVER_STEMS['o relogio de deus'][volume] ?? null;
   if (haystack.includes('fio do trono')) return SERIES_VOLUME_COVER_STEMS['o fio do trono'][volume] ?? null;
   if (haystack.includes('refeicao que virou missa')) return SERIES_VOLUME_COVER_STEMS['a refeicao que virou missa'][volume] ?? null;
+  if (haystack.includes('o corpo e a sombra')) return SERIES_VOLUME_COVER_STEMS['o corpo e a sombra'][volume] ?? null;
   if (
     haystack.includes('a escada de jaco')
     || haystack.includes('7 ceus do santuario')
@@ -1227,6 +1245,7 @@ const SELAH_SUBSECTION_FALLBACK_RULES: Partial<Record<SelahThemeTitle, Array<{ s
   'EKKLESIA': [
     { subsection: 'Ceia do Senhor', matchers: ['serie - a refeicao que virou missa', 'ceia-do-senhor'] },
     { subsection: 'Ekkelsia', matchers: ['eclesia-a-comunidade-que-virou-hierarquia', 'serie - o corpo que virou empresa'] },
+    { subsection: 'Congregação', matchers: ['congregacao', 'serie - o corpo e a sombra'] },
     { subsection: 'Templo', matchers: ['verdade-sobre-a-igreja', 'serie - a verdadeira historia da igreja', 'trilogia - o canon oculto', 'serie - o veu rasgado'] },
     { subsection: 'Missão', matchers: ['missao', 'serie - missao'] },
   ],
