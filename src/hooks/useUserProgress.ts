@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+﻿import { useMemo } from 'react';
 import { useFetch } from './useFetch';
 import { pm, type Category } from '../lib/progressManager';
 
@@ -120,16 +120,16 @@ const refutationModules = {
 } as Record<string, string>;
 
 const livrariaModules = {
-  ...import.meta.glob('/public/content/livraria/**/*.md', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/livraria/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/livraria/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/livraria/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 const livrariaEspitirualModules = {
-  ...import.meta.glob('/public/content/selah/**/*.md', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/rolos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/rolos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/rolos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
@@ -151,10 +151,10 @@ const ensinosModules = {
   ...import.meta.glob('/public/content/ensinos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 const ensinosCoverModules = {
-  ...import.meta.glob('/public/image/ensinos/**/*.webp'),
-  ...import.meta.glob('/public/image/ensinos/**/*.png'),
-  ...import.meta.glob('/public/image/ensinos/**/*.jpg'),
-  ...import.meta.glob('/public/image/ensinos/**/*.jpeg'),
+  ...import.meta.glob('/public/image/rolos/ensinos/**/*.webp'),
+  ...import.meta.glob('/public/image/rolos/ensinos/**/*.png'),
+  ...import.meta.glob('/public/image/rolos/ensinos/**/*.jpg'),
+  ...import.meta.glob('/public/image/rolos/ensinos/**/*.jpeg'),
 } as Record<string, unknown>;
 const discipulosModules = {
   ...import.meta.glob('/public/content/discipulos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
@@ -282,7 +282,7 @@ function buildEnsinosCoverLookup(): Map<string, string> {
   const lookup = new Map<string, string>();
   for (const pathKey of Object.keys(ensinosCoverModules)) {
     const normalized = pathKey.replace(/\\/g, '/');
-    if (!normalized.startsWith('/public/image/ensinos/')) continue;
+    if (!normalized.startsWith('/public/image/rolos/ensinos/')) continue;
     const fileName = normalized.split('/').pop();
     if (!fileName) continue;
     lookup.set(normalizeImageStem(fileName), normalized.slice('/public'.length));
@@ -627,8 +627,8 @@ const matrixModuleSlugs = matrixStudyEntries.map((entry) => entry.slug);
 const livrariaModuleEntries: LivrariaEntry[] = Object.entries(allLivrariaModules)
   .map(([path, markdown]) => {
     const normalizedPath = path.replace(/\\/g, '/');
-    const markerLivraria = '/public/content/livraria/';
-    const markerLivrariaEspitirual = '/public/content/selah/';
+    const markerLivraria = '/public/content/rolos/';
+    const markerLivrariaEspitirual = '/public/content/rolos/';
     const markerRolos = '/public/content/rolos/';
     const relative = normalizedPath.includes(markerLivraria)
       ? normalizedPath.slice(normalizedPath.indexOf(markerLivraria) + markerLivraria.length)
@@ -712,7 +712,7 @@ const discipulosEntries = Object.entries(discipulosModules)
 export function useUserProgress(): UserProgressSnapshot {
   const weekStartMs = useMemo(() => getWeekStartMs(), []);
 
-  const { data: libBooks, loading: libLoading } = useFetch<LibraryItem[]>('/content/livraria/index.json');
+  const { data: libBooks, loading: libLoading } = useFetch<LibraryItem[]>('/content/rolos/index.json');
   const { data: studies, loading: studiesLoading } = useFetch<StudyItem[]>('/content/mana/index.json');
 
   const bibleStats = useMemo(() => buildStats('biblica', bibleStudySlugs), []);

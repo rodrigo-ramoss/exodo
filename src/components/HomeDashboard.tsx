@@ -1,4 +1,4 @@
-import { BookMarked, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Flag, Highlighter, Library, NotebookPen, TrendingUp, UserRound, Wheat } from 'lucide-react';
+﻿import { BookMarked, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Flag, Highlighter, Library, NotebookPen, TrendingUp, UserRound, Wheat } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 import { Screen } from '../types';
 import { useProfile } from '../state/ProfileContext';
@@ -101,10 +101,10 @@ const homeBabelModules = {
 } as Record<string, string>;
 
 const homeSelahModules = {
-  ...import.meta.glob('/public/content/selah/**/*.md', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 
 const homeManaModules = {
@@ -436,7 +436,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
   const updatesCarouselRef = useRef<HTMLDivElement | null>(null);
   const { name } = useProfile();
   const { data: manaIndexData } = useFetch<ContentIndexItem[]>('/content/mana/index.json');
-  const { data: selahIndexData } = useFetch<ContentIndexItem[]>('/content/selah/index.json');
+  const { data: selahIndexData } = useFetch<ContentIndexItem[]>('/content/rolos/index.json');
   const {
     inProgressReadings,
     totals,
@@ -479,7 +479,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
       const babelSeriesMap = new Map<string, SeriesUpdateItem>();
       const moduleSources: Array<{ section: UpdatesSectionId; modules: Record<string, string>; marker: string }> = [
         { section: 'mana', modules: homeManaModules, marker: '/public/content/mana/' },
-        { section: 'selah', modules: homeSelahModules, marker: '/public/content/selah/' },
+        { section: 'selah', modules: homeSelahModules, marker: '/public/content/rolos/' },
         { section: 'babel', modules: homeBabelModules, marker: '/public/content/babel/' },
       ];
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+﻿import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, BookOpen, ChevronRight, Sparkles, Tent } from 'lucide-react';
 import { AppImage } from './AppImage';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -53,10 +53,10 @@ const ensinosMarkdownModules = {
 } as Record<string, string>;
 
 const ensinosImageModules = {
-  ...import.meta.glob('/public/image/ensinos/**/*.webp'),
-  ...import.meta.glob('/public/image/ensinos/**/*.png'),
-  ...import.meta.glob('/public/image/ensinos/**/*.jpg'),
-  ...import.meta.glob('/public/image/ensinos/**/*.jpeg'),
+  ...import.meta.glob('/public/image/rolos/ensinos/**/*.webp'),
+  ...import.meta.glob('/public/image/rolos/ensinos/**/*.png'),
+  ...import.meta.glob('/public/image/rolos/ensinos/**/*.jpg'),
+  ...import.meta.glob('/public/image/rolos/ensinos/**/*.jpeg'),
 } as Record<string, unknown>;
 
 const ENSINOS_TEMAS: EnsinoTema[] = [
@@ -385,7 +385,7 @@ function buildEnsinosImageLookup(): Map<string, string> {
   const lookup = new Map<string, string>();
   for (const key of Object.keys(ensinosImageModules)) {
     const normalized = key.replace(/\\/g, '/');
-    if (!normalized.startsWith('/public/image/ensinos/')) continue;
+    if (!normalized.startsWith('/public/image/rolos/ensinos/')) continue;
     const fileName = normalized.split('/').pop();
     if (!fileName) continue;
     lookup.set(normalizeImageStem(fileName), normalized.slice('/public'.length));

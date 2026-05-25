@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 
 interface FetchResult<T> {
   data: T | null;
@@ -16,8 +16,8 @@ export function useFetch<T>(url: string): FetchResult<T> {
       setLoading(true);
       try {
         const candidateUrls = [url];
-        if (url === '/content/livraria/index.json') {
-          candidateUrls.push('/content/selah/index.json');
+        if (url === '/content/rolos/index.json') {
+          candidateUrls.push('/content/rolos/index.json');
         }
 
         let lastError: Error | null = null;

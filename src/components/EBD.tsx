@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Star, BookOpen, GraduationCap, Gavel } from 'lucide-react';
 import { Screen } from '../types';
 import { useFetch } from '../hooks/useFetch';
@@ -19,7 +19,7 @@ interface EBDProps {
 }
 
 export default function EBD({ onNavigate }: EBDProps) {
-  const heroImage = '/image/selah/o mapa ants da tempestade.webp';
+  const heroImage = '/image/rolos/selah/o mapa ants da tempestade.webp';
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const { data: lessons, loading, error } = useFetch<EBDItem[]>('/content/ebd/index.json');

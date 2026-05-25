@@ -1,10 +1,10 @@
----
+﻿---
 title: "O Corpo e a Sombra — Volume 3: O Véu Rasgado e a Fuga do Sistema"
 description: "Quando sair da igreja institucional é obediência profética e quando se torna uma armadilha do inimigo. Critérios bíblicos para discernir a verdadeira congregação do remanescente."
 seção: ekklesia
 category: eclesiologia
 subseção: Congregação
-image: "/image/selah/o veu rasgado e a fuga do sistema.webp"
+image: "/image/rolos/selah/o veu rasgado e a fuga do sistema.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

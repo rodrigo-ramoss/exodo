@@ -1,4 +1,4 @@
-import { useState, useRef, type ReactNode } from 'react';
+﻿import { useState, useRef, type ReactNode } from 'react';
 import { Check, Shield } from 'lucide-react';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -146,7 +146,7 @@ function BookCard({ book, index, onSelect }: { book: ApoBook; index: number; onS
 export default function Protocol() {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
-  const { data: books, loading, error } = useFetch<ApoBook[]>('/content/livraria/index.json');
+  const { data: books, loading, error } = useFetch<ApoBook[]>('/content/rolos/index.json');
 
   const apocryphaBooks = (books || []).filter((book) => {
     const category = (book.category || '').trim();
@@ -166,10 +166,10 @@ export default function Protocol() {
       .join('/');
 
     const candidates = [
-      `/content/livraria/${encodedSlug}.md`,
-      `/content/livraria/apocrifos/${encodedSlug}.md`,
-      `/content/selah/${encodedSlug}.md`,
-      `/content/selah/apocrifos/${encodedSlug}.md`,
+      `/content/rolos/${encodedSlug}.md`,
+      `/content/rolos/apocrifos/${encodedSlug}.md`,
+      `/content/rolos/${encodedSlug}.md`,
+      `/content/rolos/apocrifos/${encodedSlug}.md`,
     ];
 
     for (const url of candidates) {

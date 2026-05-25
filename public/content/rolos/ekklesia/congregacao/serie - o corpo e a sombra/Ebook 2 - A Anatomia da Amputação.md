@@ -1,10 +1,10 @@
----
+﻿---
 title: "O Corpo e a Sombra — Volume 2: A Anatomia da Amputação"
 description: "Uma análise teológica e fisiológica do isolamento espiritual. O que acontece com a alma quando o crente se separa do Corpo de Cristo e por que a fé solitária leva à morte lenta."
 seção: ekklesia
 category: eclesiologia
 subseção: Congregação
-image: "/image/selah/a anatomia da amputacao.webp"
+image: "/image/rolos/selah/a anatomia da amputacao.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

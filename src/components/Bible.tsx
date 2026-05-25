@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode, type ElementType } from 'react';
+﻿import { useMemo, useState, type ReactNode, type ElementType } from 'react';
 import {
   Sparkles,
   Clock3,
@@ -70,7 +70,7 @@ const AXIS_METADATA: AxisMeta[] = [
     title: 'Seres Celestiais e Ofícios',
     subtitle: 'Conselho Divino, Funções e Hierarquias',
     description: 'Análise de querubins, vigilantes, mensageiros e seus ofícios na economia do Reino.',
-    coverImage: '/image/eixos biblicos/os querubins e serafins.webp',
+    coverImage: '/image/rolos/eixos-biblicos/os querubins e serafins.webp',
     accentClass: 'from-[#1e2a14]/95 via-[#141b12]/70 to-[#0d0f14]/40',
     glowClass: 'shadow-[0_0_30px_rgba(152,196,120,0.12)]',
     Icon: Shield,
@@ -232,7 +232,7 @@ function resolveStudyImage(
   const image = rawImage.trim();
   if (!image) return axis.coverImage;
   if (image.startsWith('/')) return image;
-  return `/image/eixos biblicos/${image}`;
+  return `/image/rolos/eixos-biblicos/${image}`;
 }
 
 function loadInterpretationStudies(): InterpretationStudy[] {

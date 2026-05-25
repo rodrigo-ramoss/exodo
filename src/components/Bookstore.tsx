@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useEffect, type ReactNode } from 'react';
+﻿import { useState, useRef, useMemo, useEffect, type ReactNode } from 'react';
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Hourglass, Tent, Sparkles, Search, Lock } from 'lucide-react';
 import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
@@ -85,26 +85,26 @@ interface BibleStudyEntry {
 }
 
 const livrariaMarkdownModules = {
-  ...import.meta.glob('/public/content/livraria/**/*.md', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/livraria/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/livraria/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/livraria/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 const livrariaEspitirualMarkdownModules = {
-  ...import.meta.glob('/public/content/selah/**/*.md', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/rolos/**/*.md', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/rolos/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/rolos/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/rolos/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 const bibleMarkdownModules = {
-  ...import.meta.glob('/public/content/selah/biblia/**/*.md', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/biblia/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/biblia/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/biblia/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/biblia/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/biblia/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/biblia/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/biblia/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 const ferramentasMarkdownModules = {
   ...import.meta.glob('/public/content/ferramentas-espirituais/**/*.md', { eager: true, query: '?raw', import: 'default' }),
@@ -124,10 +124,10 @@ const typologyMarkdownModulesRoot = {
   ...import.meta.glob('/public/content/tipologia-biblica/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 const typologyMarkdownModulesLegacy = {
-  ...import.meta.glob('/public/content/selah/tipologia-biblica/**/*.md', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/tipologia-biblica/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/tipologia-biblica/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('/public/content/selah/tipologia-biblica/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/tipologia-biblica/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/tipologia-biblica/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/tipologia-biblica/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/rolos/tipologia-biblica/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 const typologyMarkdownModules = {
   ...typologyMarkdownModulesRoot,
@@ -143,7 +143,7 @@ const imageModules = {
 const COVER_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg'] as const;
 const WEAK_REMOTE_IMAGE_HOSTS = ['placeholder-voz-do-deserto.com', 'images.unsplash.com', 'vozdodeserto.com/wp-content'];
 const CONTENT_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml)$/i;
-const TYPOLOGY_OBJECTAL_TOPIC_IMAGE_BASE_PATH = '/image/tipos/topicos';
+const TYPOLOGY_OBJECTAL_TOPIC_IMAGE_BASE_PATH = '/image/rolos/tipos/topicos';
 const TYPOLOGY_DIVISION_FOLDER_TO_ID: Record<string, TypologyDivisionId> = {
   '1-tipologia-pessoal': 'tipologia-pessoal',
   '2-tipologia-eventual': 'tipologia-eventual',
@@ -786,7 +786,7 @@ function buildTypologyCoverLookup(): Map<string, string> {
   // Prioridade 1: capas específicas de Tipos.
   for (const key of Object.keys(imageModules)) {
     const normalized = key.replace(/\\/g, '/');
-    if (!normalized.startsWith('/public/image/tipos/')) continue;
+    if (!normalized.startsWith('/public/image/rolos/tipos/')) continue;
     const fileName = normalized.split('/').pop();
     if (!fileName) continue;
     lookup.set(normalizeCoverStemForLookup(fileName), normalized.slice('/public'.length));
@@ -795,7 +795,7 @@ function buildTypologyCoverLookup(): Map<string, string> {
   // Prioridade 2 (fallback): capas editoriais em selah quando não existir equivalente em Tipos.
   for (const key of Object.keys(imageModules)) {
     const normalized = key.replace(/\\/g, '/');
-    if (!normalized.startsWith('/public/image/selah/')) continue;
+    if (!normalized.startsWith('/public/image/rolos/selah/')) continue;
     const fileName = normalized.split('/').pop();
     if (!fileName) continue;
     const stem = normalizeCoverStemForLookup(fileName);
@@ -897,7 +897,7 @@ function extractTypologyDivisionRelativePath(pathKey: string): string | null {
   const normalized = pathKey.replace(/\\/g, '/');
   const markers = [
     '/public/content/tipologia-biblica/',
-    '/public/content/selah/tipologia-biblica/',
+    '/public/content/rolos/tipologia-biblica/',
   ];
   for (const marker of markers) {
     if (!normalized.includes(marker)) continue;
@@ -1095,18 +1095,18 @@ function buildFallbackContentUrls(slug: string): string[] {
     resolveContentUrlForDesktopAndWeb(slug),
     `${runtimeBase}content/livraria/${encodedSlug}.md`,
     `${runtimeBase}content/livraria/${slug}.md`,
-    `./content/livraria/${encodedSlug}.md`,
-    `/content/livraria/${encodedSlug}.md`,
+    `./content/rolos/${encodedSlug}.md`,
+    `/content/rolos/${encodedSlug}.md`,
     `${runtimeBase}content/selah/${encodedSlug}.md`,
-    `/content/selah/${encodedSlug}.md`,
+    `/content/rolos/${encodedSlug}.md`,
     `${runtimeBase}content/rolos/${encodedSlug}.md`,
     `/content/rolos/${encodedSlug}.md`,
     ...sectionFolders.map((section) => `${runtimeBase}content/selah/${section}/${encodedSlug}.md`),
-    ...sectionFolders.map((section) => `/content/selah/${section}/${encodedSlug}.md`),
+    ...sectionFolders.map((section) => `/content/rolos/${section}/${encodedSlug}.md`),
     ...sectionFolders.map((section) => `${runtimeBase}content/rolos/${section}/${encodedSlug}.md`),
     ...sectionFolders.map((section) => `/content/rolos/${section}/${encodedSlug}.md`),
     ...legacyLivrariaFolders.map((section) => `${runtimeBase}content/livraria/${section}/${encodedSlug}.md`),
-    ...legacyLivrariaFolders.map((section) => `/content/livraria/${section}/${encodedSlug}.md`),
+    ...legacyLivrariaFolders.map((section) => `/content/rolos/${section}/${encodedSlug}.md`),
     `${runtimeBase}content/ferramentas-espirituais/${encodedSlug}.md`,
     `/content/ferramentas-espirituais/${encodedSlug}.md`,
   ];
@@ -1208,7 +1208,7 @@ function inferSeriesFallbackCover(title: string, slug: string, category?: string
     const byVolume = SERIES_VOLUME_COVER_STEMS['a armadura do remanescente'][volume];
     if (byVolume) {
       for (const extension of COVER_EXTENSIONS) {
-        const path = `/image/selah/${byVolume}.${extension}`;
+        const path = `/image/rolos/selah/${byVolume}.${extension}`;
         if (isAvailableCoverCandidate(path)) return path;
       }
     }
@@ -1216,7 +1216,7 @@ function inferSeriesFallbackCover(title: string, slug: string, category?: string
 
   for (const stem of ['o cinto da verdade', 'couraca da justica', 'o capacete da salvacao', 'a espada do espirito', 'a oracao do espirito']) {
     for (const extension of COVER_EXTENSIONS) {
-      const path = `/image/selah/${stem}.${extension}`;
+      const path = `/image/rolos/selah/${stem}.${extension}`;
       if (isAvailableCoverCandidate(path)) return path;
     }
   }
@@ -1243,11 +1243,14 @@ const SELAH_SUBSECTION_FALLBACK_RULES: Partial<Record<SelahThemeTitle, Array<{ s
     { subsection: 'Jubileus', matchers: ['serie - jubileus', 'jubileus'] },
   ],
   'EKKLESIA': [
-    { subsection: 'Ceia do Senhor', matchers: ['serie - a refeicao que virou missa', 'ceia-do-senhor'] },
     { subsection: 'Ekkelsia', matchers: ['eclesia-a-comunidade-que-virou-hierarquia', 'serie - o corpo que virou empresa'] },
     { subsection: 'Congregação', matchers: ['congregacao', 'serie - o corpo e a sombra'] },
     { subsection: 'Templo', matchers: ['verdade-sobre-a-igreja', 'serie - a verdadeira historia da igreja', 'trilogia - o canon oculto', 'serie - o veu rasgado'] },
     { subsection: 'Missão', matchers: ['missao', 'serie - missao'] },
+    { subsection: 'Jejum', matchers: ['jejum', 'jejum-e-calendario'] },
+    { subsection: 'Dízimo e Ofertas', matchers: ['dizimo', 'dizimo-a-generosidade-que-virou-imposto'] },
+    { subsection: 'Adoração', matchers: ['musica', 'louvor', 'musica-e-louvor-a-adoracao-que-virou-show'] },
+    { subsection: 'Discernimento', matchers: ['falsas-doutrinas'] },
   ],
   'TIPOLOGIA BÍBLICA': [
     {
@@ -1268,8 +1271,8 @@ const SELAH_SUBSECTION_FALLBACK_RULES: Partial<Record<SelahThemeTitle, Array<{ s
 
 const SELAH_SUBSECTION_COVER_FALLBACKS: Partial<Record<SelahThemeTitle, Record<string, string>>> = {
   'FIM DOS TEMPOS': {
-    Arrebatamento: '/image/selah/o clangor da trombeta.webp',
-    Restauração: '/image/selah/a noiva cubica.webp',
+    Arrebatamento: '/image/rolos/selah/o clangor da trombeta.webp',
+    Restauração: '/image/rolos/selah/a noiva cubica.webp',
   },
 };
 
@@ -1337,14 +1340,14 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
       const normalizedMetaPath = fromMeta.startsWith('/public/') ? fromMeta.slice('/public'.length) : fromMeta;
       candidates.add(normalizedMetaPath);
       const metaFileName = normalizedMetaPath.split('/').pop();
-      if (metaFileName && seriesFolder) candidates.add(`/image/selah/${seriesFolder}/${metaFileName}`);
-      if (metaFileName) candidates.add(`/image/selah/${metaFileName}`);
+      if (metaFileName && seriesFolder) candidates.add(`/image/rolos/selah/${seriesFolder}/${metaFileName}`);
+      if (metaFileName) candidates.add(`/image/rolos/selah/${metaFileName}`);
     } else if (/^https?:\/\//i.test(fromMeta)) {
       if (!isWeakRemoteImage(fromMeta)) candidates.add(fromMeta);
     } else {
       const fileName = fromMeta.replace(/^.*[\\/]/, '');
-      candidates.add(`/image/selah/${fileName}`);
-      if (seriesFolder) candidates.add(`/image/selah/${seriesFolder}/${fileName}`);
+      candidates.add(`/image/rolos/selah/${fileName}`);
+      if (seriesFolder) candidates.add(`/image/rolos/selah/${seriesFolder}/${fileName}`);
     }
   }
 
@@ -1378,10 +1381,10 @@ function inferBookCoverCandidates(frontmatter: Record<string, string>, title: st
     if (!stem) continue;
     for (const variantStem of buildCoverStemVariants(stem)) {
       for (const extension of COVER_EXTENSIONS) {
-        candidates.add(`/image/selah/${variantStem}.${extension}`);
-        candidates.add(`/image/ensinos/${variantStem}.${extension}`);
-        if (seriesFolder) candidates.add(`/image/selah/${seriesFolder}/${variantStem}.${extension}`);
-        if (usesTabernacleCovers) candidates.add(`/image/tipos/${variantStem}.${extension}`);
+        candidates.add(`/image/rolos/selah/${variantStem}.${extension}`);
+        candidates.add(`/image/rolos/ensinos/${variantStem}.${extension}`);
+        if (seriesFolder) candidates.add(`/image/rolos/selah/${seriesFolder}/${variantStem}.${extension}`);
+        if (usesTabernacleCovers) candidates.add(`/image/rolos/tipos/${variantStem}.${extension}`);
       }
     }
   }
@@ -1546,7 +1549,7 @@ function normalizeBibleBookKey(raw: string): string {
 
 function extractBibleBookFromPath(pathKey: string): string | null {
   const normalized = pathKey.replace(/\\/g, '/');
-  const marker = '/public/content/selah/biblia/';
+  const marker = '/public/content/rolos/biblia/';
   const idx = normalized.indexOf(marker);
   if (idx < 0) return null;
   const relative = normalized.slice(idx + marker.length);
@@ -1638,7 +1641,7 @@ const SECTIONS: Record<SectionKey, {
   'EKKLESIA': {
     numero: '10',
     label: 'EKKLESIA',
-    description: 'A anatomia do dogma e os bastidores do poder. Uma análise sobre a verdadeira EKKLESIA, a formação de suas doutrinas e como a estrutura religiosa foi utilizada como ferramenta de manipulação e controle sistêmico.',
+    description: 'A verdadeira igreja não é edifício, nem instituição. É o Corpo de Cristo reunido, onde cada crente é sacerdote, servo e membro vivo. Esta sessão defende a ekklésia bíblica contra distorções e ensina como vivê-la em comunhão.',
     Icon: BookOpen,
     accent: 'from-sky-900/70 to-sky-800/10',
   },
@@ -2385,7 +2388,7 @@ interface ParabolaSeriesPathMeta {
 function extractParabolaSeriesPathMeta(sourcePath?: string): ParabolaSeriesPathMeta | null {
   if (!sourcePath) return null;
   const normalized = sourcePath.replace(/\\/g, '/');
-  const marker = '/public/content/selah/jesus-cristo/parabolas-de-jesus/';
+  const marker = '/public/content/rolos/jesus-cristo/parabolas-de-jesus/';
   const markerIndex = normalized.indexOf(marker);
   if (markerIndex < 0) return null;
 
@@ -3061,7 +3064,7 @@ export default function Bookstore({
   const [activeEscatologicalTopicId, setActiveEscatologicalTopicId] = useState<string | null>(null);
   const typologyTopicPanelRef = useRef<HTMLDivElement | null>(null);
   const sectionSeriesRowRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const { data: books, loading, error } = useFetch<BookItem[]>('/content/livraria/index.json');
+  const { data: books, loading, error } = useFetch<BookItem[]>('/content/rolos/index.json');
   const discoveredBooks = useMemo(() => discoverBooksFromMarkdown(), []);
   const bibleStudies = useMemo(() => discoverBibleStudies(), []);
   const typologyEntries = useMemo(() => discoverTypologyContentEntries(), []);

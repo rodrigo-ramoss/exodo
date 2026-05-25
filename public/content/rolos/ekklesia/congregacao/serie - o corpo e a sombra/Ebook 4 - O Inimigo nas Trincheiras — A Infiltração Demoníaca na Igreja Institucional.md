@@ -1,10 +1,10 @@
----
+﻿---
 title: "O Corpo e a Sombra — Volume 4: O Inimigo nas Trincheiras — A Infiltração Demoníaca na Igreja Institucional"
 description: "Como Satanás trocou a perseguição pela infiltração, corrompendo doutrinas, líderes e liturgias. O papel dos principados e potestades na crise eclesial contemporânea."
 seção: ekklesia
 category: eclesiologia
 subseção: Congregação
-image: "/image/selah/o inimigo nas trincheiras.webp"
+image: "/image/rolos/selah/o inimigo nas trincheiras.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

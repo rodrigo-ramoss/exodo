@@ -1,10 +1,10 @@
----
+﻿---
 title: "O Corpo e a Sombra — Volume 5: Não Abandonemos a Nossa Congregação — A Verdadeira Mensagem de Hebreus 10:25"
 description: "Resgatando o versículo mais usado para manipulação. O contexto original de Hebreus 10, o significado de 'episynagōgē' e a exortação à perseverança, não à obrigação carnal."
 seção: ekklesia
 category: eclesiologia
 subseção: Congregação
-image: "/image/selah/nao abandonemos nossa congregacao.webp"
+image: "/image/rolos/selah/nao abandonemos nossa congregacao.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

@@ -1,4 +1,4 @@
-export type SelahThemeTitle =
+﻿export type SelahThemeTitle =
   | 'ANTISSISTEMA'
   | 'ANTROPOLOGIA DO REINO'
   | 'EKKLESIA'
@@ -55,7 +55,7 @@ function buildSubsections(themeSlug: SelahThemeSlug, titles: readonly string[]):
     title,
     order: index + 1,
     initialState: 'ready',
-    expectedContentPath: `/public/content/selah/${themeSlug}/${slugifyStable(title)}`,
+    expectedContentPath: `/public/content/rolos/${themeSlug}/${slugifyStable(title)}`,
   }));
 }
 
@@ -69,7 +69,7 @@ function buildSubsectionsWithCustomSlugs(
     title: entry.title,
     order: index + 1,
     initialState: 'ready',
-    expectedContentPath: `/public/content/selah/${themeSlug}/${entry.slug}`,
+    expectedContentPath: `/public/content/rolos/${themeSlug}/${entry.slug}`,
   }));
 }
 
@@ -103,48 +103,80 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     id: 'historia-da-igreja',
     slug: 'historia-da-igreja',
     title: 'EKKLESIA',
-    description: 'Estudos sobre a formação, os desvios, os conflitos e os fundamentos da igreja ao longo da história.',
+    description: 'A verdadeira igreja não é edifício, nem instituição. É o Corpo de Cristo reunido, onde cada crente é sacerdote, servo e membro vivo. Esta sessão defende a ekklésia bíblica contra distorções e ensina como vivê-la em comunhão.',
     order: 10,
     subsections: buildSubsectionsWithCustomSlugs('historia-da-igreja', [
       {
-        title: 'Ceia do Senhor',
-        slug: 'ceia-do-senhor-a-refeicao-que-virou-sacrificio',
-      },
-      {
-        title: 'Batismo',
-        slug: 'batismo-a-imersao-que-virou-aspersao',
-      },
-      {
-        title: 'Ekkelsia',
-        slug: 'eclesia-a-comunidade-que-virou-hierarquia',
-      },
-      {
         title: 'Congregação',
         slug: 'congregacao',
-      },
-      {
-        title: 'Dízimo',
-        slug: 'dizimo-a-generosidade-que-virou-imposto',
       },
       {
         title: 'Templo',
         slug: 'templo-a-casa-que-virou-masmorra',
       },
       {
+        title: 'Missão',
+        slug: 'missao',
+      },
+      {
         title: 'Jejum',
         slug: 'jejum-e-calendario-a-liberdade-que-virou-obrigacao',
+      },
+      {
+        title: 'Ekkelsia',
+        slug: 'eclesia-a-comunidade-que-virou-hierarquia',
+      },
+      {
+        title: 'Dízimo e Ofertas',
+        slug: 'dizimo-a-generosidade-que-virou-imposto',
       },
       {
         title: 'Adoração',
         slug: 'musica-e-louvor-a-adoracao-que-virou-show',
       },
       {
-        title: 'Pecado',
-        slug: 'ceia-batismo-e-o-voto-de-pobreza-original',
+        title: 'Identidade',
+        slug: 'identidade',
       },
       {
-        title: 'Missão',
-        slug: 'missao',
+        title: 'Sacerdócio',
+        slug: 'sacerdocio',
+      },
+      {
+        title: 'Liderança',
+        slug: 'lideranca',
+      },
+      {
+        title: 'Pastores e Diáconos',
+        slug: 'pastores-e-diaconos',
+      },
+      {
+        title: 'Dons',
+        slug: 'dons',
+      },
+      {
+        title: 'Disciplina',
+        slug: 'disciplina',
+      },
+      {
+        title: 'Discernimento',
+        slug: 'discernimento',
+      },
+      {
+        title: 'Clericalismo',
+        slug: 'clericalismo',
+      },
+      {
+        title: 'Mandamentos',
+        slug: 'mandamentos',
+      },
+      {
+        title: 'Remanescente',
+        slug: 'remanescente',
+      },
+      {
+        title: 'Esperança',
+        slug: 'esperanca',
       },
     ]),
   },
@@ -379,24 +411,23 @@ export function resolveSelahSubsectionTitle(themeTitle: SelahThemeTitle, value: 
   }
   if (themeTitle === 'EKKLESIA') {
     const historiaAliases: Record<string, string> = {
-      ceia: 'Ceia do Senhor',
-      'ceia-do-senhor': 'Ceia do Senhor',
-      batismo: 'Batismo',
       congregacao: 'Congregação',
+      templo: 'Templo',
+      tempo: 'Templo',
+      missao: 'Missão',
       jejum: 'Jejum',
       'jejum-e-calendario': 'Jejum',
+      eclesia: 'Ekkelsia',
+      ekkelsia: 'Ekkelsia',
+      dizimo: 'Dízimo e Ofertas',
+      ofertas: 'Dízimo e Ofertas',
+      'dizimo-e-ofertas': 'Dízimo e Ofertas',
       musica: 'Adoração',
       louvor: 'Adoração',
       adoracao: 'Adoração',
       'musica-e-louvor': 'Adoração',
-      pecado: 'Pecado',
-      'ceia-batismo': 'Pecado',
-      'ceia-e-batismo': 'Pecado',
-      'ceia-batismo-e-voto': 'Pecado',
-      eclesia: 'Ekkelsia',
-      ekkelsia: 'Ekkelsia',
       'verdade-sobre-a-igreja': 'Templo',
-      'falsas-doutrinas': 'Templo',
+      'falsas-doutrinas': 'Discernimento',
     };
     const aliasTitle = historiaAliases[normalized];
     if (aliasTitle) return aliasTitle;
@@ -454,24 +485,23 @@ export function resolveSelahSubsectionSlug(themeTitle: SelahThemeTitle, value: s
   }
   if (themeTitle === 'EKKLESIA') {
     const historiaAliases: Record<string, string> = {
-      ceia: 'ceia-do-senhor-a-refeicao-que-virou-sacrificio',
-      'ceia-do-senhor': 'ceia-do-senhor-a-refeicao-que-virou-sacrificio',
-      batismo: 'batismo-a-imersao-que-virou-aspersao',
       congregacao: 'congregacao',
+      templo: 'templo-a-casa-que-virou-masmorra',
+      tempo: 'templo-a-casa-que-virou-masmorra',
+      missao: 'missao',
       jejum: 'jejum-e-calendario-a-liberdade-que-virou-obrigacao',
       'jejum-e-calendario': 'jejum-e-calendario-a-liberdade-que-virou-obrigacao',
+      eclesia: 'eclesia-a-comunidade-que-virou-hierarquia',
+      ekkelsia: 'eclesia-a-comunidade-que-virou-hierarquia',
+      dizimo: 'dizimo-a-generosidade-que-virou-imposto',
+      ofertas: 'dizimo-a-generosidade-que-virou-imposto',
+      'dizimo-e-ofertas': 'dizimo-a-generosidade-que-virou-imposto',
       musica: 'musica-e-louvor-a-adoracao-que-virou-show',
       louvor: 'musica-e-louvor-a-adoracao-que-virou-show',
       adoracao: 'musica-e-louvor-a-adoracao-que-virou-show',
       'musica-e-louvor': 'musica-e-louvor-a-adoracao-que-virou-show',
-      pecado: 'ceia-batismo-e-o-voto-de-pobreza-original',
-      'ceia-batismo': 'ceia-batismo-e-o-voto-de-pobreza-original',
-      'ceia-e-batismo': 'ceia-batismo-e-o-voto-de-pobreza-original',
-      'ceia-batismo-e-voto': 'ceia-batismo-e-o-voto-de-pobreza-original',
-      eclesia: 'eclesia-a-comunidade-que-virou-hierarquia',
-      ekkelsia: 'eclesia-a-comunidade-que-virou-hierarquia',
       'verdade-sobre-a-igreja': 'templo-a-casa-que-virou-masmorra',
-      'falsas-doutrinas': 'templo-a-casa-que-virou-masmorra',
+      'falsas-doutrinas': 'discernimento',
     };
     const aliasSlug = historiaAliases[normalized];
     if (aliasSlug) return aliasSlug;

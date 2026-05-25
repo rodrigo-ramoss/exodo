@@ -1,10 +1,10 @@
----
+﻿---
 title: "O Corpo e a Sombra — Volume 1: O Templo Vivo"
 description: "Uma exegese completa da natureza orgânica da Igreja. Desmontando a falácia da fé solitária e mostrando por que o Corpo de Cristo é indispensável para a vida cristã."
 seção: ekklesia
 category: eclesiologia
 subseção: Congregação
-image: "/image/selah/a natureza organica da igreja.webp"
+image: "/image/rolos/selah/a natureza organica da igreja.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

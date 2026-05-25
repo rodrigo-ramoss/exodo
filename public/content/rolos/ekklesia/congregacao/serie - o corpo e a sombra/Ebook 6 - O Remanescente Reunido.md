@@ -1,10 +1,10 @@
----
+﻿---
 title: "O Corpo e a Sombra — Volume 6: O Remanescente Reunido — Como (Re)construir a Comunhão Fora da Babilônia"
 description: "Um guia prático e teológico para os 16 milhões de desigrejados no Brasil. Passos para formar ou encontrar uma congregação remanescente, critérios de discernimento e direcionamento pastoral."
 seção: ekklesia
 category: eclesiologia
 subseção: Congregação
-image: "/image/selah/o remanecente reunido.webp"
+image: "/image/rolos/selah/o remanecente reunido.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*
