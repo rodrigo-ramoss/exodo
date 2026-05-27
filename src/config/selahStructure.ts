@@ -111,6 +111,10 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
         slug: 'congregacao',
       },
       {
+        title: 'Cei',
+        slug: 'cei',
+      },
+      {
         title: 'Templo',
         slug: 'templo-a-casa-que-virou-masmorra',
       },
