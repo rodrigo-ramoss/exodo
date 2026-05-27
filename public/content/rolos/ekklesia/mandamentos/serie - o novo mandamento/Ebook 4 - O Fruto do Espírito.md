@@ -1,5 +1,5 @@
 ---
-title: "Mandamentos: Amor — Volume 4: O Fruto do Espírito"
+title: "O Novo Mandamento — Volume 4: O Fruto do Espírito"
 description: "Quando amar se torna natureza. O amor como fruto do Espírito, a luta entre a carne e o Espírito, e a batalha contra o espírito de individualismo que isola os crentes."
 seção: rolos
 category: mandamentos
@@ -9,9 +9,9 @@ image: "/image/rolos/selah/o fruto do espirito.webp"
 
 *Rodrigo Ramos — Voz do Deserto*
 
-*Série: Mandamentos: Amor — Volume 4*
+*Série: O Novo Mandamento — Volume 4*
 
-# MANDAMENTOS: AMOR
+# O NOVO MANDAMENTO
 ## Volume 4: O Fruto do Espírito — Quando Amar se Torna Natureza
 
 ---
@@ -46,7 +46,7 @@ Mas, se a salvação é pela fé e não pela Lei, isso significa que o cristão 
 
 Gálatas 5:16-26 é o texto central. Paulo contrasta as **obras da carne** (uma lista de 15 pecados) com o **fruto do Espírito** (9 virtudes). E o primeiro fruto listado é o **amor** (*agapē*). O amor não é algo que podemos produzir por esforço próprio; é algo que o Espírito Santo produz em nós à medida que andamos em submisso a Ele.
 
-Neste quarto volume da série **Mandamentos: Amor**, vamos explorar essa verdade libertadora. O mandamento do amor não é uma lei pesada que tentamos cumprir com nossas próprias forças. É uma **promessa**: se andarmos no Espírito, o Espírito produzirá amor em nós, como uma árvore boa produz frutos bons. Nosso papel não é fabricar o fruto; nosso papel é nos conectar à videira verdadeira (João 15:5) e permitir que a seiva do Espírito corra em nós.
+Neste quarto volume da série **O Novo Mandamento**, vamos explorar essa verdade libertadora. O mandamento do amor não é uma lei pesada que tentamos cumprir com nossas próprias forças. É uma **promessa**: se andarmos no Espírito, o Espírito produzirá amor em nós, como uma árvore boa produz frutos bons. Nosso papel não é fabricar o fruto; nosso papel é nos conectar à videira verdadeira (João 15:5) e permitir que a seiva do Espírito corra em nós.
 
 Veremos também a batalha espiritual contra o **espírito de individualismo** — a hoste que nos isola, nos convence de que “não preciso de ninguém”, e nos afasta da comunidade onde o amor é praticado. Porque o fruto do amor não amadurece na solidão; ele amadurece no pomar da Igreja.
 
@@ -187,6 +187,7 @@ Se você tem lutado para amar, não se desespere. Não é sobre você tentar mai
 
 ---
 
-**Fim do Volume 4 — Série: Mandamentos: Amor**
+**Fim do Volume 4 — Série: O Novo Mandamento**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

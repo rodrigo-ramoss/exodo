@@ -161,6 +161,7 @@ const TYPOLOGY_SERIES_PRIORITY = [
   'Série — A Terra e o Tabernáculo',
   'Série — O Tetravéu',
   'Série — O Relógio do Santuário',
+  'Série — A Escada de Jacó',
 ];
 const TYPOLOGY_OBJECTAL_TOPICS: TypologyObjectalTopicMeta[] = [
   {
@@ -565,7 +566,8 @@ function pickCategoryByFolder(folder: string): string {
     ['serie - a queda do querubim ungido', 'Série — A Queda do Querubim Ungido'],
     ['serie - a onisciencia como atributo exclusivo', 'Série — A Onisciência como Atributo Exclusivo'],
     ['serie - o relogio de deus', 'Série — O Relógio de Deus'],
-    ['serie - terra plana', 'Série — Terra Plana na Bíblia'],
+    ['serie - terra plana', 'Série — Terra Plana: O Tabernáculo, o Trono e a Mesa do Rei'],
+    ['serie - escada de jaco', 'Série — A Escada de Jacó'],
     ['serie - a arquitetura da guerra invisivel', 'Série — A Arquitetura da Guerra Invisível'],
     ['serie - o fio do trono', 'Série — O Fio do Trono'],
     ['serie - como nos dias de noe', 'Série — Como nos Dias de Noé'],
@@ -642,6 +644,7 @@ function normalizeBookCategory(rawCategory: string | undefined, seriesFolder: st
   if (normalizedSeriesFolder === 'o tetravel') return 'Série — O Tetravéu';
   if (normalizedSeriesFolder === 'o relogio do santuario') return 'Série — O Relógio do Santuário';
   if (normalizedSeriesFolder === 'tabernaculo e os 7 ceus') return 'Série — Os 7 Céus do Santuário';
+  if (normalizedSeriesFolder === 'escada de jaco') return 'Série — A Escada de Jacó';
   if (normalizedSeriesFolder === 'a refeicao que virou missa') return 'Série — A Refeição que Virou Missa';
   if (normalizedSeriesFolder === 'a imersao que virou aspersao') return 'Série — A Imersão que Virou Aspersão';
   if (normalizedSeriesFolder === 'o corpo que virou empresa') return 'Série — O Corpo que Virou Empresa';
@@ -665,7 +668,13 @@ function normalizeBookCategory(rawCategory: string | undefined, seriesFolder: st
   if (!category) return categoryFromFolder;
 
   const normalizedCategory = slugify(category).replace(/-/g, ' ');
-  if (normalizedCategory.includes('tabernaculo')) return 'TABERNACULO';
+  if (
+    normalizedCategory === 'tabernaculo'
+    || normalizedCategory === 'tipologia tabernaculo'
+    || normalizedCategory === 'tipologia/tabernaculo'
+  ) {
+    return 'TABERNACULO';
+  }
   if (SECTION_CATEGORY_ALIASES.has(normalizedCategory)) return categoryFromFolder;
   if (SUBSECTION_CATEGORY_ALIASES.has(normalizedCategory)) return categoryFromFolder;
 
@@ -972,6 +981,18 @@ function buildMarkdownBySlugIndex(): Record<string, string> {
     bySlug[normalizeSlugLookupKey(slug)] = content;
     bySlug[normalizedRelative] = content;
     bySlug[normalizeSlugLookupKey(normalizedRelative)] = content;
+
+    const normalizedSeriesFolder = normalizeSlugLookupKey(seriesFolder);
+    if (normalizedSeriesFolder === 'serie - escada de jaco') {
+      const legacyAliases = [
+        `serie - tabernaculo e os 7 ceus/${fileStem}`,
+        `serie - os 7 ceus do santuario/${fileStem}`,
+      ];
+      for (const alias of legacyAliases) {
+        bySlug[alias] = content;
+        bySlug[normalizeSlugLookupKey(alias)] = content;
+      }
+    }
   }
 
   return bySlug;
@@ -1627,7 +1648,7 @@ const SECTIONS: Record<SectionKey, {
   'BÍBLIA': {
     numero: '00',
     label: 'Bíblia',
-    description: 'Selecione o testamento e o livro.',
+    description: '',
     Icon: BookOpen,
     accent: 'from-amber-900/70 to-yellow-800/10',
   },
@@ -1790,6 +1811,7 @@ const CATEGORY_TO_SECTION: Record<string, SectionKey> = {
   'cosmologia biblica':                       'COSMOLOGIA BÍBLICA',
   'cosmologia-biblica':                       'COSMOLOGIA BÍBLICA',
   'Série — Terra Plana na Bíblia':            'COSMOLOGIA BÍBLICA',
+  'Série — Terra Plana: O Tabernáculo, o Trono e a Mesa do Rei': 'COSMOLOGIA BÍBLICA',
   'TIPOLOGIA BÍBLICA':                        'TIPOLOGIA BÍBLICA',
   'Série — Sombras do Reino':                 'TIPOLOGIA BÍBLICA',
   'Série — A Terra e o Tabernáculo':          'TIPOLOGIA BÍBLICA',
@@ -1865,6 +1887,7 @@ const TYPOLOGY_THEME_SERIES_SLUG_PREFIXES = [
   'serie - a terra e o tabernaculo/',
   'serie - o tetravel/',
   'serie - o relogio do santuario/',
+  'serie - escada de jaco/',
   'serie - tabernaculo e os 7 ceus/',
 ];
 
@@ -1873,6 +1896,7 @@ const TYPOLOGY_THEME_CATEGORIES = new Set([
   'Série — A Terra e o Tabernáculo',
   'Série — O Tetravéu',
   'Série — O Relógio do Santuário',
+  'Série — A Escada de Jacó',
   'Série — Os 7 Céus do Santuário',
 ].map((value) => normalizeSearchToken(value)));
 
@@ -1936,6 +1960,7 @@ const SERIES_LABEL: Record<string, string> = {
   'COSMOLOGIA BÍBLICA':                       'Cosmologia Bíblica',
   'cosmologia-biblica':                       'Terra Plana na Bíblia',
   'Série — Terra Plana na Bíblia':            'Terra Plana na Bíblia',
+  'Série — Terra Plana: O Tabernáculo, o Trono e a Mesa do Rei': 'Terra Plana',
   'Trilogia — O Mapa da Tempestade':          'O Mapa da Tempestade',
   'Trilogia — A Marca':                       'A Marca',
   'Trilogia — O Estrangeiro Próspero':        'O Estrangeiro Próspero',
@@ -1950,6 +1975,7 @@ const SERIES_LABEL: Record<string, string> = {
   'Série — A Terra e o Tabernáculo':          'A Terra e o Tabernáculo',
   'Série — O Tetravéu':                       'O Tetravéu',
   'Série — O Relógio do Santuário':           'O Relógio do Santuário',
+  'Série — A Escada de Jacó':                 'A Escada de Jacó',
   'Série — Os 7 Céus do Santuário':           'Os 7 Céus do Santuário',
   'Série — O Código do Jardim':               'O Código do Jardim',
   'Série — A Queda do Mundo Espiritual':      'A Queda do Mundo Espiritual',
@@ -1983,6 +2009,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'COSMOLOGIA BÍBLICA': 'Como a Bíblia usa tipologia para nos ensinar as verdades da terra, do universo e do Seu Reino.',
   'cosmologia-biblica': 'Uma série exegética sobre terra plana na Bíblia: tabernáculo, firmamento, montes sagrados, fronteiras das nações e geografia espiritual como linguagem do governo de Deus.',
   'Série — Terra Plana na Bíblia': 'Uma série exegética sobre terra plana na Bíblia: tabernáculo, firmamento, montes sagrados, fronteiras das nações e geografia espiritual como linguagem do governo de Deus.',
+  'Série — Terra Plana: O Tabernáculo, o Trono e a Mesa do Rei': 'Uma série exegética sobre terra plana na Bíblia: tabernáculo, firmamento, montes sagrados, fronteiras das nações e geografia espiritual como linguagem do governo de Deus.',
   'A REVELAÇÃO DE ENOQUE': 'Uma jornada profunda pelas visões e revelações do profeta Enoque sobre o mundo espiritual, os vigilantes e o destino da humanidade.',
   'SÉRIE — JUBILEUS': 'O livro que Moisés recebeu dos anjos e que a tradição oficial silenciou. Uma jornada pelos segredos do calendário sagrado, dos patriarcas e da guerra invisível que moldou a história bíblica.',
   'SOMBRAS DO REINO DE DEUS': 'Uma leitura bíblica do mundo espiritual: Reino de Deus, conselho celeste e as realidades invisíveis que Hebreus 8:5 chama de sombra das coisas celestiais.',
@@ -1990,6 +2017,7 @@ const SERIES_DESCRIPTION: Record<string, string> = {
   'Série — A Terra e o Tabernáculo': 'Uma série sobre cosmografia bíblica e tabernáculo: pátio, firmamento, véu, fundamentos, mar de bronze e o trono, em leitura tipológica estruturada.',
   'Série — O Tetravéu': 'Da camada visível ao limite do invisível: uma leitura progressiva do linho, do pelo de cabra e das peles que cobrem o tabernáculo para revelar separação, proteção, glória e acesso na cosmografia bíblica.',
   'Série — O Relógio do Santuário': 'Uma série sobre o relógio do santuário: menorá, mesa dos pães, incenso e sábado como linguagem temporal do Reino.',
+  'Série — A Escada de Jacó': 'Uma série sobre a ascensão pelos céus e o tabernáculo como mapa da jornada espiritual: geografia celeste, liturgia e aproximação ao trono.',
   'Série — Os 7 Céus do Santuário': 'Uma série sobre o tabernáculo como mapa dos sete céus: jornada espiritual, liturgia, hierarquias celestiais e aproximação ao trono.',
   'Série — O Código do Jardim': 'Uma série sobre os arquétipos de Gênesis: conhecimento, nomeação, Babel e sabedoria para discernir o conflito espiritual no presente.',
   'Série — A Queda do Mundo Espiritual': 'Uma série sobre a rebelião no céu e a origem da guerra espiritual: Nachash, querubins caídos e as raízes invisíveis do conflito humano.',
@@ -3598,20 +3626,26 @@ export default function Bookstore({
 
   useEffect(() => {
     if (!openSlug || selectedSlug) return;
-    const hasMatch = mergedBooks.some((book) => book.slug === openSlug) || Boolean(typologyMarkdownBySlug[openSlug]);
+    const hasMatch = mergedBooks.some((book) => book.slug === openSlug)
+      || Boolean(typologyMarkdownBySlug[openSlug])
+      || Boolean(markdownBySlug[openSlug])
+      || Boolean(markdownBySlug[normalizeSlugLookupKey(openSlug)]);
     if (!hasMatch) return;
     void handleSelectBook(openSlug);
     clearOpenSlugFromUrl();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mergedBooks, openSlug, selectedSlug, typologyMarkdownBySlug]);
+  }, [markdownBySlug, mergedBooks, openSlug, selectedSlug, typologyMarkdownBySlug]);
 
   useEffect(() => {
     if (isTypesMode || !routeEbookSlug || selectedSlug) return;
-    const hasMatch = mergedBooks.some((book) => book.slug === routeEbookSlug) || Boolean(typologyMarkdownBySlug[routeEbookSlug]);
+    const hasMatch = mergedBooks.some((book) => book.slug === routeEbookSlug)
+      || Boolean(typologyMarkdownBySlug[routeEbookSlug])
+      || Boolean(markdownBySlug[routeEbookSlug])
+      || Boolean(markdownBySlug[normalizeSlugLookupKey(routeEbookSlug)]);
     if (!hasMatch) return;
     void handleSelectBook(routeEbookSlug);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isTypesMode, mergedBooks, routeEbookSlug, selectedSlug, typologyMarkdownBySlug]);
+  }, [isTypesMode, markdownBySlug, mergedBooks, routeEbookSlug, selectedSlug, typologyMarkdownBySlug]);
 
   const handleCloseReader = () => { setSelectedSlug(null); setMarkdownContent(null); };
 
@@ -4615,10 +4649,12 @@ export default function Bookstore({
                   {label}
                 </h2>
               </div>
-              <p className="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">{description}</p>
+              {description && (
+                <p className="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed mt-1.5 sm:mt-2 max-w-3xl">{description}</p>
+              )}
               {isBibleSection && (
                 <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.14em] font-black text-primary/80 mt-2">
-                  Comentários bíblicos sem capa.
+                  Comentários bíblicos.
                 </p>
               )}
             </div>
@@ -4888,7 +4924,7 @@ export default function Bookstore({
                 books={booksBySection[sec]}
                 volumeCountOverride={sec === 'BÍBLIA' ? bibleStudies.length : undefined}
                 readCountOverride={sec === 'BÍBLIA' ? bibleReadCount : undefined}
-                noCoverNotice={sec === 'BÍBLIA' ? 'Comentário bíblico sem capa' : undefined}
+                noCoverNotice={sec === 'BÍBLIA' ? 'Comentário bíblico' : undefined}
                 onSelect={() => {
                   setSelectedSubsecao(null);
                   setSelectedSection(sec);

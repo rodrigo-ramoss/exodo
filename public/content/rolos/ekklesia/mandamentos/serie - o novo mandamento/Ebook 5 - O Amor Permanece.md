@@ -1,5 +1,5 @@
 ---
-title: "Mandamentos: Amor — Volume 5: O Amor Permanece"
+title: "O Novo Mandamento — Volume 5: O Amor Permanece"
 description: "A esperança que não decepciona. O amor como certeza de salvação, a prática do amor no cotidiano e a vitória escatológica sobre o esfriamento geral dos últimos tempos."
 seção: rolos
 category: mandamentos
@@ -9,9 +9,9 @@ image: "/image/rolos/selah/o amor permance.webp"
 
 *Rodrigo Ramos — Voz do Deserto*
 
-*Série: Mandamentos: Amor — Volume 5*
+*Série: O Novo Mandamento — Volume 5*
 
-# MANDAMENTOS: AMOR
+# O NOVO MANDAMENTO
 ## Volume 5: O Amor Permanece — A Esperança que Não Decepciona
 
 ---
@@ -44,7 +44,7 @@ Por quê? Porque a fé um dia se tornará visão. Quando virmos o Senhor face a 
 
 O apóstolo João, que se debruçou sobre o peito de Jesus na Última Ceia, que aprendeu o mandamento do amor na prática diária, escreveu no final de sua vida: “Nós conhecemos o amor por isto: que ele deu a sua vida por nós; e nós devemos dar a vida pelos irmãos” (1 João 3:16). João não estava escrevendo teologia abstrata; estava escrevendo sobre o que viu, ouviu e tocou (1 João 1:1). O amor não era uma doutrina para ele; era uma pessoa: Jesus. E essa pessoa agora vive nele e nos outros discípulos.
 
-Neste quinto e último volume da série **Mandamentos: Amor**, vamos integrar tudo o que aprendemos:
+Neste quinto e último volume da série **O Novo Mandamento**, vamos integrar tudo o que aprendemos:
 - O amor como mandamento (Vol. 1)
 - O amor como obediência que prova intimidade (Vol. 2)
 - O amor como o caminho mais excelente, superior aos dons (Vol. 3)
@@ -180,7 +180,7 @@ A **Regra 6 de Hilel** (*ke-yotze bo*) conecta o esfriamento do amor nos último
 
 ## Conclusão: Permanecei no Meu Amor
 
-Chegamos ao fim da série **Mandamentos: Amor**. Começamos com o novo mandamento na noite da traição; vimos a conexão entre amor e obediência; contemplamos o caminho mais excelente de 1 Coríntios 13; aprendemos que o amor é fruto do Espírito; e agora encerramos com a certeza de que o amor permanece na eternidade e que, mesmo nos dias de esfriamento geral, o remanescente é chamado a manter o amor aceso.
+Chegamos ao fim da série **O Novo Mandamento**. Começamos com o novo mandamento na noite da traição; vimos a conexão entre amor e obediência; contemplamos o caminho mais excelente de 1 Coríntios 13; aprendemos que o amor é fruto do Espírito; e agora encerramos com a certeza de que o amor permanece na eternidade e que, mesmo nos dias de esfriamento geral, o remanescente é chamado a manter o amor aceso.
 
 Jesus disse: “Permanecei no meu amor” (João 15:9). Permanecer é continuar, persistir, não desistir. Permanecer no amor de Cristo é:
 - Receber o amor que Ele nos dá diariamente.
@@ -200,12 +200,13 @@ E para todos nós, que aguardamos o Dia: vigiemos, aqueçamos o amor, mantenhamo
 
 ---
 
-**Fim do Volume 5 — Série: Mandamentos: Amor**
+**Fim do Volume 5 — Série: O Novo Mandamento**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
 
 ---
 
-**FIM DA SÉRIE: MANDAMENTOS: AMOR — 5 VOLUMES**
+**FIM DA SÉRIE: O NOVO MANDAMENTO — 5 VOLUMES**
 
 *Série completa sobre o mandamento do amor, desde o novo mandamento de Jesus até a consumação escatológica.*
+

@@ -151,10 +151,6 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
         slug: 'pastores-e-diaconos',
       },
       {
-        title: 'Dons',
-        slug: 'dons',
-      },
-      {
         title: 'Disciplina',
         slug: 'disciplina',
       },
@@ -200,6 +196,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
       'Ceia do Senhor',
       'Batismo',
       'Novo Nascimento',
+      'Pecado e Santidade',
       'Vida de Jesus',
       'Parábolas de Jesus',
     ]),

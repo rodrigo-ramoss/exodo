@@ -1,5 +1,5 @@
 ---
-title: "Mandamentos: Amor — Volume 3: O Caminho Mais Excelente"
+title: "O Novo Mandamento — Volume 3: O Caminho Mais Excelente"
 description: "A força que move o Corpo. O amor como superior aos dons, o retrato do amor ágape em 1 Coríntios 13 e a batalha contra as hostes da maldade que atacam os relacionamentos."
 seção: rolos
 category: mandamentos
@@ -9,9 +9,9 @@ image: "/image/rolos/selah/o caminho mais exelente.webp"
 
 *Rodrigo Ramos — Voz do Deserto*
 
-*Série: Mandamentos: Amor — Volume 3*
+*Série: O Novo Mandamento — Volume 3*
 
-# MANDAMENTOS: AMOR
+# O NOVO MANDAMENTO
 ## Volume 3: O Caminho Mais Excelente — A Força que Move o Corpo
 
 ---
@@ -48,7 +48,7 @@ No centro dessa crise, Paulo escreveu o que talvez seja o mais belo texto sobre 
 
 E o que Paulo diz é devastador: “Ainda que eu fale as línguas dos homens e dos anjos, e não tenha amor, sou como o bronze que soa ou o címbalo que retine” (1 Co 13:1). Ou seja: todo o barulho pentecostal, toda a manifestação sobrenatural, sem amor, é apenas **ruído**. Nada mais.
 
-Neste terceiro volume da série **Mandamentos: Amor**, vamos mergulhar em 1 Coríntios 13, o “hino ao amor” paulino. Vamos entender por que o amor é superior aos dons, o que significa cada característica do amor ágape, e como as **hostes da maldade** (*pneumatika tēs ponērias*) atacam diretamente os relacionamentos, semeando ciúmes, irritabilidade e mágoa. Porque o campo de batalha do amor é a trincheira do dia a dia: o lar, a igreja local, o trabalho. É ali que o amor vence ou é vencido.
+Neste terceiro volume da série **O Novo Mandamento**, vamos mergulhar em 1 Coríntios 13, o “hino ao amor” paulino. Vamos entender por que o amor é superior aos dons, o que significa cada característica do amor ágape, e como as **hostes da maldade** (*pneumatika tēs ponērias*) atacam diretamente os relacionamentos, semeando ciúmes, irritabilidade e mágoa. Porque o campo de batalha do amor é a trincheira do dia a dia: o lar, a igreja local, o trabalho. É ali que o amor vence ou é vencido.
 
 ---
 
@@ -209,6 +209,7 @@ Que possamos, como a igreja de Corinto foi chamada a fazer, colocar o amor no ce
 
 ---
 
-**Fim do Volume 3 — Série: Mandamentos: Amor**
+**Fim do Volume 3 — Série: O Novo Mandamento**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

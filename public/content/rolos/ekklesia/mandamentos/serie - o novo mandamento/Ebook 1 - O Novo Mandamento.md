@@ -1,5 +1,5 @@
 ---
-title: "Mandamentos: Amor — Volume 1: O Novo Mandamento"
+title: "O Novo Mandamento — Volume 1: O Novo Mandamento"
 description: "A marca do verdadeiro discípulo. O que há de novo no mandamento de Jesus, como o amor ágape transforma a vida cristã e como o kosmokratōr ataca a unidade do Corpo."
 seção: rolos
 category: mandamentos
@@ -9,9 +9,9 @@ image: "/image/rolos/selah/o novo mandamento.webp"
 
 *Rodrigo Ramos — Voz do Deserto*
 
-*Série: Mandamentos: Amor — Volume 1*
+*Série: O Novo Mandamento — Volume 1*
 
-# MANDAMENTOS: AMOR
+# O NOVO MANDAMENTO
 ## Volume 1: O Novo Mandamento — A Marca do Verdadeiro Discípulo
 
 ---
@@ -50,7 +50,7 @@ Foi nesse cenário de traição iminente, medo e desespero que Jesus instituiu u
 
 A novidade não estava no verbo “amar”. O Antigo Testamento já ordenava: “Amarás o teu próximo como a ti mesmo” (Levítico 19:18). A novidade estava no **padrão**: “assim como eu vos amei”. O amor de Jesus é o modelo, e esse modelo é sacrificial, incondicional, ativo, perdoador e perseverante. É um amor que lava os pés de quem vai traí-lo. É um amor que morre por inimigos. É um amor que ressuscita para interceder.
 
-Neste primeiro volume da série **Mandamentos: Amor**, vamos explorar esse mandamento radical. Vamos entender seu contexto histórico (a Última Ceia e o lava-pés), seu conteúdo teológico (o ágape divino), sua função como marca de identidade da Igreja e sua batalha espiritual contra os poderes que tentam destruir a unidade do Corpo. Porque amar não é fácil. É um ato de guerra contra o espírito do mundo.
+Neste primeiro volume da série **O Novo Mandamento**, vamos explorar esse mandamento radical. Vamos entender seu contexto histórico (a Última Ceia e o lava-pés), seu conteúdo teológico (o ágape divino), sua função como marca de identidade da Igreja e sua batalha espiritual contra os poderes que tentam destruir a unidade do Corpo. Porque amar não é fácil. É um ato de guerra contra o espírito do mundo.
 
 ---
 
@@ -226,6 +226,7 @@ Este é o novo mandamento. Esta é a marca do verdadeiro discípulo. Que possamo
 
 ---
 
-**Fim do Volume 1 — Série: Mandamentos: Amor**
+**Fim do Volume 1 — Série: O Novo Mandamento**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+

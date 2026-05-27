@@ -1,5 +1,5 @@
 ---
-title: "Mandamentos: Amor — Volume 2: Obediência e Amor"
+title: "O Novo Mandamento — Volume 2: Obediência e Amor"
 description: "A prova de que amamos a Cristo. O ciclo virtuoso do amor e da obediência, a promessa da habitação divina e a luta contra os espíritos enganadores que separam fé e prática."
 seção: rolos
 category: mandamentos
@@ -9,9 +9,9 @@ image: "/image/rolos/selah/obediencia e amor.webp"
 
 *Rodrigo Ramos — Voz do Deserto*
 
-*Série: Mandamentos: Amor — Volume 2*
+*Série: O Novo Mandamento — Volume 2*
 
-# MANDAMENTOS: AMOR
+# O NOVO MANDAMENTO
 ## Volume 2: Obediência e Amor — A Prova de Que o Amamos
 
 ---
@@ -178,6 +178,7 @@ Se você está cansado de tentar obedecer por força própria, saiba que não é
 
 ---
 
-**Fim do Volume 2 — Série: Mandamentos: Amor**
+**Fim do Volume 2 — Série: O Novo Mandamento**
 
 *Que a luz dos filhos da luz brilhe no meio das trevas, e que o remanescente permaneça fiel até o Dia.*
+
