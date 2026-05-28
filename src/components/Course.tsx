@@ -23,6 +23,18 @@ const courseModules = {
   ...import.meta.glob('/public/content/curso/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 
+const MODULE_1_LESSONS_PART_1 = [
+  'Aula 1 – A Assembleia dos Deuses: Introdução ao Conselho Divino (Salmo 82 e Gênesis 1:26)',
+  'Aula 2 – O Trono e os Serafins: A Liturgia da Corte Celestial (Isaías 6)',
+  'Aula 3 – O Estado-Maior de Yahweh: A Deliberação do Conselho (1 Reis 22)',
+] as const;
+
+const MODULE_1_LESSONS_PART_2 = [
+  'Aula 4 – O Acusador no Tribunal: A Função Forense de Satanás (Jó 1-2; Zacarias 3)',
+  'Aula 5 – O Tribunal do Ancião de Dias: O Juízo sobre os Impérios (Daniel 7)',
+  'Aula 6 – A Herança das Nações: Os Príncipes Territoriais (Deuteronômio 32; Babel)',
+] as const;
+
 function parseFrontmatter(markdown: string): Record<string, string> {
   const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
   const match = normalized.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---/);
@@ -217,9 +229,19 @@ export default function Course() {
                 {isReady ? (
                   <>
                     <p className="mt-2 text-[11px] sm:text-xs text-on-surface-variant/80">
-                      Aulas 1 a 3
+                      Módulo 1 – O Conselho Divino: O Governo Celestial Revelado
                     </p>
-                    <div className="mt-3 space-y-2">
+                    <p className="mt-1 text-[11px] sm:text-xs text-on-surface-variant/80">
+                      Aulas 1 a 10
+                    </p>
+
+                    <div className="mt-3">
+                      <p className="text-[11px] sm:text-xs font-black uppercase tracking-[0.12em] text-primary/90">
+                        Módulo 1 — Aulas 1 a 3
+                      </p>
+                    </div>
+
+                    <div className="mt-2 space-y-2">
                       <button
                         type="button"
                         onClick={() => isLessonAvailable && setSelectedLessonSlug(module1Doc!.slug)}
@@ -232,16 +254,63 @@ export default function Course() {
                       >
                         <div className="flex items-center gap-2">
                           <BookOpen size={13} className="text-primary shrink-0" />
-                          <p className="text-xs sm:text-sm font-black text-on-surface">Aula 1 — O Conselho Divino</p>
+                          <p className="text-xs sm:text-sm font-black text-on-surface line-clamp-2">
+                            {MODULE_1_LESSONS_PART_1[0]}
+                          </p>
                         </div>
                       </button>
 
                       <div className="w-full rounded-xl border border-outline-variant/20 bg-black/15 px-3 py-2.5">
-                        <p className="text-xs sm:text-sm font-semibold text-on-surface-variant">Aula 2 — Em preparação</p>
+                        <p className="text-xs sm:text-sm font-semibold text-on-surface-variant line-clamp-3">
+                          {MODULE_1_LESSONS_PART_1[1]}
+                        </p>
+                        <p className="mt-1 text-[10px] sm:text-[11px] font-semibold text-on-surface-variant/75">
+                          Em preparação
+                        </p>
                       </div>
 
                       <div className="w-full rounded-xl border border-outline-variant/20 bg-black/15 px-3 py-2.5">
-                        <p className="text-xs sm:text-sm font-semibold text-on-surface-variant">Aula 3 — Em preparação</p>
+                        <p className="text-xs sm:text-sm font-semibold text-on-surface-variant line-clamp-3">
+                          {MODULE_1_LESSONS_PART_1[2]}
+                        </p>
+                        <p className="mt-1 text-[10px] sm:text-[11px] font-semibold text-on-surface-variant/75">
+                          Em preparação
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4">
+                      <p className="text-[11px] sm:text-xs font-black uppercase tracking-[0.12em] text-primary/90">
+                        Módulo 1 — Aulas 4 a 6
+                      </p>
+                    </div>
+
+                    <div className="mt-2 space-y-2">
+                      <div className="w-full rounded-xl border border-outline-variant/20 bg-black/15 px-3 py-2.5">
+                        <p className="text-xs sm:text-sm font-semibold text-on-surface-variant line-clamp-3">
+                          {MODULE_1_LESSONS_PART_2[0]}
+                        </p>
+                        <p className="mt-1 text-[10px] sm:text-[11px] font-semibold text-on-surface-variant/75">
+                          Em preparação
+                        </p>
+                      </div>
+
+                      <div className="w-full rounded-xl border border-outline-variant/20 bg-black/15 px-3 py-2.5">
+                        <p className="text-xs sm:text-sm font-semibold text-on-surface-variant line-clamp-3">
+                          {MODULE_1_LESSONS_PART_2[1]}
+                        </p>
+                        <p className="mt-1 text-[10px] sm:text-[11px] font-semibold text-on-surface-variant/75">
+                          Em preparação
+                        </p>
+                      </div>
+
+                      <div className="w-full rounded-xl border border-outline-variant/20 bg-black/15 px-3 py-2.5">
+                        <p className="text-xs sm:text-sm font-semibold text-on-surface-variant line-clamp-3">
+                          {MODULE_1_LESSONS_PART_2[2]}
+                        </p>
+                        <p className="mt-1 text-[10px] sm:text-[11px] font-semibold text-on-surface-variant/75">
+                          Em preparação
+                        </p>
                       </div>
                     </div>
                   </>
