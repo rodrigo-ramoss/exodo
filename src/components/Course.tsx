@@ -23,18 +23,6 @@ const courseModules = {
   ...import.meta.glob('/public/content/curso/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 
-const MODULE_1_LESSONS_PART_1 = [
-  'Aula 1 – A Assembleia dos Deuses: Introdução ao Conselho Divino (Salmo 82 e Gênesis 1:26)',
-  'Aula 2 – O Trono e os Serafins: A Liturgia da Corte Celestial (Isaías 6)',
-  'Aula 3 – O Estado-Maior de Yahweh: A Deliberação do Conselho (1 Reis 22)',
-] as const;
-
-const MODULE_1_LESSONS_PART_2 = [
-  'Aula 4 – O Acusador no Tribunal: A Função Forense de Satanás (Jó 1-2; Zacarias 3)',
-  'Aula 5 – O Tribunal do Ancião de Dias: O Juízo sobre os Impérios (Daniel 7)',
-  'Aula 6 – A Herança das Nações: Os Príncipes Territoriais (Deuteronômio 32; Babel)',
-] as const;
-
 function parseFrontmatter(markdown: string): Record<string, string> {
   const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
   const match = normalized.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---/);
@@ -143,8 +131,13 @@ export default function Course() {
     [docs],
   );
 
-  const module1Doc = useMemo(
-    () => docs.find((doc) => doc.moduleNumber === 1 && !doc.isDescription) ?? null,
+  const module1Part1Doc = useMemo(
+    () => docs.find((doc) => doc.moduleNumber === 1 && !doc.isDescription && doc.relativePath.toLowerCase().includes('parte 1')) ?? null,
+    [docs],
+  );
+
+  const module1Part2Doc = useMemo(
+    () => docs.find((doc) => doc.moduleNumber === 1 && !doc.isDescription && doc.relativePath.toLowerCase().includes('parte 2')) ?? null,
     [docs],
   );
 
@@ -201,7 +194,8 @@ export default function Course() {
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           {[1, 2, 3, 4, 5].map((moduleNumber) => {
             const isReady = moduleNumber === 1;
-            const isLessonAvailable = isReady && Boolean(module1Doc);
+            const isPart1Available = isReady && Boolean(module1Part1Doc);
+            const isPart2Available = isReady && Boolean(module1Part2Doc);
             return (
               <article
                 key={moduleNumber}
@@ -213,7 +207,9 @@ export default function Course() {
               >
                 <div className="flex items-center justify-between gap-2">
                   <h3 className="font-headline text-base sm:text-lg font-black tracking-tight text-on-surface">
-                    Módulo {moduleNumber}
+                    {isReady
+                      ? 'Módulo 1 – O Conselho Divino: O Governo Celestial Revelado'
+                      : `Módulo ${moduleNumber}`}
                   </h3>
                   <span
                     className={`text-[10px] font-black uppercase tracking-[0.14em] px-2 py-1 rounded-full ${
@@ -228,90 +224,42 @@ export default function Course() {
 
                 {isReady ? (
                   <>
-                    <p className="mt-2 text-[11px] sm:text-xs text-on-surface-variant/80">
-                      Módulo 1 – O Conselho Divino: O Governo Celestial Revelado
-                    </p>
                     <p className="mt-1 text-[11px] sm:text-xs text-on-surface-variant/80">
                       Aulas 1 a 10
                     </p>
 
-                    <div className="mt-3">
-                      <p className="text-[11px] sm:text-xs font-black uppercase tracking-[0.12em] text-primary/90">
-                        Módulo 1 — Aulas 1 a 3
-                      </p>
-                    </div>
-
                     <div className="mt-2 space-y-2">
                       <button
                         type="button"
-                        onClick={() => isLessonAvailable && setSelectedLessonSlug(module1Doc!.slug)}
-                        disabled={!isLessonAvailable}
+                        onClick={() => isPart1Available && setSelectedLessonSlug(module1Part1Doc!.slug)}
+                        disabled={!isPart1Available}
                         className={`w-full rounded-xl border px-3 py-2.5 text-left transition-colors ${
-                          isLessonAvailable
+                          isPart1Available
                             ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/18'
                             : 'border-outline-variant/20 bg-black/15 cursor-not-allowed opacity-70'
                         }`}
                       >
                         <div className="flex items-center gap-2">
                           <BookOpen size={13} className="text-primary shrink-0" />
-                          <p className="text-xs sm:text-sm font-black text-on-surface line-clamp-2">
-                            {MODULE_1_LESSONS_PART_1[0]}
-                          </p>
+                          <p className="text-xs sm:text-sm font-black text-on-surface">Parte 1 — Aulas 1 a 3</p>
                         </div>
                       </button>
 
-                      <div className="w-full rounded-xl border border-outline-variant/20 bg-black/15 px-3 py-2.5">
-                        <p className="text-xs sm:text-sm font-semibold text-on-surface-variant line-clamp-3">
-                          {MODULE_1_LESSONS_PART_1[1]}
-                        </p>
-                        <p className="mt-1 text-[10px] sm:text-[11px] font-semibold text-on-surface-variant/75">
-                          Em preparação
-                        </p>
-                      </div>
-
-                      <div className="w-full rounded-xl border border-outline-variant/20 bg-black/15 px-3 py-2.5">
-                        <p className="text-xs sm:text-sm font-semibold text-on-surface-variant line-clamp-3">
-                          {MODULE_1_LESSONS_PART_1[2]}
-                        </p>
-                        <p className="mt-1 text-[10px] sm:text-[11px] font-semibold text-on-surface-variant/75">
-                          Em preparação
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="mt-4">
-                      <p className="text-[11px] sm:text-xs font-black uppercase tracking-[0.12em] text-primary/90">
-                        Módulo 1 — Aulas 4 a 6
-                      </p>
-                    </div>
-
-                    <div className="mt-2 space-y-2">
-                      <div className="w-full rounded-xl border border-outline-variant/20 bg-black/15 px-3 py-2.5">
-                        <p className="text-xs sm:text-sm font-semibold text-on-surface-variant line-clamp-3">
-                          {MODULE_1_LESSONS_PART_2[0]}
-                        </p>
-                        <p className="mt-1 text-[10px] sm:text-[11px] font-semibold text-on-surface-variant/75">
-                          Em preparação
-                        </p>
-                      </div>
-
-                      <div className="w-full rounded-xl border border-outline-variant/20 bg-black/15 px-3 py-2.5">
-                        <p className="text-xs sm:text-sm font-semibold text-on-surface-variant line-clamp-3">
-                          {MODULE_1_LESSONS_PART_2[1]}
-                        </p>
-                        <p className="mt-1 text-[10px] sm:text-[11px] font-semibold text-on-surface-variant/75">
-                          Em preparação
-                        </p>
-                      </div>
-
-                      <div className="w-full rounded-xl border border-outline-variant/20 bg-black/15 px-3 py-2.5">
-                        <p className="text-xs sm:text-sm font-semibold text-on-surface-variant line-clamp-3">
-                          {MODULE_1_LESSONS_PART_2[2]}
-                        </p>
-                        <p className="mt-1 text-[10px] sm:text-[11px] font-semibold text-on-surface-variant/75">
-                          Em preparação
-                        </p>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => isPart2Available && setSelectedLessonSlug(module1Part2Doc!.slug)}
+                        disabled={!isPart2Available}
+                        className={`w-full rounded-xl border px-3 py-2.5 text-left transition-colors ${
+                          isPart2Available
+                            ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/18'
+                            : 'border-outline-variant/20 bg-black/15 cursor-not-allowed opacity-70'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <BookOpen size={13} className="text-primary shrink-0" />
+                          <p className="text-xs sm:text-sm font-black text-on-surface">Parte 2 — Aulas 4 a 6</p>
+                        </div>
+                      </button>
                     </div>
                   </>
                 ) : (
