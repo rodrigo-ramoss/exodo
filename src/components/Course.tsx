@@ -141,6 +141,11 @@ export default function Course() {
     [docs],
   );
 
+  const module1Part3Doc = useMemo(
+    () => docs.find((doc) => doc.moduleNumber === 1 && !doc.isDescription && doc.relativePath.toLowerCase().includes('parte 3')) ?? null,
+    [docs],
+  );
+
   const selectedLesson = useMemo(
     () => docs.find((doc) => doc.slug === selectedLessonSlug) ?? null,
     [docs, selectedLessonSlug],
@@ -196,6 +201,7 @@ export default function Course() {
             const isReady = moduleNumber === 1;
             const isPart1Available = isReady && Boolean(module1Part1Doc);
             const isPart2Available = isReady && Boolean(module1Part2Doc);
+            const isPart3Available = isReady && Boolean(module1Part3Doc);
             return (
               <article
                 key={moduleNumber}
@@ -258,6 +264,22 @@ export default function Course() {
                         <div className="flex items-center gap-2">
                           <BookOpen size={13} className="text-primary shrink-0" />
                           <p className="text-xs sm:text-sm font-black text-on-surface">Parte 2 — Aulas 4 a 6</p>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => isPart3Available && setSelectedLessonSlug(module1Part3Doc!.slug)}
+                        disabled={!isPart3Available}
+                        className={`w-full rounded-xl border px-3 py-2.5 text-left transition-colors ${
+                          isPart3Available
+                            ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/18'
+                            : 'border-outline-variant/20 bg-black/15 cursor-not-allowed opacity-70'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <BookOpen size={13} className="text-primary shrink-0" />
+                          <p className="text-xs sm:text-sm font-black text-on-surface">Parte 3 — Aulas 7 a 10</p>
                         </div>
                       </button>
                     </div>

@@ -2,6 +2,10 @@
 
 **Propósito do Módulo:** Estabelecer a cosmovisão bíblica do governo celestial – a assembleia dos seres espirituais que servem a Deus, administram as nações, executam juízos e que, na consumação, será compartilhada com a Igreja redimida.
 
+Aula 4 – O Acusador no Tribunal: A Função Forense de Satanás (Jó 1-2; Zacarias 3)
+Aula 5 – O Tribunal do Ancião de Dias: O Juízo sobre os Impérios (Daniel 7)
+Aula 6 – A Herança das Nações: Os Príncipes Territoriais (Deuteronômio 32; Babel)
+
 ---
 
 ## Aula 4 – O Acusador no Tribunal: A Função Forense de Satanás (Jó 1-2; Zacarias 3)

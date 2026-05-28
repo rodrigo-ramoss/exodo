@@ -7,6 +7,10 @@ description: "Estabelecer a cosmovisão bíblica do governo celestial – a asse
 
 **Propósito do Módulo:** Estabelecer a cosmovisão bíblica do governo celestial – a assembleia dos seres espirituais que servem a Deus, administram as nações, executam juízos e que, na consumação, será compartilhada com a Igreja redimida.
 
+Aula 1 – A Assembleia dos Deuses: Introdução ao Conselho Divino (Salmo 82 e Gênesis 1:26)
+Aula 2 – O Trono e os Serafins: A Liturgia da Corte Celestial (Isaías 6)
+Aula 3 – O Estado-Maior de Yahweh: A Deliberação do Conselho (1 Reis 22)
+
 ---
 
 ## Aula 1 – A Assembleia dos Deuses: Introdução ao Conselho Divino (Salmo 82 e Gênesis 1:26)
