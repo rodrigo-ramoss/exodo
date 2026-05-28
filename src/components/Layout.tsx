@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Menu, Settings, Wheat, Library, House, UserCircle2, BookMarked, UserRound, NotebookPen } from 'lucide-react';
+import { Menu, Settings, Wheat, Library, House, UserCircle2, BookMarked, UserRound, NotebookPen, GraduationCap } from 'lucide-react';
 import { Screen } from '../types';
 import { cn } from '../lib/utils';
 import { useProfile } from '../state/ProfileContext';
@@ -12,10 +12,12 @@ interface LayoutProps {
 
 export default function Layout({ children, currentScreen, setScreen }: LayoutProps) {
   const { photo } = useProfile();
+  const SHOW_PREACHER_NAV = false;
 
   const navItems = [
     { id: Screen.HOME, label: 'INÍCIO', icon: House },
-    { id: Screen.PREACHER, label: 'PREG.', icon: NotebookPen },
+    ...(SHOW_PREACHER_NAV ? [{ id: Screen.PREACHER, label: 'PREG.', icon: NotebookPen }] : []),
+    { id: Screen.COURSE, label: 'CURSO', icon: GraduationCap },
     { id: Screen.DISCIPULOS, label: 'DISCÍP.', icon: UserRound },
     { id: Screen.MANA, label: 'MANÁ', icon: Wheat },
     { id: Screen.BOOKSTORE, label: 'ROLOS', icon: Library },
