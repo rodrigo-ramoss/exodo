@@ -17,15 +17,15 @@ image: /image/babel/eles avisam.webp
 
 ## ÍNDICE
 
-**Introdução: O Espetáculo que se Confessa** (1.200 palavras)
+**Introdução: O Espetáculo que se Confessa**
 
-**Capítulo 1 — O Enigma da Ficção que se Torna Realidade** (2.800 palavras)  
+**Capítulo 1 — O Enigma da Ficção que se Torna Realidade**  
 1.1 O déjà vu coletivo — quando a ficção vira manchete  
 1.2 Quando o aviso é anterior ao evento — os casos mais documentados  
 1.3 A diferença entre coincidência, probabilidade e programação  
 1.4 O método que este livro ensina — uma hermenêutica de guerra
 
-**Capítulo 2 — A Tese Central: Cinco Razões pelas Quais o Sistema Avisa** (3.500 palavras)  
+**Capítulo 2 — A Tese Central: Cinco Razões pelas Quais o Sistema Avisa**  
 2.1 Primeira razão — O contrato cósmico do consentimento  
 2.2 Segunda razão — Arrogância ritual  
 2.3 Terceira razão — Ficção como cobertura plausível  
@@ -33,21 +33,21 @@ image: /image/babel/eles avisam.webp
 2.5 Quinta razão — Oferta sacrificial de atenção  
 2.6 Síntese: por que o aviso é uma necessidade, não uma falha
 
-**Capítulo 3 — A Base Bíblica e do Segundo Templo** (3.200 palavras)  
+**Capítulo 3 — A Base Bíblica e do Segundo Templo**  
 3.1 O aviso profético no Antigo Testamento — Daniel, Isaías e o padrão do juízo  
 3.2 Jesus e a revelação adversária — “eis que de antemão vos tenho dito”  
 3.3 Paulo e o “mistério da iniquidade” — a revelação do homem do pecado  
 3.4 Qumran e a Doutrina dos Dois Espíritos — a operação do Anjo das Trevas  
 3.5 A literatura do Segundo Templo como chave para o NT (1 Enoque, Jubileus, 11QMelch)
 
-**Capítulo 4 — Os Quatro Pilares da Leitura Simbólica** (3.000 palavras)  
+**Capítulo 4 — Os Quatro Pilares da Leitura Simbólica**  
 4.1 Pilar 1 — Sátira e probabilidade (o filtro natural)  
 4.2 Pilar 2 — Programação preditiva (o condicionamento)  
 4.3 Pilar 3 — Simbologia ocultista (a linguagem da elite)  
 4.4 Pilar 4 — Sincomisticidade cósmica (o arquétipo de Deus)  
 4.5 Como os quatro pilares operam juntos — estudo de caso integrado
 
-**Capítulo 5 — Catálogo Simbólico Básico e Estudos de Caso Ampliados** (3.500 palavras)  
+**Capítulo 5 — Catálogo Simbólico Básico e Estudos de Caso Ampliados**  
 5.1 A Carta de Tarot — caso *The Economist* 2017  
 5.2 O Cérebro Plugado / Tomada — transhumanismo como religião  
 5.3 A Nuvem Negra / Cogumelo — pandemia e guerra híbrida  
@@ -56,20 +56,20 @@ image: /image/babel/eles avisam.webp
 5.6 O Cavaleiro Branco — o falso messias midiático  
 5.7 Estudo de caso estendido: a cerimônia de Paris 2024 e a paródia da Última Ceia
 
-**Capítulo 6 — Como Aplicar a Leitura sem Cair em Paranoia** (2.800 palavras)  
+**Capítulo 6 — Como Aplicar a Leitura sem Cair em Paranoia**  
 6.1 Os três filtros de evidência (Camada Dura, Interpretativa, Especulativa)  
 6.2 O que a Voz do Deserto nunca faz — limites éticos e editoriais  
 6.3 A postura essênica: testemunho fiel, não militância obsessiva  
 6.4 Disciplinas práticas para o leitor do remanescente  
 6.5 Quando parar de olhar para o sistema e olhar para Cristo
 
-**Conclusão: O Aviso é uma Arma de Dois Gumes** (1.200 palavras)
+**Conclusão: O Aviso é uma Arma de Dois Gumes**
 
-**Ponte para o Volume 2: A Dança dos Ídolos** (300 palavras)
+**Ponte para o Volume 2: A Dança dos Ídolos**
 
-**Apêndice — Glossário de Termos Técnicos** (800 palavras)
+**Apêndice — Glossário de Termos Técnicos**
 
-**Referências e Fontes Primárias** (500 palavras)
+**Referências e Fontes Primárias**
 
 ---
 

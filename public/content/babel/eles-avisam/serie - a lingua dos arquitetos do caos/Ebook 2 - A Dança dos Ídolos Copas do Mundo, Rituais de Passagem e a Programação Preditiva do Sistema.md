@@ -17,56 +17,56 @@ image: /image/babel/a dancados idolos.webp
 
 ## ÍNDICE
 
-**Introdução: O Maior Ritual Não Religioso do Planeta** (1.200 palavras)
+**Introdução: O Maior Ritual Não Religioso do Planeta**
 
-**Capítulo 1 — Futebol como Liturgia Global** (2.500 palavras)  
+**Capítulo 1 — Futebol como Liturgia Global**  
 1.1 A Copa do Mundo como concentração de atenção  
 1.2 Hinos, bandeiras, arquibancadas — a parafernália do sacrifício coletivo  
 1.3 A FIFA como braço do sistema global (patrocínios, parcerias, agendas)
 
-**Capítulo 2 — O Calendário dos Mortos: Datas, Morte e Copa** (2.800 palavras)  
+**Capítulo 2 — O Calendário dos Mortos: Datas, Morte e Copa**  
 2.1 O ciclo simbólico: morte do ídolo → narrativa de homenagem → Copa  
 2.2 Maradona: 25 de novembro de 2020 — dois anos exatos antes da Copa?  
 2.3 Pelé: 29 de dezembro de 2022 — 12 dias após o fim da Copa do Qatar  
 2.4 O que as datas revelam (e o que não se deve forçar)
 
-**Capítulo 3 — A Geometria da Homenagem: Números e Camisas** (2.800 palavras)  
+**Capítulo 3 — A Geometria da Homenagem: Números e Camisas**  
 3.1 O número 10: de Pelé a Maradona, de Maradona a Messi  
 3.2 O caso argentino: a camisa que carregava o "espírito de Diego"  
 3.3 O caso brasileiro: Neymar, a camisa 10 e o peso de Pelé  
 3.4 Outros números mágicos: 7 (o gol de Maradona contra a Inglaterra? A camisa de Mbappé?), 11 (o que Pelé usou em 1958?), 14 (a camisa de Messi na final?)
 
-**Capítulo 4 — A Narrativa da Redenção: O Arquiteto da Emoção** (2.800 palavras)  
+**Capítulo 4 — A Narrativa da Redenção: O Arquiteto da Emoção**  
 4.1 Como a mídia esportiva constrói o arco dramático  
 4.2 Maradona como "santo popular" — o culto póstumo e sua instrumentalização  
 4.3 Messi como "herdeiro ungido" — a Copa como consagração final  
 4.4 Pelé como "Rei" que não viu o hexa — a dívida emocional criada  
 4.5 Neymar como "o que carrega o peso" — o drama da convocação inesperada
 
-**Capítulo 5 — O Ritual da Coroação: A Final como Ápice da Magia Simpática** (2.800 palavras)  
+**Capítulo 5 — O Ritual da Coroação: A Final como Ápice da Magia Simpática**  
 5.1 A Lei da Contágio (James Frazer) aplicada ao futebol  
 5.2 A final Argentina-França (2022): o gol de Messi, a mão de Deus, a estrela de Maradona  
 5.3 A projeção para 2026: o que o sistema já está sinalizando  
 5.4 Se o Brasil ganhar: a narrativa pronta ("Pelé encomendou do céu")  
 5.5 Se o Brasil perder: a narrativa pronta ("a geração Neymar não honrou o legado")
 
-**Capítulo 6 — A Copa nos EUA (2026): Geopolítica e Simbologia Imperial** (2.500 palavras)  
+**Capítulo 6 — A Copa nos EUA (2026): Geopolítica e Simbologia Imperial**  
 6.1 A anfitriã: Estados Unidos, o "Império"  
 6.2 A Copa como palco de afirmação da Nova Ordem Mundial  
 6.3 Conexão com o Códice da Besta: a Copa em território da besta  
 6.4 O que a própria FIFA já declarou sobre 2026 (fontes primárias)
 
-**Capítulo 7 — Como Assistir à Copa sem Ser Engolido pelo Sistema** (2.000 palavras)  
+**Capítulo 7 — Como Assistir à Copa sem Ser Engolido pelo Sistema**  
 7.1 Os três filtros de evidência aplicados ao futebol  
 7.2 Não é pecado torcer — é pecado ser manipulado sem saber  
 7.3 A postura do remanescente: alegria com discernimento  
 7.4 O limite: quando o ídolo vira ídolo (no sentido bíblico)
 
-**Conclusão: O Esporte como Espelho do Sistema** (1.200 palavras)
+**Conclusão: O Esporte como Espelho do Sistema**
 
-**Apêndice — Tabela de Padrões Documentados (Maradona → Argentina 2022; Pelé → Brasil 2026)** (800 palavras)
+**Apêndice — Tabela de Padrões Documentados (Maradona → Argentina 2022; Pelé → Brasil 2026)**
 
-**Referências e Fontes Primárias** (600 palavras)
+**Referências e Fontes Primárias**
 
 ---
 

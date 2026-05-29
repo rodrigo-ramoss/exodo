@@ -17,62 +17,62 @@ image: /image/babel/o altar global.webp
 
 ## ÍNDICE
 
-**Introdução: O Estádio como Templo Moderno** (1.200 palavras)
+**Introdução: O Estádio como Templo Moderno**
 
-**Capítulo 1 — A Olimpíada como Ritual de Massa** (2.800 palavras)  
+**Capítulo 1 — A Olimpíada como Ritual de Massa**  
 1.1 A chama olímpica: do altar de Prometeu ao estádio global  
 1.2 O simbolismo dos anéis olímpicos (continentes unidos sob uma bandeira)  
 1.3 O juramento dos atletas e a "trégua olímpica"  
 1.4 A abertura como liturgia: ordem, coreografia, êxtase coletivo
 
-**Capítulo 2 — Londres 2012: O Cavaleiro e a Fênix** (2.500 palavras)  
+**Capítulo 2 — Londres 2012: O Cavaleiro e a Fênix**  
 2.1 A direção artística de Danny Boyle  
 2.2 O cavaleiro branco na vanguarda (Apocalipse 6:2)  
 2.3 A fênix sobre o estádio (símbolo da ressurreição pagã)  
 2.4 A paródia do NHS e as crianças em leitos hospitalares  
 2.5 Análise pelo método dos quatro pilares
 
-**Capítulo 3 — Rio 2016: O Altar Ambiental** (2.200 palavras)  
+**Capítulo 3 — Rio 2016: O Altar Ambiental**  
 3.1 A temática ecológica como centro da cerimônia  
 3.2 A bandeira olímpica conduzida por figuras encapuzadas  
 3.3 O "espírito da floresta" e o culto a Gaia  
 3.4 A mensagem implícita: a natureza exige sacrifício humano (mudanças de estilo de vida)
 
-**Capítulo 4 — Tóquio 2020 (2021): A Esfera que se Abre** (2.200 palavras)  
+**Capítulo 4 — Tóquio 2020 (2021): A Esfera que se Abre**  
 4.1 O olho/esfera gigante flutuante  
 4.2 O simbolismo do "despertar" (AWAKE)  
 4.3 A conexão com o CERN e o experimento AWAKE  
 4.4 O silêncio e a austeridade pós-pandemia como preparação
 
-**Capítulo 5 — Paris 2024: A Paródia da Última Ceia e o Cavaleiro do Apocalipse** (3.000 palavras)  
+**Capítulo 5 — Paris 2024: A Paródia da Última Ceia e o Cavaleiro do Apocalipse**  
 5.1 A direção artística de Thomas Jolly  
 5.2 A "Festa dos Deuses" (ou a paródia da Última Ceia)  
 5.3 O cavaleiro metálico sobre o Sena  
 5.4 A reação da imprensa e a "cobertura" da controvérsia  
 5.5 Análise aprofundada: o que o sistema estava comunicando
 
-**Capítulo 6 — Copas do Mundo como Rituais de Passagem** (2.500 palavras)  
+**Capítulo 6 — Copas do Mundo como Rituais de Passagem**  
 6.1 Cerimônias de abertura das Copas (1990-2022)  
 6.2 A Copa do Qatar 2022: simbolismo islâmico e a "unidade das nações"  
 6.3 A Copa de 2026 (EUA): o que o sistema já está anunciando
 
-**Capítulo 7 — O Culto a Gaia e a Religião da Nova Era** (2.500 palavras)  
+**Capítulo 7 — O Culto a Gaia e a Religião da Nova Era**  
 7.1 O que é Gaia: da mitologia grega à hipótese científica (Lovelock)  
 7.2 Como Gaia se tornou a divindade oficial do ambientalismo global  
 7.3 A instrumentalização de Gaia pelo sistema (WEF, ONU, Club of Rome)  
 7.4 O contraste com a teologia bíblica: a criação não é divina, é obra do Criador
 
-**Capítulo 8 — Como Assistir a uma Cerimônia de Abertura sem ser Manipulado** (1.500 palavras)  
+**Capítulo 8 — Como Assistir a uma Cerimônia de Abertura sem ser Manipulado**  
 8.1 Os três filtros de evidência aplicados a rituais de massa  
 8.2 O que fazer com a emoção (torcer, vibrar, admirar) sem idolatria  
 8.3 O limite: quando a participação no espetáculo vira consentimento  
 8.4 A postura do remanescente: testemunha no meio do templo pagão
 
-**Conclusão: O Altar é Pagão, Mas o Trono é de Yahweh** (1.200 palavras)
+**Conclusão: O Altar é Pagão, Mas o Trono é de Yahweh**
 
-**Apêndice — Linha do Tempo das Principais Cerimônias Controversas (2012-2026)** (600 palavras)
+**Apêndice — Linha do Tempo das Principais Cerimônias Controversas (2012-2026)**
 
-**Referências e Fontes Primárias** (700 palavras)
+**Referências e Fontes Primárias**
 
 ---
 

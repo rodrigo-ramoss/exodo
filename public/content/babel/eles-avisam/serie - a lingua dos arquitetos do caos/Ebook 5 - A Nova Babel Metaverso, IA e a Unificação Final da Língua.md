@@ -17,70 +17,70 @@ image: /image/babel/a nova babel.webp
 
 ## ÍNDICE
 
-**Introdução: A Torre que Nunca Caiu** (1.200 palavras)
+**Introdução: A Torre que Nunca Caiu**
 
-**Capítulo 1 — Babel Original: A Rebelião da Unidade sem Deus** (2.500 palavras)  
+**Capítulo 1 — Babel Original: A Rebelião da Unidade sem Deus**  
 1.1 Gênesis 11:1-9 — o texto e seu contexto  
 1.2 "Uma só língua e as mesmas palavras" — o poder da comunicação unificada  
 1.3 "Façamos um nome para nós" — a glória humana contra a glória divina  
 1.4 A intervenção divina: confusão das línguas e dispersão  
 1.5 O que Babel representa: a tentação perene da unidade sem Deus
 
-**Capítulo 2 — A Nova Babel: Unificação Tecnológica** (2.800 palavras)  
+**Capítulo 2 — A Nova Babel: Unificação Tecnológica**  
 2.1 A revanche do sistema: reverter a confusão das línguas  
 2.2 Tradução automática e IA: quebrando a barreira linguística  
 2.3 Metaverso: um espaço comum onde "todos falam a mesma língua"  
 2.4 Moedas digitais (CBDCs): uma economia unificada  
 2.5 Identidade digital global: uma "marca" para todos
 
-**Capítulo 3 — Metaverso: O Espaço da Nova Babel** (2.800 palavras)  
+**Capítulo 3 — Metaverso: O Espaço da Nova Babel**  
 3.1 O que é o metaverso? (definição e história)  
 3.2 O anúncio de Mark Zuckerberg (Meta, 2021)  
 3.3 As promessas do metaverso: trabalho, lazer, relacionamentos, identidade  
 3.4 Os perigos: vigilância total, controle comportamental, evasão da realidade  
 3.5 O metaverso como "nova criação" secular
 
-**Capítulo 4 — Inteligência Artificial: O Novo Espírito de Babel** (2.800 palavras)  
+**Capítulo 4 — Inteligência Artificial: O Novo Espírito de Babel**  
 4.1 A IA como "língua universal": ChatGPT, Gemini, e a padronização do conhecimento  
 4.2 A IA como "oráculo": decisões automatizadas, governança algorítmica  
 4.3 A IA como "pastor": sistemas de recomendação que moldam desejos  
 4.4 A IA como "juiz": vigilância preditiva, pontuação social  
 4.5 A IA como "divindade": o sonho transhumanista de fusão homem-máquina
 
-**Capítulo 5 — Neuralink e BCI: A Marca na Testa e na Mão** (2.500 palavras)  
+**Capítulo 5 — Neuralink e BCI: A Marca na Testa e na Mão**  
 5.1 Interface cérebro-computador (BCI): o que é, como funciona  
 5.2 Neuralink (Elon Musk): implantes cerebrais para "fusão com a IA"  
 5.3 Outras empresas: Synchron, Blackrock Neurotech, DARPA  
 5.4 Aplicações médicas (reais) e aplicações de controle (possíveis)  
 5.5 O paralelo com Apocalipse 13:16-18 (a marca na testa e na mão)
 
-**Capítulo 6 — CBDCs e Controle Econômico Global** (2.200 palavras)  
+**Capítulo 6 — CBDCs e Controle Econômico Global**  
 6.1 O que são Central Bank Digital Currencies (CBDCs)  
 6.2 O projeto do BIS e dos bancos centrais (Brasil: Drex)  
 6.3 CBDC programável: dinheiro que expira, que só pode ser usado para certas coisas  
 6.4 A obsolescência do dinheiro físico: o fim da privacidade financeira  
 6.5 A "marca" econômica da besta: o pré-anúncio do sistema
 
-**Capítulo 7 — A Unificação Final: O que o Sistema Já Está Anunciando** (2.500 palavras)  
+**Capítulo 7 — A Unificação Final: O que o Sistema Já Está Anunciando**  
 7.1 O WEF e a "Grande Reinicialização" como arcabouço  
 7.2 A Agenda 2030 da ONU como calendário  
 7.3 Klaus Schwab, Yuval Harari e o "Homo Deus" tecnológico  
 7.4 A Cúpula do Futuro (ONU, 2024) e o Pacto Digital Global  
 7.5 Projeções: o que esperar até 2030 e além
 
-**Capítulo 8 — Como Viver na Nova Babel sem Perder a Alma** (1.800 palavras)  
+**Capítulo 8 — Como Viver na Nova Babel sem Perder a Alma**  
 8.1 Os três filtros de evidência aplicados à tecnologia  
 8.2 Usar a tecnologia com discernimento (não é pecado ter smartphone)  
 8.3 Os limites: quando a tecnologia vira ídolo (neuralink estético, metaverso como fuga)  
 8.4 A postura do remanescente: peregrino na Babilônia, cidadão do céu
 
-**Conclusão: Babel Cairá, Jerusalém Descerá** (1.200 palavras)
+**Conclusão: Babel Cairá, Jerusalém Descerá**
 
-**Epílogo da Série: A Língua dos Arquitetos do Caos — Recapitulação e Envio** (800 palavras)
+**Epílogo da Série: A Língua dos Arquitetos do Caos — Recapitulação e Envio**
 
-**Apêndice — Glossário de Termos Tecnológicos (Metaverso, IA, BCI, CBDC, etc.)** (600 palavras)
+**Apêndice — Glossário de Termos Tecnológicos (Metaverso, IA, BCI, CBDC, etc.)**
 
-**Referências e Fontes Primárias** (700 palavras)
+**Referências e Fontes Primárias**
 
 ---
 

@@ -9,22 +9,66 @@ import { pm, type Category } from '../lib/progressManager';
 const HL_KEY = (slug: string) => `exodo_hl_${slug}`;
 const NOTES_KEY = (slug: string) => `exodo_notes_${slug}`;
 
-type ReaderNote = {
+type ReaderHighlight = {
   id: string;
   text: string;
-  note: string;
+  start: number;
+  end: number;
   createdAt: number;
   updatedAt: number;
 };
 
-function loadHighlights(slug: string): string[] {
+type ReaderNote = {
+  id: string;
+  text: string;
+  note: string;
+  highlightId?: string;
+  createdAt: number;
+  updatedAt: number;
+};
+
+function loadHighlights(slug: string): ReaderHighlight[] {
   try {
     const raw = localStorage.getItem(HL_KEY(slug));
-    return raw ? (JSON.parse(raw) as string[]) : [];
-  } catch { return []; }
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+
+    const now = Date.now();
+    return parsed
+      .map((item, idx) => {
+        if (typeof item === 'string') {
+          return {
+            id: `legacy-${idx}-${Math.random().toString(36).slice(2, 8)}`,
+            text: item,
+            start: -1,
+            end: -1,
+            createdAt: now,
+            updatedAt: now,
+          } satisfies ReaderHighlight;
+        }
+
+        if (!item || typeof item !== 'object' || typeof item.text !== 'string') return null;
+        const start = Number.isFinite(item.start) ? Number(item.start) : -1;
+        const end = Number.isFinite(item.end) ? Number(item.end) : -1;
+        return {
+          id: typeof item.id === 'string' && item.id.trim()
+            ? item.id
+            : `hl-${idx}-${Math.random().toString(36).slice(2, 8)}`,
+          text: item.text,
+          start,
+          end,
+          createdAt: Number.isFinite(item.createdAt) ? Number(item.createdAt) : now,
+          updatedAt: Number.isFinite(item.updatedAt) ? Number(item.updatedAt) : now,
+        } satisfies ReaderHighlight;
+      })
+      .filter((item): item is ReaderHighlight => Boolean(item && item.text.trim()));
+  } catch {
+    return [];
+  }
 }
 
-function saveHighlights(slug: string, list: string[]): void {
+function saveHighlights(slug: string, list: ReaderHighlight[]): void {
   try { localStorage.setItem(HL_KEY(slug), JSON.stringify(list)); } catch { /* noop */ }
 }
 
@@ -40,6 +84,7 @@ function loadNotes(slug: string): ReaderNote[] {
         id: item.id,
         text: item.text,
         note: typeof item.note === 'string' ? item.note : '',
+        highlightId: typeof item.highlightId === 'string' && item.highlightId.trim() ? item.highlightId : undefined,
         createdAt: Number.isFinite(item.createdAt) ? item.createdAt : Date.now(),
         updatedAt: Number.isFinite(item.updatedAt) ? item.updatedAt : Date.now(),
       }));
@@ -56,56 +101,130 @@ function saveNotes(slug: string, notes: ReaderNote[]): void {
   }
 }
 
-/**
- * Caminha pelos nós de texto do elemento e envolve cada ocorrência de `text`
- * num <mark data-hl> com a classe dourada. Case-insensitive.
- */
-function applyHighlightToDOM(root: HTMLElement, text: string): void {
-  if (!text.trim()) return;
-  const lower = text.toLowerCase();
+type SelectionAnchor = {
+  start: number;
+  end: number;
+  text: string;
+};
 
+function getTextNodes(root: HTMLElement): Text[] {
+  const nodes: Text[] = [];
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode: (node) => {
-      const p = node.parentElement;
-      if (!p || p.tagName === 'MARK' || p.closest('button, input, textarea')) {
-        return NodeFilter.FILTER_REJECT;
-      }
+      const parent = node.parentElement;
+      if (!parent) return NodeFilter.FILTER_REJECT;
+      if (parent.closest('button, input, textarea, [data-note-indicator]')) return NodeFilter.FILTER_REJECT;
       return NodeFilter.FILTER_ACCEPT;
     },
   });
 
-  const toWrap: { node: Text; idx: number }[] = [];
-  let node: Node | null;
-  while ((node = walker.nextNode())) {
-    const textNode = node as Text;
-    const idx = textNode.textContent?.toLowerCase().indexOf(lower) ?? -1;
-    if (idx !== -1) toWrap.push({ node: textNode, idx });
-  }
+  let current: Node | null;
+  while ((current = walker.nextNode())) nodes.push(current as Text);
+  return nodes;
+}
 
-  // Process in reverse so insertions don't shift indices
-  for (let i = toWrap.length - 1; i >= 0; i--) {
-    const { node: textNode, idx } = toWrap[i]!;
-    const content = textNode.textContent ?? '';
-    const parent = textNode.parentNode;
-    if (!parent) continue;
-
-    const before = document.createTextNode(content.slice(0, idx));
-    const mark = document.createElement('mark');
-    mark.setAttribute('data-hl', text);
-    mark.style.cssText =
-      'background:rgba(212,175,55,0.35);color:inherit;border-radius:3px;padding:0 2px;cursor:pointer;';
-    mark.textContent = content.slice(idx, idx + text.length);
-    const after = document.createTextNode(content.slice(idx + text.length));
-
-    parent.replaceChild(after, textNode);
-    parent.insertBefore(mark, after);
-    parent.insertBefore(before, mark);
+function selectionBoundaryOffset(root: HTMLElement, container: Node, offset: number): number | null {
+  try {
+    const range = document.createRange();
+    range.selectNodeContents(root);
+    range.setEnd(container, offset);
+    const fragment = range.cloneContents();
+    return fragment.textContent?.length ?? 0;
+  } catch {
+    return null;
   }
 }
 
-/** Remove todos os <mark data-hl> e restaura o texto plano */
+function getSelectionAnchor(root: HTMLElement, range: Range, text: string): SelectionAnchor | null {
+  const start = selectionBoundaryOffset(root, range.startContainer, range.startOffset);
+  const end = selectionBoundaryOffset(root, range.endContainer, range.endOffset);
+  if (start === null || end === null) return null;
+  const from = Math.min(start, end);
+  const to = Math.max(start, end);
+  if (to <= from) return null;
+  return { start: from, end: to, text };
+}
+
+function resolveLegacyOffsets(root: HTMLElement, text: string): { start: number; end: number } | null {
+  if (!text.trim()) return null;
+  const source = root.textContent ?? '';
+  const at = source.toLowerCase().indexOf(text.toLowerCase());
+  if (at < 0) return null;
+  return { start: at, end: at + text.length };
+}
+
+function applyHighlightToDOM(
+  root: HTMLElement,
+  highlight: ReaderHighlight,
+  note?: ReaderNote,
+): void {
+  const rawText = highlight.text.trim();
+  if (!rawText) return;
+
+  const fallback = resolveLegacyOffsets(root, rawText);
+  const start = highlight.start >= 0 ? highlight.start : (fallback?.start ?? -1);
+  const end = highlight.end > start ? highlight.end : (fallback?.end ?? -1);
+  if (start < 0 || end <= start) return;
+
+  const nodes = getTextNodes(root);
+  let position = 0;
+  const segments: Array<{ node: Text; from: number; to: number }> = [];
+
+  for (const node of nodes) {
+    const content = node.textContent ?? '';
+    const nodeStart = position;
+    const nodeEnd = position + content.length;
+    const segStart = Math.max(start, nodeStart);
+    const segEnd = Math.min(end, nodeEnd);
+    if (segEnd > segStart) {
+      segments.push({
+        node,
+        from: segStart - nodeStart,
+        to: segEnd - nodeStart,
+      });
+    }
+    position = nodeEnd;
+    if (position >= end) break;
+  }
+
+  if (!segments.length) return;
+
+  const marks: HTMLElement[] = [];
+  for (let i = segments.length - 1; i >= 0; i -= 1) {
+    const segment = segments[i];
+    if (!segment.node.parentNode) continue;
+    const range = document.createRange();
+    range.setStart(segment.node, segment.from);
+    range.setEnd(segment.node, segment.to);
+
+    const mark = document.createElement('mark');
+    mark.setAttribute('data-hl-id', highlight.id);
+    mark.setAttribute('data-hl', highlight.text);
+    mark.style.cssText =
+      'background:rgba(212,175,55,0.35);color:inherit;border-radius:3px;padding:0 2px;cursor:pointer;';
+    range.surroundContents(mark);
+    marks.push(mark);
+  }
+
+  const firstMark = marks[0];
+  if (!firstMark || !note || !note.note.trim()) return;
+  const parent = firstMark.parentNode;
+  if (!parent) return;
+
+  const indicator = document.createElement('button');
+  indicator.type = 'button';
+  indicator.setAttribute('data-note-indicator', 'true');
+  indicator.setAttribute('data-note-id', note.id);
+  indicator.setAttribute('aria-label', 'Abrir nota deste trecho');
+  indicator.style.cssText =
+    'display:inline-block;vertical-align:super;width:8px;height:8px;margin-left:4px;border-radius:999px;background:#D4AF37;border:1px solid rgba(245,215,110,0.8);box-shadow:0 0 0 1px rgba(0,0,0,0.15);cursor:pointer;padding:0;line-height:0;';
+  firstMark.after(indicator);
+}
+
+/** Remove todos os destaques e indicadores inline e restaura o texto plano */
 function clearHighlightsFromDOM(root: HTMLElement): void {
-  root.querySelectorAll('mark[data-hl]').forEach((mark) => {
+  root.querySelectorAll('[data-note-indicator]').forEach((indicator) => indicator.remove());
+  root.querySelectorAll('mark[data-hl-id], mark[data-hl]').forEach((mark) => {
     const parent = mark.parentNode;
     if (!parent) return;
     parent.replaceChild(document.createTextNode(mark.textContent ?? ''), mark);
@@ -257,12 +376,14 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
   );
 
   // ── Highlight state ────────────────────────────────────────────────────────
-  const [highlights, setHighlights] = useState<string[]>(() => loadHighlights(slug));
+  const [highlights, setHighlights] = useState<ReaderHighlight[]>(() => loadHighlights(slug));
   const [notes, setNotes] = useState<ReaderNote[]>(() => loadNotes(slug));
   const [selPopup, setSelPopup] = useState<{ x: number; y: number; text: string } | null>(null);
-  const [rmPopup, setRmPopup] = useState<{ x: number; y: number; text: string } | null>(null);
+  const [rmPopup, setRmPopup] = useState<{ x: number; y: number; id: string; text: string } | null>(null);
+  const [notePopup, setNotePopup] = useState<{ x: number; y: number; note: ReaderNote } | null>(null);
   const [isMarkupMode, setIsMarkupMode] = useState(false);
   const [selectionText, setSelectionText] = useState<string | null>(null);
+  const [selectionAnchor, setSelectionAnchor] = useState<SelectionAnchor | null>(null);
   const [isNotesPanelOpen, setIsNotesPanelOpen] = useState(false);
   const [isNoteEditorOpen, setIsNoteEditorOpen] = useState(false);
   const [noteSelectionText, setNoteSelectionText] = useState<string | null>(null);
@@ -274,7 +395,9 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
   const clearMarkupSelection = useCallback(() => {
     setSelPopup(null);
     setRmPopup(null);
+    setNotePopup(null);
     setSelectionText(null);
+    setSelectionAnchor(null);
     window.getSelection()?.removeAllRanges();
   }, []);
 
@@ -291,7 +414,9 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
     setNotes(loadNotes(slug));
     setSelPopup(null);
     setRmPopup(null);
+    setNotePopup(null);
     setSelectionText(null);
+    setSelectionAnchor(null);
     setIsNoteEditorOpen(false);
     setNoteSelectionText(null);
     setNoteDraft('');
@@ -493,10 +618,14 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
     const el = contentBodyRef.current;
     if (!el) return;
     clearHighlightsFromDOM(el);
-    highlights.forEach((hl) => applyHighlightToDOM(el, hl));
+    highlights.forEach((hl) => {
+      const relatedNote = notes.find((note) => note.highlightId === hl.id)
+        || notes.find((note) => !note.highlightId && note.text.trim() === hl.text.trim());
+      applyHighlightToDOM(el, hl, relatedNote);
+    });
   // parsedContent included so highlights re-apply when content changes
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlights, parsedContent]);
+  }, [highlights, notes, parsedContent]);
 
   // ── Selection → popup ──────────────────────────────────────────────────────
   const showSelectionPopup = useCallback(() => {
@@ -525,7 +654,10 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
 
       const rect = range.getBoundingClientRect();
       if (!rect || (rect.width === 0 && rect.height === 0)) return;
-      setSelectionText(text);
+      const anchor = getSelectionAnchor(root, range, text);
+      if (!anchor) return;
+      setSelectionText(anchor.text);
+      setSelectionAnchor(anchor);
       if (isMarkupMode || isCoarsePointer) {
         setSelPopup(null);
         if (isCoarsePointer && !isMarkupMode) {
@@ -539,9 +671,10 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
           }, 2000);
         }
       } else {
-        setSelPopup({ x: rect.left + rect.width / 2, y: rect.top - 8, text });
+        setSelPopup({ x: rect.left + rect.width / 2, y: rect.top - 8, text: anchor.text });
       }
       setRmPopup(null);
+      setNotePopup(null);
     }, 0);
   }, [isCoarsePointer, isMarkupMode, isNoteEditorOpen]);
 
@@ -556,48 +689,84 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
   // ── Click on a <mark> → show remove popup ─────────────────────────────────
   const handleContentClick = useCallback((e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    if (target.tagName !== 'MARK') { setRmPopup(null); return; }
-    const hl = target.getAttribute('data-hl');
-    if (!hl) return;
+    if (target.hasAttribute('data-note-indicator')) {
+      const noteId = target.getAttribute('data-note-id');
+      const note = notes.find((item) => item.id === noteId);
+      if (!note) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const rect = target.getBoundingClientRect();
+      setNotePopup({ x: rect.left + rect.width / 2, y: rect.top - 6, note });
+      setSelPopup(null);
+      setRmPopup(null);
+      return;
+    }
+
+    if (target.tagName !== 'MARK') {
+      setRmPopup(null);
+      setNotePopup(null);
+      return;
+    }
+
+    const hlId = target.getAttribute('data-hl-id');
+    const hlText = target.getAttribute('data-hl');
+    if (!hlId || !hlText) return;
     e.stopPropagation();
     const rect = target.getBoundingClientRect();
-    setRmPopup({ x: rect.left + rect.width / 2, y: rect.top + window.scrollY - 8, text: hl });
+    setRmPopup({ x: rect.left + rect.width / 2, y: rect.top + window.scrollY - 8, id: hlId, text: hlText });
     setSelPopup(null);
-  }, []);
+    setNotePopup(null);
+  }, [notes]);
 
   const handleContentTouchStart = useCallback((e: React.TouchEvent) => {
     const target = e.target as HTMLElement;
     if (target.tagName !== 'MARK') return;
     const hl = target.getAttribute('data-hl');
-    if (!hl) return;
+    const hlId = target.getAttribute('data-hl-id');
+    if (!hl || !hlId) return;
     const rect = target.getBoundingClientRect();
-    setRmPopup({ x: rect.left + rect.width / 2, y: rect.top - 8, text: hl });
+    setRmPopup({ x: rect.left + rect.width / 2, y: rect.top - 8, id: hlId, text: hl });
     setSelPopup(null);
+    setNotePopup(null);
   }, []);
 
   // ── Add / remove highlight helpers ─────────────────────────────────────────
   const addHighlight = useCallback(() => {
-    const text = selectionText || selPopup?.text;
-    if (!text) return;
+    const anchor = selectionAnchor;
+    if (!anchor?.text.trim()) return;
     setHighlights((prev) => {
-      if (prev.includes(text)) return prev;
-      const next = [...prev, text];
+      const alreadyExists = prev.some((item) =>
+        item.start === anchor.start
+        && item.end === anchor.end
+        && item.text.trim() === anchor.text.trim(),
+      );
+      if (alreadyExists) return prev;
+      const now = Date.now();
+      const next = [
+        ...prev,
+        {
+          id: `${now}-${Math.random().toString(36).slice(2, 8)}`,
+          text: anchor.text,
+          start: anchor.start,
+          end: anchor.end,
+          createdAt: now,
+          updatedAt: now,
+        },
+      ];
       saveHighlights(slug, next);
       return next;
     });
-    setSelPopup(null);
-    setSelectionText(null);
-    window.getSelection()?.removeAllRanges();
-  }, [selectionText, selPopup, slug]);
+    clearMarkupSelection();
+  }, [clearMarkupSelection, selectionAnchor, slug]);
 
   const startNoteEditor = useCallback(() => {
-    const text = selectionText || selPopup?.text;
+    const text = selectionAnchor?.text || selectionText || selPopup?.text;
     if (!text) return;
     setEditingNoteId(null);
     setNoteDraft('');
     setNoteSelectionText(text);
     setIsNoteEditorOpen(true);
-  }, [selectionText, selPopup]);
+  }, [selectionAnchor, selectionText, selPopup]);
 
   const openNoteForEdit = useCallback((note: ReaderNote) => {
     setEditingNoteId(note.id);
@@ -609,13 +778,43 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
   }, []);
 
   const saveNoteFromSelection = useCallback(() => {
-    const text = (noteSelectionText || selectionText || selPopup?.text || '').trim();
+    const text = (noteSelectionText || selectionAnchor?.text || selectionText || selPopup?.text || '').trim();
     const noteText = noteDraft.trim();
     if (!text || !noteText) return;
 
+    let ensuredHighlightId: string | undefined;
     setHighlights((prev) => {
-      if (prev.includes(text)) return prev;
-      const next = [...prev, text];
+      const noteBeingEdited = editingNoteId ? notes.find((item) => item.id === editingNoteId) : null;
+      const highlightFromEditedNote = noteBeingEdited?.highlightId
+        ? prev.find((item) => item.id === noteBeingEdited.highlightId)
+        : null;
+      const highlightFromText = prev.find((item) => item.text.trim() === text && item.start >= 0 && item.end > item.start) || null;
+      const anchor = selectionAnchor || highlightFromEditedNote || highlightFromText || null;
+
+      if (!anchor) return prev;
+
+      const start = anchor.start;
+      const end = anchor.end;
+      const existing = prev.find((item) =>
+        item.start === start
+        && item.end === end
+        && item.text.trim() === text,
+      );
+      if (existing) {
+        ensuredHighlightId = existing.id;
+        return prev;
+      }
+      const now = Date.now();
+      const created: ReaderHighlight = {
+        id: `${now}-${Math.random().toString(36).slice(2, 8)}`,
+        text,
+        start,
+        end,
+        createdAt: now,
+        updatedAt: now,
+      };
+      ensuredHighlightId = created.id;
+      const next = [...prev, created];
       saveHighlights(slug, next);
       return next;
     });
@@ -635,25 +834,41 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
           id: `${now}-${Math.random().toString(36).slice(2, 8)}`,
           text,
           note: noteText,
+          highlightId: ensuredHighlightId,
           createdAt: now,
           updatedAt: now,
         };
         next = [item, ...prev];
+      }
+      if (existingIndex >= 0) {
+        next = next.map((item, index) => (
+          index === existingIndex
+            ? { ...item, highlightId: ensuredHighlightId || item.highlightId, updatedAt: now }
+            : item
+        ));
       }
       saveNotes(slug, next);
       return next;
     });
 
     closeNoteEditor();
-  }, [closeNoteEditor, editingNoteId, noteDraft, noteSelectionText, selectionText, selPopup, slug]);
+  }, [closeNoteEditor, editingNoteId, noteDraft, noteSelectionText, notes, selectionAnchor, selectionText, selPopup, slug]);
 
-  const removeHighlight = useCallback((text: string) => {
+  const removeHighlight = useCallback((id: string) => {
     setHighlights((prev) => {
-      const next = prev.filter((h) => h !== text);
+      const next = prev.filter((h) => h.id !== id);
       saveHighlights(slug, next);
       return next;
     });
+    setNotes((prev) => {
+      const next = prev.map((note) => (
+        note.highlightId === id ? { ...note, highlightId: undefined } : note
+      ));
+      saveNotes(slug, next);
+      return next;
+    });
     setRmPopup(null);
+    setNotePopup(null);
   }, [slug]);
 
   const removeNote = useCallback((id: string) => {
@@ -662,24 +877,28 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
       saveNotes(slug, next);
       return next;
     });
+    setNotePopup((current) => (current?.note.id === id ? null : current));
   }, [slug]);
 
-  const jumpToHighlightedText = useCallback((text: string) => {
+  const jumpToHighlightedText = useCallback((note: ReaderNote) => {
     const root = contentBodyRef.current;
     if (!root) return;
-    const target = Array.from(root.querySelectorAll('mark[data-hl]')).find(
-      (item) => (item as HTMLElement).getAttribute('data-hl') === text,
+    const selectorById = note.highlightId ? `mark[data-hl-id="${note.highlightId}"]` : '';
+    const targetById = selectorById ? root.querySelector(selectorById) as HTMLElement | null : null;
+    const target = targetById || Array.from(root.querySelectorAll('mark[data-hl]')).find(
+      (item) => (item as HTMLElement).getAttribute('data-hl')?.trim() === note.text.trim(),
     ) as HTMLElement | undefined;
     if (!target) return;
     target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setIsNotesPanelOpen(false);
+    setNotePopup(null);
   }, []);
 
   // Close popups on scroll
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const hide = () => { setSelPopup(null); setRmPopup(null); };
+    const hide = () => { setSelPopup(null); setRmPopup(null); setNotePopup(null); };
     el.addEventListener('scroll', hide, { passive: true });
     return () => el.removeEventListener('scroll', hide);
   }, []);
@@ -784,7 +1003,10 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
           </button>
 
           <button
-            onClick={() => setIsNotesPanelOpen(true)}
+            onClick={() => {
+              setNotePopup(null);
+              setIsNotesPanelOpen(true);
+            }}
             className={`relative w-10 h-10 rounded-xl flex items-center justify-center transition-all active:scale-90 ${
               theme === 'dark'
                 ? 'bg-surface-container-highest text-primary'
@@ -845,7 +1067,10 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
               Destacar + Nota
             </button>
             <button
-              onClick={() => setIsNotesPanelOpen(true)}
+              onClick={() => {
+                setNotePopup(null);
+                setIsNotesPanelOpen(true);
+              }}
               className={`inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-full border ${
                 theme === 'dark'
                   ? 'bg-surface-container-high text-on-surface border-white/15'
@@ -1010,13 +1235,42 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
           style={{ left: rmPopup.x, top: rmPopup.y }}
         >
           <button
-            onMouseDown={(e) => { e.preventDefault(); removeHighlight(rmPopup.text); }}
+            onMouseDown={(e) => { e.preventDefault(); removeHighlight(rmPopup.id); }}
             className="flex items-center gap-1.5 bg-surface-container-high text-on-surface-variant text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-full shadow-2xl border border-white/10 active:scale-95 transition-transform"
           >
             <Trash2 size={12} />
             Remover destaque
           </button>
           <div className="w-2.5 h-2.5 bg-surface-container-high rotate-45 mx-auto -mt-1.5 border-r border-b border-white/10" />
+        </div>
+      )}
+
+      {notePopup && (
+        <div
+          className="fixed z-[10012] -translate-x-1/2 -translate-y-full pointer-events-auto max-w-xs"
+          style={{ left: notePopup.x, top: notePopup.y }}
+        >
+          <div className={`rounded-xl border px-3 py-2 shadow-2xl ${
+            theme === 'dark'
+              ? 'bg-surface-container border-white/15 text-on-surface'
+              : theme === 'sepia'
+                ? 'bg-[#f4ecd8] border-[#433422]/25 text-[#433422]'
+                : 'bg-white border-slate-300 text-slate-900'
+          }`}>
+            <p className={`text-[11px] leading-relaxed line-clamp-3 ${theme === 'dark' ? 'text-on-surface-variant' : 'text-current/80'}`}>
+              “{notePopup.note.text}”
+            </p>
+            <p className="mt-1.5 text-xs leading-relaxed whitespace-pre-wrap">
+              {notePopup.note.note}
+            </p>
+          </div>
+          <div className={`w-2.5 h-2.5 rotate-45 mx-auto -mt-1.5 border-r border-b ${
+            theme === 'dark'
+              ? 'bg-surface-container border-white/15'
+              : theme === 'sepia'
+                ? 'bg-[#f4ecd8] border-[#433422]/25'
+                : 'bg-white border-slate-300'
+          }`} />
         </div>
       )}
 
@@ -1131,7 +1385,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
                     }`}
                   >
                     <button
-                      onClick={() => jumpToHighlightedText(item.text)}
+                      onClick={() => jumpToHighlightedText(item)}
                       className={`w-full text-left text-xs font-semibold leading-relaxed line-clamp-3 ${
                         theme === 'dark' ? 'text-on-surface-variant hover:text-primary' : 'hover:text-primary'
                       }`}

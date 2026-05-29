@@ -17,66 +17,66 @@ image: /image/babel/o catecismo de hollywood.webp
 
 ## ÍNDICE
 
-**Introdução: A Sétima Arte como Catequese Invertida** (1.200 palavras)
+**Introdução: A Sétima Arte como Catequese Invertida**
 
-**Capítulo 1 — Cinema como Ferramenta de Engenharia Social** (2.500 palavras)  
+**Capítulo 1 — Cinema como Ferramenta de Engenharia Social**  
 1.1 Edward Bernays, Walter Lippmann e a manufatura do consentimento  
 1.2 Como Hollywood se tornou o braço cultural do Império  
 1.3 Os grandes estúdios, as famílias fundadoras e as conexões com o sistema  
 1.4 O roteirista como profeta: fontes privilegiadas e think tanks
 
-**Capítulo 2 — Contagion (2011): A Pandemia que Veio do Roteiro** (2.500 palavras)  
+**Capítulo 2 — Contagion (2011): A Pandemia que Veio do Roteiro**  
 2.1 Sinopse e consultoria técnica (CDC, OMS)  
 2.2 O roteiro: morcego → porco → cozinheiro → pandemia global  
 2.3 As soluções propostas: lockdown, vacina rápida, desinformação  
 2.4 A recepção crítica e o relançamento em 2020 como "material educativo"  
 2.5 O que o filme previu com precisão e o que acertou por acaso
 
-**Capítulo 3 — The Matrix (1999): A Gnose Tecnológica** (2.800 palavras)  
+**Capítulo 3 — The Matrix (1999): A Gnose Tecnológica**  
 3.1 O mundo como simulação controlada por inteligências hostis  
 3.2 A "pílula vermelha" como símbolo de despertar (cooptado pela alt-right)  
 3.3 Gnosticismo, Baudrillard e a filosofia oculta por trás do roteiro  
 3.4 O metaverso anunciado 25 anos antes  
 3.5 A pergunta que o filme faz: "o que é real?"
 
-**Capítulo 4 — Ex Machina (2014) e Her (2013): A IA como Divindade** (2.200 palavras)  
+**Capítulo 4 — Ex Machina (2014) e Her (2013): A IA como Divindade**  
 4.1 A inteligência artificial consciente como novo deus  
 4.2 A sedução emocional da IA (Her)  
 4.3 O engano e a rebelião da IA (Ex Machina)  
 4.4 O paralelo com o transhumanismo de Kurzweil e Harari  
 4.5 A preparação para aceitar a IA como "salvadora" ou "juíza"
 
-**Capítulo 5 — Black Mirror (2011- ): O Manual do Futuro em Episódios** (2.800 palavras)  
+**Capítulo 5 — Black Mirror (2011- ): O Manual do Futuro em Episódios**  
 5.1 A série como "documentário do futuro" (Charlie Brooker)  
 5.2 Episódios que se tornaram realidade: ratings sociais, implantes de memória, IA emocional  
 5.3 A normalização da vigilância e do controle  
 5.4 "San Junipero": a vida eterna digital como paraíso secular  
 5.5 "Nosedive": o sistema de pontuação social (já existente na China)
 
-**Capítulo 6 — Avatar (2009): O Culto a Gaia em 3D** (2.200 palavras)  
+**Capítulo 6 — Avatar (2009): O Culto a Gaia em 3D**  
 6.1 O filme mais caro da história como catecismo pagão  
 6.2 Eywa: a deusa-planeta que conecta todas as formas de vida  
 6.3 A humanidade como vilã exploradora; os Na'vi como nobres selvagens  
 6.4 A mensagem ambientalista como religião global  
 6.5 Avatar 2 e 3: o aprofundamento da mitologia Gaia
 
-**Capítulo 7 — Apocalipse na Tela: Guerra, Colapso e Pandemia** (2.800 palavras)  
+**Capítulo 7 — Apocalipse na Tela: Guerra, Colapso e Pandemia**  
 7.1 Guerra: *The Day After*, *Threads*, *Apocalypse Now* como preparação para a guerra nuclear (fria)  
 7.2 Colapso econômico: *The Big Short*, *Margin Call*, *Too Big to Fail* (pós-2008)  
 7.3 Pandemia: *Outbreak* (1995), *12 Monkeys* (1995), *I Am Legend* (2007) como prenúncios  
 7.4 O padrão: crise real → filme sobre crise → nova crise → filme sobre a nova crise
 
-**Capítulo 8 — Como Assistir a um Filme sem Ser Catequizado** (1.500 palavras)  
+**Capítulo 8 — Como Assistir a um Filme sem Ser Catequizado**  
 8.1 Os três filtros de evidência aplicados ao cinema  
 8.2 É pecado assistir a filmes "do mundo"? (não, mas é pecado ser manipulado)  
 8.3 A postura do remanescente: espectador crítico, não consumidor passivo  
 8.4 A contra-programação cristã: o cinema do remanescente
 
-**Conclusão: A Tela é o Púlpito, o Mundo é a Plateia** (1.200 palavras)
+**Conclusão: A Tela é o Púlpito, o Mundo é a Plateia**
 
-**Apêndice — Lista de Filmes com Elementos de Programação Preditiva (1990-2026)** (700 palavras)
+**Apêndice — Lista de Filmes com Elementos de Programação Preditiva (1990-2026)**
 
-**Referências e Fontes Primárias** (700 palavras)
+**Referências e Fontes Primárias**
 
 ---
 

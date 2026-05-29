@@ -42,6 +42,14 @@ const REFUTATION_THEMES: RefutationTheme[] = [
     accent: 'from-[#0b1f2f]/92 via-[#091523]/86 to-[#03070f]/90',
     signal: 'ALERTA::PADRAO',
   },
+  {
+    id: 'o-grande-engano',
+    label: 'O Grande Engano',
+    subtitle:
+      'O Grande Engano é a operação final do sistema de Belial: unificar a humanidade sob um governo único, uma religião global e uma falsa salvação, usando ciência secreta, ocultismo, programação preditiva e uma iminente falsa invasão alienígena.',
+    accent: 'from-[#2a1208]/92 via-[#1a0b06]/86 to-[#0a0402]/90',
+    signal: 'ENGANO::FINAL',
+  },
 ];
 
 const THEME_BY_ID = Object.fromEntries(REFUTATION_THEMES.map((theme) => [theme.id, theme])) as Record<string, RefutationTheme>;
