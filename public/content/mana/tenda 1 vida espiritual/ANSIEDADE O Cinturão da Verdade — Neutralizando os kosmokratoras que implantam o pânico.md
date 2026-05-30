@@ -3,9 +3,10 @@ title: "ANSIEDADE: O Cinturão da Verdade — Neutralizando os kosmokratoras que
 description: "Segundo ebook da trilogia da Tenda 1 (Vida Espiritual). Mostra como os kosmokratoras (dominadores) usam narrativas de medo, ideologias de catástrofe e notícias manipuladas para gerar ansiedade coletiva. Ensina a usar o cinturão da verdade da armadura de Deus para desmontar mentiras e viver em paz."
 seção: maná
 tenda: vida-espiritual
-category: batalha-espiritual
+date: "2026-05-30T09:02:00-03:00"
+category: ansiedade
 subseção: ansiedade
-image: "/image/mana/ansiedade-cinturao-verdade.webp"
+image: "/image/mana/ansiedade cinturao da verdade.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

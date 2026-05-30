@@ -3,9 +3,10 @@ title: "ANSIEDADE: A Raiz Celestial — Como os principados usam o medo para des
 description: "O primeiro ebook da trilogia da Tenda 1 (Vida Espiritual). Revela como os archas (principados) operam a ansiedade como arma de guerra cósmica para afastar o crente do trono da graça. Explica a diferença entre cuidado legítimo e peso demoníaco, e entrega a oração intercessória persistente como arma primária."
 seção: maná
 tenda: vida-espiritual
-category: batalha-espiritual
+date: "2026-05-30T09:00:00-03:00"
+category: ansiedade
 subseção: ansiedade
-image: "/image/mana/ansiedade-raiz-celestial.webp"
+image: "/image/mana/ansiedade raiz celestial.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

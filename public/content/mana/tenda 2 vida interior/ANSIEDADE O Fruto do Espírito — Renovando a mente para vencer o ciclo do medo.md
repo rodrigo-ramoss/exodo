@@ -3,9 +3,10 @@ title: "ANSIEDADE: O Fruto do Espírito — Renovando a mente para vencer o cicl
 description: "Terceiro ebook da trilogia da Tenda 2 (Vida Interior). Ensina a romper o ciclo vicioso entre ansiedade e carne, renovar a mente pela Palavra, e caminhar no fruto do Espírito – especialmente paz, alegria e domínio próprio – como antídoto permanente contra o medo."
 seção: maná
 tenda: vida-interior
-category: batalha-espiritual
+date: "2026-05-30T09:09:00-03:00"
+category: ansiedade
 subseção: ansiedade
-image: "/image/mana/ansiedade-fruto-espirito.webp"
+image: "/image/mana/ansiedade fruto do espirito.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

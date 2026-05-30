@@ -3,9 +3,10 @@ title: "ANSIEDADE: A Couraça da Justiça — O sangue do Cordeiro que silencia 
 description: "Terceiro ebook da trilogia da Tenda 1 (Vida Espiritual). Mostra como os archas (principados) acusam dia e noite, gerando culpa paralisante e ansiedade. Ensina a vestir a couraça da justiça imputada de Cristo para silenciar toda acusação e viver em liberdade."
 seção: maná
 tenda: vida-espiritual
-category: batalha-espiritual
+date: "2026-05-30T09:04:00-03:00"
+category: ansiedade
 subseção: ansiedade
-image: "/image/mana/ansiedade-couraca-justica.webp"
+image: "/image/mana/ansiedade couraca da justica.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

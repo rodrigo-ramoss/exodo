@@ -3,9 +3,10 @@ title: "ANSIEDADE: A Legião Interior — Como as hostes da maldade atormentam c
 description: "Primeiro ebook da trilogia da Tenda 2 (Vida Interior). Revela como os pneumatika tēs ponērias (hostes espirituais da maldade) atacam diretamente o corpo e a mente, causando ansiedade, pânico, pensamentos intrusivos e tormento. Ensina a usar o nome de Jesus e a espada do Espírito para libertação."
 seção: maná
 tenda: vida-interior
-category: batalha-espiritual
+date: "2026-05-30T09:06:00-03:00"
+category: ansiedade
 subseção: ansiedade
-image: "/image/mana/ansiedade-legiao-interior.webp"
+image: "/image/mana/ansiedade legiao  anterior.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*

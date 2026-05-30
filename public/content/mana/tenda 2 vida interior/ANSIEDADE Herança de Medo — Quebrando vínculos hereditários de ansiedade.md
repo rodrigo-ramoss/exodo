@@ -3,9 +3,10 @@ title: "ANSIEDADE: Herança de Medo — Quebrando vínculos hereditários de ans
 description: "Segundo ebook da trilogia da Tenda 2 (Vida Interior). Revela como as exousias (potestades) atacam famílias e linhagens, transmitindo ansiedade através de gerações por meio de maldições hereditárias e pactos ancestrais. Ensina a quebrar esses vínculos pela confissão identificatória (Daniel 9) e renúncia."
 seção: maná
 tenda: vida-interior
-category: batalha-espiritual
+date: "2026-05-30T09:08:00-03:00"
+category: ansiedade
 subseção: ansiedade
-image: "/image/mana/ansiedade-heranca-medo.webp"
+image: "/image/mana/ansiedade heranca do medo.webp"
 ---
 
 *Rodrigo Ramos — Voz do Deserto*
