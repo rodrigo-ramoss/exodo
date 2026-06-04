@@ -23,8 +23,6 @@ import Preacher from './components/Preacher';
 import Course from './components/Course';
 import { useAuth } from './state/AuthContext';
 
-const HIDE_LOGIN_GATE = true;
-
 const PATH_BY_SCREEN: Record<Screen, string> = {
   [Screen.HOME]: '/inicio',
   [Screen.PREACHER]: '/pregador',
@@ -98,7 +96,7 @@ const resolveScreenFromPath = (path: string) => {
 };
 
 export default function App() {
-  const { isSubscriber } = useAuth();
+  const { isSubscriber, checking } = useAuth();
   const [currentScreen, setCurrentScreen] = useState<Screen>(() => resolveScreenFromPath(window.location.pathname));
   const [transitionType, setTransitionType] = useState<'push' | 'none'>('none');
 
@@ -192,8 +190,17 @@ export default function App() {
     }
   };
 
-  // Ocultamento temporário da tela de login sem remover a implementação.
-  if (!HIDE_LOGIN_GATE && !isSubscriber) {
+  if (checking) {
+    return (
+      <div className="min-h-screen bg-background text-on-surface flex items-center justify-center px-6">
+        <p className="text-xs uppercase tracking-[0.2em] text-on-surface-variant/70">
+          Verificando acesso...
+        </p>
+      </div>
+    );
+  }
+
+  if (!isSubscriber) {
     return <LandingPage onEnter={() => {}} />;
   }
 

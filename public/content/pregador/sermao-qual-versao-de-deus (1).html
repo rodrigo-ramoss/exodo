@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qual Versão de Deus Eles Veem em Você?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --ink:        #0A0A0A;
+  --deep:       #0F0F0F;
+  --slate:      #161616;
+  --border:     #222;
+  --border-mid: #2E2E2E;
+  --gold:       #BF9B4A;
+  --gold-light: #D4B06A;
+  --gold-dim:   #7A6530;
+  --gold-glow:  rgba(191,155,74,0.07);
+  --amber:      #C8781A;
+  --amber-dim:  rgba(200,120,26,0.12);
+  --teal:       #2A7A6A;
+  --teal-dim:   rgba(42,122,106,0.12);
+  --crimson:    #7A1A1A;
+  --crimson-dim:rgba(122,26,26,0.15);
+  --text:       #CEC8B8;
+  --text-mid:   #928C7C;
+  --text-dim:   #585248;
+  --white:      #EEEAE0;
+}
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.5;
+}
+
+/* ── SIDEBAR ── */
+.sidenav {
+  position: fixed; left: 0; top: 0; bottom: 0; width: 220px;
+  background: var(--deep); border-right: 1px solid var(--border);
+  padding: 40px 0; display: flex; flex-direction: column;
+  z-index: 100; overflow-y: auto;
+}
+.sidenav-logo { padding: 0 24px 28px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+.sidenav-logo-series { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; color: var(--gold-dim); text-transform: uppercase; margin-bottom: 6px; }
+.sidenav-logo-title  { font-family: 'Cinzel', serif; font-size: 11px; color: var(--gold); line-height: 1.5; font-weight: 600; }
+.sidenav-label { padding: 0 24px 10px; font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; }
+.sidenav a {
+  display: block; padding: 10px 24px;
+  font-family: 'Cinzel', serif; font-size: 9.5px; letter-spacing: 1.5px;
+  color: var(--text-dim); text-decoration: none;
+  border-left: 2px solid transparent; transition: all 0.2s;
+  text-transform: uppercase; line-height: 1.5;
+}
+.sidenav a:hover, .sidenav a.active { color: var(--gold-light); border-left-color: var(--gold); background: var(--gold-glow); }
+.sidenav-footer {
+  margin-top: auto; padding: 24px 24px 0; border-top: 1px solid var(--border);
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; line-height: 1.8;
+}
+
+/* ── LAYOUT ── */
+.main { margin-left: 220px; min-height: 100vh; position: relative; z-index: 1; }
+
+/* ── HERO ── */
+.hero {
+  position: relative; min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 80px; overflow: hidden; border-bottom: 1px solid var(--border);
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 30% 30%, rgba(191,155,74,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 80% 70%, rgba(122,26,26,0.06) 0%, transparent 55%),
+    linear-gradient(170deg, #0A0A0A 0%, #0F0C08 60%, #0A0A0A 100%);
+}
+.hero-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 15% 20%, rgba(191,155,74,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 10%, rgba(191,155,74,0.2) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 70% 8%, rgba(191,155,74,0.35) 0%, transparent 100%),
+    radial-gradient(1px 1px at 88% 25%, rgba(191,155,74,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 20% 60%, rgba(191,155,74,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 45%, rgba(191,155,74,0.15) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 92% 55%, rgba(191,155,74,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 8% 85%, rgba(191,155,74,0.2) 0%, transparent 100%);
+}
+.hero-content { position: relative; z-index: 2; max-width: 780px; }
+.hero-number {
+  position: absolute; top: 60px; right: 40px;
+  font-family: 'Cinzel', serif; font-size: 160px; font-weight: 900;
+  color: rgba(191,155,74,0.05); line-height: 1; letter-spacing: -8px; pointer-events: none;
+}
+.hero-eyebrow { display: flex; align-items: center; gap: 16px; margin-bottom: 48px; }
+.hero-badge {
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3.5px;
+  color: var(--gold-dim); text-transform: uppercase;
+  border: 1px solid var(--border-mid); padding: 5px 14px; background: var(--gold-glow);
+}
+.hero-line { width: 60px; height: 1px; background: linear-gradient(90deg, var(--gold-dim), transparent); }
+.hero-vol  { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; }
+.hero-pretitle { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 22px; color: var(--gold-light); margin-bottom: 20px; }
+.hero h1 {
+  font-family: 'Cinzel', serif; font-size: clamp(32px, 4.5vw, 54px);
+  font-weight: 700; color: var(--white); line-height: 1.12; margin-bottom: 16px; letter-spacing: 0.5px;
+}
+.hero h1 em { font-style: normal; color: var(--gold-light); }
+.hero-subtitle { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--text-mid); font-style: italic; margin-bottom: 52px; max-width: 600px; line-height: 1.55; }
+.hero-meta { display: flex; gap: 32px; flex-wrap: wrap; }
+.hero-meta-item { display: flex; flex-direction: column; gap: 4px; border-left: 2px solid var(--gold-dim); padding-left: 14px; }
+.hero-meta-label { font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 2.5px; color: var(--text-dim); text-transform: uppercase; }
+.hero-meta-value { font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--gold-light); font-style: italic; }
+.hero-scroll-hint {
+  position: absolute; bottom: 36px; right: 80px;
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
+  color: var(--text-dim); text-transform: uppercase; display: flex; align-items: center; gap: 12px;
+}
+.hero-scroll-hint::after { content: ''; width: 40px; height: 1px; background: var(--text-dim); }
+
+/* ── SECTIONS ── */
+.section { padding: 80px; border-bottom: 1px solid var(--border); position: relative; }
+.section-label { display: flex; align-items: center; gap: 16px; margin-bottom: 48px; }
+.section-tag {
+  font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 3.5px;
+  color: var(--gold-dim); text-transform: uppercase;
+  border: 1px solid var(--border-mid); padding: 5px 14px; background: var(--gold-glow);
+}
+.section-tag-line { flex: 1; max-width: 48px; height: 1px; background: linear-gradient(90deg, var(--border-mid), transparent); }
+.section-number-bg {
+  position: absolute; top: 60px; right: 60px;
+  font-family: 'Cinzel', serif; font-size: 120px; font-weight: 900;
+  color: rgba(191,155,74,0.04); line-height: 1; pointer-events: none; letter-spacing: -4px;
+}
+.section-h2 { font-family: 'Cinzel', serif; font-size: clamp(20px, 2.8vw, 30px); font-weight: 700; color: var(--white); line-height: 1.25; margin-bottom: 12px; max-width: 680px; }
+.section-h2 em { font-style: normal; color: var(--gold-light); }
+.section-hook { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 20px; color: var(--text-mid); margin-bottom: 40px; max-width: 620px; line-height: 1.6; }
+
+/* ── VERSE ── */
+.verse {
+  background: linear-gradient(135deg, rgba(191,155,74,0.07) 0%, rgba(191,155,74,0.02) 100%);
+  border: 1px solid var(--border-mid); border-left: 3px solid var(--gold);
+  padding: 22px 28px; margin: 32px 0; max-width: 720px; position: relative;
+}
+.verse::before {
+  content: '"'; position: absolute; top: -20px; left: 20px;
+  font-family: 'Cormorant Garamond', serif; font-size: 80px;
+  color: var(--gold); opacity: 0.12; line-height: 1;
+}
+.verse-ref { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2.5px; color: var(--gold-dim); text-transform: uppercase; margin-bottom: 10px; display: block; }
+.verse-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 20px; color: var(--white); line-height: 1.65; }
+.verse-text strong { font-style: normal; color: var(--gold-light); font-weight: 600; }
+
+/* ── PROSE ── */
+.prose { max-width: 720px; margin-bottom: 24px; color: var(--text); font-size: 19px; line-height: 1.85; }
+.prose strong { color: var(--white); font-weight: 600; }
+.prose em { color: var(--gold-light); font-style: italic; }
+
+/* ── BULLETS ── */
+.points { list-style: none; max-width: 720px; margin: 20px 0 28px; }
+.points li {
+  position: relative; padding: 11px 0 11px 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 18.5px; color: var(--text); line-height: 1.7; display: block;
+}
+.points li:last-child { border-bottom: none; }
+.points li::before { content: '▸'; position: absolute; left: 0; top: 14px; color: var(--gold); font-size: 10px; line-height: 1; }
+.points li strong { color: var(--white); font-weight: 600; }
+.points li em     { color: var(--gold-light); font-style: italic; }
+
+/* ── DISTINCTION CARDS (crítica justa x injusta) ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 720px; margin: 28px 0; }
+.col-card { padding: 20px 22px; border: 1px solid var(--border-mid); }
+.col-card.just   { border-top: 3px solid var(--teal); background: var(--teal-dim); }
+.col-card.unjust { border-top: 3px solid var(--amber); background: var(--amber-dim); }
+.col-card-label { font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 10px; display: block; }
+.col-card.just   .col-card-label { color: #4AAFA0; }
+.col-card.unjust .col-card-label { color: #E09040; }
+.col-card-text { font-size: 16.5px; color: var(--text); line-height: 1.65; }
+.col-card-text strong { color: var(--white); }
+.col-card-example { font-size: 14.5px; color: var(--text-mid); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); line-height: 1.55; }
+
+/* ── CENTRAL IDEA ── */
+.central-idea {
+  background: linear-gradient(135deg, rgba(191,155,74,0.08) 0%, rgba(191,155,74,0.03) 100%);
+  border: 1px solid rgba(191,155,74,0.25); padding: 28px 32px; margin: 32px 0; max-width: 720px;
+}
+.central-idea-label { font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 3px; color: var(--gold-dim); text-transform: uppercase; margin-bottom: 10px; display: block; }
+.central-idea-text { font-family: 'Cormorant Garamond', serif; font-size: 21px; color: var(--gold-light); line-height: 1.65; font-style: italic; }
+
+/* ── IMPACT ── */
+.impact { max-width: 720px; margin: 28px 0; padding: 20px 26px; background: var(--crimson-dim); border: 1px solid rgba(122,26,26,0.4); border-left: 4px solid var(--crimson); }
+.impact-text { font-family: 'Cinzel', serif; font-size: 14px; color: var(--white); line-height: 1.65; letter-spacing: 0.3px; }
+
+/* ── NUMBERED EXAMPLES ── */
+.example-list { max-width: 720px; margin: 24px 0; display: flex; flex-direction: column; gap: 0; }
+.example-item {
+  display: flex; gap: 0; border: 1px solid var(--border-mid); border-top: none;
+}
+.example-item:first-child { border-top: 1px solid var(--border-mid); }
+.example-num {
+  width: 48px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700;
+  color: rgba(191,155,74,0.25); background: var(--slate); border-right: 1px solid var(--border-mid);
+}
+.example-body { padding: 16px 20px; font-size: 17px; color: var(--text); line-height: 1.65; }
+.example-body strong { color: var(--white); }
+.example-body em { color: var(--gold-light); font-style: italic; }
+
+/* ── SUBSECTION ── */
+.sub-h3 {
+  font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600;
+  color: var(--gold-light); letter-spacing: 1px;
+  margin: 44px 0 18px; display: flex; align-items: center; gap: 14px; max-width: 720px;
+}
+.sub-h3::before { content: ''; display: inline-block; width: 28px; height: 1px; background: var(--gold-dim); flex-shrink: 0; }
+
+/* ── DISTORTION CARDS ── */
+.distortion-list { max-width: 720px; margin: 24px 0; display: flex; flex-direction: column; gap: 0; }
+.distortion-item {
+  border: 1px solid var(--border-mid); border-top: none;
+  padding: 16px 20px 16px 20px;
+  display: grid; grid-template-columns: 180px 1fr;
+  gap: 0;
+}
+.distortion-item:first-child { border-top: 1px solid var(--border-mid); }
+.distortion-if {
+  padding-right: 20px; border-right: 1px solid var(--border-mid);
+  font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 1px;
+  color: var(--gold-light); display: flex; align-items: center; font-weight: 600;
+}
+.distortion-result { padding-left: 20px; }
+.distortion-consequence { font-size: 17px; color: var(--text); line-height: 1.6; margin-bottom: 6px; }
+.distortion-consequence strong { color: var(--white); }
+.distortion-eg { font-size: 15px; color: var(--text-mid); font-style: italic; line-height: 1.5; }
+
+/* ── TIAGO BLOCK ── */
+.mirror-block {
+  max-width: 720px; margin: 32px 0;
+  background: var(--slate); border: 1px solid var(--border-mid); border-left: 4px solid var(--gold-dim);
+  padding: 24px 28px;
+}
+.mirror-block-label { font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 3px; color: var(--gold-dim); text-transform: uppercase; margin-bottom: 10px; display: block; }
+.mirror-block-text { font-size: 17.5px; color: var(--text); line-height: 1.75; }
+.mirror-block-text strong { color: var(--white); }
+.mirror-block-text em { color: var(--gold-light); font-style: italic; }
+
+/* ── HIGHLIGHT QUOTE ── */
+.highlight-quote {
+  max-width: 720px; margin: 36px 0; padding: 32px 36px;
+  background: linear-gradient(135deg, rgba(122,26,26,0.12) 0%, rgba(191,155,74,0.05) 100%);
+  border: 1px solid rgba(122,26,26,0.3); text-align: center;
+}
+.highlight-quote-text { font-family: 'Cinzel', serif; font-size: clamp(14px, 1.8vw, 18px); color: var(--white); line-height: 1.7; letter-spacing: 0.3px; }
+.highlight-quote-text em { font-style: normal; color: var(--gold-light); }
+
+/* ── TRANSITION ── */
+.transition {
+  max-width: 720px; margin: 32px 0; padding: 18px 24px;
+  background: rgba(191,155,74,0.04); border: 1px solid var(--border-mid); border-left: 3px solid var(--gold-dim);
+  font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; color: var(--gold-light); line-height: 1.65;
+}
+
+/* ── RESTORATION STEPS ── */
+.restore-grid { max-width: 720px; margin: 28px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.restore-card { background: var(--slate); border: 1px solid var(--border-mid); border-bottom: 3px solid var(--gold-dim); padding: 22px 20px; }
+.restore-num { font-family: 'Cinzel', serif; font-size: 28px; font-weight: 900; color: rgba(191,155,74,0.2); line-height: 1; margin-bottom: 10px; }
+.restore-title { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 1.5px; color: var(--gold-light); text-transform: uppercase; margin-bottom: 10px; line-height: 1.4; }
+.restore-body { font-size: 16px; color: var(--text-mid); line-height: 1.65; }
+.restore-body strong { color: var(--text); }
+
+/* ── CONCLUSION QA ── */
+.qa-list { max-width: 720px; margin: 28px 0; display: flex; flex-direction: column; gap: 0; }
+.qa-item { border: 1px solid var(--border-mid); border-top: none; padding: 22px 24px; }
+.qa-item:first-child { border-top: 1px solid var(--border-mid); }
+.qa-ref { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2.5px; color: var(--gold-dim); text-transform: uppercase; margin-bottom: 6px; display: block; }
+.qa-question { font-family: 'Cinzel', serif; font-size: 13.5px; color: var(--white); line-height: 1.45; margin-bottom: 10px; font-weight: 600; }
+.qa-answer { font-size: 16.5px; color: var(--text-mid); line-height: 1.65; }
+.qa-answer strong { color: var(--text); }
+
+/* ── ECO ── */
+.eco { max-width: 720px; margin: 40px 0 0; padding: 18px 24px; border-top: 1px solid var(--border-mid); border-left: 1px solid var(--border-mid); }
+.eco-label { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; display: block; }
+.eco-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 17px; color: var(--text-mid); line-height: 1.7; }
+
+/* ── CONCLUSION BOX ── */
+.conclusion-box {
+  background: linear-gradient(135deg, rgba(191,155,74,0.08) 0%, rgba(122,26,26,0.05) 100%);
+  border: 1px solid rgba(191,155,74,0.2); padding: 44px 48px; max-width: 720px; margin-top: 44px; text-align: center;
+}
+.conclusion-symbol { font-size: 26px; color: var(--gold-dim); margin-bottom: 24px; display: block; letter-spacing: 8px; }
+.conclusion-text { font-family: 'Cinzel', serif; font-size: clamp(13px, 1.7vw, 16px); color: var(--gold-light); line-height: 1.8; font-weight: 600; letter-spacing: 0.3px; }
+
+/* ── REVEAL ── */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidenav { display: none; }
+  .main { margin-left: 0; }
+  .hero, .section { padding: 52px 24px; }
+  .hero-number { display: none; }
+  .two-col { grid-template-columns: 1fr; }
+  .distortion-item { grid-template-columns: 1fr; }
+  .distortion-if { border-right: none; border-bottom: 1px solid var(--border-mid); padding-right: 0; padding-bottom: 10px; margin-bottom: 10px; }
+  .restore-grid { grid-template-columns: 1fr; }
+  .conclusion-box { padding: 32px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="sidenav">
+  <div class="sidenav-logo">
+    <p class="sidenav-logo-series">Sermão Expositivo</p>
+    <p class="sidenav-logo-title">Romanos 2:24</p>
+  </div>
+  <p class="sidenav-label">Estrutura</p>
+  <a href="#intro">Introdução</a>
+  <a href="#parte1">1 · O Contexto</a>
+  <a href="#parte2">2 · A Pérola e a Lama</a>
+  <a href="#parte3">3 · Que Carta?</a>
+  <a href="#parte4">4 · A Versão Perfeita</a>
+  <a href="#parte5">5 · Restauração</a>
+  <a href="#conclusao">Conclusão</a>
+  <div class="sidenav-footer">
+    Rm 2:24 · Mt 7:6<br>Mt 13:45 · 2Co 3<br>Jo 14:9 · ~40 min
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- HERO -->
+<section class="hero" id="topo">
+  <div class="hero-bg"></div>
+  <div class="hero-number" aria-hidden="true">?</div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="hero-badge">Sermão Expositivo</span>
+      <span class="hero-line"></span>
+      <span class="hero-vol">Romanos 2:24</span>
+    </div>
+    <p class="hero-pretitle">A Pergunta que o Mundo Está Fazendo</p>
+    <h1>Qual Versão de Deus<br>Eles Veem <em>em Você?</em></h1>
+    <p class="hero-subtitle">Quando a vida do povo de Deus contradiz o Deus que confessa, o mundo não apenas rejeita o crente — passa a blasfemar contra o Deus que esse crente diz representar.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Texto-base</span>
+        <span class="hero-meta-value">Romanos 2:24</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Textos de apoio</span>
+        <span class="hero-meta-value">Mt 7:6 · Mt 13:45-46 · 2Co 3 · Jo 14:9</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Duração</span>
+        <span class="hero-meta-value">~40 minutos</span>
+      </div>
+    </div>
+  </div>
+  <span class="hero-scroll-hint">Role para começar</span>
+</section>
+
+
+<!-- INTRODUÇÃO -->
+<section class="section" id="intro">
+  <div class="section-number-bg" aria-hidden="true">00</div>
+  <div class="section-label">
+    <span class="section-tag">Introdução · 5 min</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">Paulo vira a lâmina —<br>o <em>acusador vira acusado</em></h2>
+  <p class="section-hook reveal">Em Romanos 1, Paulo denuncia os gentios. O ouvinte religioso concorda, acena, se sente do lado certo. Em Romanos 2, a lâmina vira.</p>
+
+  <ul class="points reveal">
+    <li>Este não é um sermão sobre o que o mundo faz contra a Igreja.</li>
+    <li>É um sermão sobre o que <strong>a Igreja faz contra o nome de Deus</strong>.</li>
+    <li>O acusador de Romanos 1 se torna o réu de Romanos 2.</li>
+  </ul>
+
+  <div class="impact reveal">
+    <p class="impact-text">"Nós gostamos de dizer que o mundo é porco porque pisa nas pérolas. Mas e quando somos nós que entregamos a Pérola coberta pela lama da nossa incoerência?"</p>
+  </div>
+</section>
+
+
+<!-- PARTE 1 -->
+<section class="section" id="parte1">
+  <div class="section-number-bg" aria-hidden="true">01</div>
+  <div class="section-label">
+    <span class="section-tag">Parte 1 · 8 min</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">O Contexto de Romanos 2:24 —<br><em>A Incoerência que Blasfema</em></h2>
+  <p class="section-hook reveal">O judeu de Romanos 2 é o religioso de todos os séculos: conhece a Lei, ensina a Lei, julga os outros — e pratica o que condena.</p>
+
+  <div class="verse reveal">
+    <span class="verse-ref">Romanos 2:24</span>
+    <p class="verse-text">"Porque, como está escrito, <strong>o nome de Deus é blasfemado entre os gentios por causa de vós.</strong>"</p>
+  </div>
+
+  <p class="prose reveal"><strong>Fluxo do texto:</strong></p>
+  <ul class="points reveal">
+    <li><strong>Rm 2:17-20</strong> — o judeu se apoia na Lei e se acha guia dos cegos.</li>
+    <li><strong>Rm 2:21-23</strong> — Paulo confronta: <em>"Tu que ensinas a outro, não te ensinas a ti mesmo?"</em></li>
+    <li><strong>Rm 2:24</strong> — conclusão: por causa disso, o nome de Deus é blasfemado.</li>
+  </ul>
+
+  <p class="prose reveal">O problema não é apenas reputacional — é <strong>teológico</strong>. A conduta do povo afetava a forma como as nações enxergavam Deus.</p>
+
+  <div class="sub-h3 reveal">Distinção necessária — nem toda crítica é blasfêmia</div>
+
+  <div class="two-col reveal">
+    <div class="col-card just">
+      <span class="col-card-label">✓ Crítica Justa</span>
+      <p class="col-card-text">O próprio crente deu ocasião — e a crítica é legítima.</p>
+      <p class="col-card-example">Pastor exposto por desvio de dinheiro. Crente que trata mal os funcionários e é denunciado pelos colegas.</p>
+    </div>
+    <div class="col-card unjust">
+      <span class="col-card-label">✕ Crítica Injusta</span>
+      <p class="col-card-text">O crente agiu bem — o problema é a hostilidade do mundo ao que é genuinamente santo.</p>
+      <p class="col-card-example">Ridicularizado por recusar bebida. Chamado de fanático por orar antes das refeições no trabalho.</p>
+    </div>
+  </div>
+
+  <div class="central-idea reveal">
+    <span class="central-idea-label">Frase-chave</span>
+    <p class="central-idea-text">Quando alguém fala mal de um crente por causa de sua fé genuína, toca no Deus que ele representa. Mas quando fala mal por causa da incoerência do crente, é o próprio crente que deu linguagem à blasfêmia.</p>
+  </div>
+</section>
+
+
+<!-- PARTE 2 -->
+<section class="section" id="parte2">
+  <div class="section-number-bg" aria-hidden="true">02</div>
+  <div class="section-label">
+    <span class="section-tag">Parte 2 · 10 min</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">A Pérola e a Lama —<br><em>Quem Profana o Santo?</em></h2>
+
+  <div class="verse reveal">
+    <span class="verse-ref">Mateus 7:6</span>
+    <p class="verse-text">"Não deis aos cães as coisas santas, <strong>nem lanceis aos porcos as vossas pérolas.</strong>"</p>
+  </div>
+
+  <p class="prose reveal">Sempre lemos esse texto como discernimento: não entregue o sagrado a quem quer destruir. Isso continua verdadeiro. Mas conectado a Romanos 2:24, a pergunta muda de direção — não é só o mundo que profana o santo. Nós podemos entregar Cristo coberto de lama pela nossa incoerência:</p>
+
+  <div class="example-list reveal">
+    <div class="example-item">
+      <div class="example-num">1</div>
+      <div class="example-body">O crente que prega amor nas redes e <strong>trata os de casa com desprezo</strong> — o vizinho vê os dois e tira a conclusão sobre Cristo.</div>
+    </div>
+    <div class="example-item">
+      <div class="example-num">2</div>
+      <div class="example-body">O líder que usa a linguagem do Evangelho para <strong>manipular e extrair dinheiro</strong> — Cristo é entregue embrulhado na ganância de quem diz servi-lo.</div>
+    </div>
+    <div class="example-item">
+      <div class="example-num">3</div>
+      <div class="example-body">O crente que vive em <strong>amargura crônica, sem paz e sem diferença</strong> visível — a mensagem que chega é que o Evangelho não funciona.</div>
+    </div>
+  </div>
+
+  <div class="verse reveal">
+    <span class="verse-ref">Mateus 13:45-46</span>
+    <p class="verse-text">"O Reino dos céus é semelhante ao negociante que busca boas pérolas; encontrando uma de grande valor, <strong>vende tudo o que tem e a compra.</strong>"</p>
+  </div>
+
+  <p class="prose reveal">Cristo é a Pérola de grande valor. O Evangelho não é barato. A graça não é comum. O nome de Deus não é enfeite religioso.</p>
+
+  <div class="impact reveal">
+    <p class="impact-text">A maior profanação não é apenas quando o mundo zomba de Cristo — é quando a vida do crente dá linguagem para essa zombaria.</p>
+  </div>
+
+  <p class="prose reveal">Três vidas que viram combustível para a zombaria:</p>
+
+  <div class="example-list reveal">
+    <div class="example-item">
+      <div class="example-num">1</div>
+      <div class="example-body">O crente que condena o pecado alheio publicamente e <strong>é encontrado no mesmo pecado</strong> em privado.</div>
+    </div>
+    <div class="example-item">
+      <div class="example-num">2</div>
+      <div class="example-body">O crente que faz negócio desonesto com o irmão e <strong>usa versículos para se defender</strong> quando confrontado.</div>
+    </div>
+    <div class="example-item">
+      <div class="example-num">3</div>
+      <div class="example-body">O crente que adora no domingo e na segunda trata o colega com <strong>frieza e arrogância</strong> — e o colega conclui: <em>"Deus não muda ninguém."</em></div>
+    </div>
+  </div>
+
+  <div class="mirror-block reveal">
+    <span class="mirror-block-label">O Espelho de Tiago · Tiago 1:23-24</span>
+    <p class="mirror-block-text">Tiago descreve algo perturbador: o homem que olha no espelho, vê seu rosto, vira as costas e <strong>imediatamente se esquece de como era</strong>. Ele usa essa imagem para quem ouve a Palavra mas não a pratica. O espelho existe — a imagem aparece — mas o olhar é rápido demais. O chamado não é apenas olhar para o espelho. É <em>demorar</em> no espelho. Deixar que a Palavra faça o que o espelho faz: mostrar o que está fora do lugar.</p>
+  </div>
+</section>
+
+
+<!-- PARTE 3 -->
+<section class="section" id="parte3">
+  <div class="section-number-bg" aria-hidden="true">03</div>
+  <div class="section-label">
+    <span class="section-tag">Parte 3 · 8 min</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">Que Carta Sua Vida<br>Está <em>Escrevendo</em>?</h2>
+
+  <div class="verse reveal">
+    <span class="verse-ref">2 Coríntios 3:2-3</span>
+    <p class="verse-text">"Vós sois a nossa carta, escrita em nossos corações, <strong>conhecida e lida por todos os homens.</strong>"</p>
+  </div>
+
+  <p class="prose reveal">Antes de ler a Bíblia, o mundo nos lê. Somos a única Bíblia que muitos leram na vida — jamais abrirão Mateus ou Romanos, mas abrirão nossas vidas todos os dias. O que estão lendo?</p>
+
+  <p class="prose reveal">Pense na diferença entre o <strong>reflexo</strong> e a <strong>caricatura</strong>: o reflexo é a imagem exata, fiel, sem distorção. A caricatura é um desenho que lembra o original, mas exagera um traço, apaga outro, deforma o que deveria ser fiel. Muita gente não conhece o Deus verdadeiro — conhece apenas a caricatura que o crente desenhou com a própria conduta.</p>
+
+  <div class="sub-h3 reveal">Distorções — que Deus estou apresentando?</div>
+
+  <div class="distortion-list reveal">
+    <div class="distortion-item">
+      <div class="distortion-if">Se sou cruel</div>
+      <div class="distortion-result">
+        <p class="distortion-consequence">Apresento um <strong>Deus carrasco</strong>.</p>
+        <p class="distortion-eg">Ex: expor o pecado alheio sem compaixão — quem vê aprende que Deus é fiscal, não Pai.</p>
+      </div>
+    </div>
+    <div class="distortion-item">
+      <div class="distortion-if">Se sou interesseiro</div>
+      <div class="distortion-result">
+        <p class="distortion-consequence">Apresento um <strong>Deus negociante</strong>.</p>
+        <p class="distortion-eg">Ex: aproximar-se das pessoas apenas quando precisa de algo — a fé parece moeda de troca.</p>
+      </div>
+    </div>
+    <div class="distortion-item">
+      <div class="distortion-if">Se sou frio</div>
+      <div class="distortion-result">
+        <p class="distortion-consequence">Apresento um <strong>Deus ausente</strong>.</p>
+        <p class="distortion-eg">Ex: passar pela dor do outro sem cuidado real — quem sofre aprende que esse Deus não se importa.</p>
+      </div>
+    </div>
+    <div class="distortion-item">
+      <div class="distortion-if">Se tolero o pecado</div>
+      <div class="distortion-result">
+        <p class="distortion-consequence">Apresento um <strong>Deus conivente</strong>.</p>
+        <p class="distortion-eg">Ex: normalizar a mentira pequena e ainda rir — o mundo conclui que esse Deus não tem santidade.</p>
+      </div>
+    </div>
+    <div class="distortion-item">
+      <div class="distortion-if">Se sou ansioso</div>
+      <div class="distortion-result">
+        <p class="distortion-consequence">Apresento um <strong>Deus impotente</strong>.</p>
+        <p class="distortion-eg">Ex: pregar que Deus supre e viver em pânico igual a quem nunca orou — a fé precisa aparecer no meio da dificuldade.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-quote reveal">
+    <p class="highlight-quote-text">Muita gente não rejeitou o Deus verdadeiro.<br>Rejeitou a <em>caricatura de Deus</em> que viu em nós.</p>
+  </div>
+</section>
+
+
+<!-- PARTE 4 -->
+<section class="section" id="parte4">
+  <div class="section-number-bg" aria-hidden="true">04</div>
+  <div class="section-label">
+    <span class="section-tag">Parte 4 · 5 min</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">A Única Versão Perfeita —<br><em>Jesus e o Pai</em></h2>
+
+  <div class="verse reveal">
+    <span class="verse-ref">João 14:9</span>
+    <p class="verse-text">"<strong>Quem me vê a mim vê o Pai.</strong>"</p>
+  </div>
+
+  <p class="prose reveal">Jesus não apresentou uma versão distorcida do Pai. Ele é a revelação perfeita: graça e verdade, santidade e misericórdia, justiça e amor — simultaneamente. O padrão não é o pregador famoso nem o influenciador gospel. É Cristo nos Evangelhos.</p>
+
+  <div class="verse reveal">
+    <span class="verse-ref">Romanos 8:29</span>
+    <p class="verse-text">"Porque os que de antemão conheceu, também os predestinou para <strong>serem conformes à imagem de seu Filho.</strong>"</p>
+  </div>
+
+  <p class="prose reveal">Ser parecido com Cristo não é meta do crente avançado — é a direção de toda vida regenerada. E Jesus nos deixou dois sinais inconfundíveis de quem verdadeiramente se parece com ele:</p>
+
+  <ul class="points reveal">
+    <li><strong>Fazer a vontade do Pai.</strong> <em>João 4:34</em> — "Meu mantimento é fazer a vontade daquele que me enviou." Obedecer não era fardo para Jesus — era alimento. O crente que parece com Cristo tem a obediência como estilo de vida, não como exceção.</li>
+    <li><strong>Ter a Palavra habitando dentro.</strong> <em>João 15:7</em> — "Se as minhas palavras permanecerem em vós…" A Palavra não é ferramenta de debate; é o alimento que forma o caráter e orienta a resposta a cada situação.</li>
+  </ul>
+
+  <div class="central-idea reveal">
+    <span class="central-idea-label">Frase Central</span>
+    <p class="central-idea-text">A única versão perfeita de Deus é Jesus. Toda vida cristã verdadeira é um processo de deixar essa imagem aparecer em nós.</p>
+  </div>
+</section>
+
+
+<!-- PARTE 5 -->
+<section class="section" id="parte5">
+  <div class="section-number-bg" aria-hidden="true">05</div>
+  <div class="section-label">
+    <span class="section-tag">Parte 5 · 4 min</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">A Imagem Pode Ser<br><em>Restaurada</em></h2>
+
+  <div class="verse reveal">
+    <span class="verse-ref">2 Coríntios 3:18</span>
+    <p class="verse-text">"Somos transformados de glória em glória na mesma imagem, <strong>como pelo Espírito do Senhor.</strong>"</p>
+  </div>
+
+  <p class="prose reveal">Romanos 2:24 confronta. Mateus 7:6 alerta. Mas 2 Coríntios 3:18 mostra o caminho. A restauração da imagem de Cristo não acontece por esforço de performance — acontece por quatro movimentos concretos:</p>
+
+  <div class="restore-grid reveal">
+    <div class="restore-card">
+      <p class="restore-num">01</p>
+      <p class="restore-title">Exposição contínua à Palavra</p>
+      <p class="restore-body">Você não pode refletir o que não contemplou. O espelho da Palavra precisa ser consultado diariamente — não como obrigação, mas como <strong>alinhamento de imagem</strong>.</p>
+    </div>
+    <div class="restore-card">
+      <p class="restore-num">02</p>
+      <p class="restore-title">Arrependimento real</p>
+      <p class="restore-body">Não choro de altar que não muda nada na segunda-feira. <strong>Arrependimento é mudança de direção</strong>: ir ao ofendido, devolver o que foi tomado, consertar o que foi dito.</p>
+    </div>
+    <div class="restore-card">
+      <p class="restore-num">03</p>
+      <p class="restore-title">Comunidade que cobra</p>
+      <p class="restore-body">Ninguém restaura sozinho. <em>Pv 27:17 — "O ferro com o ferro se aguça."</em> A Igreja existe para isso — <strong>não para cobrir falhas, mas para caminhar junto</strong>.</p>
+    </div>
+    <div class="restore-card">
+      <p class="restore-num">04</p>
+      <p class="restore-title">Rendição ao Espírito</p>
+      <p class="restore-body">A transformação é <em>"como pelo Espírito"</em> — não pela vontade própria. <strong>Ceder ao Espírito nas situações pequenas</strong>: no tom, na resposta, na honestidade quando ninguém vê.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- CONCLUSÃO -->
+<section class="section" id="conclusao">
+  <div class="section-number-bg" aria-hidden="true">✝</div>
+  <div class="section-label">
+    <span class="section-tag">Conclusão · 3 min</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">Seis Perguntas —<br>um <em>Exame de Consciência</em></h2>
+  <p class="section-hook reveal">Cada texto do sermão deixa uma pergunta. Cada pergunta merece uma resposta honesta.</p>
+
+  <div class="qa-list reveal">
+    <div class="qa-item">
+      <span class="qa-ref">Romanos 2:24</span>
+      <p class="qa-question">Quando o mundo olha para você, glorifica a Deus ou blasfema de Deus?</p>
+      <p class="qa-answer">O mundo não espera perfeição do crente — espera <strong>diferença</strong>. Algo real, não apenas religioso.</p>
+    </div>
+    <div class="qa-item">
+      <span class="qa-ref">Mateus 7:6</span>
+      <p class="qa-question">Você está tratando o santo com reverência ou deixando ser pisado?</p>
+      <p class="qa-answer">O problema não é o mundo pisar — é quando <strong>somos nós que colocamos a Pérola no chão</strong> coberta de lama.</p>
+    </div>
+    <div class="qa-item">
+      <span class="qa-ref">Mateus 13:45-46</span>
+      <p class="qa-question">Cristo é realmente a Pérola de grande valor para você?</p>
+      <p class="qa-answer">Uma fé que <strong>não custa nada</strong> não convence ninguém de que vale tudo.</p>
+    </div>
+    <div class="qa-item">
+      <span class="qa-ref">2 Coríntios 3:2-3</span>
+      <p class="qa-question">Que carta sua vida está escrevendo diante dos homens?</p>
+      <p class="qa-answer">A carta não precisa ser perfeita — mas precisa ser <strong>verdadeira</strong>. Amargura ou esperança? Medo ou fé?</p>
+    </div>
+    <div class="qa-item">
+      <span class="qa-ref">João 14:9</span>
+      <p class="qa-question">O que Jesus revelou do Pai está aparecendo em você?</p>
+      <p class="qa-answer">Jesus acolheu o pródigo, chamou Zaqueu pelo nome, defendeu a adúltera sem aprovar o pecado. <strong>Essa imagem está aparecendo</strong> — ou o mundo está vendo outra coisa?</p>
+    </div>
+    <div class="qa-item">
+      <span class="qa-ref">Pergunta Final</span>
+      <p class="qa-question">As pessoas estão vendo em você um reflexo de Cristo — ou uma caricatura de Deus?</p>
+      <p class="qa-answer">Você não controla o que o mundo concluirá. Mas pode se certificar de que não é <strong>a sua incoerência</strong> que está colocando lama sobre a Pérola.</p>
+    </div>
+  </div>
+
+  <div class="conclusion-box reveal">
+    <span class="conclusion-symbol">✝</span>
+    <p class="conclusion-text">
+      "Assim resplandeça a vossa luz diante dos homens,<br>
+      para que vejam as vossas boas obras<br>
+      e <strong>glorifiquem a vosso Pai</strong>, que está nos céus."<br><br>
+      — Mateus 5:16
+    </p>
+  </div>
+
+  <div class="eco reveal">
+    <span class="eco-label">Frase de Encerramento</span>
+    <p class="eco-text">"Você não controla quem vai rejeitar Cristo. Mas precisa se certificar de que não é a sua incoerência que está colocando lama sobre a Pérola."</p>
+  </div>
+</section>
+
+</div>
+
+<script>
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.07 });
+reveals.forEach(el => observer.observe(el));
+
+const navLinks = document.querySelectorAll('.sidenav a');
+const navObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.sidenav a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('section[id]').forEach(s => navObserver.observe(s));
+</script>
+</body>
+</html>

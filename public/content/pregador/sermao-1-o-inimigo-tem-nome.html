@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sermão 1 — O Inimigo tem Nome, Patente e Território</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+
+/* ── RESET & BASE ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --ink:        #0A0C12;
+  --deep:       #0E1220;
+  --navy:       #111827;
+  --slate:      #1C2333;
+  --border:     #1E2A3A;
+  --border-mid: #263045;
+  --gold:       #BF9B4A;
+  --gold-light: #D4B06A;
+  --gold-dim:   #8A6E35;
+  --gold-glow:  rgba(191,155,74,0.12);
+  --gold-glow2: rgba(191,155,74,0.06);
+  --azure:      #3A6EA5;
+  --azure-dim:  rgba(58,110,165,0.15);
+  --crimson:    #8B1F2A;
+  --crimson-dim:rgba(139,31,42,0.15);
+  --text:       #D8D0C0;
+  --text-mid:   #A89880;
+  --text-dim:   #6A6055;
+  --white:      #F0EBE0;
+  --radius:     2px;
+}
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: 'Crimson Pro', 'Georgia', serif;
+  font-size: 19px;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ── SIDEBAR NAV ── */
+.sidenav {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: 220px;
+  background: var(--deep);
+  border-right: 1px solid var(--border);
+  padding: 40px 0 40px;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidenav-logo {
+  padding: 0 24px 32px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 28px;
+}
+
+.sidenav-logo-series {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.sidenav-logo-title {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  color: var(--gold);
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.sidenav-label {
+  padding: 0 24px 12px;
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.sidenav a {
+  display: block;
+  padding: 10px 24px;
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+
+.sidenav a:hover,
+.sidenav a.active {
+  color: var(--gold-light);
+  border-left-color: var(--gold);
+  background: var(--gold-glow2);
+}
+
+.sidenav-footer {
+  margin-top: auto;
+  padding: 24px 24px 0;
+  border-top: 1px solid var(--border);
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  line-height: 1.8;
+}
+
+/* ── MAIN LAYOUT ── */
+.main {
+  margin-left: 220px;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 80px 80px 80px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 30% 40%, rgba(58,110,165,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 80%, rgba(191,155,74,0.06) 0%, transparent 50%),
+    linear-gradient(170deg, #0A0C12 0%, #0E1525 50%, #0A0C12 100%);
+}
+
+/* Constellation dots */
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 15% 20%, rgba(191,155,74,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 35% 15%, rgba(191,155,74,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 10%, rgba(191,155,74,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 25%, rgba(191,155,74,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 35%, rgba(191,155,74,0.15) 0%, transparent 100%),
+    radial-gradient(1px 1px at 20% 55%, rgba(191,155,74,0.25) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 90% 50%, rgba(191,155,74,0.35) 0%, transparent 100%),
+    radial-gradient(1px 1px at 10% 80%, rgba(191,155,74,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 70%, rgba(191,155,74,0.15) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 85%, rgba(191,155,74,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 88%, rgba(191,155,74,0.3) 0%, transparent 100%);
+}
+
+.hero-content { position: relative; z-index: 2; max-width: 780px; }
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 48px;
+  animation: fadeUp 0.8s ease both;
+}
+
+.hero-series-badge {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3.5px;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  border: 1px solid var(--border-mid);
+  padding: 5px 14px;
+  background: rgba(191,155,74,0.04);
+}
+
+.hero-divider-line {
+  flex: 1;
+  max-width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold-dim), transparent);
+}
+
+.hero-volume {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.hero-number {
+  font-family: 'Cinzel', serif;
+  font-size: 160px;
+  font-weight: 900;
+  line-height: 1;
+  color: rgba(191,155,74,0.06);
+  position: absolute;
+  top: 60px;
+  right: 40px;
+  letter-spacing: -8px;
+  animation: fadeIn 1.2s ease both;
+  pointer-events: none;
+}
+
+.hero-pretitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--gold-light);
+  margin-bottom: 20px;
+  letter-spacing: 0.3px;
+  animation: fadeUp 0.8s 0.15s ease both;
+  opacity: 0;
+}
+
+.hero h1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(36px, 5vw, 58px);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.12;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+  animation: fadeUp 0.8s 0.25s ease both;
+  opacity: 0;
+}
+
+.hero h1 em {
+  font-style: normal;
+  color: var(--gold-light);
+}
+
+.hero-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  color: var(--text-mid);
+  font-style: italic;
+  margin-bottom: 52px;
+  animation: fadeUp 0.8s 0.35s ease both;
+  opacity: 0;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  animation: fadeUp 0.8s 0.45s ease both;
+  opacity: 0;
+}
+
+.hero-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-left: 2px solid var(--gold-dim);
+  padding-left: 14px;
+}
+
+.hero-meta-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px;
+  letter-spacing: 2.5px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.hero-meta-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  color: var(--gold-light);
+  font-style: italic;
+}
+
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 36px;
+  right: 80px;
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: fadeIn 1.5s 1s ease both;
+  opacity: 0;
+}
+
+.hero-scroll-hint::after {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: var(--text-dim);
+}
+
+/* ── CONTENT SECTIONS ── */
+.section {
+  padding: 80px 80px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.section-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px;
+  letter-spacing: 3.5px;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  border: 1px solid var(--border-mid);
+  padding: 5px 14px;
+  background: var(--gold-glow2);
+}
+
+.section-tag-line {
+  flex: 1;
+  max-width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border-mid), transparent);
+}
+
+.section-number-bg {
+  position: absolute;
+  top: 60px;
+  right: 60px;
+  font-family: 'Cinzel', serif;
+  font-size: 120px;
+  font-weight: 900;
+  color: rgba(191,155,74,0.04);
+  line-height: 1;
+  pointer-events: none;
+  letter-spacing: -4px;
+}
+
+.section-h2 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.25;
+  margin-bottom: 12px;
+  max-width: 680px;
+}
+
+.section-h2 em { font-style: normal; color: var(--gold-light); }
+
+.section-hook {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--text-mid);
+  margin-bottom: 40px;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* ── VERSE BLOCK ── */
+.verse {
+  background: linear-gradient(135deg, rgba(58,110,165,0.08) 0%, rgba(191,155,74,0.04) 100%);
+  border: 1px solid var(--border-mid);
+  border-left: 3px solid var(--azure);
+  padding: 24px 28px;
+  margin: 36px 0;
+  position: relative;
+  max-width: 720px;
+}
+
+.verse::before {
+  content: '"';
+  position: absolute;
+  top: -20px;
+  left: 20px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 80px;
+  color: var(--azure);
+  opacity: 0.2;
+  line-height: 1;
+}
+
+.verse-ref {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: var(--azure);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.verse-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--white);
+  line-height: 1.65;
+}
+
+.verse-text strong {
+  font-style: normal;
+  color: var(--gold-light);
+  font-weight: 600;
+}
+
+/* ── CENTRAL IDEA ── */
+.central-idea {
+  background: linear-gradient(135deg, rgba(191,155,74,0.08) 0%, rgba(191,155,74,0.03) 100%);
+  border: 1px solid rgba(191,155,74,0.25);
+  padding: 32px 36px;
+  margin: 36px 0;
+  max-width: 720px;
+  position: relative;
+}
+
+.central-idea-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px;
+  letter-spacing: 3px;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.central-idea-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px;
+  color: var(--gold-light);
+  line-height: 1.65;
+  font-style: italic;
+}
+
+/* ── BODY TEXT ── */
+.prose {
+  max-width: 720px;
+  margin-bottom: 28px;
+  color: var(--text);
+  font-size: 19px;
+}
+
+.prose strong { color: var(--white); font-weight: 600; }
+.prose em { color: var(--gold-light); font-style: italic; }
+
+/* ── BULLET POINTS ── */
+.points {
+  list-style: none;
+  max-width: 720px;
+  margin: 24px 0 32px;
+}
+
+.points li {
+  display: flex;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 18.5px;
+  color: var(--text);
+  line-height: 1.65;
+  align-items: flex-start;
+}
+
+.points li:last-child { border-bottom: none; }
+
+.points li::before {
+  content: '▸';
+  color: var(--gold);
+  font-size: 11px;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.points li strong { color: var(--white); }
+.points li em { color: var(--gold-light); font-style: italic; }
+
+/* ── TERM CARDS ── */
+.term-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 720px;
+  margin: 32px 0;
+}
+
+.term-card {
+  background: var(--slate);
+  border: 1px solid var(--border-mid);
+  border-top: 2px solid var(--gold-dim);
+  padding: 24px 22px;
+  position: relative;
+}
+
+.term-card-greek {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 24px;
+  color: var(--gold-light);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.term-card-pt {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: block;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+
+.term-card-def {
+  font-size: 15.5px;
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+
+.term-card-def strong { color: var(--text); }
+
+/* ── IMPACT BOX ── */
+.impact {
+  max-width: 720px;
+  margin: 32px 0;
+  padding: 22px 28px;
+  background: var(--crimson-dim);
+  border: 1px solid rgba(139,31,42,0.35);
+  border-left: 4px solid var(--crimson);
+}
+
+.impact-text {
+  font-family: 'Cinzel', serif;
+  font-size: 14.5px;
+  color: var(--white);
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+}
+
+/* ── ECO / MEMO ── */
+.eco {
+  max-width: 720px;
+  margin: 40px 0 0;
+  padding: 20px 28px;
+  border-top: 1px solid var(--border-mid);
+  border-left: 1px solid var(--border-mid);
+}
+
+.eco-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.eco-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--text-mid);
+  line-height: 1.7;
+}
+
+/* ── SUBSECTION HEADING ── */
+.sub-h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold-light);
+  letter-spacing: 1px;
+  margin: 48px 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 720px;
+}
+
+.sub-h3::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: var(--gold-dim);
+  flex-shrink: 0;
+}
+
+.sub-h3-num {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  margin-right: 4px;
+}
+
+/* ── TRANSITION BOX ── */
+.transition {
+  max-width: 720px;
+  margin: 40px 0;
+  padding: 20px 28px;
+  background: rgba(191,155,74,0.04);
+  border: 1px solid var(--border-mid);
+  border-left: 3px solid var(--gold-dim);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--gold-light);
+  line-height: 1.65;
+}
+
+/* ── TENSION BANNER ── */
+.tension {
+  max-width: 720px;
+  margin: 36px 0;
+  background: linear-gradient(90deg, rgba(58,110,165,0.12) 0%, transparent 100%);
+  border-left: 4px solid var(--azure);
+  padding: 16px 24px;
+}
+
+.tension-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--azure);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
+  opacity: 0.8;
+}
+
+.tension-text {
+  font-size: 17px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.tension-text strong { color: var(--white); }
+
+/* ── CONCLUSION BOX ── */
+.conclusion-box {
+  background: linear-gradient(135deg, rgba(191,155,74,0.08) 0%, rgba(58,110,165,0.05) 100%);
+  border: 1px solid rgba(191,155,74,0.2);
+  padding: 48px 52px;
+  max-width: 720px;
+  margin-top: 48px;
+  text-align: center;
+}
+
+.conclusion-cross {
+  font-size: 28px;
+  color: var(--gold-dim);
+  margin-bottom: 28px;
+  display: block;
+  letter-spacing: 8px;
+}
+
+.conclusion-text {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--gold-light);
+  line-height: 1.7;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* ── PREGADOR NOTES ── */
+.pregador-note {
+  max-width: 720px;
+  margin: 28px 0;
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.02);
+  border: 1px dashed var(--border-mid);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.pregador-note-icon {
+  font-size: 13px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pregador-note-text {
+  font-family: 'Crimson Pro', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ── BRIDGE SECTION ── */
+.bridge {
+  padding: 64px 80px;
+  background: var(--deep);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.bridge-num {
+  font-family: 'Cinzel', serif;
+  font-size: 60px;
+  font-weight: 900;
+  color: rgba(191,155,74,0.12);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.bridge-content {}
+
+.bridge-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px;
+  letter-spacing: 3px;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.bridge-title {
+  font-family: 'Cinzel', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+
+.bridge-text {
+  font-size: 17px;
+  color: var(--text-mid);
+  line-height: 1.7;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidenav { display: none; }
+  .main { margin-left: 0; }
+  .hero, .section { padding: 56px 28px; }
+  .term-grid { grid-template-columns: 1fr; }
+  .hero-number { font-size: 80px; top: 20px; right: 20px; }
+  .bridge { padding: 48px 28px; flex-direction: column; gap: 16px; }
+  .conclusion-box { padding: 32px 24px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<nav class="sidenav">
+  <div class="sidenav-logo">
+    <p class="sidenav-logo-series">A Cruz no Mundo Espiritual</p>
+    <p class="sidenav-logo-title">Sermão 1 de 6</p>
+  </div>
+
+  <p class="sidenav-label">Estrutura</p>
+
+  <a href="#introducao">Introdução</a>
+  <a href="#tensao">Tensão Central</a>
+  <a href="#parte1">1 · A Terminologia</a>
+  <a href="#parte2">2 · Os Kosmokratores</a>
+  <a href="#parte3">3 · Os Sarim</a>
+  <a href="#armadura">4 · Aplicação</a>
+  <a href="#conclusao">Conclusão</a>
+
+  <div class="sidenav-footer">
+    Efésios 6:12<br>Daniel 10:13<br>~40 minutos
+  </div>
+</nav>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+<!-- ── HERO ── -->
+<section class="hero" id="topo">
+  <div class="hero-bg"></div>
+  <div class="hero-number" aria-hidden="true">I</div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="hero-series-badge">Série · A Cruz no Mundo Espiritual</span>
+      <span class="hero-divider-line"></span>
+      <span class="hero-volume">Volume IV · Sermão 1</span>
+    </div>
+
+    <p class="hero-pretitle">O Inimigo tem Nome, Patente e Território</p>
+    <h1>A <em>Hierarquia Invisível</em><br>que Governa por Trás<br>do Mundo Visível</h1>
+    <p class="hero-subtitle">Uma pregação expositiva sobre a estrutura do reino das trevas — e por que isso importa para a missão da Igreja</p>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Texto-base</span>
+        <span class="hero-meta-value">Efésios 6:12</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Texto de apoio</span>
+        <span class="hero-meta-value">Daniel 10:13</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Duração</span>
+        <span class="hero-meta-value">~40 minutos</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Série</span>
+        <span class="hero-meta-value">Cap. 1 do Ebook 4</span>
+      </div>
+    </div>
+  </div>
+
+  <span class="hero-scroll-hint">Role para começar</span>
+</section>
+
+
+<!-- ── INTRODUÇÃO ── -->
+<section class="section" id="introducao">
+  <div class="section-number-bg" aria-hidden="true">00</div>
+  <div class="section-label">
+    <span class="section-tag">Introdução</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">Antes de guerrear, é preciso <em>conhecer o inimigo</em></h2>
+  <p class="section-hook reveal">Paulo não escreveu sobre guerra espiritual para assustar a Igreja — escreveu para armá-la com discernimento.</p>
+
+  <div class="verse reveal">
+    <span class="verse-ref">Efésios 6:12</span>
+    <p class="verse-text">"Porque não temos que lutar contra carne e sangue, mas contra <strong>principados</strong>, contra <strong>potestades</strong>, contra os <strong>dominadores deste mundo tenebroso</strong>, contra as <strong>hostes espirituais da maldade</strong> nas regiões celestiais."</p>
+  </div>
+
+  <ul class="points reveal">
+    <li>Este versículo não é poesia. É <strong>linguagem técnica do Segundo Templo</strong> — categorias espirituais reais com nomes reais.</li>
+    <li>Paulo não está inventando uma cosmologia do mal. Ele está <strong>mapeando um território que já existe</strong>.</li>
+    <li>A guerra espiritual que a Igreja trava não é contra <strong>forças vagas e impessoais</strong> — é contra entidades organizadas, com hierarquia, patente e jurisdição.</li>
+    <li>Quem não conhece a estrutura do inimigo entra no campo de batalha <strong>desarmado de discernimento</strong>.</li>
+  </ul>
+
+  <div class="pregador-note reveal">
+    <span class="pregador-note-icon">✎</span>
+    <p class="pregador-note-text">Nota ao pregador: Pause aqui. Deixe a pergunta pousar. Pergunte à congregação: "Você já pensou no mal como algo organizado — com hierarquia, território, estratégia?" A maioria nunca pensou assim. Esta é a abertura do sermão.</p>
+  </div>
+
+</section>
+
+
+<!-- ── TENSÃO ── -->
+<section class="section" id="tensao">
+  <div class="section-number-bg" aria-hidden="true">T</div>
+  <div class="section-label">
+    <span class="section-tag">Tensão Central</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">O problema que este sermão resolve</h2>
+
+  <div class="tension reveal">
+    <span class="tension-label">Tensão</span>
+    <p class="tension-text">As pessoas tendem a tratar o mal como <strong>vago e impessoal</strong> — uma névoa de negatividade, um sentimento ruim, uma energia contrária. Paulo trata o mal como <strong>estruturado e nomeado</strong>. Essa diferença muda tudo.</p>
+  </div>
+
+  <ul class="points reveal">
+    <li>Se o mal é vago, a Igreja reage com <strong>emoção</strong>. Se o mal é estruturado, a Igreja responde com <strong>discernimento</strong>.</li>
+    <li>Se os principados são metáforas, a guerra espiritual é <strong>simbólica</strong>. Se são entidades reais, a guerra espiritual é <strong>literal e estratégica</strong>.</li>
+    <li>Paulo escreve para uma Igreja que precisa entender <strong>quem está do outro lado</strong> antes de vestir a armadura.</li>
+  </ul>
+
+  <div class="central-idea reveal">
+    <span class="central-idea-label">Ideia Central do Sermão</span>
+    <p class="central-idea-text">Antes de guerrear, é preciso conhecer quem está do outro lado — e o inimigo não é desordenado. É um exército com hierarquia, território e estratégia. Conhecer essa estrutura não é fascínio pelas trevas: é inteligência de guerra.</p>
+  </div>
+
+</section>
+
+
+<!-- ── PARTE 1 ── -->
+<section class="section" id="parte1">
+  <div class="section-number-bg" aria-hidden="true">01</div>
+  <div class="section-label">
+    <span class="section-tag">Parte 1 · ~10 min</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">A Terminologia de Paulo:<br><em>Quatro Termos, uma Hierarquia</em></h2>
+  <p class="section-hook reveal">Paulo não usa palavras vagas. Usa um vocabulário técnico que seus leitores do Primeiro Século reconheceriam como linguagem militar de catálogo.</p>
+
+  <p class="prose reveal">Efésios 6:12, Colossenses 1:16, Romanos 8:38-39 — Paulo repete consistentemente os mesmos quatro termos. Não é coincidência. É um <strong>catálogo hierárquico</strong>: há patentes, há níveis de autoridade, há uma cadeia de comando no reino das trevas.</p>
+
+  <div class="term-grid reveal">
+    <div class="term-card">
+      <p class="term-card-greek">Archai</p>
+      <span class="term-card-pt">Principados · Governantes</span>
+      <p class="term-card-def">Do grego <em>archē</em> — "aqueles que governam primeiro". No mundo greco-romano, designava o mais alto cargo político. No mundo espiritual: <strong>o nível mais alto da hierarquia rebelde</strong>. Governantes de impérios invisíveis.</p>
+    </div>
+    <div class="term-card">
+      <p class="term-card-greek">Exousiai</p>
+      <span class="term-card-pt">Potestades · Autoridades</span>
+      <p class="term-card-def">De <em>exousia</em> — "autoridade delegada, direito legal de agir". Estes seres possuem <strong>jurisdição</strong>: um âmbito específico onde podem operar com autoridade real. Não agem por força bruta — agem por <em>direito</em>.</p>
+    </div>
+    <div class="term-card">
+      <p class="term-card-greek">Dynameis</p>
+      <span class="term-card-pt">Poderes · Forças</span>
+      <p class="term-card-def">Literalmente "poderes" — forças com <strong>capacidade sobrenatural de manifestação</strong>. Não são apenas autoridades; possuem potência de operação real no mundo visível e invisível.</p>
+    </div>
+    <div class="term-card">
+      <p class="term-card-greek">Kyriotētes</p>
+      <span class="term-card-pt">Dominações · Senhorios</span>
+      <p class="term-card-def">De <em>kyrios</em> — "senhor". Designa <strong>domínio exercido sobre territórios ou esferas</strong>. São seres que governam como senhores — com poder de manutenção, não apenas de conquista.</p>
+    </div>
+  </div>
+
+  <div class="impact reveal">
+    <p class="impact-text">Estes termos não são imaginação poética. Aparecem consistentemente nas cartas de Paulo — e todos derivam da angelologia judaica do Segundo Templo. A hierarquia do mal espelha uma hierarquia espiritual real.</p>
+  </div>
+
+  <div class="pregador-note reveal">
+    <span class="pregador-note-icon">✎</span>
+    <p class="pregador-note-text">Sugestão: Escreva os quatro termos gregos no quadro ou telão. Mostre que Paulo está usando linguagem militar técnica — não vocabulário devocional vago. Isso ancora o sermão no texto original e abre os olhos da congregação.</p>
+  </div>
+
+</section>
+
+
+<!-- ── PARTE 2 ── -->
+<section class="section" id="parte2">
+  <div class="section-number-bg" aria-hidden="true">02</div>
+  <div class="section-label">
+    <span class="section-tag">Parte 2 · ~10 min</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">Os <em>Kosmokratores</em>:<br>Arquitetos do Sistema Mundial</h2>
+  <p class="section-hook reveal">Efésios 6:12 traz um termo que muda tudo: kosmokratores — aqueles que dominam o cosmos. Não apenas indivíduos. Sistemas inteiros.</p>
+
+  <div class="verse reveal">
+    <span class="verse-ref">Efésios 6:12 · Destaque</span>
+    <p class="verse-text">"…contra os <strong>dominadores deste mundo tenebroso</strong>…"<br>— no grego: <em>kosmokratores tou skotous toutou</em></p>
+  </div>
+
+  <p class="prose reveal">O termo <em>kosmokratōr</em> é composto de <em>kosmos</em> (mundo organizado, sistema) e <em>krateō</em> (dominar com poder constitutivo). Não descreve influência — descreve <strong>controle sistêmico</strong>.</p>
+
+  <div class="sub-h3 reveal"><span class="sub-h3-num">2.1</span>O que os Kosmokratores controlam</div>
+
+  <ul class="points reveal">
+    <li>Por trás de <strong>impérios políticos</strong> há entidades espirituais que os sustentam e moldam.</li>
+    <li>Por trás de <strong>religiões falsas e ideologias</strong> há kosmokratores que fabricam sistemas de sentido que mantêm as nações distantes de Deus.</li>
+    <li>Por trás de <strong>estruturas econômicas de opressão</strong> há poderes que lucram com a escravidão humana.</li>
+    <li>Por trás de <strong>culturas inteiras</strong> que rejeitam Cristo há uma inteligência que molda o ambiente espiritual de gerações.</li>
+  </ul>
+
+  <div class="tension reveal">
+    <span class="tension-label">Implicação Missionária</span>
+    <p class="tension-text">Jesus não derrotou apenas demônios individuais. A cruz <strong>desmantelou a estrutura de comando</strong> que governa as nações em rebelião. Por isso o evangelho não é apenas mensagem individual — é confronto com sistemas.</p>
+  </div>
+
+  <div class="sub-h3 reveal"><span class="sub-h3-num">2.2</span>Por que isso importa hoje</div>
+
+  <ul class="points reveal">
+    <li>Quando uma nação inteira resiste ao evangelho por gerações, <strong>não é apenas cultura — há um poder por trás da cultura</strong>.</li>
+    <li>Quando um sistema econômico escraviza povos por séculos, <strong>não é apenas política — há entidades que se beneficiam da injustiça</strong>.</li>
+    <li>Quando uma religião falsa domina centenas de milhões, <strong>não é apenas engano humano — há kosmokratores sustentando o engano</strong>.</li>
+    <li>A missão da Igreja não é apenas convencer indivíduos. É <strong>confrontar os sistemas invisíveis</strong> que prendem povos inteiros.</li>
+  </ul>
+
+  <div class="impact reveal">
+    <p class="impact-text">Os kosmokratores são os estrategistas da rebelião: os arquitetos do sistema mundial que se opõe a Deus. Entender isso transforma a maneira como a Igreja ora, envia e prega.</p>
+  </div>
+
+</section>
+
+
+<!-- ── PARTE 3 ── -->
+<section class="section" id="parte3">
+  <div class="section-number-bg" aria-hidden="true">03</div>
+  <div class="section-label">
+    <span class="section-tag">Parte 3 · ~10 min</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">Os <em>Sarim</em> de Daniel:<br>Príncipes com Território</h2>
+  <p class="section-hook reveal">O Antigo Testamento não é silencioso sobre principados. Daniel 10 abre uma janela para o mundo invisível que confirma tudo que Paulo ensina.</p>
+
+  <div class="verse reveal">
+    <span class="verse-ref">Daniel 10:13</span>
+    <p class="verse-text">"O <strong>príncipe do reino da Pérsia</strong> me resistiu por vinte e um dias; porém eis que <strong>Miguel</strong>, um dos primeiros príncipes, veio em meu socorro, e eu fiquei ali com os reis da Pérsia."</p>
+  </div>
+
+  <div class="sub-h3 reveal"><span class="sub-h3-num">3.1</span>O que Daniel 10 revela</div>
+
+  <ul class="points reveal">
+    <li>O profeta Daniel ora por 21 dias. Uma resposta é enviada do céu — e <strong>chega com 21 dias de atraso</strong>.</li>
+    <li>O motivo do atraso: o <strong>príncipe espiritual da Pérsia</strong> interceptou o mensageiro nos lugares celestiais.</li>
+    <li>Isso revela que há <strong>batalhas espirituais nos lugares celestiais</strong> que afetam diretamente os eventos da história terrena.</li>
+    <li>Miguel é o <em>sar</em> de Israel — o príncipe espiritual designado à nação. A Pérsia tem o seu. A Grécia tem o seu (v. 20). Cada nação tem um <strong>príncipe territorial</strong> no mundo espiritual.</li>
+  </ul>
+
+  <div class="sub-h3 reveal"><span class="sub-h3-num">3.2</span>Deuteronômio 32 e a origem dos sarim</div>
+
+  <div class="verse reveal">
+    <span class="verse-ref">Deuteronômio 32:8 · LXX e 4QDeut-j (Qumran)</span>
+    <p class="verse-text">"Quando o Altíssimo deu herança às nações, quando dividiu os filhos dos homens, fixou os limites dos povos <strong>conforme o número dos filhos de Deus</strong>."</p>
+  </div>
+
+  <ul class="points reveal">
+    <li>O texto original de Qumran e a Septuaginta dizem "filhos de Deus" — os <em>bene elohim</em>, membros do conselho divino.</li>
+    <li>Cada nação foi posta sob a jurisdição de um ser celestial — um <em>sar</em>. <strong>Israel ficou sob a porção direta de Yahweh</strong> (v.9).</li>
+    <li>Esses <em>sarim</em>, em vez de governar as nações para Yahweh, <strong>aceitaram a adoração das nações e se tornaram os deuses falsos</strong> das religiões pagãs (Sl 82; 1 Co 10:20).</li>
+    <li>A rebelião dos <em>sarim</em> em Babel é a <strong>terceira rebelião cósmica</strong> — após a queda no Éden e os Vigilantes de Gênesis 6.</li>
+  </ul>
+
+  <div class="transition reveal">
+    Esta é a teologia por trás de Efésios 6:12. Paulo não está inventando uma cosmologia. Ele está ecoando a teologia do Antigo Testamento: há príncipes espirituais territoriais que governam nações em rebelião — e a cruz os desmantelou.
+  </div>
+
+  <div class="sub-h3 reveal"><span class="sub-h3-num">3.3</span>Por que a oração tem peso geopolítico</div>
+
+  <ul class="points reveal">
+    <li>Daniel não fez nada de especial exceto <strong>orar e jejuar por 21 dias</strong>. Sua oração desencadeou uma batalha nos lugares celestiais.</li>
+    <li>A oração da Igreja não é monólogo devocional — é <strong>operação de guerra nos lugares celestiais</strong>.</li>
+    <li>Quando a Igreja ora por uma nação, por um povo não alcançado, por um território fechado, ela está <strong>confrontando os sarim daquele lugar</strong>.</li>
+    <li>O missionário que entra em território não alcançado não está apenas mudando de cidade — está <strong>confrontando o príncipe daquele território</strong>.</li>
+  </ul>
+
+  <div class="pregador-note reveal">
+    <span class="pregador-note-icon">✎</span>
+    <p class="pregador-note-text">Aqui o sermão pode ter um momento de pausa contemplativa. Pergunte: "Quando você ora pelos povos não alcançados, você percebe o peso do que está fazendo?" Daniel provou que oração humana no mundo visível desencadeia batalhas reais no mundo invisível.</p>
+  </div>
+
+</section>
+
+
+<!-- ── PARTE 4 / APLICAÇÃO ── -->
+<section class="section" id="armadura">
+  <div class="section-number-bg" aria-hidden="true">04</div>
+  <div class="section-label">
+    <span class="section-tag">Aplicação · ~7 min</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">O que fazemos com isso:<br><em>Inteligência de Guerra, não Fascínio pelas Trevas</em></h2>
+  <p class="section-hook reveal">Conhecer a hierarquia inimiga não é um convite ao fascínio — é o pré-requisito para o discernimento correto.</p>
+
+  <ul class="points reveal">
+    <li>A Igreja que ignora a estrutura do inimigo <strong>não é mais espiritual</strong> — é mais ingênua.</li>
+    <li>Paulo conhecia a hierarquia das trevas. Jesus confrontou principados. Os apóstolos discerniam o que estava por trás das situações. <strong>O discernimento não é opcional</strong> — é parte da armadura.</li>
+    <li>Conhecer que há principados sobre territórios muda como <strong>intercedemos por cidades</strong>.</li>
+    <li>Conhecer que há kosmokratores sobre sistemas muda como <strong>lemos a história e a política</strong>.</li>
+    <li>Conhecer que há sarim sobre nações muda como <strong>planejamos missões e oramos pelos povos não alcançados</strong>.</li>
+    <li>Conhecer que há hostes espirituais sobre indivíduos muda como <strong>ministramos libertação às pessoas</strong>.</li>
+  </ul>
+
+  <div class="impact reveal">
+    <p class="impact-text">Mas há um aviso: conhecer as trevas deve sempre ser subordinado ao foco em Cristo. A Igreja não é chamada a se especializar no inimigo — é chamada a conhecê-lo o suficiente para não ser enganada por ele.</p>
+  </div>
+
+  <div class="sub-h3 reveal"><span class="sub-h3-num">4.1</span>Três posições que mudam com esse entendimento</div>
+
+  <ul class="points reveal">
+    <li><strong>Na oração:</strong> Deixamos de orar apenas pelas pessoas e começamos a orar contra as estruturas que as prendem. "Senhor, abre os olhos de João" inclui agora: "Senhor, derrota o poder que cega João."</li>
+    <li><strong>Na missão:</strong> Entendemos por que alguns territórios são tão resistentes. Não é apenas cultura ou história — há um <em>sar</em> que não quer soltar. A missão é confronto, não apenas anúncio.</li>
+    <li><strong>Na vida:</strong> Paramos de brigar com pessoas e começamos a identificar o que está por trás das situações. O viciado não é o inimigo — o poder que o escraviza é.</li>
+  </ul>
+
+</section>
+
+
+<!-- ── CONCLUSÃO ── -->
+<section class="section" id="conclusao">
+  <div class="section-number-bg" aria-hidden="true">✝</div>
+  <div class="section-label">
+    <span class="section-tag">Conclusão</span>
+    <span class="section-tag-line"></span>
+  </div>
+
+  <h2 class="section-h2 reveal">O inimigo tem nome — mas <em>Cristo tem autoridade sobre todos eles</em></h2>
+
+  <ul class="points reveal">
+    <li>Os principados são reais. As potestades são reais. Os kosmokratores são reais. Os sarim são reais.</li>
+    <li>Mas <strong>Cristo está acima de todo principado, e poder, e potestade, e domínio</strong> — e de todo nome que se nomeia, não só neste século, mas também no vindouro (Ef 1:21).</li>
+    <li>A Igreja não conhece a hierarquia das trevas para ter medo. <strong>A Igreja a conhece para saber o tamanho da vitória de Cristo</strong>.</li>
+    <li>Cada nome que Paulo lista em Efésios 6:12 é, em Efésios 1:21, <strong>posto debaixo dos pés de Jesus</strong>.</li>
+    <li>A mesma lista que descreve o inimigo é a mesma lista que descreve a vitória.</li>
+  </ul>
+
+  <div class="verse reveal">
+    <span class="verse-ref">Efésios 1:20-22</span>
+    <p class="verse-text">"…ressuscitando-o dos mortos e pondo-o à sua direita nos céus, <strong>acima de todo principado, e poder, e potestade, e domínio</strong>, e de todo nome que se nomeia, não só neste século, mas também no vindouro; e <strong>sujeitou todas as coisas a seus pés</strong>."</p>
+  </div>
+
+  <div class="conclusion-box reveal">
+    <span class="conclusion-cross">✝</span>
+    <p class="conclusion-text">
+      Os principados têm nome.<br>
+      As potestades têm jurisdição.<br>
+      Os kosmokratores têm estratégia.<br>
+      Os sarim têm territórios.<br><br>
+      Mas Cristo tem autoridade sobre todos eles —<br>
+      e a Igreja foi enviada com a autoridade do Nome<br>
+      que está acima de todos os nomes.
+    </p>
+  </div>
+
+  <div class="eco reveal">
+    <span class="eco-label">Frase Final</span>
+    <p class="eco-text">"Conhecemos o inimigo não para temê-lo, mas para entender o tamanho da vitória de Cristo. A Cruz não apenas venceu a batalha — desmantelou a estrutura de comando que mantinha o mundo em trevas."</p>
+  </div>
+
+</section>
+
+
+<!-- ── PONTE ── -->
+<div class="bridge">
+  <div class="bridge-num">II</div>
+  <div class="bridge-content">
+    <span class="bridge-label">Próximo Sermão · Série</span>
+    <h3 class="bridge-title">A Cruz foi um Desfile de Triunfo</h3>
+    <p class="bridge-text">Se o Sermão 1 revelou quem é o inimigo, o Sermão 2 explode Colossenses 2:15 — os três verbos que decretaram a derrota deles. <em>Despojou. Expôs. Triunfou.</em> A crucificação que parecia derrota foi, nos lugares celestiais, o maior desfile de conquista da história cósmica.</p>
+  </div>
+</div>
+
+</div><!-- /.main -->
+
+<script>
+// ── SCROLL REVEAL ──
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+reveals.forEach(el => observer.observe(el));
+
+// ── ACTIVE NAV ──
+const sections = document.querySelectorAll('section[id], div.bridge');
+const navLinks = document.querySelectorAll('.sidenav a');
+
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.sidenav a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('section[id]').forEach(s => navObserver.observe(s));
+</script>
+
+</body>
+</html>

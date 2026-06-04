@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { X, Loader2, AlertCircle, Mail } from 'lucide-react';
-import { useAuth } from '../state/AuthContext';
+import { type RequestCodeResult, useAuth } from '../state/AuthContext';
 
 interface LoginModalProps {
   onClose: () => void;
@@ -9,18 +9,39 @@ interface LoginModalProps {
   startOnSubscribe?: boolean;
 }
 
-type Step = 'email' | 'loading' | 'not_found' | 'error';
+type Step =
+  | 'email'
+  | 'sending_code'
+  | 'code'
+  | 'verifying_code'
+  | 'not_found'
+  | 'rate_limited'
+  | 'error';
+
+const RESEND_COOLDOWN_SECONDS = 30;
 
 export default function LoginModal({ onClose, onSuccess, startOnSubscribe = false }: LoginModalProps) {
-  const { login, checking } = useAuth();
+  const { requestCode, verifyCode } = useAuth();
   const [email, setEmail] = useState('');
+  const [code, setCode] = useState('');
+  const [challengeToken, setChallengeToken] = useState('');
+  const [devCode, setDevCode] = useState<string | null>(null);
+  const [codeHint, setCodeHint] = useState('');
+  const [resending, setResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [expiresIn, setExpiresIn] = useState(0);
+  const [subscribing, setSubscribing] = useState(false);
   const [step, setStep] = useState<Step>('email');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    if (startOnSubscribe) {
+      handleSubscribe();
+      return;
+    }
     const timeout = setTimeout(() => inputRef.current?.focus(), 80);
     return () => clearTimeout(timeout);
-  }, []);
+  }, [startOnSubscribe]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -28,28 +49,124 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
     return () => window.removeEventListener('keydown', onKey);
   }, [onClose]);
 
-  async function handleSubmit(e: React.FormEvent) {
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = window.setInterval(() => {
+      setResendCooldown((previous) => Math.max(0, previous - 1));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [resendCooldown]);
+
+  useEffect(() => {
+    if (expiresIn <= 0) return;
+    const timer = window.setInterval(() => {
+      setExpiresIn((previous) => Math.max(0, previous - 1));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [expiresIn]);
+
+  function applyCodeSent(result: Extract<RequestCodeResult, { status: 'code_sent' }>) {
+    setChallengeToken(result.challengeToken);
+    setCode('');
+    setCodeHint('');
+    setDevCode(result.devCode ?? null);
+    setResendCooldown(RESEND_COOLDOWN_SECONDS);
+    setExpiresIn(result.expiresIn);
+    setStep('code');
+  }
+
+  async function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = email.trim().toLowerCase();
     if (!trimmed) return;
 
-    setStep('loading');
-    const result = await login(trimmed);
+    setStep('sending_code');
+    setCodeHint('');
+    const result = await requestCode(trimmed);
 
-    if (result.status === 'subscriber') {
+    if (result.status === 'code_sent') {
+      applyCodeSent(result);
+      return;
+    }
+    if (result.status === 'not_found') {
+      setStep('not_found');
+      return;
+    }
+    if (result.status === 'rate_limited') {
+      setStep('rate_limited');
+      return;
+    }
+    setStep('error');
+  }
+
+  async function handleCodeSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const normalizedCode = code.trim();
+    if (!challengeToken || normalizedCode.length !== 6) return;
+
+    setStep('verifying_code');
+    setCodeHint('');
+    const result = await verifyCode(challengeToken, normalizedCode);
+    if (result.status === 'authenticated') {
       onSuccess();
       return;
     }
-    if (result.status === 'error') {
-      setStep('error');
+    if (result.status === 'not_found') {
+      setStep('not_found');
       return;
     }
-    // not_found
-    setStep('not_found');
+    if (result.status === 'expired') {
+      setCode('');
+      setCodeHint('Código expirado. Solicite um novo código.');
+      setStep('code');
+      return;
+    }
+    if (result.status === 'invalid_code') {
+      setCode('');
+      setCodeHint('Código inválido. Confira e tente novamente.');
+      setStep('code');
+      return;
+    }
+    if (result.status === 'rate_limited') {
+      setStep('rate_limited');
+      return;
+    }
+    setStep('error');
+  }
+
+  async function handleResendCode() {
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || resendCooldown > 0 || resending) return;
+
+    setResending(true);
+    setCodeHint('');
+    const result = await requestCode(trimmed);
+
+    if (result.status === 'code_sent') {
+      applyCodeSent(result);
+      setCodeHint('Novo código enviado para seu e-mail.');
+      setResending(false);
+      return;
+    }
+
+    if (result.status === 'rate_limited') {
+      setStep('rate_limited');
+      setResending(false);
+      return;
+    }
+
+    if (result.status === 'not_found') {
+      setStep('not_found');
+      setResending(false);
+      return;
+    }
+
+    setStep('error');
+    setResending(false);
   }
 
   async function handleSubscribe() {
-    setStep('loading');
+    setSubscribing(true);
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
@@ -64,6 +181,8 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
       }
     } catch {
       setStep('error');
+    } finally {
+      setSubscribing(false);
     }
   }
 
@@ -97,12 +216,11 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
           Acessar o Êxodo
         </h2>
         <p className="text-on-surface-variant text-xs text-center mb-8">
-          Digite seu e-mail para verificar sua assinatura
+          Entre com seu e-mail e confirme com o código enviado
         </p>
 
-        {/* Formulário de e-mail */}
-        {(step === 'email' || step === 'loading') && (
-          <form onSubmit={handleSubmit} className="space-y-4">
+        {(step === 'email' || step === 'sending_code') && (
+          <form onSubmit={handleEmailSubmit} className="space-y-4">
             <div>
               <input
                 ref={inputRef}
@@ -111,28 +229,101 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
-                disabled={step === 'loading'}
+                disabled={step === 'sending_code'}
                 className="w-full bg-surface-container border border-outline-variant/30 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary/50 transition-colors disabled:opacity-50"
               />
             </div>
             <button
               type="submit"
-              disabled={step === 'loading' || !email.trim()}
+              disabled={step === 'sending_code' || !email.trim()}
               className="w-full bg-primary text-on-primary-container font-black text-sm uppercase tracking-widest py-3 rounded-xl hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {step === 'loading' ? (
+              {step === 'sending_code' ? (
                 <>
                   <Loader2 size={14} className="animate-spin" />
-                  Verificando...
+                  Enviando código...
                 </>
               ) : (
-                'Entrar'
+                'Enviar Código'
               )}
             </button>
           </form>
         )}
 
-        {/* Sem assinatura encontrada */}
+        {(step === 'code' || step === 'verifying_code') && (
+          <form onSubmit={handleCodeSubmit} className="space-y-4">
+            <div className="bg-surface-container border border-outline-variant/20 rounded-xl p-4">
+              <p className="text-xs text-on-surface-variant leading-relaxed">
+                Enviamos um código de 6 dígitos para{' '}
+                <span className="text-primary font-semibold">{email}</span>.
+              </p>
+              <p className="mt-1 text-[10px] text-on-surface-variant/70">
+                {expiresIn > 0 ? `Expira em ${Math.ceil(expiresIn / 60)} min` : 'Código expirado'}
+              </p>
+            </div>
+            <input
+              type="text"
+              inputMode="numeric"
+              maxLength={6}
+              value={code}
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+              placeholder="000000"
+              autoFocus
+              disabled={step === 'verifying_code'}
+              className="w-full text-center tracking-[0.5em] bg-surface-container border border-outline-variant/30 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary/50 transition-colors disabled:opacity-50"
+            />
+            {devCode && (
+              <p className="text-[10px] text-primary/80 text-center">
+                Dev code: {devCode}
+              </p>
+            )}
+            {codeHint && (
+              <p className="text-[11px] text-on-surface-variant text-center">
+                {codeHint}
+              </p>
+            )}
+            <button
+              type="submit"
+              disabled={step === 'verifying_code' || code.trim().length !== 6}
+              className="w-full bg-primary text-on-primary-container font-black text-sm uppercase tracking-widest py-3 rounded-xl hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {step === 'verifying_code' ? (
+                <>
+                  <Loader2 size={14} className="animate-spin" />
+                  Confirmando...
+                </>
+              ) : (
+                'Entrar'
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={handleResendCode}
+              disabled={resendCooldown > 0 || resending}
+              className="w-full bg-surface-container-high border border-outline-variant/30 text-on-surface font-bold text-xs uppercase tracking-widest py-2.5 rounded-xl hover:border-primary/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {resending ? (
+                <><Loader2 size={12} className="animate-spin" /> Reenviando...</>
+              ) : resendCooldown > 0 ? (
+                `Reenviar em ${resendCooldown}s`
+              ) : (
+                'Não recebi o código'
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setCode('');
+                setCodeHint('');
+                setStep('email');
+              }}
+              className="w-full text-on-surface-variant/60 text-xs hover:text-on-surface-variant transition-colors py-2"
+            >
+              Trocar e-mail
+            </button>
+          </form>
+        )}
+
         {step === 'not_found' && (
           <div className="space-y-4">
             <div className="bg-surface-container border border-outline-variant/20 rounded-xl p-4 flex gap-3">
@@ -146,7 +337,7 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
               onClick={handleSubscribe}
               className="w-full bg-primary text-on-primary-container font-black text-sm uppercase tracking-widest py-3 rounded-xl hover:brightness-110 transition-all flex items-center justify-center gap-2"
             >
-              {checking ? (
+              {subscribing ? (
                 <><Loader2 size={14} className="animate-spin" /> Aguarde...</>
               ) : (
                 'Assinar Agora'
@@ -157,6 +348,23 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
               className="w-full text-on-surface-variant/60 text-xs hover:text-on-surface-variant transition-colors py-2"
             >
               Tentar outro e-mail
+            </button>
+          </div>
+        )}
+
+        {step === 'rate_limited' && (
+          <div className="space-y-4">
+            <div className="bg-surface-container border border-outline-variant/20 rounded-xl p-4 flex gap-3">
+              <AlertCircle size={16} className="text-red-400 shrink-0 mt-0.5" />
+              <p className="text-xs text-on-surface-variant leading-relaxed">
+                Muitas tentativas em sequência. Aguarde alguns segundos e tente novamente.
+              </p>
+            </div>
+            <button
+              onClick={() => setStep('email')}
+              className="w-full bg-surface-container-high border border-outline-variant/30 text-on-surface font-bold text-sm uppercase tracking-widest py-3 rounded-xl hover:border-primary/40 transition-all"
+            >
+              Voltar
             </button>
           </div>
         )}

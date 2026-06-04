@@ -349,6 +349,17 @@ const SERIES_VOLUME_COVER_STEMS: Record<string, Record<number, string>> = {
     5: 'nao abandonemos nossa congregacao',
     6: 'o remanecente reunido',
   },
+  'guerra contra a imoralidade': {
+    1: 'lascivia',
+    2: 'impureza',
+    3: 'mastubacao e vicios solitario',
+    4: 'fornicacao',
+    5: 'prostituicao',
+    6: 'adulterio',
+    7: 'homoafetividade',
+    8: 'incesto abusos e estupro',
+    9: 'o leito sem macula',
+  },
 };
 
 const CEIA_TITLE_TO_COVER_STEM: Record<string, string> = {
@@ -1215,6 +1226,7 @@ function inferSeriesVolumeCoverStem(title: string, slug: string, category?: stri
   if (haystack.includes('hierarquia do inimigo')) return SERIES_VOLUME_COVER_STEMS['hierarquia do inimigo'][volume] ?? null;
   if (haystack.includes('a casa do valente')) return SERIES_VOLUME_COVER_STEMS['a casa do valente'][volume] ?? null;
   if (haystack.includes('consumacao e o juizo do reino')) return SERIES_VOLUME_COVER_STEMS['a consumacao e o juizo do reino'][volume] ?? null;
+  if (haystack.includes('guerra contra a imoralidade')) return SERIES_VOLUME_COVER_STEMS['guerra contra a imoralidade'][volume] ?? null;
   if (haystack.includes('tabernaculo')) return SERIES_VOLUME_COVER_STEMS['tabernaculo'][volume] ?? null;
 
   return null;

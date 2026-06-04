@@ -21,6 +21,12 @@ const preacherMarkdownModules = {
   ...import.meta.glob('/public/content/pregador/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/pregador/**/*.html', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/pregador/**/*.htm', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/pregadores/**/*.md', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/pregadores/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/pregadores/**/*.yaml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/pregadores/**/*.yml', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/pregadores/**/*.html', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('/public/content/pregadores/**/*.htm', { eager: true, query: '?raw', import: 'default' }),
 } as Record<string, string>;
 
 function titleCase(raw: string): string {
@@ -54,10 +60,10 @@ function removeFrontmatter(markdown: string): string {
 
 function toRelativePreacherPath(pathKey: string): string {
   const normalized = pathKey.replace(/\\/g, '/');
-  const marker = '/public/content/pregador/';
-  const idx = normalized.indexOf(marker);
-  if (idx < 0) return normalized;
-  return normalized.slice(idx + marker.length);
+  const markers = ['/public/content/pregador/', '/public/content/pregadores/'];
+  const marker = markers.find((item) => normalized.includes(item));
+  if (!marker) return normalized;
+  return normalized.slice(normalized.indexOf(marker) + marker.length);
 }
 
 function detectTitle(pathKey: string, markdown: string): string {
@@ -126,12 +132,12 @@ function discoverSermons(): SermonItem[] {
     });
   }
 
-  return list.sort((a, b) => a.title.localeCompare(b.title, 'pt-BR'));
+  return list.sort((a, b) => a.title.localeCompare(b.title, 'pt-BR', { numeric: true }));
 }
 
 export default function Preacher() {
   const sermons = useMemo(() => discoverSermons(), []);
-  const [selectedSlug, setSelectedSlug] = useState<string | null>(sermons[0]?.slug ?? null);
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
   const selected = useMemo(
     () => sermons.find((item) => item.slug === selectedSlug) ?? null,

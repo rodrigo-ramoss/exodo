@@ -3,7 +3,7 @@
  * Preparado para notificações push e cache offline.
  */
 
-const CACHE_NAME = 'exodo-v5-congregacao-subsecao';
+const CACHE_NAME = 'exodo-v6-santidade-pregador';
 const PRECACHE_URLS = ['./', './manifest.json', './logo-192.png', './logo-512.png'];
 
 // Install: pré-cache dos recursos principais
