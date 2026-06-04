@@ -26,13 +26,21 @@ export type VerifyCodeResult =
   | { status: 'error' };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+const AUTH_GATE_ENABLED = import.meta.env.VITE_AUTH_GATE_ENABLED === 'true';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [email, setEmail] = useState('');
-  const [isSubscriber, setIsSubscriber] = useState(false);
-  const [checking, setChecking] = useState(true);
+  const [isSubscriber, setIsSubscriber] = useState(!AUTH_GATE_ENABLED);
+  const [checking, setChecking] = useState(AUTH_GATE_ENABLED);
 
   const refreshSession = async () => {
+    if (!AUTH_GATE_ENABLED) {
+      setEmail('');
+      setIsSubscriber(true);
+      setChecking(false);
+      return;
+    }
+
     setChecking(true);
     try {
       const res = await fetch('/api/auth/session', { method: 'GET', cache: 'no-store' });
@@ -66,6 +74,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const requestCode = async (rawEmail: string): Promise<RequestCodeResult> => {
+    if (!AUTH_GATE_ENABLED) return { status: 'error' };
+
     const emailNormalized = rawEmail.trim().toLowerCase();
     if (!emailNormalized) return { status: 'error' };
 
@@ -101,6 +111,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const verifyCode = async (challengeToken: string, code: string): Promise<VerifyCodeResult> => {
+    if (!AUTH_GATE_ENABLED) return { status: 'error' };
+
     try {
       const res = await fetch('/api/auth/verify-code', {
         method: 'POST',
@@ -126,6 +138,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async () => {
+    if (!AUTH_GATE_ENABLED) {
+      setEmail('');
+      setIsSubscriber(true);
+      setChecking(false);
+      return;
+    }
+
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
     } catch {}
