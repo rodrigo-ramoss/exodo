@@ -1,5 +1,5 @@
 ﻿import { useState, useRef, useMemo, useEffect, type ReactNode } from 'react';
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Hourglass, Tent, Sparkles, Search, Lock } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Hourglass, Tent, Sparkles, Search } from 'lucide-react';
 import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -1946,6 +1946,7 @@ function resolveSelahTheme(book: BookItem): SelahThemeTitle | null {
 }
 
 function resolveSectionFromThemeSlug(themeSlug: string): SectionKey | null {
+  if (slugify(themeSlug) === 'biblia') return 'BÍBLIA';
   const themeTitle = resolveSelahThemeTitleFromSlug(themeSlug);
   if (!themeTitle) return null;
   return themeTitle as SectionKey;
@@ -2971,7 +2972,6 @@ function SectionCard({ sectionKey, books, onSelect, volumeCountOverride, readCou
 }) {
   const { label, description, Icon, accent, numero } = getSectionMeta(sectionKey);
   const isBibleSection = sectionKey === 'BÍBLIA';
-  const isLockedSection = isBibleSection;
   const cover = books.find((book) => Boolean(book.image))?.image;
   const volumeCount = Math.max(0, Math.trunc(volumeCountOverride ?? books.length));
   const totalRead = Math.max(0, Math.trunc(readCountOverride ?? pm.countRead('livraria', books.map((b) => b.slug))));
@@ -2979,14 +2979,9 @@ function SectionCard({ sectionKey, books, onSelect, volumeCountOverride, readCou
   return (
     <div
       onClick={() => {
-        if (isLockedSection) return;
         onSelect();
       }}
-      className={`interactive-card group relative w-full h-40 sm:h-44 rounded-2xl overflow-hidden transition-all duration-300 border border-primary/25 ${
-        isLockedSection
-          ? 'cursor-not-allowed opacity-95'
-          : 'cursor-pointer active:scale-[0.98] gold-glow-hover hover:border-primary/40 hover:shadow-[0_0_40px_rgba(242,192,141,0.10)]'
-      }`}
+      className="interactive-card group relative w-full h-40 sm:h-44 rounded-2xl overflow-hidden transition-all duration-300 border border-primary/25 cursor-pointer active:scale-[0.98] gold-glow-hover hover:border-primary/40 hover:shadow-[0_0_40px_rgba(242,192,141,0.10)]"
     >
       {/* Cover image — blurred, zooms out on hover */}
       {cover && (
@@ -3015,15 +3010,15 @@ function SectionCard({ sectionKey, books, onSelect, volumeCountOverride, readCou
           <div className="flex items-center gap-2">
             <Icon size={15} className="text-primary/90 group-hover:text-primary transition-colors shrink-0" />
             <span className="inline-flex rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.18em] text-primary">
-              {isBibleSection ? 'Seção em produção' : `Seção com ${volumeCount} volume${volumeCount !== 1 ? 's' : ''}`}
+              {isBibleSection ? `${volumeCount} estudo${volumeCount !== 1 ? 's' : ''} bíblico${volumeCount !== 1 ? 's' : ''}` : `Seção com ${volumeCount} volume${volumeCount !== 1 ? 's' : ''}`}
             </span>
           </div>
-          {totalRead > 0 && volumeCount > 0 && !isLockedSection && (
+          {totalRead > 0 && volumeCount > 0 && (
             <span className="text-[7px] sm:text-[8px] font-black uppercase tracking-widest text-white/40 bg-black/50 px-1.5 sm:px-2 py-0.5 rounded-full border border-white/5">
               {totalRead}/{volumeCount} lidos
             </span>
           )}
-          {volumeCount === 0 && !isLockedSection && (
+          {volumeCount === 0 && (
             <span className="text-[7px] sm:text-[8px] font-black uppercase tracking-widest text-primary/90 bg-black/55 px-1.5 sm:px-2 py-0.5 rounded-full border border-primary/35">
               Em preparação
             </span>
@@ -3043,24 +3038,12 @@ function SectionCard({ sectionKey, books, onSelect, volumeCountOverride, readCou
               {noCoverNotice}
             </p>
           )}
-          {isLockedSection ? (
-            <>
-              <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-amber-300/50 bg-gradient-to-r from-amber-500/25 via-yellow-300/20 to-amber-500/25 px-2.5 py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.16em] text-amber-100">
-                <Lock size={10} className="shrink-0" />
-                Seção bloqueada
-              </div>
-              <p className="mt-1 text-[8px] sm:text-[9px] text-amber-100/85 leading-snug font-semibold max-w-[260px]">
-                Seção em preparação, prevista para ser aberta ainda este ano.
-              </p>
-            </>
-          ) : (
-            <button
-              type="button"
-              className="mt-2 inline-flex items-center rounded-full border border-amber-300/60 bg-gradient-to-r from-amber-500/30 via-yellow-300/25 to-amber-500/30 px-2.5 py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.16em] text-amber-100 transition-all duration-300 animate-[pulse_2.6s_ease-in-out_infinite] group-hover:border-amber-200 group-hover:text-amber-50"
-            >
-              Clique aqui
-            </button>
-          )}
+          <button
+            type="button"
+            className="mt-2 inline-flex items-center rounded-full border border-amber-300/60 bg-gradient-to-r from-amber-500/30 via-yellow-300/25 to-amber-500/30 px-2.5 py-1 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.16em] text-amber-100 transition-all duration-300 animate-[pulse_2.6s_ease-in-out_infinite] group-hover:border-amber-200 group-hover:text-amber-50"
+          >
+            Clique aqui
+          </button>
         </div>
       </div>
     </div>
@@ -3342,6 +3325,7 @@ export default function Bookstore({
   const canonicalSelahPath = useMemo(() => {
     if (isTypesMode) return null;
     if (!selectedSection) return '/selah';
+    if (selectedSection === 'BÍBLIA') return '/biblia';
 
     const theme = SELAH_THEME_BY_SECTION[selectedSection];
     if (!theme) return '/selah';

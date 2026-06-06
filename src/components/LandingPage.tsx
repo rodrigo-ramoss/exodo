@@ -4,6 +4,7 @@ import LoginModal from './LoginModal';
 
 interface LandingPageProps {
   onEnter: () => void;
+  onOpenBible?: () => void;
 }
 
 const FEATURES = [
@@ -12,7 +13,7 @@ const FEATURES = [
   { icon: Library,      label: 'Rolos',        desc: 'Livraria completa de e-books e séries' },
   { icon: BookMarked,   label: 'Babel',        desc: 'Refutações e análise crítica de doutrinas' },
   { icon: Scroll,       label: 'Apócrifos',    desc: 'Textos deuterocanônicos e protocolo de leitura' },
-  { icon: BookOpen,     label: 'Bíblia',       desc: 'Leitura bíblica com eixos temáticos' },
+  { icon: BookOpen,     label: 'Bíblia',       desc: 'Comentários bíblicos liberados para estudo', free: true },
 ];
 
 const PLAN_ITEMS = [
@@ -25,7 +26,7 @@ const PLAN_ITEMS = [
   'Suporte via canal da comunidade',
 ];
 
-export default function LandingPage({ onEnter }: LandingPageProps) {
+export default function LandingPage({ onEnter, onOpenBible }: LandingPageProps) {
   const [showLogin, setShowLogin] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
@@ -83,10 +84,19 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            {onOpenBible && (
+              <button
+                onClick={onOpenBible}
+                className="bg-primary text-on-primary-container font-black text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:brightness-110 transition-all shadow-lg"
+                style={{ boxShadow: '0 4px 24px rgba(242,192,141,0.25)' }}
+              >
+                Estudar Bíblia
+              </button>
+            )}
             <button
               onClick={handleSubscribe}
               disabled={checkoutLoading}
-              className="bg-primary text-on-primary-container font-black text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:brightness-110 transition-all disabled:opacity-60 shadow-lg"
+              className="bg-surface-container border border-primary/35 text-on-surface font-black text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:border-primary/55 transition-all disabled:opacity-60 shadow-lg"
               style={{ boxShadow: '0 4px 24px rgba(242,192,141,0.25)' }}
             >
               {checkoutLoading ? 'Aguarde...' : 'Assinar Agora'}
@@ -119,10 +129,18 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {FEATURES.map(({ icon: Icon, label, desc }) => (
-            <div
+          {FEATURES.map(({ icon: Icon, label, desc, free }) => (
+            <button
               key={label}
-              className="bg-surface-container-low border border-outline-variant/15 rounded-2xl p-4 flex flex-col gap-2 relative overflow-hidden group"
+              type="button"
+              onClick={() => {
+                if (free) onOpenBible?.();
+              }}
+              className={`text-left bg-surface-container-low border rounded-2xl p-4 flex flex-col gap-2 relative overflow-hidden group ${
+                free
+                  ? 'border-primary/35 hover:border-primary/55 transition-colors cursor-pointer'
+                  : 'border-outline-variant/15 cursor-default'
+              }`}
             >
               <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                 <Icon size={16} className="text-primary" />
@@ -133,8 +151,14 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               <p className="text-[11px] text-on-surface-variant leading-snug">
                 {desc}
               </p>
-              <Lock size={10} className="absolute top-3 right-3 text-on-surface-variant/25" />
-            </div>
+              {free ? (
+                <span className="absolute top-3 right-3 rounded-full border border-primary/35 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-widest text-primary">
+                  Aberto
+                </span>
+              ) : (
+                <Lock size={10} className="absolute top-3 right-3 text-on-surface-variant/25" />
+              )}
+            </button>
           ))}
         </div>
       </section>

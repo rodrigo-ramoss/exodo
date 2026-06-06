@@ -9,7 +9,6 @@ import { Screen } from './types';
 import Layout from './components/Layout';
 import ScreenWrapper from './components/ScreenWrapper';
 import HomeDashboard from './components/HomeDashboard';
-import Bible from './components/Bible';
 import Studies from './components/Studies';
 import Disciples from './components/Disciples';
 import EBD from './components/EBD';
@@ -157,7 +156,7 @@ export default function App() {
       case Screen.HOME:
         return <HomeDashboard onNavigate={handleNavigate} />;
       case Screen.BIBLE:
-        return <Bible />;
+        return <Bookstore routeThemeSlug="biblia" />;
       case Screen.PREACHER:
         return <Preacher />;
       case Screen.COURSE:
@@ -200,8 +199,8 @@ export default function App() {
     );
   }
 
-  if (!isSubscriber) {
-    return <LandingPage onEnter={() => {}} />;
+  if (!isSubscriber && currentScreen !== Screen.BIBLE) {
+    return <LandingPage onEnter={() => {}} onOpenBible={() => handleNavigate(Screen.BIBLE, 'none')} />;
   }
 
   return (
