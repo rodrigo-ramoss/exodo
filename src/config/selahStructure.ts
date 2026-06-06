@@ -91,6 +91,7 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     subsections: buildSubsections('antropologia-do-reino', [
       'Alimentação',
       'Corpo Humano',
+      'Saúde',
       'Sexo',
       'Pharmakeia',
       'Cura Divina',
@@ -211,7 +212,17 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     title: 'IA & APOCALIPSE',
     description: 'Tecnologia, controle, marca e sinais do fim.',
     order: 12,
-    subsections: buildSubsections('ia-e-apocalipse', ['Marca', 'Imagem da besta', 'Transhumanismo', 'Singularidade', 'Vigilância', 'CBDC', 'Metaverso', 'Falsa revelação']),
+    subsections: buildSubsections('ia-e-apocalipse', [
+      'Marca',
+      'Imagem da besta',
+      'Transhumanismo',
+      'Singularidade',
+      'Vigilância',
+      'CBDC',
+      'Metaverso',
+      'Necromancia Digital',
+      'Falsa revelação',
+    ]),
   },
   {
     id: 'deus-pai',
