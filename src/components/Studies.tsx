@@ -263,15 +263,12 @@ function formatBadge(order: number): string {
 
 function parseOrderHint(value?: string): number | null {
   if (!value) return null;
-  const match = value.match(/\b(?:e-?book|ebook|livro|volume|vol\.?|parte)\s*0*(\d{1,3})\b/i)
-    || value.match(/\b0*(\d{1,3})\b/);
-  if (!match) {
-    const normalized = normalizeText(value);
-    const ordinalMatch = normalized.match(
-      /\b(primeir[oa]|segund[oa]|terceir[oa]|quart[oa]|quint[oa]|sext[oa]|setim[oa]|oitav[oa]|non[oa]|decim[oa])\s+(?:e\s*)?(?:e-?book|ebook|livro|volume|vol|parte)\b/,
-    );
-    if (!ordinalMatch) return null;
 
+  const normalized = normalizeText(value);
+  const ordinalMatch = normalized.match(
+    /\b(primeir[oa]|segund[oa]|terceir[oa]|quart[oa]|quint[oa]|sext[oa]|setim[oa]|oitav[oa]|non[oa]|decim[oa])\s+(?:e\s*)?(?:e-?book|ebook|livro|volume|vol|parte)\b/,
+  );
+  if (ordinalMatch) {
     const ordinalOrders: Record<string, number> = {
       primeiro: 1,
       primeira: 1,
@@ -297,6 +294,11 @@ function parseOrderHint(value?: string): number | null {
 
     return ordinalOrders[ordinalMatch[1]] ?? null;
   }
+
+  const match = value.match(/\b(?:e-?book|ebook|livro|volume|vol\.?|parte)\s*0*(\d{1,3})\b/i)
+    || value.match(/\b0*(\d{1,3})\b/);
+  if (!match) return null;
+
   const parsed = Number.parseInt(match[1], 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
 }
