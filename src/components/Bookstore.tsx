@@ -81,6 +81,9 @@ interface BibleStudyEntry {
   book: string;
   chapter: number;
   title: string;
+  description?: string;
+  image?: string;
+  volume: number;
   content: string;
 }
 
@@ -1574,6 +1577,21 @@ const BIBLE_SUBSECTION_KEYS = Object.keys(BIBLE_SUBSECTIONS) as BibleSubsectionK
 const BIBLE_BOOK_TOTAL_CHAPTERS: Partial<Record<string, number>> = {
   'juizes': 21,
   'efesios': 6,
+  '1corintios': 16,
+};
+
+const BIBLE_CHAPTER_SERIES_META: Record<string, { title: string; description: string }> = {
+  'NOVO TESTAMENTO:1 Coríntios:15': {
+    title: 'A SEMENTE DA VITÓRIA',
+    description:
+      'Um estudo expositivo de 1 Coríntios 15 sobre a ressurreição de Cristo, a transformação do corpo e a derrota da Morte',
+  },
+};
+
+const FIRST_CORINTHIANS_15_COVER_BY_VOLUME: Record<number, string> = {
+  1: '/image/rolos/selah/biblia/o fundamento inabalavel.webp',
+  2: '/image/rolos/selah/biblia/a semente e o corpo glorificado.webp',
+  3: '/image/rolos/selah/biblia/a arvore do conhecimento.webp',
 };
 
 function normalizeBibleBookKey(raw: string): string {
@@ -1593,6 +1611,33 @@ function extractBibleBookFromPath(pathKey: string): string | null {
   return parts[1] || null;
 }
 
+function extractBibleChapterFromPath(pathKey: string): number | null {
+  const match = pathKey.replace(/\\/g, '/').match(/(?:capitulo|capitulo|chapter)\s*(\d{1,3})/i);
+  if (!match) return null;
+  const parsed = Number(match[1]);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
+
+function normalizeBibleBookCandidate(raw: string): string {
+  return raw.replace(/\s+\d{1,3}\s*$/, '').trim();
+}
+
+function resolveBibleStudyImage(
+  rawImage: string | undefined,
+  book: string,
+  chapter: number,
+  volume: number,
+): string | undefined {
+  if (book === '1 Coríntios' && chapter === 15) {
+    return FIRST_CORINTHIANS_15_COVER_BY_VOLUME[volume];
+  }
+
+  const image = (rawImage || '').trim();
+  if (!image || image.startsWith('https://via.placeholder.com')) return undefined;
+  if (image.startsWith('/')) return image;
+  return `/image/rolos/selah/biblia/${image}`;
+}
+
 function discoverBibleStudies(): BibleStudyEntry[] {
   const entries: BibleStudyEntry[] = [];
 
@@ -1603,15 +1648,16 @@ function discoverBibleStudies(): BibleStudyEntry[] {
       : 'VELHO TESTAMENTO';
     const frontmatter = parseFrontmatter(content);
     const heading = removeFrontmatter(content).match(/^#\s+(.+)$/m)?.[1]?.trim() || '';
-    const bookCandidate = (frontmatter.livro || extractBibleBookFromPath(pathKey) || '').trim();
+    const bookCandidate = normalizeBibleBookCandidate((frontmatter.livro || frontmatter.book || extractBibleBookFromPath(pathKey) || '').trim());
     if (!bookCandidate) continue;
     const chapterCandidate = (frontmatter.capitulo || '').trim();
-    const parsedChapter = Number(chapterCandidate || heading.match(/\b(\d{1,3})\b/)?.[1] || 0);
+    const parsedChapter = Number(chapterCandidate || extractBibleChapterFromPath(pathKey) || heading.match(/\b(\d{1,3})\b/)?.[1] || 0);
     if (!Number.isFinite(parsedChapter) || parsedChapter <= 0) continue;
 
     const title = (frontmatter.title || heading || `Capítulo ${parsedChapter}`).trim();
     const bookDisplay = BIBLE_SUBSECTIONS[testament].find((book) => normalizeBibleBookKey(book) === normalizeBibleBookKey(bookCandidate));
     if (!bookDisplay) continue;
+    const volume = extractVolume(title, pathKey);
 
     entries.push({
       id: `${testament}:${bookDisplay}:${parsedChapter}:${slugify(title)}`,
@@ -1619,6 +1665,9 @@ function discoverBibleStudies(): BibleStudyEntry[] {
       book: bookDisplay,
       chapter: parsedChapter,
       title,
+      description: frontmatter.description,
+      image: resolveBibleStudyImage(frontmatter.image, bookDisplay, parsedChapter, volume),
+      volume,
       content: content.replace(/^\uFEFF/, ''),
     });
   }
@@ -1627,7 +1676,7 @@ function discoverBibleStudies(): BibleStudyEntry[] {
 }
 
 function extractBibleStudyVerseStart(study: BibleStudyEntry): number {
-  const chapterPattern = new RegExp(`${study.chapter}\\.(\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?`, 'i');
+  const chapterPattern = new RegExp(`${study.chapter}[.:](\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?`, 'i');
   const fromTitle = study.title.match(chapterPattern)?.[1];
   const parsed = Number(fromTitle);
   return Number.isFinite(parsed) ? parsed : 0;
@@ -2635,6 +2684,73 @@ function BookCard({
         )}
       </div>
     </div>
+  );
+}
+
+function BibleStudyCoverCard({ study, onSelect }: { study: BibleStudyEntry; onSelect: () => void }) {
+  const readerSlug = buildBibleStudyReaderSlug(study);
+  const progress = pm.getProgress('livraria', readerSlug);
+  const isCompleted = pm.isRead('livraria', readerSlug);
+  const readsCount = pm.getReadCount('livraria', readerSlug);
+  const clamped = Math.max(0, Math.min(100, Math.round(progress)));
+  const isReading = clamped > 0 && !isCompleted;
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className="interactive-card group shrink-0 w-[156px] sm:w-[176px] flex flex-col text-left cursor-pointer active:scale-95 transition-transform snap-start"
+    >
+      <div className="relative aspect-[2/3] w-full overflow-hidden rounded-2xl border border-primary/20 bg-surface-container-high shadow-2xl transition-colors group-hover:border-primary/55">
+        <AppImage
+          className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+          src={study.image}
+          alt={study.title}
+        />
+        {isCompleted && (
+          <div className="absolute top-1.5 right-1.5 flex items-center gap-1 rounded-full bg-black/70 border border-[#D4AF37]/60 px-2 py-0.5">
+            <Check size={8} className="text-[#D4AF37]" />
+            <span className="text-[7px] font-black uppercase tracking-widest text-[#D4AF37]">Lido</span>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-2 flex select-none flex-col gap-1.5 px-0.5">
+        <span className="text-[9px] font-black uppercase tracking-[0.15em] text-on-surface-variant/45 leading-none">
+          Vol. {String(study.volume).padStart(2, '0')}
+        </span>
+
+        {study.description && (
+          <p className="text-[12px] text-on-surface-variant/80 leading-snug line-clamp-2 font-semibold">
+            {study.description}
+          </p>
+        )}
+
+        <div className="flex items-center gap-1.5">
+          <div className="h-1 flex-1 overflow-hidden rounded-full bg-outline-variant/20">
+            <div
+              className={
+                isCompleted
+                  ? 'h-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] shadow-[0_0_6px_rgba(212,175,55,0.4)]'
+                  : 'h-full bg-gradient-to-r from-orange-500 to-yellow-400 shadow-[0_0_5px_rgba(249,115,22,0.3)]'
+              }
+              style={{ width: `${isReading ? clamped : isCompleted ? 100 : 0}%` }}
+            />
+          </div>
+          {(isReading || isCompleted) && (
+            <span className={`text-[8px] font-black leading-none shrink-0 ${isCompleted ? 'text-[#D4AF37]' : 'text-orange-400'}`}>
+              {isCompleted ? '100' : clamped}%
+            </span>
+          )}
+        </div>
+
+        {readsCount > 0 && (
+          <span className="text-[8px] font-black uppercase tracking-widest text-[#D4AF37]/80">
+            Lido {readsCount}x
+          </span>
+        )}
+      </div>
+    </button>
   );
 }
 
@@ -4403,6 +4519,11 @@ export default function Bookstore({
               .slice()
               .sort((a, b) => extractBibleStudyVerseStart(a) - extractBibleStudyVerseStart(b))
           : [];
+        const selectedChapterSeriesMeta = selectedBibleChapter
+          ? BIBLE_CHAPTER_SERIES_META[`${selectedBibleSubsection}:${selectedBibleBook}:${selectedBibleChapter}`]
+          : undefined;
+        const selectedChapterUsesCoverCards = selectedChapterStudies.length > 0
+          && selectedChapterStudies.every((study) => Boolean(study.image));
 
         if (selectedBibleBook) {
           const totalChapters = BIBLE_BOOK_TOTAL_CHAPTERS[normalizeBibleBookKey(selectedBibleBook)] ?? 0;
@@ -4485,11 +4606,27 @@ export default function Bookstore({
 
                 {selectedBibleChapter && (
                   <div className="relative z-10 border-t border-primary/15 mt-4 pt-4 sm:pt-5">
-                    <h3 className="font-headline text-lg sm:text-xl font-black tracking-tight text-on-surface mb-3">
-                      {selectedBibleBook} {selectedBibleChapter}
+                    <h3 className="font-headline text-lg sm:text-xl font-black tracking-tight text-on-surface uppercase">
+                      {selectedChapterSeriesMeta?.title || `${selectedBibleBook} ${selectedBibleChapter}`}
                     </h3>
+                    {selectedChapterSeriesMeta?.description && (
+                      <p className="mt-1 mb-3 max-w-2xl text-[11px] sm:text-xs leading-relaxed text-on-surface-variant/75 font-medium">
+                        {selectedChapterSeriesMeta.description}
+                      </p>
+                    )}
                     {selectedChapterStudies.length > 0 ? (
-                      <div className="space-y-2.5">
+                      selectedChapterUsesCoverCards ? (
+                        <DragScrollRow>
+                          {selectedChapterStudies.map((study) => (
+                            <BibleStudyCoverCard
+                              key={study.id}
+                              study={study}
+                              onSelect={() => handleOpenBibleStudy(study)}
+                            />
+                          ))}
+                        </DragScrollRow>
+                      ) : (
+                      <div className="mt-3 space-y-2.5">
                         {selectedChapterStudies.map((study) => {
                           const readerSlug = buildBibleStudyReaderSlug(study);
                           const progress = pm.getProgress('livraria', readerSlug);
@@ -4535,6 +4672,7 @@ export default function Bookstore({
                           );
                         })}
                       </div>
+                      )
                     ) : (
                       <p className="text-[11px] sm:text-xs text-on-surface-variant/80">
                         Sem estudos publicados para este capítulo.

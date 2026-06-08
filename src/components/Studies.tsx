@@ -265,9 +265,55 @@ function parseOrderHint(value?: string): number | null {
   if (!value) return null;
   const match = value.match(/\b(?:e-?book|ebook|livro|volume|vol\.?|parte)\s*0*(\d{1,3})\b/i)
     || value.match(/\b0*(\d{1,3})\b/);
-  if (!match) return null;
+  if (!match) {
+    const normalized = normalizeText(value);
+    const ordinalMatch = normalized.match(
+      /\b(primeir[oa]|segund[oa]|terceir[oa]|quart[oa]|quint[oa]|sext[oa]|setim[oa]|oitav[oa]|non[oa]|decim[oa])\s+(?:e\s*)?(?:e-?book|ebook|livro|volume|vol|parte)\b/,
+    );
+    if (!ordinalMatch) return null;
+
+    const ordinalOrders: Record<string, number> = {
+      primeiro: 1,
+      primeira: 1,
+      segundo: 2,
+      segunda: 2,
+      terceiro: 3,
+      terceira: 3,
+      quarto: 4,
+      quarta: 4,
+      quinto: 5,
+      quinta: 5,
+      sexto: 6,
+      sexta: 6,
+      setimo: 7,
+      setima: 7,
+      oitavo: 8,
+      oitava: 8,
+      nono: 9,
+      nona: 9,
+      decimo: 10,
+      decima: 10,
+    };
+
+    return ordinalOrders[ordinalMatch[1]] ?? null;
+  }
   const parsed = Number.parseInt(match[1], 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
+
+function getExplicitOrderHint(item: Pick<ManaStudyItem, 'time' | 'title' | 'file'>): number | null {
+  return parseOrderHint(item.time)
+    ?? parseOrderHint(item.title)
+    ?? parseOrderHint(item.file?.split('/').pop());
+}
+
+function getDescriptiveOrderHint(item: Pick<ManaStudyItem, 'description'>): number | null {
+  return parseOrderHint(item.description);
+}
+
+function getTemaOrderHint(tema: Pick<ManaTema, 'badge' | 'title' | 'file' | 'description'>): number | null {
+  return getExplicitOrderHint({ time: tema.badge, title: tema.title, file: tema.file })
+    ?? getDescriptiveOrderHint(tema);
 }
 
 function parseFrontmatter(raw: string): Record<string, string> {
@@ -559,12 +605,17 @@ export default function Studies({ openSlug }: StudiesProps) {
       const tendaB = resolveTendaFromSlugOrFolder(b.slug, b.file);
       if (sortOrder[tendaA] !== sortOrder[tendaB]) return sortOrder[tendaA] - sortOrder[tendaB];
 
-      const orderA = parseOrderHint(a.time)
-        ?? parseOrderHint(a.title)
-        ?? parseOrderHint(a.file?.split('/').pop());
-      const orderB = parseOrderHint(b.time)
-        ?? parseOrderHint(b.title)
-        ?? parseOrderHint(b.file?.split('/').pop());
+      const explicitOrderA = getExplicitOrderHint(a);
+      const explicitOrderB = getExplicitOrderHint(b);
+
+      if (explicitOrderA !== null && explicitOrderB !== null && explicitOrderA !== explicitOrderB) {
+        return explicitOrderA - explicitOrderB;
+      }
+      if (explicitOrderA !== null && explicitOrderB === null) return -1;
+      if (explicitOrderA === null && explicitOrderB !== null) return 1;
+
+      const orderA = getDescriptiveOrderHint(a);
+      const orderB = getDescriptiveOrderHint(b);
 
       if (orderA !== null && orderB !== null && orderA !== orderB) return orderA - orderB;
       if (orderA !== null && orderB === null) return -1;
@@ -647,7 +698,28 @@ export default function Studies({ openSlug }: StudiesProps) {
       }
     }
 
-    return Array.from(deduped.values()).slice(0, 30);
+    return Array.from(deduped.values())
+      .sort((a, b) => {
+        const tendaOrder: Record<TendaId, number> = {
+          'vida-espiritual': 1,
+          'vida-interior': 2,
+          'vida-exterior': 3,
+        };
+
+        if (tendaOrder[a.tendaId] !== tendaOrder[b.tendaId]) {
+          return tendaOrder[a.tendaId] - tendaOrder[b.tendaId];
+        }
+
+        const orderA = getTemaOrderHint(a.tema);
+        const orderB = getTemaOrderHint(b.tema);
+        if (orderA !== null && orderB !== null && orderA !== orderB) return orderA - orderB;
+        if (orderA !== null && orderB === null) return -1;
+        if (orderA === null && orderB !== null) return 1;
+
+        if (b.result.score !== a.result.score) return b.result.score - a.result.score;
+        return a.tema.title.localeCompare(b.tema.title, 'pt-BR');
+      })
+      .slice(0, 30);
   }, [allTemas, manaSearchIndex, manaSearchQuery]);
 
   useEffect(() => {
