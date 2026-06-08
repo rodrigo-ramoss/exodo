@@ -1638,6 +1638,10 @@ function resolveBibleStudyImage(
   return `/image/rolos/selah/biblia/${image}`;
 }
 
+function extractBibleStudyVolume(title: string, pathKey: string): number {
+  return extractVolumeFromText(`${title} ${pathKey}`) ?? 1;
+}
+
 function discoverBibleStudies(): BibleStudyEntry[] {
   const entries: BibleStudyEntry[] = [];
 
@@ -1657,7 +1661,7 @@ function discoverBibleStudies(): BibleStudyEntry[] {
     const title = (frontmatter.title || heading || `Capítulo ${parsedChapter}`).trim();
     const bookDisplay = BIBLE_SUBSECTIONS[testament].find((book) => normalizeBibleBookKey(book) === normalizeBibleBookKey(bookCandidate));
     if (!bookDisplay) continue;
-    const volume = extractVolume(title, pathKey);
+    const volume = extractBibleStudyVolume(title, pathKey);
 
     entries.push({
       id: `${testament}:${bookDisplay}:${parsedChapter}:${slugify(title)}`,
