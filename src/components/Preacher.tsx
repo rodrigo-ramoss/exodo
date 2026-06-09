@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import { ArrowLeft, BookOpen, NotebookPen } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 
+type PreacherSectionId = 'sermoes' | 'estudos';
+
 type SermonItem = {
   id: string;
   slug: string;
@@ -9,7 +11,29 @@ type SermonItem = {
   description: string;
   content: string;
   format: 'markdown' | 'html';
+  section: PreacherSectionId;
+  groupLabel?: string;
 };
+
+const PREACHER_SECTIONS: Array<{
+  id: PreacherSectionId;
+  title: string;
+  description: string;
+  emptyText: string;
+}> = [
+  {
+    id: 'sermoes',
+    title: 'Sermões',
+    description: 'Sermões prontos para estudar, adaptar e pregar.',
+    emptyText: 'Nenhum sermão disponível no momento.',
+  },
+  {
+    id: 'estudos',
+    title: 'Estudo',
+    description: 'Estudos bíblicos para aprofundamento e preparo.',
+    emptyText: 'Nenhum estudo disponível no momento.',
+  },
+];
 
 const CONTENT_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml|html?)$/i;
 const MARKDOWN_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml)$/i;
@@ -39,6 +63,16 @@ function titleCase(raw: string): string {
     .join(' ');
 }
 
+function normalizeToken(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function parseFrontmatter(markdown: string): Record<string, string> {
   const normalized = markdown.replace(/^\uFEFF/, '').trimStart();
   const match = normalized.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---/);
@@ -64,6 +98,19 @@ function toRelativePreacherPath(pathKey: string): string {
   const marker = markers.find((item) => normalized.includes(item));
   if (!marker) return normalized;
   return normalized.slice(normalized.indexOf(marker) + marker.length);
+}
+
+function resolvePreacherSection(relativePath: string): PreacherSectionId {
+  const firstFolder = relativePath.replace(/\\/g, '/').split('/').filter(Boolean)[0] || '';
+  const normalized = normalizeToken(firstFolder);
+  if (normalized === 'estudo' || normalized === 'estudos') return 'estudos';
+  return 'sermoes';
+}
+
+function resolveGroupLabel(relativePath: string, section: PreacherSectionId): string | undefined {
+  const parts = relativePath.replace(/\\/g, '/').split('/').filter(Boolean);
+  if (section !== 'estudos' || parts.length < 3) return undefined;
+  return titleCase(parts[1] || '');
 }
 
 function detectTitle(pathKey: string, markdown: string): string {
@@ -122,6 +169,7 @@ function discoverSermons(): SermonItem[] {
     const relativePath = toRelativePreacherPath(pathKey);
     const slug = relativePath.replace(CONTENT_FILE_EXTENSION_REGEX, '');
     const format: SermonItem['format'] = MARKDOWN_FILE_EXTENSION_REGEX.test(relativePath) ? 'markdown' : 'html';
+    const section = resolvePreacherSection(relativePath);
     list.push({
       id: slug,
       slug,
@@ -129,20 +177,39 @@ function discoverSermons(): SermonItem[] {
       description: buildDescription(content),
       content: content.replace(/^\uFEFF/, ''),
       format,
+      section,
+      groupLabel: resolveGroupLabel(relativePath, section),
     });
   }
 
-  return list.sort((a, b) => a.title.localeCompare(b.title, 'pt-BR', { numeric: true }));
+  return list.sort((a, b) => {
+    const sectionOrder = PREACHER_SECTIONS.findIndex((section) => section.id === a.section)
+      - PREACHER_SECTIONS.findIndex((section) => section.id === b.section);
+    if (sectionOrder !== 0) return sectionOrder;
+    return a.title.localeCompare(b.title, 'pt-BR', { numeric: true });
+  });
 }
 
 export default function Preacher() {
   const sermons = useMemo(() => discoverSermons(), []);
+  const [selectedSection, setSelectedSection] = useState<PreacherSectionId>('sermoes');
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
   const selected = useMemo(
     () => sermons.find((item) => item.slug === selectedSlug) ?? null,
     [sermons, selectedSlug],
   );
+  const visibleItems = useMemo(
+    () => sermons.filter((item) => item.section === selectedSection),
+    [sermons, selectedSection],
+  );
+  const selectedSectionMeta = PREACHER_SECTIONS.find((section) => section.id === selectedSection) ?? PREACHER_SECTIONS[0];
+  const countsBySection = useMemo(() => {
+    const counts = new Map<PreacherSectionId, number>();
+    for (const section of PREACHER_SECTIONS) counts.set(section.id, 0);
+    for (const item of sermons) counts.set(item.section, (counts.get(item.section) || 0) + 1);
+    return counts;
+  }, [sermons]);
 
   if (selected?.format === 'html') {
     return (
@@ -204,21 +271,47 @@ export default function Preacher() {
       </div>
 
       <section className="px-4 sm:px-6 grid grid-cols-1 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
+          {PREACHER_SECTIONS.map((section) => {
+            const isActive = section.id === selectedSection;
+            const count = countsBySection.get(section.id) || 0;
+            return (
+              <button
+                key={section.id}
+                type="button"
+                onClick={() => setSelectedSection(section.id)}
+                className={`rounded-2xl border px-3 py-3 text-left transition-colors ${
+                  isActive
+                    ? 'border-primary/45 bg-primary/15'
+                    : 'border-outline-variant/25 bg-surface-container-low hover:border-primary/35'
+                }`}
+              >
+                <span className="block font-headline text-sm sm:text-base font-black tracking-tight text-on-surface">
+                  {section.title}
+                </span>
+                <span className="mt-0.5 block text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+                  {count} {count === 1 ? 'item' : 'itens'}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
         <article className="rounded-2xl border border-outline-variant/20 bg-surface-container-low p-3 sm:p-4">
           <h2 className="font-headline text-lg sm:text-xl font-black tracking-tight text-on-surface">
-            Sermões disponíveis para pregação
+            {selectedSectionMeta.title}
           </h2>
           <p className="mt-1 text-[11px] text-on-surface-variant/75">
-            Selecione um sermão para abrir e estudar.
+            {selectedSectionMeta.description}
           </p>
 
           <div className="mt-3 space-y-2">
-            {sermons.length === 0 ? (
+            {visibleItems.length === 0 ? (
               <div className="rounded-xl border border-outline-variant/20 bg-black/15 px-3 py-4 text-xs text-on-surface-variant/80">
-                Nenhum sermão disponível no momento.
+                {selectedSectionMeta.emptyText}
               </div>
             ) : (
-              sermons.map((item) => (
+              visibleItems.map((item) => (
                 <button
                   key={item.id}
                   type="button"
@@ -231,6 +324,11 @@ export default function Preacher() {
                       {item.title}
                     </p>
                   </div>
+                  {item.groupLabel && (
+                    <p className="mt-1 text-[10px] font-black uppercase tracking-[0.14em] text-primary/85">
+                      {item.groupLabel}
+                    </p>
+                  )}
                   <p className="mt-1 text-[10px] text-on-surface-variant/70 line-clamp-2">
                     {item.description}
                   </p>
