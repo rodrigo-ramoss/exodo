@@ -432,6 +432,10 @@ function buildCoverStemVariants(stem: string): string[] {
   const variants = new Set<string>([normalized]);
 
   const replacements: Array<[string, string]> = [
+    ['da ideia ao primeiro ovo', 'criação de galinhas poedeiras ebook 1'],
+    ['manual do criador de poedeiras: da ideia ao primeiro ovo', 'criação de galinhas poedeiras ebook 1'],
+    ['gestao, vendas e escala do negocio', 'criação de galinhas poedeiras ebook 2'],
+    ['manual do criador de poedeiras: gestao, vendas e escala do negocio', 'criação de galinhas poedeiras ebook 2'],
     ['invisivel', 'invisivl'],
     ['mapa do', 'mapado'],
     ['despertar', 'dspertar'],
@@ -563,6 +567,14 @@ function extractSeriesCategoryFromContent(markdown: string): string | null {
   return null;
 }
 
+function frontmatterValue(frontmatter: Record<string, string>, ...keys: string[]): string {
+  for (const key of keys) {
+    const value = (frontmatter[key] || '').trim();
+    if (value) return value;
+  }
+  return '';
+}
+
 function pickCategoryByFolder(folder: string): string {
   const key = normalizeLooseText(folder);
   const dynamicMap: Array<[string, string]> = [
@@ -607,6 +619,7 @@ function pickCategoryByFolder(folder: string): string {
     ['trilogia - o canon oculto', 'Série — O Cânon Oculto'],
     ['trilogia - o veu rasgado', 'Trilogia — O Véu Rasgado'],
     ['trilogia - a coroa roubada', 'Trilogia — A Coroa Roubada'],
+    ['serie - manual do criador de poedeiras', 'Série — Manual do Criador de Poedeiras'],
     ['ferramentas-espirituais', 'FERRAMENTAS'],
     ['ferramentas', 'FERRAMENTAS'],
   ];
@@ -627,6 +640,7 @@ const SECTION_CATEGORY_ALIASES = new Set<string>([
   'cosmologia biblica',
   'mundo espiritual',
   'satanas e demonios',
+  'antisistema',
   'antissistema',
   'ia apocalipse',
   'ia e apocalipse',
@@ -640,6 +654,7 @@ const SECTION_CATEGORY_ALIASES = new Set<string>([
   'ferramentas',
   'ferramentas espirituais',
   'livraria',
+  'rolos',
 ]);
 
 const SUBSECTION_CATEGORY_ALIASES = new Set<string>(
@@ -1368,7 +1383,7 @@ function inferSelahSubsectionFromContext(params: {
 
 function inferBookCoverCandidates(frontmatter: Record<string, string>, title: string, slug: string): string[] {
   const candidates = new Set<string>();
-  const fromMeta = (frontmatter.image || frontmatter.cover || frontmatter.capa || frontmatter.thumbnail || '').trim();
+  const fromMeta = frontmatterValue(frontmatter, 'image', 'cover', 'capa', 'thumbnail');
   const seriesFolder = slug.split('/')[0] ?? '';
 
   if (fromMeta) {
@@ -1448,30 +1463,33 @@ function discoverBooksFromMarkdown(): BookItem[] {
     const frontmatter = parseFrontmatter(content);
     const extractedSeriesCategory = extractSeriesCategoryFromContent(content);
     const firstHeading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
-    const title = frontmatter.title || firstHeading || fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
+    const title = frontmatterValue(frontmatter, 'title', 'titulo') || firstHeading || fileName.replace(CONTENT_FILE_EXTENSION_REGEX, '');
+    const description = frontmatterValue(frontmatter, 'description', 'descricao');
+    const category = frontmatterValue(frontmatter, 'category', 'categoria');
+    const date = frontmatterValue(frontmatter, 'date', 'data');
     const frontmatterSubsection = extractFrontmatterSubsectionCandidate(frontmatter);
     const inferredSubsection = inferSelahSubsectionFromContext({
       themeTitle,
       frontmatterSubsection,
       pathSubsectionCandidate,
       seriesFolder,
-      category: frontmatter.category || '',
+      category,
       title,
-      description: frontmatter.description || '',
+      description,
     });
     const cover =
       inferBookCoverCandidates(frontmatter, title, slug).find((candidate) => isAvailableCoverCandidate(candidate))
-      || inferSeriesFallbackCover(title, slug, frontmatter.category);
+      || inferSeriesFallbackCover(title, slug, category);
 
     return {
       title,
       slug,
-      description: frontmatter.description || '',
-      date: frontmatter.date || '2026-04-18',
-      category: normalizeBookCategory(extractedSeriesCategory || frontmatter.category, seriesFolder),
+      description,
+      date: date || '2026-04-18',
+      category: normalizeBookCategory(extractedSeriesCategory || category, seriesFolder),
       tema: themeTitle ?? undefined,
       subsecao: inferredSubsection,
-      time: frontmatter.time || 'LIVRO',
+      time: frontmatterValue(frontmatter, 'time', 'tempo') || 'LIVRO',
       image: cover,
       seriesFolder,
       sourcePath: pathKey,

@@ -182,11 +182,35 @@ function parseFrontmatter(markdown: string): Record<string, string> {
 
   const result: Record<string, string> = {};
   for (const line of match[1].split(/\r?\n/)) {
-    const entry = line.match(/^\s*([A-Za-z_][\w-]*)\s*:\s*(.*?)\s*$/);
+    const entry = line.match(/^\s*([\p{L}_][\p{L}\p{N}_-]*)\s*:\s*(.*?)\s*$/u);
     if (!entry) continue;
-    result[entry[1].toLowerCase()] = entry[2].replace(/^["']|["']$/g, '');
+    const rawKey = entry[1].toLowerCase();
+    const normalizedKey = rawKey
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+    const value = entry[2].replace(/^["']|["']$/g, '');
+    result[rawKey] = value;
+    result[normalizedKey] = value;
   }
   return result;
+}
+
+function frontmatterValue(frontmatter: Record<string, string>, ...keys: string[]): string {
+  for (const key of keys) {
+    const value = (frontmatter[key] || '').trim();
+    if (value) return value;
+  }
+  return '';
+}
+
+function isGenericSelahCategory(raw: string): boolean {
+  return [
+    'selah',
+    'rolos',
+    'livraria',
+    'antissistema',
+    'antisistema',
+  ].includes(normalizeLookupText(raw));
 }
 
 function humanizeToken(raw: string): string {
@@ -268,7 +292,7 @@ function deriveManaContext(relativePath: string, frontmatter: Record<string, str
 }
 
 function deriveSelahSectionLabel(parts: string[], frontmatter: Record<string, string>): string {
-  const raw = (frontmatter.category || frontmatter.tema || frontmatter.theme || parts[0] || '').trim();
+  const raw = frontmatterValue(frontmatter, 'tema', 'theme', 'secao') || parts[0] || frontmatterValue(frontmatter, 'category', 'categoria');
   return toTitleCaseLabel(raw) || 'Rolos';
 }
 
@@ -317,7 +341,7 @@ function deriveSeriesLabelFromMarkdown(
   if (fromSeriesLine) return fromSeriesLine;
 
   if (section === 'mana') {
-    const category = (frontmatter.category || '').trim();
+    const category = frontmatterValue(frontmatter, 'category', 'categoria');
     if (category) return humanizeToken(category);
     const parentFolder = parts.length > 1 ? parts[parts.length - 2] : '';
     if (parentFolder) return humanizeToken(parentFolder);
@@ -325,10 +349,11 @@ function deriveSeriesLabelFromMarkdown(
   }
 
   if (section === 'selah') {
-    const category = (frontmatter.category || '').trim();
+    const category = frontmatterValue(frontmatter, 'category', 'categoria');
     const normalizedCategory = normalizeLookupText(category);
     const genericSelahCategories = new Set([
       'selah',
+      'rolos',
       'livraria',
       'mundo espiritual',
       'satanas e demonios',
@@ -342,13 +367,14 @@ function deriveSeriesLabelFromMarkdown(
       'ia e apocalipse',
       'historia da igreja',
       'antissistema',
+      'antisistema',
       'reino de deus',
       'fim dos tempos',
       'tipologia biblica',
     ]);
     const seriesFolder = [...parts].reverse().find((part) => /^(serie|trilogia)\s*-/i.test(part));
     if (seriesFolder) return humanizeToken(seriesFolder);
-    if (category && !genericSelahCategories.has(normalizedCategory)) return humanizeToken(category);
+    if (category && !genericSelahCategories.has(normalizedCategory) && !isGenericSelahCategory(category)) return humanizeToken(category);
     const parentFolder = parts.length > 1 ? parts[parts.length - 2] : '';
     if (parentFolder) return humanizeToken(parentFolder);
     return 'Coleção Rolos';
@@ -357,7 +383,7 @@ function deriveSeriesLabelFromMarkdown(
   if (section === 'babel') {
     const parentFolder = parts.length > 1 ? parts[parts.length - 2] : '';
     if (parentFolder) return humanizeToken(parentFolder);
-    const category = (frontmatter.category || '').split(',')[0]?.trim();
+    const category = frontmatterValue(frontmatter, 'category', 'categoria').split(',')[0]?.trim();
     if (category) return humanizeToken(category);
     return 'Discernimento da Matrix';
   }
@@ -495,8 +521,9 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           const parts = toDisplayPathParts(relativePath);
           const fileStem = (parts[parts.length - 1] || '').replace(/\.[^.]+$/, '');
           const frontmatter = parseFrontmatter(content);
-          const title = normalizeSeriesLabel((frontmatter.title || '').trim() || toTitleCaseLabel(fileStem));
-          const image = (frontmatter.image || '').startsWith('/') ? frontmatter.image : undefined;
+          const title = normalizeSeriesLabel(frontmatterValue(frontmatter, 'title', 'titulo') || toTitleCaseLabel(fileStem));
+          const imageSource = frontmatterValue(frontmatter, 'image', 'cover', 'capa', 'thumbnail');
+          const image = imageSource.startsWith('/') ? imageSource : undefined;
 
           if (source.section === 'mana') {
             const fallbackDate = manaDateByTitle.get(normalizeLookupText(title));

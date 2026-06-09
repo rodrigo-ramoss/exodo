@@ -80,7 +80,10 @@ export const SELAH_STRUCTURE: SelahThemeConfig[] = [
     title: 'ANTISSISTEMA',
     description: 'Estudos que usam a Escritura para discernir as estruturas, narrativas e poderes que moldam o sistema deste século.',
     order: 13,
-    subsections: [],
+    subsections: buildSubsections('antissistema', [
+      'Discernindo os tempos',
+      'Negócio próprio',
+    ]),
   },
   {
     id: 'antropologia-do-reino',
@@ -365,6 +368,7 @@ export function resolveSelahThemeTitleFromSlug(value: string): SelahThemeTitle |
   if (!normalized) return null;
 
   const legacyThemeAliases: Record<string, SelahThemeTitle> = {
+    antisistema: 'ANTISSISTEMA',
     'satanas-e-demonios': 'MUNDO ESPIRITUAL',
     'reino-de-deus': 'MUNDO ESPIRITUAL',
   };

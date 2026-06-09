@@ -64,6 +64,25 @@ function parseFrontmatter(markdown: string): ParsedFrontmatter {
   return result;
 }
 
+function frontmatterValue(frontmatter: ParsedFrontmatter, ...keys: string[]): string {
+  for (const key of keys) {
+    const value = frontmatter[key]?.trim();
+    if (value) return value;
+  }
+  return '';
+}
+
+function isGenericSeriesCategory(raw: string): boolean {
+  const normalized = normalizeKey(raw).replace(/-/g, ' ');
+  return [
+    'rolos',
+    'selah',
+    'livraria',
+    'antissistema',
+    'antisistema',
+  ].includes(normalized);
+}
+
 function stripFrontmatter(markdown: string): string {
   return markdown
     .replace(/^\uFEFF/, '')
@@ -176,12 +195,15 @@ export function buildStudySearchIndex(
 
     const frontmatter = parseFrontmatter(content);
     const title =
-      frontmatter.title?.trim()
+      frontmatterValue(frontmatter, 'title', 'titulo')
       || firstHeading(content)
       || titleFromFileName(fileName);
 
-    const series = frontmatter.category?.trim() || deriveSeriesFromPath(parts);
-    const theme = frontmatter.tema?.trim() || frontmatter.theme?.trim() || deriveThemeFromPath(source, parts);
+    const frontmatterSeries = frontmatterValue(frontmatter, 'category', 'categoria');
+    const series = frontmatterSeries && !isGenericSeriesCategory(frontmatterSeries)
+      ? frontmatterSeries
+      : deriveSeriesFromPath(parts);
+    const theme = frontmatterValue(frontmatter, 'tema', 'theme') || deriveThemeFromPath(source, parts);
     const subsection = frontmatter.subsecao?.trim() || frontmatter.subsection?.trim() || deriveSubsectionFromPath(source, parts);
     const slug = normalizeKey(relative.replace(CONTENT_FILE_EXTENSION_REGEX, ''));
     const body = stripMarkdown(content);
