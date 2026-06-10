@@ -27,7 +27,7 @@ export type VerifyCodeResult =
   | { status: 'error' };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
-const AUTH_GATE_ENABLED = import.meta.env.VITE_AUTH_GATE_ENABLED === 'true';
+const AUTH_GATE_ENABLED = import.meta.env.VITE_AUTH_GATE_ENABLED !== 'false';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [email, setEmail] = useState('');
