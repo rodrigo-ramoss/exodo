@@ -123,7 +123,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const result = verifyOtpChallenge(challengeToken, code);
-  if (!result.ok) {
+  if (result.ok === false) {
     const challengeFailure = await incrementChallengeFailure(key, CHALLENGE_ATTEMPT_TTL_MS);
 
     if (challengeFailure.count >= LIMIT_VERIFY_CHALLENGE) {
