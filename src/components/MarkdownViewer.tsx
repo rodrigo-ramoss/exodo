@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm';
 import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X, Highlighter, Trash2, Pencil, FileText, PenLine } from 'lucide-react';
 import type { Components } from 'react-markdown';
 import { pm, type Category } from '../lib/progressManager';
+import { loadRemoteReaderState, remoteSaveReaderState } from '../lib/serverSync';
 
 // ── Highlight helpers ─────────────────────────────────────────────────────────
 const HL_KEY = (slug: string) => `exodo_hl_${slug}`;
@@ -99,6 +100,21 @@ function saveNotes(slug: string, notes: ReaderNote[]): void {
   } catch {
     // noop
   }
+}
+
+function mergeByUpdatedAt<T extends { id: string; createdAt: number; updatedAt: number }>(local: T[], remote: T[]): T[] {
+  const map = new Map<string, T>();
+  for (const item of local) {
+    if (item?.id) map.set(item.id, item);
+  }
+  for (const item of remote) {
+    if (!item?.id) continue;
+    const current = map.get(item.id);
+    if (!current || item.updatedAt >= current.updatedAt) {
+      map.set(item.id, item);
+    }
+  }
+  return Array.from(map.values()).sort((a, b) => a.createdAt - b.createdAt);
 }
 
 type SelectionAnchor = {
@@ -368,6 +384,8 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
   const didFinalizeRef = useRef(false);
   const reachedEndRef = useRef(false);
   const completionCountedRef = useRef(false);
+  const remoteReaderLoadedRef = useRef(false);
+  const remoteReaderSaveTimerRef = useRef<number | null>(null);
   const isCoarsePointer = useMemo(
     () => (typeof window !== 'undefined' && typeof window.matchMedia === 'function'
       ? window.matchMedia('(pointer: coarse)').matches
@@ -410,8 +428,11 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
   }, [clearMarkupSelection]);
 
   useEffect(() => {
-    setHighlights(loadHighlights(slug));
-    setNotes(loadNotes(slug));
+    remoteReaderLoadedRef.current = false;
+    const localHighlights = loadHighlights(slug);
+    const localNotes = loadNotes(slug);
+    setHighlights(localHighlights);
+    setNotes(localNotes);
     setSelPopup(null);
     setRmPopup(null);
     setNotePopup(null);
@@ -423,12 +444,52 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
     setEditingNoteId(null);
     setIsNotesPanelOpen(false);
     setShowMarkupHint(false);
+
+    let cancelled = false;
+    void loadRemoteReaderState(slug)
+      .then((remote) => {
+        if (cancelled || !remote) return;
+        const mergedHighlights = mergeByUpdatedAt(localHighlights, remote.highlights || []);
+        const mergedNotes = mergeByUpdatedAt(localNotes, remote.notes || []);
+        saveHighlights(slug, mergedHighlights);
+        saveNotes(slug, mergedNotes);
+        setHighlights(mergedHighlights);
+        setNotes(mergedNotes);
+      })
+      .finally(() => {
+        if (!cancelled) remoteReaderLoadedRef.current = true;
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [slug]);
+
+  useEffect(() => {
+    if (!remoteReaderLoadedRef.current) return;
+    if (remoteReaderSaveTimerRef.current !== null) {
+      window.clearTimeout(remoteReaderSaveTimerRef.current);
+    }
+    remoteReaderSaveTimerRef.current = window.setTimeout(() => {
+      remoteSaveReaderState(slug, highlights, notes);
+      remoteReaderSaveTimerRef.current = null;
+    }, 900);
+
+    return () => {
+      if (remoteReaderSaveTimerRef.current !== null) {
+        window.clearTimeout(remoteReaderSaveTimerRef.current);
+        remoteReaderSaveTimerRef.current = null;
+      }
+    };
+  }, [highlights, notes, slug]);
 
   useEffect(() => {
     return () => {
       if (markupHintTimerRef.current !== null) {
         window.clearTimeout(markupHintTimerRef.current);
+      }
+      if (remoteReaderSaveTimerRef.current !== null) {
+        window.clearTimeout(remoteReaderSaveTimerRef.current);
       }
     };
   }, []);

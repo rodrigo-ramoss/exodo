@@ -42,7 +42,7 @@ function sign(value: string, secret: string): string {
   return createHmac('sha256', secret).update(value).digest('base64url');
 }
 
-function toSignedToken(payload: Record<string, unknown>, secret: string): string {
+function toSignedToken(payload: object, secret: string): string {
   const data = base64urlEncode(JSON.stringify(payload));
   const signature = sign(data, secret);
   return `${data}.${signature}`;
@@ -204,4 +204,3 @@ export async function readJsonBody(req: VercelRequest): Promise<Record<string, u
 export const authConfig = {
   challengeTtlSeconds: CHALLENGE_TTL_SECONDS,
 };
-

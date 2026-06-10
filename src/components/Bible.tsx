@@ -132,6 +132,14 @@ const AXIS_METADATA: AxisMeta[] = [
 
 const AXIS_BY_ID = Object.fromEntries(AXIS_METADATA.map((axis) => [axis.id, axis])) as Record<string, AxisMeta>;
 
+const BIBLE_COMMENTARY_DESCRIPTION = [
+  'Comentar a Bíblia, para nós, não é repetir o que os outros disseram nem inventar significados espirituosos. É entrar na mente dos autores bíblicos: pensar como eles pensavam, dentro do judaísmo do Segundo Templo, com sua cosmologia, suas técnicas rabínicas e sua esperança apocalíptica.',
+  'Nossos comentários operam em quatro camadas (PaRDeS): o sentido literal (Peshat), as alusões e dicas (Remez), a investigação comparativa com a tradição (Derash) e a revelação do mundo invisível (Sod). Usamos as 7 Regras de Hilel que Jesus e Paulo dominavam. Distinguimos 8 tipos de tipologia bíblica, sempre com controle textual, nunca com alegoria solta.',
+  'Cada livro é lido com sua Biblioteca Mental específica: o que Paulo pensava é diferente do que Tiago pensava, e ambos diferem de João. Recuperamos o contexto do Segundo Templo (1 Enoque, Jubileus, Qumran) como janela para a mente dos autores, sem confundir esses textos com a Escritura canônica.',
+  'Nossos comentários não fogem do combate. Enfrentam o sistema da Besta, denunciam a institucionalização religiosa que costurou o véu rasgado, e anunciam a vitória final de Cristo sobre a Morte e sobre todo principado e potestade.',
+  'O resultado é alimento sólido: exegese rigorosa, densidade teológica, aplicação pastoral corajosa e esperança escatológica sem date-setting.',
+];
+
 const studyMarkdownModules = {
   ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.md', { eager: true, query: '?raw', import: 'default' }),
   ...import.meta.glob('/public/content/eixos biblicos/eixo-*/**/*.mdx', { eager: true, query: '?raw', import: 'default' }),
@@ -602,6 +610,17 @@ export default function Bible() {
             </button>
           );
         })}
+      </section>
+
+      <section className="mt-6 rounded-2xl border border-primary/25 bg-surface-container-low px-4 py-5 sm:px-5">
+        <p className="text-[9px] font-black uppercase tracking-[0.18em] text-primary/85">
+          O que é um comentário bíblico da Voz do Deserto?
+        </p>
+        <div className="mt-3 space-y-3 text-[11px] sm:text-xs font-medium leading-relaxed text-on-surface-variant/85">
+          {BIBLE_COMMENTARY_DESCRIPTION.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </div>
       </section>
     </div>
   );

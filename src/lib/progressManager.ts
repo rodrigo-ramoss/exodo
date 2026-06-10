@@ -12,6 +12,8 @@
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
+import { remoteSaveProgress } from './serverSync';
+
 export type Category = 'mana' | 'apocrifos' | 'refutacao' | 'livraria' | 'biblica' | 'ebd' | 'ensinos' | 'discipulos' | 'pregador';
 
 export interface ContentEntry {
@@ -138,6 +140,7 @@ export const pm = {
     if (scrollPos !== undefined && scrollPos > 0) {
       localStorage.setItem(`scroll_${slug}`, String(scrollPos));
     }
+    remoteSaveProgress(category, slug, entry);
   },
 
   /**
@@ -173,6 +176,7 @@ export const pm = {
     localStorage.setItem(`reads_${slug}`, String(entry.readCount));
     localStorage.setItem(`progress_${slug}`, '0');
     localStorage.removeItem(`scroll_${slug}`);
+    remoteSaveProgress(category, slug, entry);
 
     return true;
   },

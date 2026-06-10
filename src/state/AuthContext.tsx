@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { syncLocalStateWithServer } from '../lib/serverSync';
 
 interface AuthContextValue {
   email: string;
@@ -57,6 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (data.isLoggedIn && data.isSubscriber && data.email) {
         setEmail(data.email);
         setIsSubscriber(true);
+        void syncLocalStateWithServer();
       } else {
         setEmail('');
         setIsSubscriber(false);
