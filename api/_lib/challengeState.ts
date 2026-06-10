@@ -1,4 +1,4 @@
-import { isUpstashRedisConfigured, upstashPipeline } from './upstashRedis';
+import { isUpstashRedisConfigured, upstashPipeline } from './upstashRedis.js';
 
 interface LocalFailureState {
   count: number;
@@ -217,4 +217,3 @@ export async function incrementChallengeFailure(
   }
   return incrementChallengeFailureLocal(hash, ttlMs);
 }
-

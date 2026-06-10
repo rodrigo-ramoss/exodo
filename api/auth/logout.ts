@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { clearSessionCookie, getSessionFromRequest } from '../_lib/auth';
-import { recordLoginAudit } from '../_lib/loginAudit';
+import { clearSessionCookie, getSessionFromRequest } from '../_lib/auth.js';
+import { recordLoginAudit } from '../_lib/loginAudit.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown')

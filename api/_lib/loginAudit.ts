@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { isUpstashRedisConfigured, upstashPipeline } from './upstashRedis';
+import { isUpstashRedisConfigured, upstashPipeline } from './upstashRedis.js';
 
 type AuthAction = 'request_code' | 'verify_code' | 'session' | 'logout';
 
@@ -60,4 +60,3 @@ export async function recordLoginAudit(event: LoginAuditEvent): Promise<void> {
     }
   }
 }
-

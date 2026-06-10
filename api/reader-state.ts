@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getSessionFromRequest, readJsonBody } from './_lib/auth';
-import { clampInt, cleanText, ensureUser, getSql } from './_lib/db';
+import { getSessionFromRequest, readJsonBody } from './_lib/auth.js';
+import { clampInt, cleanText, ensureUser, getSql } from './_lib/db.js';
 
 function toMs(value: unknown): number {
   const parsed = typeof value === 'number' ? value : Number(value);

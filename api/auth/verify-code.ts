@@ -7,16 +7,16 @@ import {
   readJsonBody,
   setSessionCookie,
   verifyOtpChallenge,
-} from '../_lib/auth';
+} from '../_lib/auth.js';
 import {
   getChallengeFailureState,
   incrementChallengeFailure,
   isChallengeUsed,
   markChallengeUsed,
-} from '../_lib/challengeState';
-import { recordLoginAudit } from '../_lib/loginAudit';
-import { consumeRateLimit, withRateLimitHeaders } from '../_lib/rateLimit';
-import { hasActiveSubscriptionByEmail } from '../_lib/stripe';
+} from '../_lib/challengeState.js';
+import { recordLoginAudit } from '../_lib/loginAudit.js';
+import { consumeRateLimit, withRateLimitHeaders } from '../_lib/rateLimit.js';
+import { hasActiveSubscriptionByEmail } from '../_lib/stripe.js';
 
 const LIMIT_VERIFY_IP = 45;
 const LIMIT_VERIFY_CHALLENGE = 5;

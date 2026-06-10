@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { clearSessionCookie, getSessionFromRequest } from '../_lib/auth';
-import { hasActiveSubscriptionByEmail } from '../_lib/stripe';
+import { clearSessionCookie, getSessionFromRequest } from '../_lib/auth.js';
+import { hasActiveSubscriptionByEmail } from '../_lib/stripe.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
@@ -36,4 +36,3 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ isLoggedIn: false, isSubscriber: false, email: '' });
   }
 }
-

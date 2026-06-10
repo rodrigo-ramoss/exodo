@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { authConfig, createOtpChallenge, generateOtpCode, normalizeEmail, readJsonBody } from '../_lib/auth';
-import { consumeRateLimit, withRateLimitHeaders } from '../_lib/rateLimit';
-import { recordLoginAudit } from '../_lib/loginAudit';
-import { hasActiveSubscriptionByEmail } from '../_lib/stripe';
+import { authConfig, createOtpChallenge, generateOtpCode, normalizeEmail, readJsonBody } from '../_lib/auth.js';
+import { consumeRateLimit, withRateLimitHeaders } from '../_lib/rateLimit.js';
+import { recordLoginAudit } from '../_lib/loginAudit.js';
+import { hasActiveSubscriptionByEmail } from '../_lib/stripe.js';
 
 const LIMIT_IP = 20;
 const LIMIT_EMAIL = 6;

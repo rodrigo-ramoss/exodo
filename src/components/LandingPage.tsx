@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import { BookOpen, Library, Wheat, BookMarked, Scroll, Check, Star, Lock, UserRound } from 'lucide-react';
+import { BookOpen, Library, Wheat, BookMarked, Scroll, Check, Star, Lock, UserRound, AlertCircle } from 'lucide-react';
 import LoginModal from './LoginModal';
 
 interface LandingPageProps {
   onEnter: () => void;
-  onOpenBible?: () => void;
+  onOpenFree?: () => void;
 }
 
 const FEATURES = [
   { icon: Wheat,        label: 'Maná',         desc: 'Estudos diários e séries bíblicas profundas' },
-  { icon: UserRound,   label: 'Discípulos',    desc: 'Jornadas guiadas de discipulado e formação' },
+  { icon: UserRound,   label: 'Discípulos',    desc: 'Jornadas abertas de discipulado e formação', free: true },
   { icon: Library,      label: 'Rolos',        desc: 'Livraria completa de e-books e séries' },
   { icon: BookMarked,   label: 'Babel',        desc: 'Refutações e análise crítica de doutrinas' },
   { icon: Scroll,       label: 'Apócrifos',    desc: 'Textos deuterocanônicos e protocolo de leitura' },
-  { icon: BookOpen,     label: 'Bíblia',       desc: 'Comentários bíblicos liberados para estudo', free: true },
+  { icon: BookOpen,     label: 'Bíblia',       desc: 'Comentários bíblicos para assinantes' },
 ];
 
 const PLAN_ITEMS = [
@@ -26,22 +26,28 @@ const PLAN_ITEMS = [
   'Suporte via canal da comunidade',
 ];
 
-export default function LandingPage({ onEnter, onOpenBible }: LandingPageProps) {
+export default function LandingPage({ onEnter, onOpenFree }: LandingPageProps) {
   const [showLogin, setShowLogin] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [subscribeError, setSubscribeError] = useState('');
 
   async function handleSubscribe() {
     setCheckoutLoading(true);
+    setSubscribeError('');
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: '' }),
       });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.url) {
+        window.location.href = data.url;
+        return;
+      }
+      setSubscribeError(data.error || 'Não foi possível abrir a assinatura agora. Tente novamente em instantes.');
     } catch {
-      // silently fail
+      setSubscribeError('Não foi possível conectar ao pagamento agora. Tente novamente em instantes.');
     } finally {
       setCheckoutLoading(false);
     }
@@ -84,13 +90,13 @@ export default function LandingPage({ onEnter, onOpenBible }: LandingPageProps) 
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            {onOpenBible && (
+            {onOpenFree && (
               <button
-                onClick={onOpenBible}
+                onClick={onOpenFree}
                 className="bg-primary text-on-primary-container font-black text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:brightness-110 transition-all shadow-lg"
                 style={{ boxShadow: '0 4px 24px rgba(242,192,141,0.25)' }}
               >
-                Estudar Bíblia
+                Estudar Grátis
               </button>
             )}
             <button
@@ -108,6 +114,12 @@ export default function LandingPage({ onEnter, onOpenBible }: LandingPageProps) 
               Já sou assinante
             </button>
           </div>
+          {subscribeError && (
+            <p className="mt-4 mx-auto max-w-md rounded-xl border border-red-400/25 bg-red-950/20 px-3 py-2 text-xs leading-relaxed text-red-100/90 inline-flex items-start gap-2">
+              <AlertCircle size={14} className="mt-0.5 shrink-0 text-red-300" />
+              <span>{subscribeError}</span>
+            </p>
+          )}
         </div>
 
         {/* Scroll indicator */}
@@ -134,7 +146,7 @@ export default function LandingPage({ onEnter, onOpenBible }: LandingPageProps) 
               key={label}
               type="button"
               onClick={() => {
-                if (free) onOpenBible?.();
+                if (free) onOpenFree?.();
               }}
               className={`text-left bg-surface-container-low border rounded-2xl p-4 flex flex-col gap-2 relative overflow-hidden group ${
                 free
@@ -206,6 +218,11 @@ export default function LandingPage({ onEnter, onOpenBible }: LandingPageProps) 
             >
               {checkoutLoading ? 'Aguarde...' : 'Começar Agora'}
             </button>
+            {subscribeError && (
+              <p className="mt-3 rounded-xl border border-red-400/25 bg-red-950/20 px-3 py-2 text-[11px] leading-relaxed text-red-100/90">
+                {subscribeError}
+              </p>
+            )}
 
             <p className="text-center text-[10px] text-on-surface-variant/40 mt-4">
               Cancele a qualquer momento

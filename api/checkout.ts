@@ -3,13 +3,19 @@ import Stripe from 'stripe';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+function cleanEnvValue(raw: string | undefined, key: string): string {
+  const value = (raw || '').trim().replace(/^["']|["']$/g, '');
+  const prefix = `${key}=`;
+  return value.startsWith(prefix) ? value.slice(prefix.length).trim().replace(/^["']|["']$/g, '') : value;
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
-  const secretKey = process.env.STRIPE_SECRET_KEY;
-  const priceId = process.env.STRIPE_MONTHLY_PRICE_ID;
+  const secretKey = cleanEnvValue(process.env.STRIPE_SECRET_KEY, 'STRIPE_SECRET_KEY');
+  const priceId = cleanEnvValue(process.env.STRIPE_MONTHLY_PRICE_ID, 'STRIPE_MONTHLY_PRICE_ID');
 
   if (!secretKey || !priceId) {
     console.error('[checkout] Variáveis de ambiente do Stripe não configuradas.');

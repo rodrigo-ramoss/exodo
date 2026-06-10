@@ -1,4 +1,4 @@
-import { isUpstashRedisConfigured, upstashPipeline } from './upstashRedis';
+import { isUpstashRedisConfigured, upstashPipeline } from './upstashRedis.js';
 
 interface Bucket {
   count: number;

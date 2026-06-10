@@ -199,8 +199,13 @@ export default function App() {
     );
   }
 
-  if (!isSubscriber && currentScreen !== Screen.BIBLE) {
-    return <LandingPage onEnter={() => {}} onOpenBible={() => handleNavigate(Screen.BIBLE, 'none')} />;
+  if (!isSubscriber && currentScreen !== Screen.DISCIPULOS) {
+    return (
+      <LandingPage
+        onEnter={() => handleNavigate(Screen.HOME, 'none', { replace: true })}
+        onOpenFree={() => handleNavigate(Screen.DISCIPULOS, 'none')}
+      />
+    );
   }
 
   return (
