@@ -341,7 +341,7 @@ export default function Preacher() {
         <aside className="rounded-2xl border border-[#D4AF37]/28 bg-[#D4AF37]/8 px-4 py-3">
           <p className="text-[11px] sm:text-xs font-semibold leading-relaxed text-on-surface">
             Observação: este não é um catálogo de sermões prontos vendidos na internet ou gerados apenas para venda.
-            Este é um espaço sério, por isso os sermões são adicionados aos poucos. O foco principal está nas séries de livros,
+            Este é um espaço sério, por isso os sermões são adicionados aos poucos. O foco principal é nas séries de livros,
             para que cada pessoa desenvolva seus próprios esboços e estudos. Fique à vontade para usá-los; eu também uso.
             Mas não caia na preguiça de deixar de estudar e querer tudo pronto: ainda é o Espírito Santo quem inspira.
           </p>

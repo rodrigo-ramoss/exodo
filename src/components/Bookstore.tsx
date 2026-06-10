@@ -1,5 +1,5 @@
 ﻿import { useState, useRef, useMemo, useEffect, type ReactNode } from 'react';
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Hourglass, Tent, Sparkles, Search } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Shield, BookOpen, Zap, Cpu, Eye, Layers, Check, Flame, Hourglass, Tent, Sparkles, Search, AlertTriangle } from 'lucide-react';
 import { pm } from '../lib/progressManager';
 import { useFetch } from '../hooks/useFetch';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -1606,6 +1606,14 @@ const BIBLE_CHAPTER_SERIES_META: Record<string, { title: string; description: st
   },
 };
 
+const BIBLE_COMMENTARY_DESCRIPTION = [
+  'Comentar a Bíblia, para nós, não é repetir o que os outros disseram nem inventar significados espirituosos. É entrar na mente dos autores bíblicos — pensar como eles pensavam, dentro do judaísmo do Segundo Templo, com sua cosmologia, suas técnicas rabínicas e sua esperança apocalíptica.',
+  'Nossos comentários operam em quatro camadas (PaRDeS): o sentido literal (Peshat), as alusões e dicas (Remez), a investigação comparativa com a tradição (Derash) e a revelação do mundo invisível (Sod). Usamos as 7 Regras de Hilel que Jesus e Paulo dominavam. Distinguimos 8 tipos de tipologia bíblica, sempre com controle textual, nunca com alegoria solta.',
+  'Cada livro é lido com sua Biblioteca Mental específica — o que Paulo pensava é diferente do que Tiago pensava, e ambos diferem de João. Recuperamos o contexto do Segundo Templo (1 Enoque, Jubileus, Qumran) como janela para a mente dos autores, sem confundir esses textos com a Escritura canônica.',
+  'Nossos comentários não fogem do combate. Enfrentam o sistema da Besta, denunciam a institucionalização religiosa que costurou o véu rasgado, e anunciam a vitória final de Cristo sobre a Morte e sobre todo principado e potestade.',
+  'O resultado é alimento sólido: exegese rigorosa, densidade teológica, aplicação pastoral corajosa e esperança escatológica sem date-setting.',
+];
+
 const FIRST_CORINTHIANS_15_COVER_BY_VOLUME: Record<number, string> = {
   1: '/image/rolos/selah/biblia/o fundamento inabalavel.webp',
   2: '/image/rolos/selah/biblia/a semente e o corpo glorificado.webp',
@@ -3174,6 +3182,14 @@ function SectionCard({ sectionKey, books, onSelect, volumeCountOverride, readCou
           {noCoverNotice && (
             <p className="mt-1 text-[8px] sm:text-[9px] text-white/65 uppercase tracking-[0.12em] font-black">
               {noCoverNotice}
+            </p>
+          )}
+          {isBibleSection && (
+            <p className="mt-1.5 flex items-start gap-1.5 text-[8px] sm:text-[9px] font-semibold leading-snug text-amber-100/90 max-w-[260px]">
+              <AlertTriangle size={10} className="mt-0.5 shrink-0 text-amber-300" />
+              <span>
+                Em preparação: os comentários bíblicos serão liberados gradualmente, e a organização completa pode levar algum tempo.
+              </span>
             </p>
           )}
           <button
@@ -4840,6 +4856,17 @@ export default function Bookstore({
                 ))}
               </div>
             </div>
+
+            <section className="relative z-10 mt-5 rounded-2xl border border-primary/20 bg-black/20 px-4 py-4 sm:px-5 sm:py-5">
+              <h3 className="font-headline text-base sm:text-lg font-black tracking-tight text-on-surface">
+                O que é um comentário bíblico da Voz do Deserto?
+              </h3>
+              <div className="mt-3 space-y-3 text-[11px] sm:text-xs font-medium leading-relaxed text-on-surface-variant/85">
+                {BIBLE_COMMENTARY_DESCRIPTION.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+            </section>
           </section>
         </div>
       );

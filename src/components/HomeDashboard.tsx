@@ -1,5 +1,4 @@
 ﻿import { BookMarked, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Flag, Highlighter, Library, NotebookPen, TrendingUp, UserRound, Wheat } from 'lucide-react';
-import { AlertTriangle } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 import { Screen } from '../types';
 import { useProfile } from '../state/ProfileContext';
@@ -714,17 +713,6 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
                       Abrir
                     </button>
                   </div>
-
-                  {card.label === 'ROLOS' && (
-                    <div className="mt-2 rounded-lg border border-amber-400/30 bg-amber-950/20 px-2.5 py-2">
-                      <p className="flex items-start gap-1.5 text-[9px] font-semibold leading-snug text-amber-100/90">
-                        <AlertTriangle size={11} className="mt-0.5 shrink-0 text-amber-300" />
-                        <span>
-                          Atenção: esta seção ainda está em preparação. As séries serão liberadas aos poucos, e a organização completa pode levar algum tempo.
-                        </span>
-                      </p>
-                    </div>
-                  )}
 
                   <div className="mt-2.5 space-y-1.5">
                     {card.items.map((item, index) => (
