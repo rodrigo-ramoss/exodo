@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X, Highlighter, Trash2, Pencil, FileText, PenLine } from 'lucide-react';
+import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X, Highlighter, Trash2, Pencil, FileText, PenLine, Lock, LogIn } from 'lucide-react';
 import type { Components } from 'react-markdown';
 import { pm, type Category } from '../lib/progressManager';
 import { loadRemoteReaderState, remoteSaveReaderState } from '../lib/serverSync';
+import { useAuth } from '../state/AuthContext';
+import LoginModal from './LoginModal';
 
 // ── Highlight helpers ─────────────────────────────────────────────────────────
 const HL_KEY = (slug: string) => `exodo_hl_${slug}`;
@@ -371,7 +373,47 @@ function safeParseMarkdown(rawContent?: string | null): { metadata: MarkdownMeta
   }
 }
 
+type FreePreview = {
+  content: string;
+  isTruncated: boolean;
+};
+
+function buildFreePreview(markdown: string): FreePreview {
+  const lines = markdown.split(/\r?\n/);
+  const headings = lines.flatMap((line, index) => {
+    const match = line.match(/^(#{1,6})\s+(.+?)\s*#*\s*$/);
+    if (!match) return [];
+    return [{ index, level: match[1].length, title: match[2].trim() }];
+  });
+  const normalizeHeading = (value: string) => value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+  const introduction = headings.find((heading) => /^introducao\b/.test(normalizeHeading(heading.title)));
+  const indexHeading = headings.find((heading) => /^(indice|sumario)\b/.test(normalizeHeading(heading.title)));
+  const lastVisibleHeading = introduction ?? indexHeading;
+
+  if (!lastVisibleHeading) {
+    const firstSection = headings.find((heading) => heading.index > 0);
+    if (!firstSection) return { content: markdown, isTruncated: false };
+    return { content: lines.slice(0, firstSection.index).join('\n').trim(), isTruncated: true };
+  }
+
+  const nextSection = headings.find((heading) => (
+    heading.index > lastVisibleHeading.index
+    && heading.level <= lastVisibleHeading.level
+  ));
+  if (!nextSection) return { content: markdown, isTruncated: false };
+
+  return {
+    content: lines.slice(0, nextSection.index).join('\n').trim(),
+    isTruncated: true,
+  };
+}
+
 export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, category = 'biblica', onClose }) => {
+  const { isSubscriber } = useAuth();
+  const isFreePreview = !isSubscriber && category !== 'discipulos';
   const [progress, setProgress] = useState(0);
   const [fontSize, setFontSize] = useState(18);
   const [theme, setTheme] = useState<ReadingTheme>('dark');
@@ -408,6 +450,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
   const [noteDraft, setNoteDraft] = useState('');
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [showMarkupHint, setShowMarkupHint] = useState(false);
+  const [loginMode, setLoginMode] = useState<'login' | 'subscribe' | null>(null);
   const markupHintTimerRef = useRef<number | null>(null);
 
   const clearMarkupSelection = useCallback(() => {
@@ -500,6 +543,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
    * O completionCountedRef evita dupla contagem na mesma sessão.
    */
   const markReadCompletion = useCallback((updateUi: boolean) => {
+    if (isFreePreview) return;
     if (completionCountedRef.current) return;
     completionCountedRef.current = true;
 
@@ -509,7 +553,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
     if (updateUi) {
       setProgress(0);
     }
-  }, [category, slug]);
+  }, [category, isFreePreview, slug]);
 
   const persistCompletionIfNeeded = useCallback((percentage: number, updateUi: boolean) => {
     if (percentage < 100) return false;
@@ -547,6 +591,12 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
   };
 
   const { metadata, parsedContent } = useMemo(() => safeParseMarkdown(content), [content]);
+  const freePreview = useMemo(
+    () => (isFreePreview ? buildFreePreview(parsedContent) : { content: parsedContent, isTruncated: false }),
+    [isFreePreview, parsedContent],
+  );
+  const visibleContent = freePreview.content;
+  const showSubscriptionGate = isFreePreview && freePreview.isTruncated;
 
   const title = metadata?.title;
   const subcategory = metadata?.subcategory;
@@ -636,6 +686,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
 
   // Scroll listener: rastreia progresso % e posição de scroll
   useEffect(() => {
+    if (isFreePreview) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -665,7 +716,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
 
     container.addEventListener('scroll', handleScroll, { passive: true });
     return () => container.removeEventListener('scroll', handleScroll);
-  }, [category, slug, persistCompletionIfNeeded]);
+  }, [category, isFreePreview, slug, persistCompletionIfNeeded]);
 
   // Theme styles - Cleaned up to rely on global CSS for red headings
   const themeStyles = {
@@ -686,7 +737,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
     });
   // parsedContent included so highlights re-apply when content changes
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlights, notes, parsedContent]);
+  }, [highlights, notes, visibleContent]);
 
   // ── Selection → popup ──────────────────────────────────────────────────────
   const showSelectionPopup = useCallback(() => {
@@ -1037,7 +1088,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
         
         <div className="flex items-center gap-3">
           <div className={`px-2 py-1 rounded-lg text-[9px] font-black tracking-widest uppercase ${theme === 'dark' ? 'bg-primary/10 text-primary' : theme === 'sepia' ? 'bg-[#433422]/10 text-[#433422]' : 'bg-slate-100 text-slate-900'}`}>
-            {progress}% Lido
+            {isFreePreview ? 'Prévia grátis' : `${progress}% Lido`}
           </div>
 
           <button
@@ -1263,13 +1314,60 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
           onClick={handleContentClick}
         >
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-            {parsedContent}
+            {visibleContent}
           </ReactMarkdown>
         </div>
 
+        {showSubscriptionGate && (
+          <section className={`mt-10 rounded-3xl border px-5 py-8 text-center sm:px-8 sm:py-10 ${
+            theme === 'dark'
+              ? 'border-primary/30 bg-gradient-to-b from-primary/10 to-surface-container-low'
+              : theme === 'sepia'
+                ? 'border-[#8a6a3f]/30 bg-[#eadfc5]'
+                : 'border-amber-300 bg-amber-50'
+          }`} aria-labelledby="subscription-gate-title">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/35 bg-primary/15 text-primary">
+              <Lock size={26} aria-hidden="true" />
+            </div>
+            <h2 id="subscription-gate-title" className="mt-5 font-headline text-2xl font-black tracking-tight">
+              Continue sua leitura
+            </h2>
+            <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed opacity-75">
+              O índice e a introdução são gratuitos. Assine o plano para liberar os próximos capítulos e todo o acervo do Êxodo.
+            </p>
+            <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={() => setLoginMode('subscribe')}
+                className="rounded-xl bg-primary px-6 py-3 text-xs font-black uppercase tracking-widest text-on-primary shadow-lg transition-transform active:scale-95"
+              >
+                Assinar o plano
+              </button>
+              <button
+                type="button"
+                onClick={() => setLoginMode('login')}
+                className={`inline-flex items-center justify-center gap-2 rounded-xl border px-6 py-3 text-xs font-black uppercase tracking-widest transition-colors ${
+                  theme === 'dark' ? 'border-white/15 bg-white/5' : 'border-current/20 bg-current/5'
+                }`}
+              >
+                <LogIn size={15} aria-hidden="true" />
+                Já sou assinante
+              </button>
+            </div>
+          </section>
+        )}
+
         {/* Sentinel: IntersectionObserver observa este elemento para detectar fim de leitura */}
-        <div ref={sentinelRef} className="h-1 w-full mt-4" aria-hidden="true" />
+        {!isFreePreview && <div ref={sentinelRef} className="h-1 w-full mt-4" aria-hidden="true" />}
       </div>
+
+      {loginMode && (
+        <LoginModal
+          startOnSubscribe={loginMode === 'subscribe'}
+          onClose={() => setLoginMode(null)}
+          onSuccess={() => setLoginMode(null)}
+        />
+      )}
 
       {/* ── Highlight: selection popup ──────────────────────────────────────── */}
       {selPopup && (

@@ -98,6 +98,9 @@ export default function App() {
   const { isSubscriber, checking } = useAuth();
   const [currentScreen, setCurrentScreen] = useState<Screen>(() => resolveScreenFromPath(window.location.pathname));
   const [transitionType, setTransitionType] = useState<'push' | 'none'>('none');
+  const [freeExperienceStarted, setFreeExperienceStarted] = useState(
+    () => resolveScreenFromPath(window.location.pathname) !== Screen.HOME,
+  );
 
   const handleNavigate = (
     screen: Screen,
@@ -199,11 +202,14 @@ export default function App() {
     );
   }
 
-  if (!isSubscriber && currentScreen !== Screen.DISCIPULOS) {
+  if (!isSubscriber && currentScreen === Screen.HOME && !freeExperienceStarted) {
     return (
       <LandingPage
         onEnter={() => handleNavigate(Screen.HOME, 'none', { replace: true })}
-        onOpenFree={() => handleNavigate(Screen.DISCIPULOS, 'none')}
+        onOpenFree={() => {
+          setFreeExperienceStarted(true);
+          handleNavigate(Screen.DISCIPULOS, 'none');
+        }}
       />
     );
   }
