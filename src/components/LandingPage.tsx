@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { BookOpen, Library, Wheat, BookMarked, Scroll, Check, Star, Lock, UserRound, AlertCircle } from 'lucide-react';
+import { BookOpen, Library, Wheat, BookMarked, Scroll, Check, Star, Lock, UserRound, AlertCircle, NotebookPen } from 'lucide-react';
 import LoginModal from './LoginModal';
+import { Screen } from '../types';
 
 interface LandingPageProps {
   onEnter: () => void;
-  onOpenFree?: () => void;
+  onOpenFree?: (screen?: Screen) => void;
 }
 
 const FEATURES = [
   { icon: Wheat,        label: 'Maná',         desc: 'Estudos diários e séries bíblicas profundas' },
-  { icon: UserRound,   label: 'Discípulos',    desc: 'Jornadas abertas de discipulado e formação', free: true },
+  { icon: UserRound,   label: 'Discípulos',    desc: 'Jornadas abertas de discipulado e formação', free: true, screen: Screen.DISCIPULOS },
+  { icon: NotebookPen, label: 'Pregador',      desc: 'Sermões e estudos abertos para preparo', free: true, screen: Screen.PREACHER },
   { icon: Library,      label: 'Rolos',        desc: 'Livraria completa de e-books e séries' },
   { icon: BookMarked,   label: 'Babel',        desc: 'Refutações e análise crítica de doutrinas' },
   { icon: Scroll,       label: 'Apócrifos',    desc: 'Textos deuterocanônicos e protocolo de leitura' },
@@ -92,7 +94,7 @@ export default function LandingPage({ onEnter, onOpenFree }: LandingPageProps) {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             {onOpenFree && (
               <button
-                onClick={onOpenFree}
+                onClick={() => onOpenFree()}
                 className="bg-primary text-on-primary-container font-black text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:brightness-110 transition-all shadow-lg"
                 style={{ boxShadow: '0 4px 24px rgba(242,192,141,0.25)' }}
               >
@@ -141,12 +143,12 @@ export default function LandingPage({ onEnter, onOpenFree }: LandingPageProps) {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {FEATURES.map(({ icon: Icon, label, desc, free }) => (
+          {FEATURES.map(({ icon: Icon, label, desc, free, screen }) => (
             <button
               key={label}
               type="button"
               onClick={() => {
-                if (free) onOpenFree?.();
+                if (free) onOpenFree?.(screen);
               }}
               className={`text-left bg-surface-container-low border rounded-2xl p-4 flex flex-col gap-2 relative overflow-hidden group ${
                 free

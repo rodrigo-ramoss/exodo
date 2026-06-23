@@ -206,9 +206,9 @@ export default function App() {
     return (
       <LandingPage
         onEnter={() => handleNavigate(Screen.HOME, 'none', { replace: true })}
-        onOpenFree={() => {
+        onOpenFree={(targetScreen = Screen.DISCIPULOS) => {
           setFreeExperienceStarted(true);
-          handleNavigate(Screen.DISCIPULOS, 'none');
+          handleNavigate(targetScreen, 'none');
         }}
       />
     );

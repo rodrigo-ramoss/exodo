@@ -413,7 +413,8 @@ function buildFreePreview(markdown: string): FreePreview {
 
 export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, category = 'biblica', onClose }) => {
   const { isSubscriber } = useAuth();
-  const isFreePreview = !isSubscriber && category !== 'discipulos';
+  const isOpenCategory = category === 'discipulos' || category === 'pregador';
+  const isFreePreview = !isSubscriber && !isOpenCategory;
   const [progress, setProgress] = useState(0);
   const [fontSize, setFontSize] = useState(18);
   const [theme, setTheme] = useState<ReadingTheme>('dark');
