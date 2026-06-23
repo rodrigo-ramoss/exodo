@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ArrowLeft, BookOpen, NotebookPen } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronDown, ChevronRight, NotebookPen } from 'lucide-react';
 import { MarkdownViewer } from './MarkdownViewer';
 
 type PreacherSectionId = 'sermoes' | 'estudos';
@@ -13,6 +13,11 @@ type SermonItem = {
   format: 'markdown' | 'html';
   section: PreacherSectionId;
   groupLabel?: string;
+};
+
+type StudyGroup = {
+  label: string;
+  items: SermonItem[];
 };
 
 const PREACHER_SECTIONS: Array<{
@@ -37,6 +42,7 @@ const PREACHER_SECTIONS: Array<{
 
 const CONTENT_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml|html?)$/i;
 const MARKDOWN_FILE_EXTENSION_REGEX = /\.(?:md|mdx|markdown|ya?ml)$/i;
+const DEFAULT_STUDY_GROUP_LABEL = 'Estudos gerais';
 
 const preacherMarkdownModules = {
   ...import.meta.glob('/public/content/pregador/**/*.md', { eager: true, query: '?raw', import: 'default' }),
@@ -54,12 +60,17 @@ const preacherMarkdownModules = {
 } as Record<string, string>;
 
 function titleCase(raw: string): string {
+  const lowercaseWords = new Set(['a', 'as', 'da', 'das', 'de', 'do', 'dos', 'e', 'em', 'na', 'nas', 'no', 'nos', 'o', 'os']);
   return raw
     .replace(/[-_]+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
     .split(' ')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .map((part, index) => {
+      const lower = part.toLowerCase();
+      if (index > 0 && lowercaseWords.has(lower)) return lower;
+      return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+    })
     .join(' ');
 }
 
@@ -194,6 +205,7 @@ export default function Preacher() {
   const sermons = useMemo(() => discoverSermons(), []);
   const [selectedSection, setSelectedSection] = useState<PreacherSectionId>('sermoes');
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const [expandedStudyGroups, setExpandedStudyGroups] = useState<Set<string>>(() => new Set(['Livro de Tiago']));
 
   const selected = useMemo(
     () => sermons.find((item) => item.slug === selectedSlug) ?? null,
@@ -203,6 +215,16 @@ export default function Preacher() {
     () => sermons.filter((item) => item.section === selectedSection),
     [sermons, selectedSection],
   );
+  const studyGroups = useMemo<StudyGroup[]>(() => {
+    const groups = new Map<string, SermonItem[]>();
+    for (const item of visibleItems) {
+      const label = item.groupLabel || DEFAULT_STUDY_GROUP_LABEL;
+      groups.set(label, [...(groups.get(label) || []), item]);
+    }
+    return Array.from(groups.entries())
+      .map(([label, items]) => ({ label, items }))
+      .sort((a, b) => a.label.localeCompare(b.label, 'pt-BR', { numeric: true }));
+  }, [visibleItems]);
   const selectedSectionMeta = PREACHER_SECTIONS.find((section) => section.id === selectedSection) ?? PREACHER_SECTIONS[0];
   const countsBySection = useMemo(() => {
     const counts = new Map<PreacherSectionId, number>();
@@ -210,6 +232,17 @@ export default function Preacher() {
     for (const item of sermons) counts.set(item.section, (counts.get(item.section) || 0) + 1);
     return counts;
   }, [sermons]);
+  const toggleStudyGroup = (label: string) => {
+    setExpandedStudyGroups((current) => {
+      const next = new Set(current);
+      if (next.has(label)) {
+        next.delete(label);
+      } else {
+        next.add(label);
+      }
+      return next;
+    });
+  };
 
   if (selected?.format === 'html') {
     return (
@@ -310,6 +343,59 @@ export default function Preacher() {
               <div className="rounded-xl border border-outline-variant/20 bg-black/15 px-3 py-4 text-xs text-on-surface-variant/80">
                 {selectedSectionMeta.emptyText}
               </div>
+            ) : selectedSection === 'estudos' ? (
+              studyGroups.map((group) => {
+                const isExpanded = expandedStudyGroups.has(group.label);
+                const GroupIcon = isExpanded ? ChevronDown : ChevronRight;
+                return (
+                  <div
+                    key={group.label}
+                    className="rounded-xl border border-outline-variant/25 bg-black/15 overflow-hidden"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => toggleStudyGroup(group.label)}
+                      className="w-full px-3 py-2.5 text-left hover:bg-primary/8 transition-colors"
+                      aria-expanded={isExpanded}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <GroupIcon size={14} className="text-primary shrink-0" />
+                          <p className="font-headline text-sm font-black tracking-tight text-on-surface line-clamp-1">
+                            {group.label}
+                          </p>
+                        </div>
+                        <span className="shrink-0 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-primary">
+                          {group.items.length}
+                        </span>
+                      </div>
+                    </button>
+
+                    {isExpanded && (
+                      <div className="border-t border-outline-variant/18 bg-surface-container-low/70 p-2 space-y-1.5">
+                        {group.items.map((item) => (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => setSelectedSlug(item.slug)}
+                            className="w-full rounded-lg border border-outline-variant/20 bg-black/12 px-3 py-2 text-left hover:border-primary/35 transition-colors"
+                          >
+                            <div className="flex items-center gap-2">
+                              <BookOpen size={12} className="text-primary shrink-0" />
+                              <p className="font-headline text-[13px] font-black tracking-tight text-on-surface line-clamp-1">
+                                {item.title}
+                              </p>
+                            </div>
+                            <p className="mt-1 text-[10px] text-on-surface-variant/70 line-clamp-2">
+                              {item.description}
+                            </p>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
             ) : (
               visibleItems.map((item) => (
                 <button
