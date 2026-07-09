@@ -110,11 +110,11 @@ export default function LandingPage({ onOpenFree, onLoginSuccess }: LandingPageP
             className="mx-auto mt-3 flex w-full max-w-xl items-center justify-center gap-2 rounded-xl border border-primary/30 bg-surface-container-low px-6 py-3 text-[11px] font-black uppercase tracking-[0.14em] text-primary transition-colors hover:border-primary/55 hover:bg-primary/10"
           >
             <Mail size={14} />
-            Entrar com e-mail e sincronizar
+            Já sou assinante — entrar
           </button>
 
           <p className="mt-3 text-[10px] leading-relaxed tracking-[0.08em] text-on-surface-variant/50">
-            O acesso é gratuito. Entre para salvar sua leitura, notas e destaques em todos os dispositivos.
+            Assinantes salvam histórico, notas, destaques e progresso para continuar em qualquer dispositivo.
           </p>
         </div>
 

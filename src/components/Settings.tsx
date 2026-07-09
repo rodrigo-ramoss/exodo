@@ -7,7 +7,7 @@ import LoginModal from './LoginModal';
 
 export default function Settings() {
   const { name, photo, notifications, setName, setPhoto, setNotifications } = useProfile();
-  const { email, isLoggedIn, isSubscriber, logout } = useAuth();
+  const { email, isLoggedIn, logout } = useAuth();
   const [nameSaved, setNameSaved] = useState(false);
   const [localName, setLocalName] = useState(name);
   const [showAbout, setShowAbout] = useState(false);
@@ -86,7 +86,7 @@ export default function Settings() {
         <div className="flex items-center gap-2 mb-4">
           <Cloud size={14} className="text-primary" />
           <span className="font-headline text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant">
-            Conta e sincronização
+            Acesso de assinante
           </span>
         </div>
 
@@ -97,7 +97,7 @@ export default function Settings() {
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-on-surface truncate">{email}</p>
                   <p className="mt-1 text-[10px] font-black uppercase tracking-widest text-primary">
-                    {isSubscriber ? 'Assinatura ativa' : 'Conta gratuita'}
+                    Assinatura ativa
                   </p>
                 </div>
                 <span className="shrink-0 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-1 text-[8px] font-black uppercase tracking-widest text-emerald-300">
@@ -118,9 +118,10 @@ export default function Settings() {
             </>
           ) : (
             <>
-              <p className="text-sm font-bold text-on-surface">Continue de onde parou</p>
+              <p className="text-sm font-bold text-on-surface">Seu histórico em todos os dispositivos</p>
               <p className="mt-1 text-[11px] leading-relaxed text-on-surface-variant/75">
-                Entre gratuitamente para salvar sua leitura, notas e destaques e acessá-los em outros dispositivos.
+                Entre com o e-mail vinculado à assinatura para sincronizar histórico, notas,
+                destaques e progresso entre dispositivos.
               </p>
               <button
                 type="button"
@@ -128,7 +129,7 @@ export default function Settings() {
                 className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-primary-container transition-all hover:brightness-110"
               >
                 <Mail size={14} />
-                Entrar com e-mail
+                Entrar como assinante
               </button>
             </>
           )}

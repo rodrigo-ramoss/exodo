@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { authConfig, createOtpChallenge, generateOtpCode, normalizeEmail, readJsonBody } from '../_lib/auth.js';
 import { consumeRateLimit, withRateLimitHeaders } from '../_lib/rateLimit.js';
 import { recordLoginAudit } from '../_lib/loginAudit.js';
+import { hasActiveSubscriptionByEmail } from '../_lib/stripe.js';
 
 const LIMIT_IP = 20;
 const LIMIT_EMAIL = 6;
@@ -53,6 +54,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ip,
     });
     return res.status(405).json({ error: 'Método não permitido' });
+  }
+
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+  if (!stripeSecretKey) {
+    console.error('[auth/request-code] STRIPE_SECRET_KEY não configurada.');
+    await recordLoginAudit({
+      action: 'request_code',
+      outcome: 'error',
+      ip,
+      details: { reason: 'missing_stripe_secret_key' },
+    });
+    return res.status(503).json({ status: 'error' });
   }
 
   let email = '';
@@ -135,6 +148,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    const isSubscriber = await hasActiveSubscriptionByEmail(normalizedEmail, stripeSecretKey);
+    if (!isSubscriber) {
+      await recordLoginAudit({
+        action: 'request_code',
+        outcome: 'not_found',
+        ip,
+        email: normalizedEmail,
+      });
+      return res.status(200).json({ status: 'not_found' });
+    }
+
     const code = generateOtpCode();
     const challengeToken = createOtpChallenge(normalizedEmail, code);
 

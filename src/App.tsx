@@ -97,7 +97,7 @@ const resolveScreenFromPath = (path: string) => {
 };
 
 export default function App() {
-  const { isLoggedIn, checking } = useAuth();
+  const { isSubscriber, checking } = useAuth();
   const [currentScreen, setCurrentScreen] = useState<Screen>(() => resolveScreenFromPath(window.location.pathname));
   const [transitionType, setTransitionType] = useState<'push' | 'none'>('none');
   const [freeExperienceStarted, setFreeExperienceStarted] = useState(
@@ -209,7 +209,7 @@ export default function App() {
     );
   }
 
-  if (!isLoggedIn && currentScreen === Screen.HOME && !freeExperienceStarted) {
+  if (!isSubscriber && currentScreen === Screen.HOME && !freeExperienceStarted) {
     return (
       <LandingPage
         onLoginSuccess={() => {

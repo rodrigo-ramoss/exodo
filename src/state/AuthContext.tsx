@@ -55,9 +55,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isSubscriber?: boolean;
         isLoggedIn?: boolean;
       };
-      if (data.isLoggedIn && data.email) {
+      if (data.isLoggedIn && data.isSubscriber && data.email) {
         setEmail(data.email);
-        setIsSubscriber(Boolean(data.isSubscriber));
+        setIsSubscriber(true);
         void syncLocalStateWithServer();
       } else {
         setEmail('');
@@ -158,7 +158,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     () => ({
       email,
       isSubscriber,
-      isLoggedIn: Boolean(email),
+      isLoggedIn: Boolean(email) && isSubscriber,
       checking,
       requestCode,
       verifyCode,

@@ -12,6 +12,7 @@ type Step =
   | 'sending_code'
   | 'code'
   | 'verifying_code'
+  | 'not_found'
   | 'rate_limited'
   | 'error';
 
@@ -81,7 +82,7 @@ export default function LoginModal({ onClose, onSuccess }: LoginModalProps) {
       return;
     }
     if (result.status === 'not_found') {
-      setStep('error');
+      setStep('not_found');
       return;
     }
     if (result.status === 'rate_limited') {
@@ -104,7 +105,7 @@ export default function LoginModal({ onClose, onSuccess }: LoginModalProps) {
       return;
     }
     if (result.status === 'not_found') {
-      setStep('error');
+      setStep('not_found');
       return;
     }
     if (result.status === 'expired') {
@@ -148,7 +149,7 @@ export default function LoginModal({ onClose, onSuccess }: LoginModalProps) {
     }
 
     if (result.status === 'not_found') {
-      setStep('error');
+      setStep('not_found');
       setResending(false);
       return;
     }
@@ -187,10 +188,10 @@ export default function LoginModal({ onClose, onSuccess }: LoginModalProps) {
         </div>
 
         <h2 id="login-modal-title" className="font-headline text-xl font-black tracking-tight text-on-surface text-center uppercase mb-1">
-          Salve sua jornada
+          Acesso de assinante
         </h2>
         <p className="text-on-surface-variant text-xs text-center mb-8">
-          Entre gratuitamente para sincronizar leituras, notas e destaques
+          Entre com o e-mail vinculado à sua assinatura
         </p>
 
         {(step === 'email' || step === 'sending_code') && (
@@ -315,6 +316,29 @@ export default function LoginModal({ onClose, onSuccess }: LoginModalProps) {
           </div>
         )}
 
+        {step === 'not_found' && (
+          <div className="space-y-4">
+            <div className="bg-surface-container border border-outline-variant/20 rounded-xl p-4 flex gap-3">
+              <AlertCircle size={16} className="text-primary shrink-0 mt-0.5" />
+              <div>
+                <p className="text-xs font-bold text-on-surface leading-relaxed">
+                  Nenhuma assinatura ativa foi encontrada para este e-mail.
+                </p>
+                <p className="mt-2 text-[11px] text-on-surface-variant leading-relaxed">
+                  O acesso gratuito continua disponível sem login. O histórico sincronizado será
+                  liberado para assinantes.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setStep('email')}
+              className="w-full bg-surface-container-high border border-outline-variant/30 text-on-surface font-bold text-sm uppercase tracking-widest py-3 rounded-xl hover:border-primary/40 transition-all"
+            >
+              Tentar outro e-mail
+            </button>
+          </div>
+        )}
+
         {/* Erro */}
         {step === 'error' && (
           <div className="space-y-4">
@@ -334,7 +358,7 @@ export default function LoginModal({ onClose, onSuccess }: LoginModalProps) {
         )}
 
         <p className="text-center text-[10px] text-on-surface-variant/30 mt-8 uppercase tracking-widest">
-          Êxodo · Conta gratuita · Sincronização segura
+          Êxodo · Área do assinante · Sincronização segura
         </p>
       </div>
     </div>

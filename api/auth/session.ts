@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getSessionFromRequest } from '../_lib/auth.js';
+import { clearSessionCookie, getSessionFromRequest } from '../_lib/auth.js';
 import { hasActiveSubscriptionByEmail } from '../_lib/stripe.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -12,19 +12,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({ isLoggedIn: false, isSubscriber: false, email: '' });
   }
 
-  let isSubscriber = session.tier === 'subscriber';
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-  if (stripeSecretKey) {
-    try {
-      isSubscriber = await hasActiveSubscriptionByEmail(session.email, stripeSecretKey);
-    } catch (error) {
-      console.error('[auth/session] falha ao consultar assinatura:', error);
-    }
+  if (!stripeSecretKey) {
+    console.error('[auth/session] STRIPE_SECRET_KEY não configurada.');
+    clearSessionCookie(res);
+    return res.status(200).json({ isLoggedIn: false, isSubscriber: false, email: '' });
   }
 
-  return res.status(200).json({
-    isLoggedIn: true,
-    isSubscriber,
-    email: session.email,
-  });
+  try {
+    const isSubscriber = await hasActiveSubscriptionByEmail(session.email, stripeSecretKey);
+    if (!isSubscriber) {
+      clearSessionCookie(res);
+      return res.status(200).json({ isLoggedIn: false, isSubscriber: false, email: '' });
+    }
+
+    return res.status(200).json({
+      isLoggedIn: true,
+      isSubscriber: true,
+      email: session.email,
+    });
+  } catch (error) {
+    console.error('[auth/session] erro:', error);
+    return res.status(500).json({ isLoggedIn: false, isSubscriber: false, email: '' });
+  }
 }

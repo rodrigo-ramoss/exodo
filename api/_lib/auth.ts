@@ -8,7 +8,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 interface SessionTokenPayload {
   sub: string;
-  tier: 'free' | 'subscriber';
+  tier: 'subscriber';
   iat: number;
   exp: number;
   jti: string;
@@ -138,7 +138,7 @@ export function verifyOtpChallenge(
   return { ok: true, email: payload.email };
 }
 
-export function createSessionToken(email: string, tier: 'free' | 'subscriber' = 'free'): string {
+export function createSessionToken(email: string): string {
   const secret = getSessionSecret();
   if (!secret) {
     throw new Error('AUTH_SESSION_SECRET não configurado.');
@@ -147,7 +147,7 @@ export function createSessionToken(email: string, tier: 'free' | 'subscriber' = 
   const now = Math.floor(Date.now() / 1000);
   const payload: SessionTokenPayload = {
     sub: email,
-    tier,
+    tier: 'subscriber',
     iat: now,
     exp: now + SESSION_TTL_SECONDS,
     jti: randomUUID(),
@@ -156,7 +156,7 @@ export function createSessionToken(email: string, tier: 'free' | 'subscriber' = 
   return toSignedToken(payload, secret);
 }
 
-export function getSessionFromRequest(req: VercelRequest): { email: string; tier: 'free' | 'subscriber' } | null {
+export function getSessionFromRequest(req: VercelRequest): { email: string } | null {
   const secret = getSessionSecret();
   if (!secret) return null;
 
@@ -165,18 +165,12 @@ export function getSessionFromRequest(req: VercelRequest): { email: string; tier
   if (!token) return null;
 
   const payload = fromSignedToken<SessionTokenPayload>(token, secret);
-  if (
-    !payload?.sub
-    || !payload.exp
-    || (payload.tier !== 'free' && payload.tier !== 'subscriber')
-  ) {
-    return null;
-  }
+  if (!payload?.sub || !payload.exp || payload.tier !== 'subscriber') return null;
 
   const now = Math.floor(Date.now() / 1000);
   if (payload.exp < now) return null;
 
-  return { email: payload.sub, tier: payload.tier };
+  return { email: payload.sub };
 }
 
 export function setSessionCookie(res: VercelResponse, token: string): void {
