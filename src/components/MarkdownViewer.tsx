@@ -6,6 +6,7 @@ import type { Components } from 'react-markdown';
 import { pm, type Category } from '../lib/progressManager';
 import { loadRemoteReaderState, remoteSaveReaderState } from '../lib/serverSync';
 import { useAuth } from '../state/AuthContext';
+import { CONTENT_PAYWALL_ENABLED } from '../config/access';
 import LoginModal from './LoginModal';
 
 // ── Highlight helpers ─────────────────────────────────────────────────────────
@@ -414,7 +415,7 @@ function buildFreePreview(markdown: string): FreePreview {
 export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, category = 'biblica', onClose }) => {
   const { isSubscriber } = useAuth();
   const isOpenCategory = category === 'discipulos' || category === 'pregador';
-  const isFreePreview = !isSubscriber && !isOpenCategory;
+  const isFreePreview = CONTENT_PAYWALL_ENABLED && !isSubscriber && !isOpenCategory;
   const [progress, setProgress] = useState(0);
   const [fontSize, setFontSize] = useState(18);
   const [theme, setTheme] = useState<ReadingTheme>('dark');
