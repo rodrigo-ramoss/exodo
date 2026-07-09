@@ -15,6 +15,7 @@ import {
   resolveSelahThemeTitleFromSlug,
   type SelahThemeTitle,
 } from '../config/selahStructure';
+import { BIBLE_SECTION_VISIBLE } from '../config/access';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface BookItem {
@@ -3369,6 +3370,12 @@ export default function Bookstore({
     const hits: SelahSearchHit[] = [];
 
     for (const result of rawResults) {
+      if (
+        !BIBLE_SECTION_VISIBLE
+        && normalizeSlugLookupKey(result.document.sourcePath || '').includes('/public/content/rolos/biblia/')
+      ) {
+        continue;
+      }
       const slugFromSource = selahSourcePathToBookSlug.get(normalizeSlugLookupKey(result.document.sourcePath || ''));
       if (!slugFromSource) continue;
       const book = mergedBooks.find((item) => item.slug === slugFromSource);
@@ -3424,7 +3431,9 @@ export default function Bookstore({
     console.warn('[Selah] Ebooks sem subseção válida detectados:', booksWithoutValidSubsecao);
   }, [booksWithoutValidSubsecao]);
 
-  const visibleSectionOrder: SectionKey[] = SECTION_ORDER;
+  const visibleSectionOrder: SectionKey[] = BIBLE_SECTION_VISIBLE
+    ? SECTION_ORDER
+    : SECTION_ORDER.filter((section) => section !== 'BÍBLIA');
 
   // Group books by top-level section
   const booksBySection = SECTION_ORDER.reduce((acc, sec) => {

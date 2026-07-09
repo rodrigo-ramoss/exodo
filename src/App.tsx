@@ -21,6 +21,7 @@ import LandingPage from './components/LandingPage';
 import Preacher from './components/Preacher';
 import Course from './components/Course';
 import { useAuth } from './state/AuthContext';
+import { BIBLE_SECTION_VISIBLE } from './config/access';
 
 const PATH_BY_SCREEN: Record<Screen, string> = {
   [Screen.HOME]: '/inicio',
@@ -90,6 +91,7 @@ const parseSelahRoute = (path: string): SelahRouteParams => {
 
 const resolveScreenFromPath = (path: string) => {
   const normalized = normalizePath(path);
+  if (normalized === '/biblia' && !BIBLE_SECTION_VISIBLE) return Screen.BOOKSTORE;
   if (normalized.startsWith('/selah/')) return Screen.BOOKSTORE;
   return SCREEN_BY_PATH[normalized] ?? Screen.HOME;
 };
@@ -107,11 +109,14 @@ export default function App() {
     transition: 'push' | 'none' = 'none',
     options?: { syncHistory?: boolean; replace?: boolean; openSlug?: string }
   ) => {
+    const targetScreen = screen === Screen.BIBLE && !BIBLE_SECTION_VISIBLE
+      ? Screen.BOOKSTORE
+      : screen;
     setTransitionType(transition);
-    setCurrentScreen(screen);
+    setCurrentScreen(targetScreen);
     const shouldSyncHistory = options?.syncHistory ?? true;
     if (shouldSyncHistory) {
-      const basePath = PATH_BY_SCREEN[screen] ?? PATH_BY_SCREEN[Screen.HOME];
+      const basePath = PATH_BY_SCREEN[targetScreen] ?? PATH_BY_SCREEN[Screen.HOME];
       const targetPath = options?.openSlug
         ? `${basePath}?open=${encodeURIComponent(options.openSlug)}`
         : basePath;
@@ -159,7 +164,9 @@ export default function App() {
       case Screen.HOME:
         return <HomeDashboard onNavigate={handleNavigate} />;
       case Screen.BIBLE:
-        return <Bookstore routeThemeSlug="biblia" />;
+        return BIBLE_SECTION_VISIBLE
+          ? <Bookstore routeThemeSlug="biblia" />
+          : <Bookstore />;
       case Screen.PREACHER:
         return <Preacher />;
       case Screen.COURSE:
