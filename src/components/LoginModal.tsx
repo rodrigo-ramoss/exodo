@@ -5,8 +5,6 @@ import { type RequestCodeResult, useAuth } from '../state/AuthContext';
 interface LoginModalProps {
   onClose: () => void;
   onSuccess: () => void;
-  /** Se true, abre direto no modo "assinar" (sem campo de login) */
-  startOnSubscribe?: boolean;
 }
 
 type Step =
@@ -14,13 +12,12 @@ type Step =
   | 'sending_code'
   | 'code'
   | 'verifying_code'
-  | 'not_found'
   | 'rate_limited'
   | 'error';
 
 const RESEND_COOLDOWN_SECONDS = 30;
 
-export default function LoginModal({ onClose, onSuccess, startOnSubscribe = false }: LoginModalProps) {
+export default function LoginModal({ onClose, onSuccess }: LoginModalProps) {
   const { requestCode, verifyCode } = useAuth();
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
@@ -30,18 +27,13 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
   const [resending, setResending] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [expiresIn, setExpiresIn] = useState(0);
-  const [subscribing, setSubscribing] = useState(false);
   const [step, setStep] = useState<Step>('email');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (startOnSubscribe) {
-      handleSubscribe();
-      return;
-    }
     const timeout = setTimeout(() => inputRef.current?.focus(), 80);
     return () => clearTimeout(timeout);
-  }, [startOnSubscribe]);
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -89,7 +81,7 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
       return;
     }
     if (result.status === 'not_found') {
-      setStep('not_found');
+      setStep('error');
       return;
     }
     if (result.status === 'rate_limited') {
@@ -112,7 +104,7 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
       return;
     }
     if (result.status === 'not_found') {
-      setStep('not_found');
+      setStep('error');
       return;
     }
     if (result.status === 'expired') {
@@ -156,7 +148,7 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
     }
 
     if (result.status === 'not_found') {
-      setStep('not_found');
+      setStep('error');
       setResending(false);
       return;
     }
@@ -165,32 +157,14 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
     setResending(false);
   }
 
-  async function handleSubscribe() {
-    setSubscribing(true);
-    try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim().toLowerCase() }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        setStep('error');
-      }
-    } catch {
-      setStep('error');
-    } finally {
-      setSubscribing(false);
-    }
-  }
-
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center px-4"
       style={{ backgroundColor: 'rgba(0,0,0,0.85)' }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="login-modal-title"
     >
       <div
         className="relative w-full max-w-md bg-surface-container-low border border-outline-variant/20 rounded-2xl px-8 py-10 shadow-2xl"
@@ -212,11 +186,11 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
           </div>
         </div>
 
-        <h2 className="font-headline text-xl font-black tracking-tight text-on-surface text-center uppercase mb-1">
-          Acessar o Êxodo
+        <h2 id="login-modal-title" className="font-headline text-xl font-black tracking-tight text-on-surface text-center uppercase mb-1">
+          Salve sua jornada
         </h2>
         <p className="text-on-surface-variant text-xs text-center mb-8">
-          Entre com seu e-mail e confirme com o código enviado
+          Entre gratuitamente para sincronizar leituras, notas e destaques
         </p>
 
         {(step === 'email' || step === 'sending_code') && (
@@ -324,34 +298,6 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
           </form>
         )}
 
-        {step === 'not_found' && (
-          <div className="space-y-4">
-            <div className="bg-surface-container border border-outline-variant/20 rounded-xl p-4 flex gap-3">
-              <AlertCircle size={16} className="text-primary shrink-0 mt-0.5" />
-              <p className="text-xs text-on-surface-variant leading-relaxed">
-                Nenhuma assinatura ativa encontrada para <span className="text-primary font-semibold">{email}</span>.
-                Assine agora para ter acesso completo ao Êxodo.
-              </p>
-            </div>
-            <button
-              onClick={handleSubscribe}
-              className="w-full bg-primary text-on-primary-container font-black text-sm uppercase tracking-widest py-3 rounded-xl hover:brightness-110 transition-all flex items-center justify-center gap-2"
-            >
-              {subscribing ? (
-                <><Loader2 size={14} className="animate-spin" /> Aguarde...</>
-              ) : (
-                'Assinar Agora'
-              )}
-            </button>
-            <button
-              onClick={() => { setStep('email'); }}
-              className="w-full text-on-surface-variant/60 text-xs hover:text-on-surface-variant transition-colors py-2"
-            >
-              Tentar outro e-mail
-            </button>
-          </div>
-        )}
-
         {step === 'rate_limited' && (
           <div className="space-y-4">
             <div className="bg-surface-container border border-outline-variant/20 rounded-xl p-4 flex gap-3">
@@ -375,7 +321,7 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
             <div className="bg-surface-container border border-outline-variant/20 rounded-xl p-4 flex gap-3">
               <AlertCircle size={16} className="text-red-400 shrink-0 mt-0.5" />
               <p className="text-xs text-on-surface-variant leading-relaxed">
-                Ocorreu um erro ao verificar sua assinatura. Verifique sua conexão e tente novamente.
+                Não foi possível entrar agora. Verifique sua conexão e tente novamente.
               </p>
             </div>
             <button
@@ -388,7 +334,7 @@ export default function LoginModal({ onClose, onSuccess, startOnSubscribe = fals
         )}
 
         <p className="text-center text-[10px] text-on-surface-variant/30 mt-8 uppercase tracking-widest">
-          Êxodo · Acesso por assinatura
+          Êxodo · Conta gratuita · Sincronização segura
         </p>
       </div>
     </div>

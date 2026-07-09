@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
+import { syncLocalStateWithServer } from '../lib/serverSync';
 
 interface ProfileContextValue {
   name: string;
@@ -25,17 +26,20 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const setName = (v: string) => {
     setNameState(v);
     localStorage.setItem(KEY_NAME, v);
+    void syncLocalStateWithServer();
   };
 
   const setPhoto = (v: string | null) => {
     setPhotoState(v);
     if (v) localStorage.setItem(KEY_PHOTO, v);
     else localStorage.removeItem(KEY_PHOTO);
+    void syncLocalStateWithServer();
   };
 
   const setNotifications = (v: boolean) => {
     setNotificationsState(v);
     localStorage.setItem(KEY_NOTIFICATIONS, String(v));
+    void syncLocalStateWithServer();
   };
 
   const value = useMemo(

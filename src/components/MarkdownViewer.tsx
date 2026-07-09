@@ -1365,7 +1365,6 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
 
       {loginMode && (
         <LoginModal
-          startOnSubscribe={loginMode === 'subscribe'}
           onClose={() => setLoginMode(null)}
           onSuccess={() => setLoginMode(null)}
         />

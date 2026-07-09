@@ -1,7 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createHash } from 'crypto';
 import {
-  clearSessionCookie,
   createSessionToken,
   normalizeEmail,
   readJsonBody,
@@ -16,7 +15,7 @@ import {
 } from '../_lib/challengeState.js';
 import { recordLoginAudit } from '../_lib/loginAudit.js';
 import { consumeRateLimit, withRateLimitHeaders } from '../_lib/rateLimit.js';
-import { hasActiveSubscriptionByEmail } from '../_lib/stripe.js';
+import { ensureUser } from '../_lib/db.js';
 
 const LIMIT_VERIFY_IP = 45;
 const LIMIT_VERIFY_CHALLENGE = 5;
@@ -40,18 +39,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ip,
     });
     return res.status(405).json({ error: 'Método não permitido' });
-  }
-
-  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-  if (!stripeSecretKey) {
-    console.error('[auth/verify-code] STRIPE_SECRET_KEY não configurada.');
-    await recordLoginAudit({
-      action: 'verify_code',
-      outcome: 'error',
-      ip,
-      details: { reason: 'missing_stripe_secret_key' },
-    });
-    return res.status(503).json({ status: 'error' });
   }
 
   let challengeToken = '';
@@ -169,21 +156,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const isSubscriber = await hasActiveSubscriptionByEmail(normalizedEmail, stripeSecretKey);
-    if (!isSubscriber) {
-      clearSessionCookie(res);
-      await markChallengeUsed(key, CHALLENGE_USED_TTL_SECONDS);
-      await recordLoginAudit({
-        action: 'verify_code',
-        outcome: 'not_found',
-        ip,
-        email: normalizedEmail,
-      });
-      return res.status(403).json({ status: 'not_found' });
-    }
-
+    await ensureUser(normalizedEmail);
     await markChallengeUsed(key, CHALLENGE_USED_TTL_SECONDS);
-    const token = createSessionToken(normalizedEmail);
+    const token = createSessionToken(normalizedEmail, 'free');
     setSessionCookie(res, token);
     await recordLoginAudit({
       action: 'verify_code',

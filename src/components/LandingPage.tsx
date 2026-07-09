@@ -1,15 +1,19 @@
+import { useState } from 'react';
 import {
   BookMarked,
   Library,
+  Mail,
   NotebookPen,
   Sparkles,
   UserRound,
   Wheat,
 } from 'lucide-react';
 import { Screen } from '../types';
+import LoginModal from './LoginModal';
 
 interface LandingPageProps {
   onOpenFree: (screen?: Screen) => void;
+  onLoginSuccess: () => void;
 }
 
 const FEATURES = [
@@ -45,7 +49,9 @@ const FEATURES = [
   },
 ];
 
-export default function LandingPage({ onOpenFree }: LandingPageProps) {
+export default function LandingPage({ onOpenFree, onLoginSuccess }: LandingPageProps) {
+  const [showLogin, setShowLogin] = useState(false);
+
   return (
     <div className="min-h-screen bg-background text-on-surface font-sans">
       <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-20 text-center">
@@ -98,8 +104,17 @@ export default function LandingPage({ onOpenFree }: LandingPageProps) {
             Acessar o app grátis
           </button>
 
-          <p className="mt-3 text-[10px] uppercase tracking-[0.18em] text-on-surface-variant/45">
-            Sem cobrança durante o período de acesso aberto
+          <button
+            type="button"
+            onClick={() => setShowLogin(true)}
+            className="mx-auto mt-3 flex w-full max-w-xl items-center justify-center gap-2 rounded-xl border border-primary/30 bg-surface-container-low px-6 py-3 text-[11px] font-black uppercase tracking-[0.14em] text-primary transition-colors hover:border-primary/55 hover:bg-primary/10"
+          >
+            <Mail size={14} />
+            Entrar com e-mail e sincronizar
+          </button>
+
+          <p className="mt-3 text-[10px] leading-relaxed tracking-[0.08em] text-on-surface-variant/50">
+            O acesso é gratuito. Entre para salvar sua leitura, notas e destaques em todos os dispositivos.
           </p>
         </div>
 
@@ -260,6 +275,16 @@ export default function LandingPage({ onOpenFree }: LandingPageProps) {
           Êxodo · Criado por Rodrigo Ramos · {new Date().getFullYear()}
         </p>
       </footer>
+
+      {showLogin && (
+        <LoginModal
+          onClose={() => setShowLogin(false)}
+          onSuccess={() => {
+            setShowLogin(false);
+            onLoginSuccess();
+          }}
+        />
+      )}
     </div>
   );
 }

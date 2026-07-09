@@ -97,7 +97,7 @@ const resolveScreenFromPath = (path: string) => {
 };
 
 export default function App() {
-  const { isSubscriber, checking } = useAuth();
+  const { isLoggedIn, checking } = useAuth();
   const [currentScreen, setCurrentScreen] = useState<Screen>(() => resolveScreenFromPath(window.location.pathname));
   const [transitionType, setTransitionType] = useState<'push' | 'none'>('none');
   const [freeExperienceStarted, setFreeExperienceStarted] = useState(
@@ -209,9 +209,13 @@ export default function App() {
     );
   }
 
-  if (!isSubscriber && currentScreen === Screen.HOME && !freeExperienceStarted) {
+  if (!isLoggedIn && currentScreen === Screen.HOME && !freeExperienceStarted) {
     return (
       <LandingPage
+        onLoginSuccess={() => {
+          setFreeExperienceStarted(true);
+          handleNavigate(Screen.HOME, 'none', { replace: true });
+        }}
         onOpenFree={(targetScreen = Screen.HOME) => {
           setFreeExperienceStarted(true);
           handleNavigate(targetScreen, 'none');

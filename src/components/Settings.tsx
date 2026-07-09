@@ -1,13 +1,17 @@
 import React, { useRef, useState } from 'react';
-import { User, Bell, Camera, Info, ArrowLeft } from 'lucide-react';
+import { User, Bell, Camera, Info, ArrowLeft, Cloud, LogOut, Mail } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useProfile } from '../state/ProfileContext';
+import { useAuth } from '../state/AuthContext';
+import LoginModal from './LoginModal';
 
 export default function Settings() {
   const { name, photo, notifications, setName, setPhoto, setNotifications } = useProfile();
+  const { email, isLoggedIn, isSubscriber, logout } = useAuth();
   const [nameSaved, setNameSaved] = useState(false);
   const [localName, setLocalName] = useState(name);
   const [showAbout, setShowAbout] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const aboutExodoText =
@@ -77,6 +81,59 @@ export default function Settings() {
         </h2>
         <p className="text-on-surface-variant text-xs mt-1">Personalize sua experiência</p>
       </div>
+
+      <section className="px-6 mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <Cloud size={14} className="text-primary" />
+          <span className="font-headline text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant">
+            Conta e sincronização
+          </span>
+        </div>
+
+        <div className="bg-surface-container-low rounded-2xl border border-outline-variant/10 p-5">
+          {isLoggedIn ? (
+            <>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-on-surface truncate">{email}</p>
+                  <p className="mt-1 text-[10px] font-black uppercase tracking-widest text-primary">
+                    {isSubscriber ? 'Assinatura ativa' : 'Conta gratuita'}
+                  </p>
+                </div>
+                <span className="shrink-0 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-1 text-[8px] font-black uppercase tracking-widest text-emerald-300">
+                  Sincronização ativa
+                </span>
+              </div>
+              <p className="mt-3 text-[11px] leading-relaxed text-on-surface-variant/75">
+                Seu progresso, notas, destaques e preferências são salvos na sua conta.
+              </p>
+              <button
+                type="button"
+                onClick={logout}
+                className="mt-4 inline-flex items-center gap-2 rounded-xl border border-outline-variant/30 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-on-surface-variant transition-colors hover:border-primary/45 hover:text-primary"
+              >
+                <LogOut size={13} />
+                Sair da conta
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="text-sm font-bold text-on-surface">Continue de onde parou</p>
+              <p className="mt-1 text-[11px] leading-relaxed text-on-surface-variant/75">
+                Entre gratuitamente para salvar sua leitura, notas e destaques e acessá-los em outros dispositivos.
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowLogin(true)}
+                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-primary-container transition-all hover:brightness-110"
+              >
+                <Mail size={14} />
+                Entrar com e-mail
+              </button>
+            </>
+          )}
+        </div>
+      </section>
 
       {/* Profile Section */}
       <section className="px-6 mb-8">
@@ -227,6 +284,13 @@ export default function Settings() {
           Êxodo · v1.0 · Investigação Especial
         </p>
       </div>
+
+      {showLogin && (
+        <LoginModal
+          onClose={() => setShowLogin(false)}
+          onSuccess={() => setShowLogin(false)}
+        />
+      )}
     </div>
   );
 }
