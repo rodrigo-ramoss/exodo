@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X, Highlighter, Trash2, Pencil, FileText, PenLine, Lock, LogIn } from 'lucide-react';
+import { ArrowLeft, Settings, Type, Sun, Moon, Coffee, X, Highlighter, Trash2, Pencil, FileText, PenLine, Lock } from 'lucide-react';
 import type { Components } from 'react-markdown';
 import { pm, type Category } from '../lib/progressManager';
 import { loadRemoteReaderState, remoteSaveReaderState } from '../lib/serverSync';
 import { useAuth } from '../state/AuthContext';
 import { CONTENT_PAYWALL_ENABLED } from '../config/access';
-import LoginModal from './LoginModal';
 
 // ── Highlight helpers ─────────────────────────────────────────────────────────
 const HL_KEY = (slug: string) => `exodo_hl_${slug}`;
@@ -452,7 +451,6 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
   const [noteDraft, setNoteDraft] = useState('');
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [showMarkupHint, setShowMarkupHint] = useState(false);
-  const [loginMode, setLoginMode] = useState<'login' | 'subscribe' | null>(null);
   const markupHintTimerRef = useRef<number | null>(null);
 
   const clearMarkupSelection = useCallback(() => {
@@ -1337,38 +1335,15 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, slug, c
             <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed opacity-75">
               O índice e a introdução são gratuitos. Assine o plano para liberar os próximos capítulos e todo o acervo do Êxodo.
             </p>
-            <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-              <button
-                type="button"
-                onClick={() => setLoginMode('subscribe')}
-                className="rounded-xl bg-primary px-6 py-3 text-xs font-black uppercase tracking-widest text-on-primary shadow-lg transition-transform active:scale-95"
-              >
-                Assinar o plano
-              </button>
-              <button
-                type="button"
-                onClick={() => setLoginMode('login')}
-                className={`inline-flex items-center justify-center gap-2 rounded-xl border px-6 py-3 text-xs font-black uppercase tracking-widest transition-colors ${
-                  theme === 'dark' ? 'border-white/15 bg-white/5' : 'border-current/20 bg-current/5'
-                }`}
-              >
-                <LogIn size={15} aria-hidden="true" />
-                Já sou assinante
-              </button>
-            </div>
+            <p className="mx-auto mt-5 max-w-md text-xs font-bold uppercase tracking-widest text-primary">
+              O app está aberto gratuitamente nesta fase.
+            </p>
           </section>
         )}
 
         {/* Sentinel: IntersectionObserver observa este elemento para detectar fim de leitura */}
         {!isFreePreview && <div ref={sentinelRef} className="h-1 w-full mt-4" aria-hidden="true" />}
       </div>
-
-      {loginMode && (
-        <LoginModal
-          onClose={() => setLoginMode(null)}
-          onSuccess={() => setLoginMode(null)}
-        />
-      )}
 
       {/* ── Highlight: selection popup ──────────────────────────────────────── */}
       {selPopup && (

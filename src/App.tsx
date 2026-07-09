@@ -212,10 +212,6 @@ export default function App() {
   if (!isSubscriber && currentScreen === Screen.HOME && !freeExperienceStarted) {
     return (
       <LandingPage
-        onLoginSuccess={() => {
-          setFreeExperienceStarted(true);
-          handleNavigate(Screen.HOME, 'none', { replace: true });
-        }}
         onOpenFree={(targetScreen = Screen.HOME) => {
           setFreeExperienceStarted(true);
           handleNavigate(targetScreen, 'none');

@@ -1,19 +1,15 @@
-import { useState } from 'react';
 import {
   BookMarked,
   Library,
-  Mail,
   NotebookPen,
   Sparkles,
   UserRound,
   Wheat,
 } from 'lucide-react';
 import { Screen } from '../types';
-import LoginModal from './LoginModal';
 
 interface LandingPageProps {
   onOpenFree: (screen?: Screen) => void;
-  onLoginSuccess: () => void;
 }
 
 const FEATURES = [
@@ -49,9 +45,7 @@ const FEATURES = [
   },
 ];
 
-export default function LandingPage({ onOpenFree, onLoginSuccess }: LandingPageProps) {
-  const [showLogin, setShowLogin] = useState(false);
-
+export default function LandingPage({ onOpenFree }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-background text-on-surface font-sans">
       <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-20 text-center">
@@ -104,17 +98,8 @@ export default function LandingPage({ onOpenFree, onLoginSuccess }: LandingPageP
             Acessar o app grátis
           </button>
 
-          <button
-            type="button"
-            onClick={() => setShowLogin(true)}
-            className="mx-auto mt-3 flex w-full max-w-xl items-center justify-center gap-2 rounded-xl border border-primary/30 bg-surface-container-low px-6 py-3 text-[11px] font-black uppercase tracking-[0.14em] text-primary transition-colors hover:border-primary/55 hover:bg-primary/10"
-          >
-            <Mail size={14} />
-            Já sou assinante — entrar
-          </button>
-
           <p className="mt-3 text-[10px] leading-relaxed tracking-[0.08em] text-on-surface-variant/50">
-            Assinantes salvam histórico, notas, destaques e progresso para continuar em qualquer dispositivo.
+            O acesso gratuito não exige login. Entre agora e estude livremente enquanto o app está aberto.
           </p>
         </div>
 
@@ -276,15 +261,6 @@ export default function LandingPage({ onOpenFree, onLoginSuccess }: LandingPageP
         </p>
       </footer>
 
-      {showLogin && (
-        <LoginModal
-          onClose={() => setShowLogin(false)}
-          onSuccess={() => {
-            setShowLogin(false);
-            onLoginSuccess();
-          }}
-        />
-      )}
     </div>
   );
 }

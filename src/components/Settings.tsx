@@ -1,9 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { User, Bell, Camera, Info, ArrowLeft, Cloud, LogOut, Mail } from 'lucide-react';
+import { User, Bell, Camera, Info, ArrowLeft, Cloud, LogOut } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useProfile } from '../state/ProfileContext';
 import { useAuth } from '../state/AuthContext';
-import LoginModal from './LoginModal';
 
 export default function Settings() {
   const { name, photo, notifications, setName, setPhoto, setNotifications } = useProfile();
@@ -11,7 +10,6 @@ export default function Settings() {
   const [nameSaved, setNameSaved] = useState(false);
   const [localName, setLocalName] = useState(name);
   const [showAbout, setShowAbout] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const aboutExodoText =
@@ -118,19 +116,12 @@ export default function Settings() {
             </>
           ) : (
             <>
-              <p className="text-sm font-bold text-on-surface">Seu histórico em todos os dispositivos</p>
+              <p className="text-sm font-bold text-on-surface">App aberto sem login por enquanto</p>
               <p className="mt-1 text-[11px] leading-relaxed text-on-surface-variant/75">
-                Entre com o e-mail vinculado à assinatura para sincronizar histórico, notas,
-                destaques e progresso entre dispositivos.
+                Você pode estudar gratuitamente sem criar conta. A sincronização de histórico,
+                notas, destaques e progresso ficará disponível quando o acesso de assinante for
+                liberado.
               </p>
-              <button
-                type="button"
-                onClick={() => setShowLogin(true)}
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-primary-container transition-all hover:brightness-110"
-              >
-                <Mail size={14} />
-                Entrar como assinante
-              </button>
             </>
           )}
         </div>
@@ -286,12 +277,6 @@ export default function Settings() {
         </p>
       </div>
 
-      {showLogin && (
-        <LoginModal
-          onClose={() => setShowLogin(false)}
-          onSuccess={() => setShowLogin(false)}
-        />
-      )}
     </div>
   );
 }
