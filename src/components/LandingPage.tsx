@@ -1,265 +1,265 @@
-import { useState } from 'react';
-import { BookOpen, Library, Wheat, BookMarked, Scroll, Check, Star, Lock, UserRound, AlertCircle, NotebookPen } from 'lucide-react';
-import LoginModal from './LoginModal';
+import {
+  BookMarked,
+  Library,
+  NotebookPen,
+  Sparkles,
+  UserRound,
+  Wheat,
+} from 'lucide-react';
 import { Screen } from '../types';
 
 interface LandingPageProps {
-  onEnter: () => void;
-  onOpenFree?: (screen?: Screen) => void;
+  onOpenFree: (screen?: Screen) => void;
 }
 
 const FEATURES = [
-  { icon: Wheat,        label: 'Maná',         desc: 'Estudos diários e séries bíblicas profundas' },
-  { icon: UserRound,   label: 'Discípulos',    desc: 'Jornadas abertas de discipulado e formação', free: true, screen: Screen.DISCIPULOS },
-  { icon: NotebookPen, label: 'Pregador',      desc: 'Sermões e estudos abertos para preparo', free: true, screen: Screen.PREACHER },
-  { icon: Library,      label: 'Rolos',        desc: 'Livraria completa de e-books e séries' },
-  { icon: BookMarked,   label: 'Babel',        desc: 'Refutações e análise crítica de doutrinas' },
-  { icon: Scroll,       label: 'Apócrifos',    desc: 'Textos deuterocanônicos e protocolo de leitura' },
-  { icon: BookOpen,     label: 'Bíblia',       desc: 'Comentários bíblicos para assinantes' },
+  {
+    icon: UserRound,
+    label: 'Discípulos',
+    desc: 'Jornadas progressivas de discipulado, identidade, maturidade e batalha espiritual.',
+    screen: Screen.DISCIPULOS,
+  },
+  {
+    icon: Wheat,
+    label: 'Maná',
+    desc: 'Estudos para a vida espiritual, a cura interior e os desafios da vida cotidiana.',
+    screen: Screen.MANA,
+  },
+  {
+    icon: Library,
+    label: 'Rolos',
+    desc: 'Uma biblioteca de séries sobre teologia, mundo espiritual, tipologia e profecia.',
+    screen: Screen.BOOKSTORE,
+  },
+  {
+    icon: NotebookPen,
+    label: 'Pregador',
+    desc: 'Sermões, esboços e estudos bíblicos para aprofundamento e preparo da Palavra.',
+    screen: Screen.PREACHER,
+  },
+  {
+    icon: BookMarked,
+    label: 'Babel',
+    desc: 'Análises do sistema mundial, das estruturas de poder e das narrativas da cultura.',
+    screen: Screen.REFUTACAO,
+  },
 ];
 
-const PLAN_ITEMS = [
-  'Acesso completo a todos os e-books',
-  'Séries bíblicas exclusivas (Maná)',
-  'Rolos com novos conteúdos mensais',
-  'Refutações e exegese aprofundada',
-  'Textos apócrifos com protocolo de leitura',
-  'Progresso de leitura salvo por e-mail',
-  'Suporte via canal da comunidade',
-];
-
-export default function LandingPage({ onEnter, onOpenFree }: LandingPageProps) {
-  const [showLogin, setShowLogin] = useState(false);
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
-  const [subscribeError, setSubscribeError] = useState('');
-
-  async function handleSubscribe() {
-    setCheckoutLoading(true);
-    setSubscribeError('');
-    try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: '' }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data.url) {
-        window.location.href = data.url;
-        return;
-      }
-      setSubscribeError(data.error || 'Não foi possível abrir a assinatura agora. Tente novamente em instantes.');
-    } catch {
-      setSubscribeError('Não foi possível conectar ao pagamento agora. Tente novamente em instantes.');
-    } finally {
-      setCheckoutLoading(false);
-    }
-  }
-
+export default function LandingPage({ onOpenFree }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-background text-on-surface font-sans">
-
-      {/* ── HERO ── */}
-      <section className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center overflow-hidden">
-        {/* Fundo com glow */}
+      <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-20 text-center">
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="pointer-events-none absolute inset-0"
           style={{
-            background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(242,192,141,0.07) 0%, transparent 70%)',
+            background:
+              'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(242,192,141,0.1) 0%, transparent 70%)',
           }}
         />
 
-        <div className="relative z-10 max-w-2xl mx-auto">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-1.5 mb-8">
-            <Star size={11} className="text-primary fill-primary" />
-            <span className="text-primary text-[10px] font-black uppercase tracking-widest">
-              Plataforma de Estudos Bíblicos
+        <div className="relative z-10 mx-auto max-w-3xl">
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5">
+            <Sparkles size={12} className="text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-primary">
+              Estudos bíblicos e discernimento dos tempos
             </span>
           </div>
 
-          <h1 className="font-headline text-5xl sm:text-6xl font-black tracking-tighter text-on-surface uppercase leading-none mb-4">
+          <h1 className="mb-5 font-headline text-5xl font-black uppercase leading-none tracking-tighter text-on-surface sm:text-7xl">
             Ê<span className="text-primary">X</span>ODO
           </h1>
 
-          <p className="text-on-surface-variant text-base sm:text-lg leading-relaxed mb-3 max-w-xl mx-auto">
-            Uma jornada de investigação bíblica profunda — séries, e-books e estudos
-            que a tradição religiosa não ousou mostrar.
+          <h2 className="mx-auto mb-4 max-w-2xl font-headline text-2xl font-black leading-tight tracking-tight text-on-surface sm:text-3xl">
+            Aprofunde sua fé. Compreenda as Escrituras. Discernir o mundo começa aqui.
+          </h2>
+
+          <p className="mx-auto mb-3 max-w-2xl text-sm leading-relaxed text-on-surface-variant sm:text-base">
+            Um aplicativo de estudos bíblicos, formação espiritual e discernimento do sistema
+            mundial, criado por Rodrigo Ramos.
           </p>
 
-          <p className="text-on-surface-variant/60 text-sm mb-10">
-            Exegese. Escatologia. Apócrifos. Doutrinas originais.
+          <p className="mx-auto mb-8 max-w-xl text-sm leading-relaxed text-on-surface-variant/65">
+            Jornadas de discipulado, estudos para a vida diária, séries teológicas, recursos
+            para pregadores e análises das forças que moldam a cultura.
           </p>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            {onOpenFree && (
-              <button
-                onClick={() => onOpenFree()}
-                className="bg-primary text-on-primary-container font-black text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:brightness-110 transition-all shadow-lg"
-                style={{ boxShadow: '0 4px 24px rgba(242,192,141,0.25)' }}
-              >
-                Estudar Grátis
-              </button>
-            )}
-            <button
-              onClick={handleSubscribe}
-              disabled={checkoutLoading}
-              className="bg-surface-container border border-primary/35 text-on-surface font-black text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:border-primary/55 transition-all disabled:opacity-60 shadow-lg"
-              style={{ boxShadow: '0 4px 24px rgba(242,192,141,0.25)' }}
-            >
-              {checkoutLoading ? 'Aguarde...' : 'Assinar Agora'}
-            </button>
-            <button
-              onClick={() => setShowLogin(true)}
-              className="bg-surface-container border border-outline-variant/30 text-on-surface font-bold text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:border-primary/40 transition-all"
-            >
-              Já sou assinante
-            </button>
-          </div>
-          {subscribeError && (
-            <p className="mt-4 mx-auto max-w-md rounded-xl border border-red-400/25 bg-red-950/20 px-3 py-2 text-xs leading-relaxed text-red-100/90 inline-flex items-start gap-2">
-              <AlertCircle size={14} className="mt-0.5 shrink-0 text-red-300" />
-              <span>{subscribeError}</span>
+          <div className="mx-auto mb-4 max-w-xl rounded-2xl border border-[#D4AF37]/30 bg-[#D4AF37]/8 px-4 py-3">
+            <p className="text-xs font-bold leading-relaxed text-[#f8dc86] sm:text-sm">
+              Acesso gratuito por tempo limitado. Aproveite esta fase para estudar, crescer
+              espiritualmente e explorar todo o conteúdo do Êxodo.
             </p>
-          )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => onOpenFree(Screen.HOME)}
+            className="limited-free-cta w-full max-w-xl rounded-xl px-8 py-4 font-black uppercase tracking-widest text-[#261900] transition-transform active:scale-[0.98]"
+          >
+            Acessar o app grátis
+          </button>
+
+          <p className="mt-3 text-[10px] uppercase tracking-[0.18em] text-on-surface-variant/45">
+            Sem cobrança durante o período de acesso aberto
+          </p>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-30">
-          <div className="w-px h-8 bg-on-surface-variant" />
-          <span className="text-[9px] uppercase tracking-widest text-on-surface-variant">ver mais</span>
+        <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1 opacity-30">
+          <div className="h-8 w-px bg-on-surface-variant" />
+          <span className="text-[9px] uppercase tracking-widest text-on-surface-variant">
+            conheça o app
+          </span>
         </div>
       </section>
 
-      {/* ── SEÇÕES DO APP ── */}
-      <section className="px-6 py-20 max-w-3xl mx-auto">
-        <div className="text-center mb-12">
-          <span className="text-[10px] uppercase tracking-[0.25em] text-primary font-black">
-            O que você acessa
+      <section className="mx-auto max-w-4xl px-6 py-20">
+        <div className="mb-12 text-center">
+          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">
+            O que você encontra
           </span>
-          <h2 className="font-headline text-2xl font-black uppercase tracking-tight mt-2 text-on-surface">
-            Tudo em um só lugar
+          <h2 className="mt-2 font-headline text-2xl font-black uppercase tracking-tight text-on-surface">
+            Cinco caminhos. Uma jornada.
           </h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-on-surface-variant/70">
+            Cada área tem um propósito claro — da formação pessoal à leitura bíblica, do preparo
+            da Palavra ao discernimento do sistema mundial.
+          </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {FEATURES.map(({ icon: Icon, label, desc, free, screen }) => (
+        <div className="grid gap-3 sm:grid-cols-2">
+          {FEATURES.map(({ icon: Icon, label, desc, screen }, index) => (
             <button
               key={label}
               type="button"
-              onClick={() => {
-                if (free) onOpenFree?.(screen);
-              }}
-              className={`text-left bg-surface-container-low border rounded-2xl p-4 flex flex-col gap-2 relative overflow-hidden group ${
-                free
-                  ? 'border-primary/35 hover:border-primary/55 transition-colors cursor-pointer'
-                  : 'border-outline-variant/15 cursor-default'
+              onClick={() => onOpenFree(screen)}
+              className={`group relative flex min-h-36 flex-col gap-2 overflow-hidden rounded-2xl border border-outline-variant/20 bg-surface-container-low p-5 text-left transition-all hover:-translate-y-0.5 hover:border-primary/45 ${
+                index === FEATURES.length - 1 ? 'sm:col-span-2' : ''
               }`}
             >
-              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Icon size={16} className="text-primary" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                <Icon size={18} className="text-primary" />
               </div>
               <p className="font-headline text-sm font-black uppercase tracking-tight text-on-surface">
                 {label}
               </p>
-              <p className="text-[11px] text-on-surface-variant leading-snug">
-                {desc}
-              </p>
-              {free ? (
-                <span className="absolute top-3 right-3 rounded-full border border-primary/35 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-widest text-primary">
-                  Aberto
-                </span>
-              ) : (
-                <Lock size={10} className="absolute top-3 right-3 text-on-surface-variant/25" />
-              )}
+              <p className="max-w-lg text-xs leading-relaxed text-on-surface-variant">{desc}</p>
+              <span className="absolute right-4 top-4 text-[8px] font-black uppercase tracking-widest text-primary/60 transition-colors group-hover:text-primary">
+                Explorar →
+              </span>
             </button>
           ))}
         </div>
       </section>
 
-      {/* ── PLANO ── */}
-      <section className="px-6 py-20 max-w-sm mx-auto">
+      <section className="relative overflow-hidden border-y border-outline-variant/10 bg-surface-container-lowest px-6 py-20">
         <div
-          className="bg-surface-container-low border border-primary/20 rounded-2xl p-8 relative overflow-hidden"
-          style={{ boxShadow: '0 0 40px rgba(242,192,141,0.08)' }}
-        >
-          {/* Glow decorativo */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(242,192,141,0.06) 0%, transparent 70%)',
-            }}
-          />
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 55% 55% at 18% 45%, rgba(212,175,55,0.09) 0%, transparent 75%)',
+          }}
+        />
 
-          <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-6">
-              <Star size={12} className="text-primary fill-primary" />
-              <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-black">
-                Plano Mensal
-              </span>
-            </div>
-
-            <div className="mb-6">
-              <span className="font-headline text-4xl font-black text-on-surface">R$ 19</span>
-              <span className="text-on-surface-variant text-sm">/mês</span>
-            </div>
-
-            <ul className="space-y-3 mb-8">
-              {PLAN_ITEMS.map((item) => (
-                <li key={item} className="flex items-start gap-2.5">
-                  <Check size={13} className="text-primary shrink-0 mt-0.5" />
-                  <span className="text-xs text-on-surface-variant leading-snug">{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <button
-              onClick={handleSubscribe}
-              disabled={checkoutLoading}
-              className="w-full bg-primary text-on-primary-container font-black text-sm uppercase tracking-widest py-4 rounded-xl hover:brightness-110 transition-all disabled:opacity-60"
-            >
-              {checkoutLoading ? 'Aguarde...' : 'Começar Agora'}
-            </button>
-            {subscribeError && (
-              <p className="mt-3 rounded-xl border border-red-400/25 bg-red-950/20 px-3 py-2 text-[11px] leading-relaxed text-red-100/90">
-                {subscribeError}
+        <div className="relative mx-auto grid max-w-5xl items-center gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+          <div className="relative mx-auto w-full max-w-sm">
+            <div className="absolute -inset-2 rounded-[2rem] border border-[#D4AF37]/15" />
+            <div
+              className="absolute -inset-5 -z-10 rounded-[2.5rem] opacity-50 blur-2xl"
+              style={{ background: 'rgba(212,175,55,0.12)' }}
+            />
+            <img
+              src="/image/rodrigo-ramos-voz-do-deserto.png"
+              alt="Rodrigo Ramos, criador do aplicativo Êxodo"
+              loading="lazy"
+              className="aspect-[4/5] w-full rounded-[1.6rem] border border-[#D4AF37]/30 object-cover object-top shadow-2xl"
+            />
+            <div className="absolute inset-x-4 bottom-4 rounded-xl border border-white/10 bg-black/75 px-4 py-3 text-center backdrop-blur-md">
+              <p className="font-headline text-sm font-black uppercase tracking-[0.12em] text-white">
+                Rodrigo Ramos
               </p>
-            )}
-
-            <p className="text-center text-[10px] text-on-surface-variant/40 mt-4">
-              Cancele a qualquer momento
-            </p>
+              <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.24em] text-[#e8c85c]">
+                Voz do Deserto
+              </p>
+            </div>
           </div>
-        </div>
 
-        {/* Link de login */}
-        <div className="text-center mt-6">
-          <button
-            onClick={() => setShowLogin(true)}
-            className="text-on-surface-variant/50 text-xs hover:text-primary transition-colors"
-          >
-            Já sou assinante → Entrar
-          </button>
+          <div>
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">
+              Quem está por trás do Êxodo
+            </span>
+            <h2 className="mt-3 font-headline text-3xl font-black uppercase leading-tight tracking-tight text-on-surface sm:text-4xl">
+              Rodrigo Ramos
+              <span className="mt-1 block text-primary">Voz do Deserto</span>
+            </h2>
+
+            <div className="mt-7 space-y-5 text-sm leading-7 text-on-surface-variant">
+              <p>
+                Há mais de uma década, minha fé deixou de ser uma herança passiva e se tornou uma
+                busca incansável pela Verdade. Nos últimos sete anos, mergulhei em um estudo
+                teológico independente e profundo das Escrituras, rompendo com as bolhas
+                denominacionais para redescobrir a Bíblia a partir de suas raízes judaicas, com os
+                olhos dos autores do primeiro século.
+              </p>
+
+              <p>
+                Meu foco não está em entreter religiosos, mas em equipar o remanescente fiel. Por
+                isso, escrevo sobre escatologia e o mundo espiritual com seriedade, conectando os
+                sinais dos tempos ao desmascaramento do sistema bestial que opera no mundo. Não
+                ofereço leite superficial, mas alimento sólido: análises densas que unem o texto
+                canônico, os apócrifos, os Manuscritos do Mar Morto e a cosmovisão do Segundo
+                Templo.
+              </p>
+
+              <p>
+                O Êxodo é o meu cantinho de guerra. Aqui, as séries de e-books não fogem dos temas
+                difíceis. Pelo contrário, mergulham de cabeça no plano divino para o fim dos
+                tempos, na antropologia bíblica e na batalha cósmica que define nossa geração.
+              </p>
+
+              <p className="border-l-2 border-[#D4AF37]/60 pl-5 font-semibold text-on-surface">
+                Se você está cansado de respostas fáceis, encontrou o seu lugar no deserto.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ── RODAPÉ ── */}
+      <section className="mx-auto max-w-2xl px-6 pb-24 pt-6 text-center">
+        <div
+          className="relative overflow-hidden rounded-3xl border border-[#D4AF37]/25 bg-surface-container-low p-8"
+          style={{ boxShadow: '0 0 50px rgba(212,175,55,0.08)' }}
+        >
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 80% 80% at 50% 0%, rgba(212,175,55,0.12) 0%, transparent 70%)',
+            }}
+          />
+          <div className="relative">
+            <Sparkles size={20} className="mx-auto mb-4 text-[#D4AF37]" />
+            <h2 className="font-headline text-xl font-black uppercase tracking-tight text-on-surface">
+              Seu tempo de aprofundar é agora
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-on-surface-variant">
+              Todo o aplicativo está aberto gratuitamente nesta fase. Entre, escolha um caminho
+              e avance no seu ritmo.
+            </p>
+            <button
+              type="button"
+              onClick={() => onOpenFree(Screen.HOME)}
+              className="limited-free-cta mt-6 w-full rounded-xl px-8 py-4 font-black uppercase tracking-widest text-[#261900] transition-transform active:scale-[0.98]"
+            >
+              Começar meus estudos
+            </button>
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-outline-variant/10 px-6 py-8 text-center">
-        <p className="text-[10px] uppercase tracking-widest text-on-surface-variant/25 font-bold">
-          Êxodo · Investigação Especial · {new Date().getFullYear()}
+        <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/35">
+          Êxodo · Criado por Rodrigo Ramos · {new Date().getFullYear()}
         </p>
       </footer>
-
-      {/* Modal de login */}
-      {showLogin && (
-        <LoginModal
-          onClose={() => setShowLogin(false)}
-          onSuccess={() => {
-            setShowLogin(false);
-            onEnter();
-          }}
-        />
-      )}
     </div>
   );
 }

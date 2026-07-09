@@ -10,9 +10,8 @@ export default function Settings() {
   const [showAbout, setShowAbout] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // TODO: Substituir pelo texto institucional definitivo do app.
   const aboutExodoText =
-    'O Êxodo é uma plataforma de estudos, séries e e-books criada para organizar uma jornada de leitura espiritual profunda, conectando temas bíblicos, interpretação, formação interior e discernimento dos tempos.';
+    'O Êxodo é um aplicativo de estudos bíblicos, formação espiritual e discernimento do sistema mundial, criado por Rodrigo Ramos. Sua proposta é reunir jornadas de discipulado, estudos para a vida diária, séries teológicas, recursos para pregadores e análises das forças que moldam a cultura.';
 
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
